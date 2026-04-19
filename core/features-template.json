@@ -1,0 +1,20 @@
+{
+  "project": "[PROJECT_NAME]",
+  "sprint": 1,
+  "topology": "pipeline",
+  "features": [
+    {
+      "feature_id": "[PROJECT_KEY]-S-001-001",
+      "ticket": "[PROJECT_KEY]-S-001",
+      "category": "functional",
+      "description": "Example: [Describe the specific testable behavior]",
+      "steps": [
+        "Step 1: [Navigate to / invoke / trigger]",
+        "Step 2: [Perform action]",
+        "Step 3: [Verify expected outcome]"
+      ],
+      "depends_on": [],
+      "passes": false
+    }
+  ]
+}
