@@ -59,4 +59,4 @@ Fabrika uses semantic versioning. Consumer projects carry a `.fabrika/manifest.y
 
 MIT License. See [LICENSE](LICENSE).
 
-Built by [VerbumEng](https://github.com/verbumeng). For integration guides, workflows, and deep dives, subscribe to the [newsletter](https://verbum.ing).
+Built by [VerbumEng](https://github.com/verbumeng). For integration guides, workflows, and deep dives, subscribe to the [newsletter](https://verbumeng.substack.com/).
