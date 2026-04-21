@@ -64,6 +64,18 @@ The user reviews each proposal:
 
 Accepted changes are now in canonical Fabrika. They flow to other projects via the normal UPDATE.md protocol the next time those projects update.
 
+## Ordering: Harvest Before Update
+
+**Always run the harvest before running UPDATE.md on consumer projects.** If you update first, the update may overwrite locally customized agent files (if the user accepts the canonical version), and the local diff you wanted to harvest is lost. The eval artifact would still describe the change, but the actual modified file is gone.
+
+The correct sequence when a new Fabrika version is available AND projects have local changes to harvest:
+
+1. **Harvest** — scan eval artifacts, propose canonical updates, accept/reject
+2. **Commit accepted changes to canonical Fabrika** — version bump, changelog entry
+3. **Update consumer projects** — now the update includes both the upstream changes and the harvested improvements in a single pass
+
+This avoids updating twice and ensures no local work is lost.
+
 ## What NOT to Harvest
 
 - Project-specific agent tuning (e.g., "check for pandas deprecation warnings" in a data-platform project)

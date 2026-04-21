@@ -6,6 +6,7 @@
 
 - The target project has a `.fabrika/manifest.yml` (installed via BOOTSTRAP.md or ADOPT.md)
 - You have access to the canonical Fabrika repo on this machine
+- **If this project has local agent customizations to harvest,** run the harvest workflow (see HARVEST.md) BEFORE running this update. Updating first may overwrite locally customized files, losing the diffs you wanted to harvest. Harvest first, commit accepted changes to canonical Fabrika, then update all consumer projects in one pass.
 
 ## Update Flow
 
