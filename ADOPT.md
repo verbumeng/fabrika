@@ -40,8 +40,9 @@ Ask the user: **"I've read your project structure. Which Fabrika integration tie
    - **Project configuration (copilot-instructions.md):** If no `.github/copilot-instructions.md` exists, copy from `[FABRIKA_PATH]/integrations/copilot/copilot-instructions.md`. If one already exists, **do NOT overwrite it.** Instead, read both files, identify Fabrika sections missing from the existing file, present a section-by-section summary, and merge Fabrika's workflow sections into the existing file — preserving everything the user already has
 4. Copy `[FABRIKA_PATH]/core/STATUS-template.md` to `STATUS.md` in project root (if STATUS.md doesn't exist)
 5. Copy `[FABRIKA_PATH]/core/features-template.json` to `features.json` in project root (if features.json doesn't exist)
-6. Generate `.fabrika/manifest.yml` recording what was installed
-7. Report to the user what was placed and where
+6. Copy `[FABRIKA_PATH]/core/FABRIKA.md` to `.fabrika/FABRIKA.md` (framework relationship guide — agents read this on demand during retros and when asking about upstream flow)
+7. Generate `.fabrika/manifest.yml` recording what was installed
+8. Report to the user what was placed and where
 
 **The user's existing project structure is not modified.** No docs reorganization, no hooks, no templates.
 
