@@ -6,52 +6,73 @@
 
 Each project that installs Fabrika gets a fork of the canonical agents. Over time, those forks diverge as agents are tuned for the specific project. Some of those tunings are project-specific (e.g., "pay extra attention to SQL injection in this data app"). Others are generalizable (e.g., "the code-reviewer should always check for unused destructured fields"). The harvest workflow separates the two.
 
-## Eval Artifacts — The Input
+## What Can Be Harvested
 
-Each consuming project produces a structured eval artifact after each sprint, stored at `.fabrika/evals/sprint-NN.md`. The template for this artifact is at `core/evals/eval-artifact-template.md`.
+Harvest is NOT limited to agent prompts. Any Fabrika-originated file in a consumer project can diverge and contain generalizable improvements. The manifest tracks every installed file and whether it's been customized. Common sources of harvestable changes:
 
-The key field in each agent entry is **`Generalizable?`** — marked `yes`, `no`, or `maybe` with brief reasoning. This is the harvest signal.
+| File type | Examples of generalizable changes |
+|-----------|----------------------------------|
+| **CLAUDE.md** (project config) | New workflow steps (e.g., "prompt user to review story before moving to next"), new backlog types (e.g., bugs alongside stories/epics), session lifecycle improvements, evaluation cycle refinements |
+| **Agent prompts** | Better orientation steps, new check categories, improved skepticism calibration |
+| **Sprint contract templates** | Additional stage gates, new sections for specific topology types |
+| **Rubrics** | Adjusted criteria weights, new grading dimensions discovered through real use |
+| **Maintenance checklist** | New check categories, refined thresholds |
+| **Document Catalog** | New document types, tier adjustments based on what actually gets used |
+| **Hooks** | Improved logic, additional checks |
+| **Templates** (story, epic, sprint, etc.) | New fields, structural improvements |
 
-### Who writes eval artifacts
+## Two Inputs to the Harvest
 
-The orchestrating agent writes the eval artifact during the sprint retro phase (or as a dedicated step after the retro). It draws from:
+### Input 1: Eval artifacts (structured, per-sprint)
+
+Each consuming project produces a structured eval artifact after each sprint, stored at `.fabrika/evals/sprint-NN.md`. The template is at `core/evals/eval-artifact-template.md`.
+
+The key field in each entry is **`Generalizable?`** — marked `yes`, `no`, or `maybe` with brief reasoning. This is the primary harvest signal for agent-level changes.
+
+The orchestrating agent writes the eval artifact during the sprint retro phase. It draws from:
 - The sprint progress file's "Agent quality observations" bullets
 - The evaluation reports in `docs/evaluations/`
 - The agent-changelog entries from this sprint
 - Any agent prompt changes approved in the retro
 
+### Input 2: Manifest drift (file-level, any time)
+
+The `.fabrika/manifest.yml` records every Fabrika-originated file and its install-time hash. Any file where the current hash differs from the install hash has been customized. The harvest workflow should **diff every customized file against its canonical source** — not just the agents.
+
+This catches workflow changes (CLAUDE.md modifications, template additions, rubric adjustments) that the eval artifacts might not cover because they aren't agent-specific.
+
 ### Cross-machine note
 
-Projects live on whichever machine they're developed on. Per-project agent forks and eval artifacts stay local to that machine. Canonical Fabrika is what syncs across machines (via `git pull`). This is correct and intentional — do not try to engineer cross-machine sync of fork state. The harvest workflow is the bridge.
+Projects live on whichever machine they're developed on. Per-project forks and eval artifacts stay local to that machine. Canonical Fabrika is what syncs across machines (via `git pull`). This is correct and intentional — do not try to engineer cross-machine sync of fork state. The harvest workflow is the bridge.
 
 ## The Harvest Workflow
 
 This is triggered by the user (or by an external task management system on a schedule). It is NOT triggered automatically.
 
-### 1. Scan
+### 1. Scan both inputs
 
-Read `.fabrika/evals/` directories across all project directories on this machine. The user should provide the list of project paths, or the agent can discover them by searching for `.fabrika/manifest.yml` files under the projects root.
+For each project (the user provides the list, or the agent discovers them by searching for `.fabrika/manifest.yml` under the projects root):
 
-### 2. Filter
+**a. Eval artifacts:** Read `.fabrika/evals/sprint-*.md` files. Collect entries marked `Generalizable: yes` or `Generalizable: maybe`.
 
-Find all eval artifact entries marked `Generalizable: yes` or `Generalizable: maybe`. Collect them into a single list grouped by agent.
+**b. Manifest drift:** Read `.fabrika/manifest.yml`. For every file with `customized: true` (or where the current file hash differs from the manifest's install-time hash), compute a diff against the canonical source in the Fabrika repo. Collect all diffs.
 
-### 3. Analyze
+### 2. Analyze
 
-For each generalizable finding:
-- Read the full context: what happened, what the root cause was, what local fix was applied
-- Determine if the finding genuinely applies to ALL projects using this agent, or only to a subset of project types
-- If it applies to a subset, note which project types
+For each finding (eval artifact entry or file diff):
+- Read the full context: what changed, why, what problem it solved
+- Classify: **generalizable** (any project benefits), **type-specific** (benefits a subset of project types), or **project-specific** (only relevant to this project's domain)
+- For manifest diffs: distinguish between project-specific customization (e.g., filled-in Project Stack section in CLAUDE.md) and framework-level improvements (e.g., added a story review step to the session lifecycle)
 
-### 4. Propose
+### 3. Propose
 
-For each finding that passes analysis, propose a concrete canonical update:
-- Which file in `core/agents/` to modify
+For each generalizable or type-specific finding, propose a concrete canonical update:
+- Which file in the Fabrika repo to modify (could be `core/agents/`, `core/templates/`, `integrations/claude-code/CLAUDE.md`, `core/Document-Catalog.md`, etc.)
 - The specific change (diff or before/after snippet)
-- Which project types it affects
+- Which project types it affects (all, or a subset)
 - The rationale
 
-Present all proposals to the user as a batch.
+Present all proposals to the user as a batch, grouped by file.
 
 ### 5. Review
 
@@ -66,7 +87,7 @@ Accepted changes are now in canonical Fabrika. They flow to other projects via t
 
 ## Ordering: Harvest Before Update
 
-**Always run the harvest before running UPDATE.md on consumer projects.** If you update first, the update may overwrite locally customized agent files (if the user accepts the canonical version), and the local diff you wanted to harvest is lost. The eval artifact would still describe the change, but the actual modified file is gone.
+**Always run the harvest before running UPDATE.md on consumer projects.** If you update first, the update may overwrite locally customized files (if the user accepts the canonical version), and the local diffs you wanted to harvest are lost. Eval artifacts would still describe agent-level changes, but workflow changes captured only as CLAUDE.md or template diffs would be gone.
 
 The correct sequence when a new Fabrika version is available AND projects have local changes to harvest:
 
@@ -78,9 +99,9 @@ This avoids updating twice and ensures no local work is lost.
 
 ## What NOT to Harvest
 
-- Project-specific agent tuning (e.g., "check for pandas deprecation warnings" in a data-platform project)
-- Findings that are already in the canonical agent (duplicates)
-- Findings from a single occurrence (wait for a pattern — at least 2 independent observations across different sprints or projects)
+- **Project-specific customization** — filled-in placeholders (Project Stack, Project Basics), domain-specific agent tuning (e.g., "check for pandas deprecation warnings"), project-specific workflow steps that don't generalize
+- **Duplicates** — changes that are already in the current canonical version
+- **Single occurrences** — wait for a pattern (at least 2 independent observations across different sprints or projects) before proposing a canonical change. Exception: if a change is obviously correct and universally applicable (e.g., fixing a broken step in the session lifecycle), one occurrence is enough.
 
 ## How to Run the Harvest
 
@@ -90,14 +111,18 @@ The harvest is not automated — you trigger it by pointing an agent at this doc
 
 Open a new chat in the Fabrika repo directory and give the agent this prompt (fill in your project paths):
 
-> Read HARVEST.md. Scan the following project directories for `.fabrika/evals/sprint-*.md` files:
+> Read HARVEST.md. Run the harvest workflow against these projects:
 > - ~/projects/project-a
 > - ~/projects/project-b
 > - ~/projects/project-c
 >
-> Find all entries marked `Generalizable: yes` or `Generalizable: maybe`. Group them by agent. For each finding, read the full context, assess whether it genuinely applies to all projects or a subset, and propose concrete canonical updates. Present all proposals for my review.
+> For each project:
+> 1. Read `.fabrika/manifest.yml` and diff every customized file against its canonical source in this Fabrika repo
+> 2. Read `.fabrika/evals/sprint-*.md` for eval artifact entries marked `Generalizable: yes` or `maybe`
+> 3. For each finding (file diff or eval entry), assess: is this project-specific, type-specific, or universally generalizable?
+> 4. Propose concrete canonical updates for anything generalizable. Present all proposals grouped by file for my review.
 
-That's it. The agent reads this doc for the full protocol, reads the eval artifacts, and does the analysis. You review the proposals and accept/reject/defer.
+The agent reads this doc for the full protocol, diffs customized files, reads eval artifacts, and does the analysis. You review the proposals and accept/reject/defer.
 
 ### Option B: Integrate with your task/review system
 

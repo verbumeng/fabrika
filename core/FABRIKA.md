@@ -13,15 +13,15 @@ The `.fabrika/` directory at this project's root contains:
 - **`evals/sprint-NN.md`** — Per-sprint evaluation artifacts that capture how each agent performed. These are the input to the harvest workflow. **You write these during sprint retros.**
 - **`FABRIKA.md`** — This file.
 
-## How local agent changes work
+## How local changes work
 
-During a sprint, you may tune agent prompts in `.claude/agents/` (or `.github/agents/` for Copilot) to fit this project's needs. **This is expected and encouraged.** Local agent forks are how agents get better for specific projects. These changes stay local to this project — they do not automatically propagate anywhere.
+During a sprint, you may modify any Fabrika-originated file to fit this project's needs — agent prompts, workflow steps in the project configuration (CLAUDE.md), sprint contract templates, rubrics, the maintenance checklist, hooks, or anything else. **This is expected and encouraged.** Local customization is how the framework adapts to specific projects. These changes stay local — they do not automatically propagate anywhere.
 
-When you modify an agent prompt, log the change to `docs/evals/agent-changelog.md` with: what changed, why (the observed failure), and which session logs document the failure. This is already part of the maintenance checklist.
+The manifest tracks which files have been customized (their hash drifts from the install-time hash). When you modify an agent prompt specifically, also log the change to `docs/evals/agent-changelog.md` with: what changed, why, and which session logs document the context.
 
 ## How local changes flow back to canonical Fabrika
 
-The flow is: **eval artifacts → harvest → canonical update → propagation to other projects.**
+The flow is: **eval artifacts + manifest drift → harvest → canonical update → propagation to other projects.**
 
 ### Step 1: Write eval artifacts (your job)
 
@@ -42,7 +42,7 @@ Draw from:
 
 ### Step 2: Harvest (the owner's job, not yours)
 
-A separate harvest workflow — run by the owner across all Fabrika-managed projects — reads eval artifacts, finds `yes` and `maybe` entries, and proposes concrete canonical updates. This happens outside of any individual project. You do not push changes upstream yourself.
+A separate harvest workflow — run by the owner across all Fabrika-managed projects — reads both eval artifacts AND manifest drift (diffs of all customized files against their canonical versions). It finds generalizable improvements across agents, workflow steps, templates, rubrics, and any other Fabrika-originated file. This happens outside of any individual project. You do not push changes upstream yourself.
 
 ### Step 3: Canonical update (the owner's job)
 
@@ -56,7 +56,7 @@ The owner runs the update protocol against this project (and others). It reads t
 
 ## Quick reference for the agent
 
-- **Tune agents freely** during sprints — you won't break canonical Fabrika
+- **Customize any Fabrika file freely** during sprints — agents, CLAUDE.md workflow, templates, rubrics, whatever the project needs. You won't break canonical Fabrika.
 - **Log agent prompt changes** to `docs/evals/agent-changelog.md`
 - **Write eval artifacts** during retro — the Sprint Retro Template prompts for this
 - **Don't modify `.fabrika/manifest.yml`** directly
