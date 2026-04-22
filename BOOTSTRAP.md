@@ -95,6 +95,7 @@ git init
 - `features.json` — copy from `[FABRIKA_PATH]/core/features-template.json`
 - `docs/evals/README.md` — copy from `[FABRIKA_PATH]/core/templates/`
 - `docs/evals/agent-changelog.md` — copy from `[FABRIKA_PATH]/core/templates/`
+- `.fabrika/FABRIKA.md` — copy from `[FABRIKA_PATH]/core/FABRIKA.md` (framework relationship guide, read on demand by agents)
 - Basic `.gitignore` with .env and `__pycache__` exclusions
 
 ### 1.5 Generate the Fabrika manifest

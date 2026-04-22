@@ -100,6 +100,12 @@ Did the "Process changes" from `Sprint-[XX-1]-retro.md` actually get applied thi
 
 (If first sprint: write "N/A — first sprint.")
 
+## Fabrika Eval Artifact
+
+Write `.fabrika/evals/sprint-XX.md` using the eval artifact template (see `.fabrika/manifest.yml` for the Fabrika version; the template is at `[FABRIKA_PATH]/core/evals/eval-artifact-template.md`). For each agent invoked this sprint, record: outcome, what happened, root cause (if friction/failure), local fix applied, and the `Generalizable?` assessment. Draw from the "Agent quality observations" bullets in the progress file and the "Agent Quality Findings" section above.
+
+- [ ] `.fabrika/evals/sprint-XX.md` written
+
 ## One-Line Sprint Summary
 
 [A single sentence that captures the sprint. Used in the next planning chat's orientation as the high-signal recap.]

@@ -1,5 +1,5 @@
-# Meta files — not shipped
-CLAUDE.md
+# Meta files — not shipped (root CLAUDE.md only, not the integration template)
+/CLAUDE.md
 
 # OS files
 .DS_Store
