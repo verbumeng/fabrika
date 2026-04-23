@@ -59,7 +59,15 @@ Could these tests pass even when the implementation is broken?
 - **Pass:** Tests would genuinely fail if the feature broke. Assertions are specific (exact values, not just "truthy"). Tests exercise real code paths, not mocks of the code under test.
 - **Fail:** Tests use overly broad assertions (`expect(result).toBeTruthy()`), mock the code under test rather than its dependencies, or would pass even if the feature were removed.
 
-### 7. Test Output Quality — Weight: LOW
+### 7. Structural Constraint Enforcement — Weight: MEDIUM (when applicable)
+Are codebase structural constraints enforced by tests?
+
+- **Pass:** All constraints declared in `docs/02-Engineering/Structural-Constraints.md` have corresponding tests. Tests produce prompt-style error messages with remediation instructions.
+- **Partial:** Some constraints are enforced but others rely only on agent judgment (code-reviewer) rather than mechanical enforcement.
+- **Fail:** Structural Constraints document exists but no tests enforce it.
+- **N/A:** No `docs/02-Engineering/Structural-Constraints.md` exists yet. Skip this criterion.
+
+### 8. Test Output Quality — Weight: LOW
 Is test output concise and agent-friendly?
 
 - **Pass:** Summary lines on success, specific error messages on failure. Grep-friendly format: `ERROR: [component] [description]`. Details go to log files, not stdout.

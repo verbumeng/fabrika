@@ -58,7 +58,7 @@ status: draft
 ```
 
 4. Be **ambitious about scope** (what the feature could be) but **disciplined about specification** (don't over-specify implementation details — that causes cascading errors downstream)
-5. Present the spec to the main session, which presents it to the owner for approval
+5. Present the spec to the main session, which presents it to the owner for approval. **Owner approval is required before implementation begins.** This spec is the contract for implementation — an unreviewed plan encodes potentially bad instructions that waste tokens and produce wrong code. The agent must not proceed without explicit approval.
 
 ---
 

@@ -66,6 +66,20 @@ tags: [maintenance, workflow]
 - [ ] Verify post-commit STATUS.md check is working (not producing false warnings)
 - [ ] If sprint topology changed, verify pre-commit isolation scope enforcement is appropriate
 
+### Pattern & Lint Rule Curation
+- [ ] Scan session logs for implementation patterns used 2+ times that are not yet in `docs/02-Engineering/Canonical-Patterns.md` — propose additions
+- [ ] Scan `docs/evaluations/` and `docs/evals/agent-changelog.md` for code-reviewer feedback that has appeared 3+ times across sprints on the same class of issue
+- [ ] For each repeated finding: propose a custom lint rule with a prompt-style error message (remediation instructions, not just "X is not allowed") and save to `docs/02-Engineering/Custom-Lint-Rules/`
+- [ ] If `docs/02-Engineering/Structural-Constraints.md` exists, verify all declared constraints still have working enforcement (tests or lint rules that actually run)
+- [ ] Log pattern and lint curation findings to `docs/maintenance/patterns-YYYY-MM-DD.md`
+
+### Token Usage Review
+- [ ] Scan the current sprint's progress file for "Tokens (actual)" entries
+- [ ] If token data exists, calculate: total tokens this sprint, per-story averages, stories that consumed >2x the sprint average
+- [ ] Flag disproportionately expensive stories with a note on likely cause (evaluator retries, large context loads, complex implementations)
+- [ ] Compare against predicted token estimates from the sprint contract if available
+- [ ] Log token findings to `docs/maintenance/context-review-YYYY-MM-DD.md` (alongside context efficiency findings below)
+
 ### Context Efficiency Review
 - [ ] Scan `docs/session-logs/` since last maintenance
 - [ ] Identify top 3 context efficiency issues (most frequent wasteful patterns across sessions)

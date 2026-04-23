@@ -20,5 +20,9 @@ tags: [session-log]
 ## Files Changed
 - [Key files added or modified]
 
+## Token Usage
+- **Tokens (actual):** [Total tokens consumed, if available from the tool]
+- **Measurement notes:** [e.g., "includes 2 evaluator retry cycles" or "clean single-pass implementation"]
+
 ## Next Session
 - [What to pick up next time]

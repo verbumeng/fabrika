@@ -58,13 +58,21 @@ Is the feature fully interactive, or is it a display-only stub?
 - **Partial:** Feature renders but interactions are incomplete (buttons that don't work, forms that don't submit, data that doesn't persist).
 - **Fail:** Feature is a visual stub with no real functionality.
 
-### 7. Security — Weight: MEDIUM
+### 7. Pattern Conformance — Weight: MEDIUM
+Does the implementation use canonical patterns where applicable?
+
+- **Pass:** New code follows patterns defined in `docs/02-Engineering/Canonical-Patterns.md` where relevant. No ad-hoc reimplementation of concerns that have a canonical pattern (error handling, API calls, state management, logging, etc.).
+- **Partial:** Code works but uses a different approach than the canonical pattern without justification. Not a hard fail, but the reviewer should flag it and recommend aligning.
+- **Fail:** Code reimplements a canonical concern in a way that contradicts the documented pattern, creating inconsistency that will confuse future agent work.
+- **N/A:** Skip if `docs/02-Engineering/Canonical-Patterns.md` does not yet exist (early project with no patterns established).
+
+### 8. Security — Weight: MEDIUM
 Are there any OWASP top 10 vulnerabilities or other security concerns?
 
 - **Pass:** No vulnerabilities detected by semgrep or manual review. Input validation at system boundaries. No credentials in code.
 - **Fail:** XSS, SQL injection, command injection, insecure authentication, or exposed secrets.
 
-### 8. Interface Contract Compliance (Hierarchical Topology Only) — Weight: HIGH
+### 9. Interface Contract Compliance (Hierarchical Topology Only) — Weight: HIGH
 Does the implementation respect shared interface contracts defined in the sprint contract?
 
 - **Pass:** All shared interfaces match the contract definitions exactly.
@@ -72,9 +80,11 @@ Does the implementation respect shared interface contracts defined in the sprint
 - **Only applies when the current sprint topology is `hierarchical`.** Skip for pipeline and mesh topologies.
 
 ## Verdict Scale
-- **PASS:** All CRITICAL criteria pass, no HIGH criteria fail, no more than 1 MEDIUM partial.
+- **PASS:** All CRITICAL criteria pass, no HIGH criteria fail, no more than 1 MEDIUM partial or N/A.
 - **PASS WITH NOTES:** All CRITICAL criteria pass, 1 HIGH partial or 2+ MEDIUM partials. Notes describe what should be improved.
 - **FAIL:** Any CRITICAL fail, OR 2+ HIGH fails. Specific failures listed with fix instructions.
+
+**Note:** Criteria marked N/A (topology-specific criteria that don't apply, or Pattern Conformance when Canonical Patterns doesn't exist yet) are excluded from the verdict calculation.
 
 ## Output Format
 Write your review to `docs/evaluations/[TICKET]-code-review.md` with:

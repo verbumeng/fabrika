@@ -78,6 +78,21 @@ The retro is the approval gate for agent prompt changes — the maintenance chat
 
 When applying approved prompt changes in this chat, log each change to `docs/evals/agent-changelog.md` per the existing changelog format.
 
+## Token Efficiency
+
+Compare predicted token estimates (from the sprint contract) against actual token usage (from per-session entries in `Sprint-XX-progress.md`). This is an observability mechanism — not a control. The goal is calibration: are predictions tracking reality? If not, what's the pattern?
+
+| Story | Predicted Tokens | Actual Tokens | Delta | Notes |
+|-------|-----------------|---------------|-------|-------|
+| [TICKET-1] | [estimate from contract] | [sum from progress file] | [over/under/close] | [e.g., "underestimated — data model changes triggered 2 evaluator retry cycles"] |
+| [TICKET-2] | [...] | [...] | [...] | |
+
+- **Sprint total predicted:** [X]
+- **Sprint total actual:** [Y]
+- **Calibration notes:** [Are predictions consistently over or under? By how much? What types of stories are hardest to predict?]
+
+If no token data was recorded this sprint (tool doesn't report it, or sessions forgot to log it), note "No token data available" and skip the table. The mechanism exists for when data starts flowing.
+
 ## Process Changes for Next Sprint
 
 This is the section the next sprint's planning chat **must** read. Be concrete — vague resolutions don't survive the next sprint.
