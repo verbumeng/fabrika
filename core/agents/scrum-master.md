@@ -33,9 +33,10 @@ When invoked for sprint planning:
    - Update `features.json` with feature entries for the sprint
    - Update story assignments
 
-7. **Present the sprint plan and contract** to the owner for final approval.
+7. **Create external task entries (if configured):** If the project uses an external task management system, create one entry per sprint story. Task title pattern: "Work on [TICKET]: [title]"
+8. **Present the sprint plan and contract** to the owner for final approval.
 
-8. **Close-out:** After approval, update `STATUS.md` with `Cycle phase: story-in-progress` and `Next chat should: Start [TICKET] — [Story 1 title]`. Issue the deterministic close-out prompt: *"Sprint planning complete. Open a new chat to start [TICKET] — [Story 1 title]."* Do NOT begin work on the first story in this chat.
+9. **Close-out:** After approval, update `STATUS.md` with `Cycle phase: story-in-progress` and `Next chat should: Start [TICKET] — [Story 1 title]`. Issue the deterministic close-out prompt: *"Sprint planning complete. Open a new chat to start [TICKET] — [Story 1 title]."* Do NOT begin work on the first story in this chat.
 
 ## Topology-Specific Behavior
 

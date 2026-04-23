@@ -34,6 +34,15 @@ tags: [maintenance, workflow]
 - [ ] Check for unused imports and dead code in files modified since last maintenance
 - [ ] Run semgrep for security scan on changed files
 
+### Evaluation Findings Sweep
+- [ ] Scan all `docs/evaluations/` reports created since last maintenance
+- [ ] Collect non-blocking findings (items marked as observations, notes, or recommendations — not failures)
+- [ ] Triage each finding:
+  - **Trivial** (< 5 min fix) → fix in this maintenance session
+  - **Small** (story-sized) → create a story in `docs/04-Backlog/Stories/` or add to an existing story's technical notes
+  - **Speculative** (nice-to-have, no clear pain yet) → add to `docs/09-Personal-Tasks/Someday-Maybe.md`
+- [ ] Log triage decisions to `docs/maintenance/eval-sweep-YYYY-MM-DD.md`
+
 ### Test Health
 - [ ] Run the **full test command** (not fast mode), log results to `docs/maintenance/full-test-YYYY-MM-DD.md`
 - [ ] Verify `features.json` pass/fail states match actual test results — fix any drift
