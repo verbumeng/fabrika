@@ -6,6 +6,13 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.3.1
+
+### Operational Docs (changed — no consumer action needed)
+- `UPDATE.md` — **CHANGED.** Step 1 now validates manifest format against MANIFEST_SPEC.md and regenerates non-conformant manifests in-place before proceeding. Replaces the vague "corrupted manifest → re-run ADOPT.md" guidance with specific regeneration instructions. Needed because early consumer projects have inconsistent manifest formats (wrong field names, missing hashes, map-vs-list).
+
+---
+
 ## 0.3.0
 
 Harvest from 4 consumer projects (Notnomo, Conduit, Social-engine, Vaultsync) on Fabrika 0.1.0. Bug tracking system, maintenance checklist improvements, scrum-master task system step, and settings permission update.
