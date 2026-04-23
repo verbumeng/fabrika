@@ -6,6 +6,49 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.5.0
+
+Deterministic enforcement layer. Expands hooks from 3 git hooks to 7 git hooks + 4 Claude Code hooks, adds hook discovery workflow for project-specific hook graduation, and cross-tool adaptation guide for Copilot/Cursor/other tools. Fixes exit code bug in mesh isolation hook (was exit 1, should be exit 2). Inspired by Daniel Williams' articles on hooks as enforcement vs. prompts as guidance.
+
+### Core (changed — consumer projects should update)
+- `core/hooks/pre-commit.sh` — **CHANGED.** Expanded from mesh-isolation-only to four checks: branch protection (blocks main/master), secret scanning (credential patterns in staged diff), STATUS.md session gate (requires STATUS.md when task lock active), mesh isolation scope (existing, exit code fixed from 1 to 2).
+- `core/hooks/commit-msg.sh` — **NEW.** Validates conventional commit message format (`type(scope): description`). Blocks on mismatch. Allows merge and revert commits through.
+- `core/hooks/post-commit.sh` — **CHANGED.** Updated messaging to clarify this is the advisory fallback for the pre-commit STATUS.md gate.
+- `core/hooks/claude-code/guard-destructive-git.sh` — **NEW.** Claude Code PreToolUse hook. Blocks destructive git commands (force push, hard reset, checkout --, restore ., branch -D, clean -f) before execution.
+- `core/hooks/claude-code/guard-protected-files.sh` — **NEW.** Claude Code PreToolUse hook. Blocks agent writes to .env, key, secret, credential, and SSH files. Defense-in-depth with permissions deny list.
+- `core/hooks/claude-code/auto-format.sh` — **NEW.** Claude Code PostToolUse hook. Runs configurable `FORMAT_CMD` on files after Write/Edit. Empty by default — consumer configures during bootstrap.
+- `core/hooks/claude-code/check-lock-cleanup.sh` — **NEW.** Claude Code PostToolUse hook. Warns about remaining task lock files after git commit. Advisory only.
+- `core/hook-discovery-workflow.md` — **NEW.** Workflow for evaluating when recurring rule violations should graduate to mechanical hooks. Includes trigger criteria (3+ violations, high-cost single violations, user corrections), decision framework (cost assessment, mechanical checkability, hook placement), creation checklist, and anti-patterns. Placed in consumer projects at `.fabrika/hook-discovery-workflow.md`.
+- `core/hook-adaptation-guide.md` — **NEW.** Cross-tool hook reference. Documents every hook conceptually (trigger, what it checks, why, blocks or advises), shows implementation per tool (Claude Code settings.json, Copilot git hooks + instructions, Cursor/Windsurf/Aider adaptation), and provides a "point your agent at this document" workflow for unsupported tools. Placed in consumer projects at `.fabrika/hook-adaptation-guide.md`.
+- `core/maintenance-checklist.md` — **CHANGED.** Updated "Hook Health" section to cover all new hooks (pre-commit checks, commit-msg, Claude Code hooks, auto-format). Added "Hook Discovery" section: scan for recurring violations, run hook discovery workflow, check lint rule graduation candidates.
+
+### Integrations (changed — consumer projects should update)
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Rewrote Hooks section from 3-hook summary to full two-layer documentation (git hooks + Claude Code hooks) with all 11 hooks described. Added Hook Discovery subsection with pointer to `.fabrika/hook-discovery-workflow.md` and `.fabrika/hook-adaptation-guide.md`.
+- `integrations/claude-code/settings-template.json` — **CHANGED.** Added `hooks` section with PreToolUse entries (guard-destructive-git on Bash, guard-protected-files on Write|Edit) and PostToolUse entries (auto-format on Write|Edit, check-lock-cleanup on Bash).
+- `integrations/copilot/copilot-instructions.md` — **CHANGED.** Added "Hooks & Enforcement" section documenting git hook coverage, instruction-based equivalents for Claude Code hooks (destructive git guard, protected files, lock cleanup), auto-formatting via VS Code, and pointer to adaptation guide.
+
+### Operational Docs (changed — no consumer action needed)
+- `BOOTSTRAP.md` — **CHANGED.** Updated hook configuration section to include all new hooks (git hooks, Claude Code hooks, hook discovery workflow, adaptation guide). Updated readiness checklist to verify full hook coverage.
+- `ADOPT.md` — **CHANGED.** Updated Tier 2 hook installation to include commit-msg.sh, Claude Code hooks, hook discovery workflow, adaptation guide. Added Copilot-specific hook adaptation guidance.
+
+### Consumer update instructions
+Projects on 0.4.x should:
+1. Replace `.claude/hooks/pre-commit.sh` from `core/hooks/pre-commit.sh` (adds branch protection, secret scanning, STATUS.md session gate; fixes mesh isolation exit code)
+2. Copy `core/hooks/commit-msg.sh` to `.claude/hooks/commit-msg.sh` (new file)
+3. Replace `.claude/hooks/post-commit.sh` from `core/hooks/post-commit.sh` (updated messaging)
+4. Create `.claude/hooks/claude-code/` directory
+5. Copy all four files from `core/hooks/claude-code/` to `.claude/hooks/claude-code/` (new files)
+6. Update `auto-format.sh` with your project's formatter command (or leave empty to disable)
+7. Update `.claude/settings.json` — add the `hooks` section from `integrations/claude-code/settings-template.json`
+8. Copy `core/hook-discovery-workflow.md` to `.fabrika/hook-discovery-workflow.md` (new file)
+9. Copy `core/hook-adaptation-guide.md` to `.fabrika/hook-adaptation-guide.md` (new file)
+10. Update `docs/02-Engineering/maintenance-checklist.md` — update "Hook Health" section and add "Hook Discovery" section (or re-copy from `core/maintenance-checklist.md` if not customized)
+11. Update `CLAUDE.md` — replace the Hooks section with the expanded version from `integrations/claude-code/CLAUDE.md`
+12. For Copilot users: update `.github/copilot-instructions.md` — add "Hooks & Enforcement" section from `integrations/copilot/copilot-instructions.md`
+13. Install git hooks: if using `.git/hooks/` directly (not Claude Code's `.claude/hooks/`), copy the hook scripts there and `chmod +x`
+
+---
+
 ## 0.4.0
 
 Harness engineering patterns inspired by Ryan Leapo's talk at Laten Space London. Adds canonical patterns, structural tests, lint-as-prompts, token observability, progressive context disclosure, and agent-locality guidance. These patterns formalize the "garbage collection loop" — the flywheel where observed agent failures become durable guardrails.
