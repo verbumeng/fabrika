@@ -186,9 +186,14 @@ Now that you know the project type and stack, create the stack-specific scaffold
 - E2E test command (if applicable)
 
 **Configure hooks:**
-- Copy the hook templates from `[FABRIKA_PATH]/core/hooks/` to `.claude/hooks/`
+- Copy git hook templates from `[FABRIKA_PATH]/core/hooks/` to `.claude/hooks/` (includes `pre-commit.sh`, `commit-msg.sh`, `post-commit.sh`, `pre-push.sh`)
+- Copy Claude Code hook scripts from `[FABRIKA_PATH]/core/hooks/claude-code/` to `.claude/hooks/claude-code/`
 - Update `pre-push.sh` with the fast test command
-- Register hooks in `.claude/settings.json`
+- Update `auto-format.sh` with the project's formatter command (e.g., `prettier --write`, `ruff format`, `gofmt -w`) — leave empty to disable
+- Register hooks in `.claude/settings.json` (the settings template includes the hooks section)
+- Copy `[FABRIKA_PATH]/core/hook-discovery-workflow.md` to `.fabrika/hook-discovery-workflow.md`
+- Copy `[FABRIKA_PATH]/core/hook-adaptation-guide.md` to `.fabrika/hook-adaptation-guide.md`
+- For non-Claude-Code tools: install git hooks to `.git/hooks/` and see `.fabrika/hook-adaptation-guide.md` for tool-specific adaptation
 
 **Set up E2E verification (if applicable):**
 Based on project type, determine the verification method:
@@ -359,7 +364,7 @@ Run this check autonomously and report findings.
 5. Sprint contract exists with topology and acceptance criteria
 6. Testing Strategy has real content
 7. Pre-Dev Checklist has actionable items
-8. Hooks are installed and configured (pre-push has the correct test command)
+8. Hooks are installed and configured (pre-push has the correct test command, pre-commit has branch/secret/STATUS.md checks, commit-msg validates format, Claude Code hooks registered in settings.json)
 9. Rubrics are in place at `docs/02-Engineering/rubrics/`
 10. Maintenance checklist is in place
 11. Sprint contract templates are in `docs/Templates/`
@@ -462,7 +467,8 @@ Use this during the Phase 4 readiness check.
 - [ ] Project config fully filled in (no `[PLACEHOLDER]` values)
 - [ ] STATUS.md reflects current state
 - [ ] features.json has Sprint 1 entries
-- [ ] Hooks configured and registered
+- [ ] Hooks configured and registered (git hooks + Claude Code hooks if applicable)
+- [ ] Hook discovery workflow and adaptation guide in `.fabrika/`
 - [ ] Rubrics in place
 - [ ] Maintenance checklist in place
 - [ ] Evaluation scaffold in place

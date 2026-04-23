@@ -63,8 +63,17 @@ tags: [maintenance, workflow]
 ### Hook Health
 - [ ] Verify pre-push hook test command matches current test runner configuration
 - [ ] If test framework changed since last maintenance, update hook
-- [ ] Verify post-commit STATUS.md check is working (not producing false warnings)
+- [ ] Verify pre-commit checks are working: branch protection, secret scanning, STATUS.md session gate, mesh isolation (if applicable)
+- [ ] Verify commit-msg hook is validating conventional commit format
+- [ ] If using Claude Code: verify settings.json hooks section references all four scripts in `.claude/hooks/claude-code/`
 - [ ] If sprint topology changed, verify pre-commit isolation scope enforcement is appropriate
+- [ ] If auto-format hook is configured (`FORMAT_CMD`), verify it still matches the project's formatter
+
+### Hook Discovery
+- [ ] Scan session logs and evaluator feedback since last maintenance for recurring rule violations
+- [ ] If any rule violation has appeared 3+ times: run the hook discovery workflow (see `.fabrika/hook-discovery-workflow.md`)
+- [ ] Check if any custom lint rules in `docs/02-Engineering/Custom-Lint-Rules/` have been stable for 2+ sprints and could graduate to mechanical hooks
+- [ ] Log hook discovery findings to `docs/maintenance/hooks-YYYY-MM-DD.md`
 
 ### Pattern & Lint Rule Curation
 - [ ] Scan session logs for implementation patterns used 2+ times that are not yet in `docs/02-Engineering/Canonical-Patterns.md` — propose additions

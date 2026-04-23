@@ -66,13 +66,16 @@ Ask the user: **"I've read your project structure. Which Fabrika integration tie
    - Copy `[FABRIKA_PATH]/core/evals/agent-changelog-template.md` as `agent-changelog.md`
    - Create empty agent subdirectories: `evals/code-reviewer/`, `evals/test-writer/`, `evals/product-manager/`, `evals/scrum-master/`
 7. For Claude Code — **hooks (`.claude/hooks/`):**
-   - If no hooks exist, copy all three from `[FABRIKA_PATH]/core/hooks/` and update `pre-push.sh` with the project's test command (ask if not obvious)
+   - If no hooks exist, copy all git hooks from `[FABRIKA_PATH]/core/hooks/` (`pre-commit.sh`, `commit-msg.sh`, `post-commit.sh`, `pre-push.sh`) and Claude Code hooks from `[FABRIKA_PATH]/core/hooks/claude-code/` (`guard-destructive-git.sh`, `guard-protected-files.sh`, `auto-format.sh`, `check-lock-cleanup.sh`). Update `pre-push.sh` with the project's test command (ask if not obvious). Update `auto-format.sh` with the project's formatter (ask or detect from config).
    - If hooks already exist, check each one individually:
      - **pre-push.sh:** If one exists, read it. If it already runs tests, ask whether to keep theirs, replace with Fabrika's, or merge (e.g., add Fabrika's blocked-push logging alongside the existing test command). If it does something unrelated to testing (linting, formatting), merge Fabrika's regression gate as an additional step.
-     - **post-commit.sh / pre-commit.sh:** Same approach — read the existing hook, present what Fabrika's version adds, merge or ask.
-   - Register hooks in `.claude/settings.json` (merging into existing settings if the file exists)
-8. For Copilot: check for existing git hooks in `.git/hooks/` or CI pipeline gates. If they exist, suggest merging Fabrika's hook logic into them rather than replacing. If none exist, suggest creating equivalent hooks or CI steps.
-9. Update the manifest with all newly installed files
+     - **pre-commit.sh / commit-msg.sh / post-commit.sh:** Same approach — read the existing hook, present what Fabrika's version adds, merge or ask.
+     - **Claude Code hooks (claude-code/*.sh):** These are new files in a new subdirectory — unlikely to conflict. Copy them in.
+   - Register hooks in `.claude/settings.json` (merging into existing settings if the file exists — the `hooks` section from the settings template includes PreToolUse and PostToolUse entries)
+8. For Copilot: install git hooks to `.git/hooks/` (or merge with existing git hooks). See `.fabrika/hook-adaptation-guide.md` for how Copilot-specific enforcement differs from Claude Code. Update `.github/copilot-instructions.md` with the hook awareness section.
+9. Copy `[FABRIKA_PATH]/core/hook-discovery-workflow.md` to `.fabrika/hook-discovery-workflow.md`
+10. Copy `[FABRIKA_PATH]/core/hook-adaptation-guide.md` to `.fabrika/hook-adaptation-guide.md`
+11. Update the manifest with all newly installed files
 
 **The existing docs structure is preserved.** Fabrika adds directories alongside what's already there. The numbered `00-Index/` through `09-Personal-Tasks/` hierarchy from BOOTSTRAP.md is NOT imposed.
 

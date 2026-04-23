@@ -410,16 +410,35 @@ The `Cycle phase` and `Next chat should:` fields are how a fresh chat orients it
 
 ## Hooks
 
-Three Claude Code hooks enforce workflow conventions mechanically:
+Hooks enforce workflow conventions mechanically — the agent cannot rationalize around them. Two layers provide defense-in-depth:
 
-### Pre-Push (`.claude/hooks/pre-push.sh`)
-Runs the fast test command. Blocks push if any test fails. Prevents regressions from reaching the remote.
+### Git Hooks (universal — work with any AI coding tool)
 
-### Post-Commit (`.claude/hooks/post-commit.sh`)
-Verifies STATUS.md was modified in the commit. Warns (does not block) if missing. Ensures session lifecycle compliance.
+**Pre-Commit (`.claude/hooks/pre-commit.sh`)** — Four checks, all blocking:
+1. **Branch protection** — blocks commits directly to `main` or `master`
+2. **Secret scanning** — blocks commits containing credential patterns (`password=`, `api_key=`, PEM headers, `sk-` tokens)
+3. **STATUS.md session gate** — if a task lock file exists (active Fabrika session), requires STATUS.md in the commit. Skipped for ad hoc work.
+4. **Mesh isolation scope** — for mesh topology sprints, verifies modified files fall within the declared scope for the active ticket. Inactive for pipeline and hierarchical topologies.
 
-### Pre-Commit (`.claude/hooks/pre-commit.sh`)
-For mesh topology sprints: reads the active sprint contract's isolation scopes and verifies modified files fall within the declared scope for the active ticket. Blocks commit if out-of-scope files are modified. Inactive for pipeline and hierarchical topologies.
+**Commit-Msg (`.claude/hooks/commit-msg.sh`)** — Validates conventional commit format: `type(scope): description`. Blocks on mismatch.
+
+**Post-Commit (`.claude/hooks/post-commit.sh`)** — Advisory reminder if STATUS.md wasn't in the commit. Does not block (post-commit hooks run after the commit is done). Catches ad hoc commits where the session gate didn't fire.
+
+**Pre-Push (`.claude/hooks/pre-push.sh`)** — Runs the fast test command. Blocks push if any test fails.
+
+### Claude Code Hooks (tool-specific — configured in `.claude/settings.json`)
+
+**PreToolUse — Destructive Git Guard** (`.claude/hooks/claude-code/guard-destructive-git.sh`): Blocks `git push --force`, `git reset --hard`, `git checkout -- .`, `git restore .`, `git branch -D`, `git clean -f` before execution.
+
+**PreToolUse — Protected File Guard** (`.claude/hooks/claude-code/guard-protected-files.sh`): Blocks writes to `.env`, `*.key`, `*secret*`, `*credential*`, `.ssh/*` files. Defense-in-depth with the permissions deny list.
+
+**PostToolUse — Auto-Format** (`.claude/hooks/claude-code/auto-format.sh`): Runs `FORMAT_CMD` on files after Write/Edit. Empty by default — configure during bootstrap with your formatter (prettier, ruff, gofmt, etc.).
+
+**PostToolUse — Lock File Cleanup** (`.claude/hooks/claude-code/check-lock-cleanup.sh`): After git commit, warns if task lock files remain in `.claude/current_tasks/`. Advisory only.
+
+### Hook Discovery
+
+When a rule violation appears in evaluator feedback, session logs, or maintenance findings 3+ times, assess whether it should graduate to a mechanical hook. See `.fabrika/hook-discovery-workflow.md` for the evaluation criteria and creation process. For adapting hooks to other AI coding tools, see `.fabrika/hook-adaptation-guide.md`.
 
 ---
 

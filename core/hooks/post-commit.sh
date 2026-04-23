@@ -1,16 +1,19 @@
 #!/bin/bash
-# Post-commit hook — STATUS.md update reminder
-# Verifies that STATUS.md was modified in the commit. Warns (does not block) if missing.
-# This ensures the session lifecycle close-out step is followed.
+# Post-commit hook — STATUS.md update reminder (advisory)
+#
+# This is the soft fallback for the pre-commit STATUS.md gate. The pre-commit hook
+# blocks commits without STATUS.md when a task lock file is present (formal session).
+# This hook catches the remaining case: ad hoc work outside a formal session where
+# STATUS.md should still be updated but isn't strictly required.
+#
+# Advisory only — does not block. Post-commit hooks cannot block (the commit is done).
 
-# Check if STATUS.md was part of the committed files
 if ! git diff-tree --no-commit-id --name-only -r HEAD | grep -q "^STATUS.md$"; then
   echo ""
-  echo "⚠️  Post-commit reminder: STATUS.md was not updated in this commit."
-  echo "   The session lifecycle requires updating STATUS.md during close-out."
-  echo "   If this was a mid-session commit, update STATUS.md before ending the session."
+  echo "  Reminder: STATUS.md was not updated in this commit."
+  echo "  If this was session work, update STATUS.md before ending the session."
+  echo "  (The pre-commit hook enforces this when a task lock is active.)"
   echo ""
 fi
 
-# This hook does not block — it's advisory only.
 exit 0
