@@ -97,6 +97,7 @@ The verification approach depends on project type:
 │   ├── 04-Backlog/
 │   │   ├── Epics/
 │   │   ├── Stories/                   # Story files (markdown mode) or local references (Jira mode)
+│   │   ├── Bugs/                     # Bug reports with evaluator tracing
 │   │   └── Sprints/
 │   │       ├── Sprint-XX.md           # Sprint definition
 │   │       ├── Sprint-XX-contract.md  # Sprint contract (topology-aware)
@@ -149,10 +150,12 @@ Stories and epics are tracked as markdown files. Story files are the authoritati
 - **Epics:** `docs/04-Backlog/Epics/E-XX-[name].md` — globally numbered E-01 through E-99
 - **Stories:** `docs/04-Backlog/Stories/S-XXX-[name].md` — globally numbered S-001 through S-999
 - **Sprints:** `docs/04-Backlog/Sprints/Sprint-XX.md`
+- **Bugs:** `docs/04-Backlog/Bugs/[PROJECT_KEY]-BXX-[name].md` — separate numbering from stories (B01, B02, ...)
 - **Finding the next ID:**
   ```bash
   rg "^id: " docs/04-Backlog/Epics/ | sort | tail -1
   rg "^id: " docs/04-Backlog/Stories/ | sort | tail -1
+  rg "^id: [PROJECT_KEY]-B" docs/04-Backlog/Bugs/ | sort | tail -1
   ```
 
 ### Jira Mode
@@ -364,6 +367,9 @@ When the conversation involves investigating a technology or debating an approac
 3. If the discussion produces a decision → create an ADR in `02-Engineering/ADRs/`
 4. If the discussion changes the data model or architecture → update those docs
 
+### Bug Reporting & Fix Workflow
+When the owner reports a bug, read and follow `docs/02-Engineering/bug-workflow.md`. Summary: file bug → trace root cause through evaluator reports → fix with regression test → invoke code-reviewer (always), test-writer (always), product-manager (if behavior changed or spec was root cause) → create eval case for the missed failure mode.
+
 ---
 
 ## Progress Files
@@ -424,7 +430,9 @@ Run between sprints or weekly (whichever comes first). See full checklist at `do
 **Summary of what maintenance covers:**
 - Documentation sync (ARCHITECTURE.md, CLAUDE.md, README)
 - Code quality (dedup scan, TODO/FIXME scan, dead code)
+- Evaluation findings sweep (triage non-blocking observations from evaluation reports)
 - Test health (full test suite, features.json reconciliation, regression check)
+- Bug review (open bugs, missed-by patterns, eval case coverage, root cause clusters)
 - Progress file reconciliation (STATUS.md accuracy, sprint progress completeness)
 - Dependency health (outdated packages, security advisories — report only, do NOT auto-update)
 - Context efficiency review (scan session logs for wasteful patterns)
@@ -441,7 +449,8 @@ A graduated, self-building system for measuring and improving agent quality. Sca
 
 - **docs/evals/agent-changelog.md** — Log of agent prompt modifications with failure context. Written whenever an agent prompt is modified. Captures WHAT changed, WHY (the observed failure), and WHICH session logs document the failure.
 - **docs/evals/{agent-name}/** — Eval cases per agent. Each case has a known correct answer. Built from real observed failures, not synthetic scenarios.
-- **Lifecycle:** Session logs capture failures (day 1) → maintenance reviews and builds eval cases (after 2-3 sprints) → maintenance runs evals and proposes prompt improvements (ongoing) → human reviews and approves changes.
+- **docs/04-Backlog/Bugs/** — Bug reports with `missed-by` tracing. Bugs are the ground truth for agent quality — they are the only reliable signal that the evaluation cycle missed something. Every bug with a `missed-by` field produces an eval case.
+- **Lifecycle:** Session logs capture failures (day 1) → bugs reported by owner provide ground truth → maintenance reviews and builds eval cases (after 2-3 sprints) → maintenance runs evals and proposes prompt improvements (ongoing) → human reviews and approves changes.
 - **Coverage target:** Top 10 observed failure modes per agent. Stop adding evals when accuracy is stable and no new failure patterns are emerging.
 
 See `docs/evals/README.md` for detailed format and process.
@@ -464,6 +473,7 @@ During ongoing development, create new documents when these situations arise. Re
 | User wants to demo or present the project | Create Stakeholder Presentation or Demo Script in `06-Visibility/` |
 | Deployment or infrastructure changes | Update `07-Operations/` docs |
 | Agent prompt modified | Log change + failure context to `docs/evals/agent-changelog.md` |
+| Owner reports a bug | Create bug file in `04-Backlog/Bugs/`, run Bug Reporting & Fix Workflow |
 | Idea for future work surfaces | Add to `09-Personal-Tasks/Someday-Maybe.md` |
 
 ---
