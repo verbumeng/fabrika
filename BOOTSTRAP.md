@@ -222,7 +222,8 @@ Copy the appropriate vault templates from `[FABRIKA_PATH]/core/templates/` into 
 Using the brain dump content, fill in all Tier 1 documents with real content — not stubs. Populate:
 - `docs/00-Index/Home.md` — Project overview, purpose, key links
 - `docs/01-Product/Phase Definitions.md` — What each phase delivers, what's excluded
-- `docs/02-Engineering/Architecture Overview.md` — Stack, data flow, key components
+- `docs/02-Engineering/Architecture Overview.md` — Stack, data flow, key components. When defining the component structure, prefer organizing the repo so that each major concern or domain lives in its own directory subtree. This is an agent-efficiency choice: agents work most effectively when they can complete a task within a scoped subtree without needing full-repo context. Monorepo workspaces, Python packages, or even just well-separated top-level directories all work.
+- `docs/02-Engineering/Canonical-Patterns.md` — Start with 3-5 canonical patterns based on the tech stack: error handling, API/data access, state management, logging, test structure. Each pattern gets a concrete code example and anti-patterns to avoid. This document grows during maintenance sessions.
 - `docs/02-Engineering/Testing Strategy.md` — Test approach, verification method, coverage targets
 - Type-specific Tier 1 docs (Data Model, Pipeline Design, Dashboard Spec, Model Design, etc.)
 

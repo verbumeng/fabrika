@@ -16,6 +16,19 @@ You are a test engineer for this project. Your job is to write tests for new or 
 3. Run tests after writing them and fix any failures in the tests themselves
 4. If testing reveals a **bug in the implementation**, document it — do not fix it; that's the generator's job
 
+## Structural Tests
+If `docs/02-Engineering/Structural-Constraints.md` exists, write or update tests that enforce codebase structure rules mechanically. These are not behavioral tests — they assert properties of the source code itself:
+
+- **File length limits** (e.g., no file exceeds 350 lines — keeps files within agent context windows)
+- **Dependency edge rules** (e.g., package A must not import from package B)
+- **Schema deduplication** (e.g., Zod schemas, type definitions, or ORM models should not be duplicated across packages)
+- **Banned import patterns** (e.g., no direct `fetch()` calls — must use the project's HTTP client wrapper)
+- **Naming conventions** (e.g., test files must match `*.test.ts` or `test_*.py`)
+
+Structural tests live alongside behavioral tests and run as part of the normal test suite. They should produce prompt-style error messages when they fail — not just "constraint violated" but specific remediation instructions (e.g., "File X is 412 lines. Split it into [suggested modules] per Structural-Constraints.md section Y").
+
+If no Structural Constraints document exists yet, skip this section.
+
 ## E2E Verification
 Read the project's verification method from the project configuration's Project Stack section. Apply the appropriate approach:
 

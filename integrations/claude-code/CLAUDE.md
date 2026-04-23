@@ -205,7 +205,7 @@ Every conversation follows this lifecycle. No steps are optional.
 ### Session Close-Out
 13. Git commit with conventional format (all work in a mergeable state)
 14. Update `STATUS.md` with current state snapshot — including the `Cycle phase` field (see Sprint Lifecycle below)
-15. Append to current sprint's progress file: what was done, what failed, what remains, **any lessons / insights worth surfacing in the retro**, and **any agent quality observations** about subagents you invoked this session (missed bugs, false positives, judgment calls, useful catches — see the progress template for guidance). The orchestrating session is the right vantage point for this because it reads each subagent's output before acting on it.
+15. Append to current sprint's progress file: what was done, what failed, what remains, **tokens consumed** (if available from the tool — measurement boundary is "begin story" to "ready for approval"), **any lessons / insights worth surfacing in the retro**, and **any agent quality observations** about subagents you invoked this session (missed bugs, false positives, judgment calls, useful catches — see the progress template for guidance). The orchestrating session is the right vantage point for this because it reads each subagent's output before acting on it.
 16. Update `features.json` pass/fail status
 17. Remove task lock file from `.claude/current_tasks/`
 18. Write **narrative dev log** to `docs/session-logs/YYYY-MM-DD-[topic].md` (see Dev Log Format below)
@@ -545,7 +545,9 @@ If a stale lock file exists (from a session that didn't clean up), the session o
 - **Privacy first.** No credentials in git. No third-party services unless decided via ADR.
 - **Conservative sprint scope.** 2-3 stories per sprint. Favor shipping over perfecting.
 - **Context window hygiene.** Load docs on demand, not up front. Return concise summaries from subagent invocations. Avoid reading large files when targeted grep would suffice.
+- **Progressive context disclosure.** This CLAUDE.md is front-loaded into every session — keep it to what every session needs (identity, lifecycle, git conventions, stack config). Phase-specific context (sprint planning rules, evaluation workflow, maintenance checklist) lives in agent prompt files and referenced docs, loaded only when that phase is active. If a section of this file has not been relevant in 3+ sprints, move it to an on-demand doc and add a pointer here.
 - **Stack-agnostic agent prompts.** Never put technology-specific references in global agent prompts. All tech details live in this CLAUDE.md's Project Stack section.
+- **Prefer improving existing agents over adding new ones.** If a new capability is needed, first check if it belongs in an existing agent's scope. Only create a new agent if the capability requires a fundamentally different evaluation lens.
 
 ---
 

@@ -208,6 +208,24 @@ A project can be **multi-type**. A data app with scrapers feeding a dashboard is
 - **Types:** web-app, data-app | **Tier:** 2 | **Audience:** agent
 - **Structure:** Per-table: what seed data exists, source, format, load method. For web-apps: default categories, system settings, demo data.
 
+### Canonical Patterns.md
+- **Purpose:** The single reference for how common concerns are implemented in this project. One pattern per concern (error handling, API calls, state management, logging, test structure, etc.), each with a concrete code example. Agents use this as a lookup table: "when you need to do X, do it exactly like this." This makes agent output predictable and consistent regardless of where in the codebase it operates.
+- **Types:** all | **Tier:** 1 | **Audience:** agent
+- **Structure:** One section per concern. Each section: pattern name, when to use it, canonical code example, anti-patterns to avoid.
+- **Notes:** Start with 3-5 patterns during bootstrapping based on the tech stack. Expand during maintenance when session logs reveal new patterns used 2+ times. The code-reviewer grades against this document (see "Pattern Conformance" criterion in the code-review rubric).
+
+### Custom Lint Rules/
+- **Purpose:** Project-specific lint rules with prompt-style error messages. Each rule targets a recurring agent (or human) mistake that was observed 3+ times. Error messages are written as remediation instructions, not just violation descriptions — they tell the agent what to do instead and why.
+- **Types:** all | **Tier:** 3 (built during maintenance from observed patterns) | **Audience:** agent
+- **Structure:** One file per lint rule or group. Contains: the rule definition (ESLint, Ruff, semgrep custom rule, or structural test), the prompt-style error message, and the failure context that motivated it.
+- **Notes:** Created during maintenance sessions when the same code-reviewer feedback appears 3+ times across sprints. The error message IS a prompt — write it as remediation instructions the agent can follow, not just "X is not allowed."
+
+### Structural Constraints.md
+- **Purpose:** Declares codebase structure rules that are enforced mechanically via tests or lint, not just by agent judgment. Examples: max file length, banned import patterns, dependency edge rules, schema deduplication requirements. These are agent-efficiency constraints — they keep the codebase in a shape where agents can work effectively within limited context windows.
+- **Types:** all | **Tier:** 2 | **Audience:** agent
+- **Structure:** One section per constraint. Each section: constraint name, rationale (why this helps agents), enforcement mechanism (test, lint, hook), threshold or rule definition.
+- **Notes:** Start simple (file length limits, no circular imports). Expand based on observed agent struggles during maintenance. The test-writer agent generates structural tests from this document. The pre-push hook runs structural tests alongside behavioral tests.
+
 ### ADRs/ (Architecture Decision Records)
 - **Purpose:** Documents significant technical decisions with context, alternatives considered, and consequences.
 - **Types:** all | **Tier:** 1 (at least one for major tech choices) | **Audience:** agent
@@ -487,28 +505,29 @@ Templates live in the `Templates/` folder and are used by the agent when creatin
 ## Quick Reference: Documents by Project Type
 
 ### data-app (Excel replacement, dashboards, reporting tools)
-**Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Data Pipeline Design, Dashboard Spec, Testing Strategy, ADR (at least one), Epics, Stories, Someday-Maybe, Pre-Dev Checklist
-**Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, Wireframes, Seed Data, User Stories, Deployment Guide
+**Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Data Pipeline Design, Dashboard Spec, Testing Strategy, Canonical Patterns, ADR (at least one), Epics, Stories, Someday-Maybe, Pre-Dev Checklist
+**Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, Wireframes, Seed Data, User Stories, Deployment Guide, Structural Constraints
 **Tier 3:** Stakeholder Presentation, Demo Script, ROI/Impact Analysis, Session Logs
 
 ### data-platform (DuckDB, dbt, pipelines, analytics engineering)
-**Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Data Pipeline Design, Transformation Logic, Testing Strategy, ADR, Epics, Stories, Data Source Research, Someday-Maybe, Pre-Dev Checklist
-**Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, Deployment Guide, Environment Config
+**Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Data Pipeline Design, Transformation Logic, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Data Source Research, Someday-Maybe, Pre-Dev Checklist
+**Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, Deployment Guide, Environment Config, Structural Constraints
 **Tier 3:** Stakeholder Presentation, ROI/Impact Analysis, Session Logs
 
 ### ml-project (model development, training, evaluation)
-**Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Model Design, Training Data Spec, Model Evaluation Criteria, Testing Strategy, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
-**Tier 2:** Data Pipeline Design, Data Dictionary, Deployment Guide
+**Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Model Design, Training Data Spec, Model Evaluation Criteria, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
+**Tier 2:** Data Pipeline Design, Data Dictionary, Deployment Guide, Structural Constraints
 **Tier 3:** Session Logs, Feature Specs
 
 ### web-app (SaaS, personal tools, consumer apps)
-**Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Testing Strategy, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
+**Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
 **Tier 1 (consumer):** + Vision & Positioning, UX Specification
 **Tier 2:** API Conventions, Security & Privacy, Deployment Guide, User Stories, Wireframes, Seed Data
+**Tier 2:** + Structural Constraints
 **Tier 2 (consumer):** + Brand Guidelines, Design Tokens, GTM Strategy, Launch Plan, Business Setup, Legal
 **Tier 3:** Feature Specs, Revenue Model, Content Calendar, Demo Script, Session Logs
 
 ### automation (scripts, CLIs, bots, scheduled jobs)
-**Tier 1:** Home, Phase Definitions, Architecture Overview, Testing Strategy, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
-**Tier 2:** Data Pipeline Design (if data-moving), Output Specs, Deployment Guide
+**Tier 1:** Home, Phase Definitions, Architecture Overview, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
+**Tier 2:** Data Pipeline Design (if data-moving), Output Specs, Deployment Guide, Structural Constraints
 **Tier 3:** Session Logs
