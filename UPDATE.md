@@ -10,11 +10,24 @@
 
 ## Update Flow
 
-### 1. Read the manifest
+### 1. Read and validate the manifest
 
-Read the target project's `.fabrika/manifest.yml`. Note:
-- `fabrika_version` — the version currently installed
-- `installed_files` — every file Fabrika placed, with source paths and hashes
+Read the target project's `.fabrika/manifest.yml`. The manifest must conform to the format defined in `MANIFEST_SPEC.md`. Validate:
+
+- Top-level fields: `fabrika_version`, `project_type`, `integrations`, `installed_at`, `updated_at`, `installed_files`
+- `installed_files` is a **list of objects** (not a key-value map)
+- Each entry has: `path`, `source`, `source_version`, `hash` (prefixed with `sha256:`), `customized`
+
+**If the manifest is non-conformant** (wrong field names, missing hashes, map instead of list, missing required fields), **regenerate it before proceeding:**
+
+1. Read the existing manifest to extract what it does have (file paths, sources, customized flags, version info)
+2. For each file listed, compute the current sha256 hash of the file in the target project: `sha256:$(sha256sum <file> | cut -d' ' -f1)`
+3. Rebuild the manifest as a conformant `installed_files` list per MANIFEST_SPEC.md
+4. Preserve `installed_at` from the original (or use the earliest date available)
+5. Set `updated_at` to today
+6. Commit the regenerated manifest before continuing with the update: `chore: regenerate .fabrika/manifest.yml per MANIFEST_SPEC.md`
+
+This is expected for projects that adopted Fabrika before the manifest spec was finalized. Once regenerated, proceed normally.
 
 ### 2. Read the current Fabrika version
 
@@ -78,5 +91,5 @@ Tell the user:
 
 - **Never auto-update customized files.** Always ask the user.
 - **The changelog is the source of truth for what changed.** Do not diff the entire Fabrika repo.
-- **If the manifest is missing or corrupted,** recommend running ADOPT.md to re-establish it.
+- **If the manifest is missing,** recommend running ADOPT.md to re-establish it. If the manifest exists but is non-conformant (pre-spec format), step 1 handles regeneration — do not re-run ADOPT.md for format issues.
 - **Multi-version jumps are fine.** If the project is on 0.1.0 and Fabrika is at 0.4.0, process all changelog entries from 0.1.0 through 0.4.0 in order.
