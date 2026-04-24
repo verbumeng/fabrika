@@ -6,6 +6,48 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.5.2
+
+Session summary and retro briefing formats. Extends the owner briefing system (0.5.1) to cover session close-out summaries and sprint retro presentations. The agent now translates evaluation results, retro findings, and session outcomes into plain-language summaries focused on product impact, rather than telling the owner to go read raw report files.
+
+### Core (new — consumer projects should copy)
+- `core/briefings/session-summary-briefing.md` — **NEW.** Five-part briefing format for session close-out and story completion summaries. Covers: what changed in the product, key decisions, evaluation results in plain language, what to look at (if anything), what's next. Explicitly says not to send the owner to evaluation report files.
+- `core/briefings/retro-briefing.md` — **NEW.** Six-part briefing format for presenting sprint retros. Covers: what the sprint accomplished, story-by-story recap, what we learned, what's changing, health check, anything needing input. Translates the dense retro artifact (eval tables, token metrics) into human-facing takeaways.
+
+### Integrations (changed — consumer projects should update)
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Expanded "Owner Briefings" section to include session-summary and retro briefing pointers. Updated Session Close-Out step 23, story completion step 16, and Sprint Retro chat description to reference briefing formats.
+
+### Consumer update instructions
+Projects on 0.5.1 should:
+1. Copy `core/briefings/session-summary-briefing.md` and `core/briefings/retro-briefing.md` to your Fabrika briefings path (2 new files)
+2. Update `CLAUDE.md` "Owner Briefings" section — add the two new pointer lines from `integrations/claude-code/CLAUDE.md`
+3. In `CLAUDE.md` Session Close-Out, update step 23 to reference the Session Summary Briefing format
+4. In `CLAUDE.md` Completing a Story, update step 16 to reference the Session Summary Briefing format
+5. In `CLAUDE.md` Sprint Lifecycle > Sprint Retro chat, add the Retro Briefing reference
+
+---
+
+## 0.5.1
+
+Owner briefing format. Adds structured plain-language briefing templates for how the orchestrating session presents specs and sprint plans to the owner. Instead of dumping raw artifacts or giving terse summaries, the agent follows a briefing format that explains what is being built, why, how it fits into the product, defines all jargon, and frames design decisions as choices the owner can push back on.
+
+### Core (new — consumer projects should copy)
+- `core/briefings/briefing-principles.md` — **NEW.** Cross-cutting principles for all owner briefings: assume the owner hasn't touched the codebase in a week, define terms even if defined before, lead with product impact not implementation, make disagreement easy.
+- `core/briefings/spec-briefing.md` — **NEW.** Six-part briefing format for presenting specs after product-manager planning mode. Covers: what and why, how it works, key design decisions, jargon glossary, out of scope, open questions.
+- `core/briefings/sprint-plan-briefing.md` — **NEW.** Six-part briefing format for presenting sprint plans after scrum-master planning. Covers: sprint goal, why these stories in this order, topology choice explained, jargon glossary, deferred work, risks.
+
+### Integrations (changed — consumer projects should update)
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Added "Owner Briefings" section with pointers to the three briefing files. Updated "Starting a Story" step 5 and "Sprint Planning" step 9 to reference the briefing format.
+
+### Consumer update instructions
+Projects on 0.5.0 should:
+1. Copy `core/briefings/` directory (3 files) to your Fabrika path
+2. Update `CLAUDE.md` — add the "Owner Briefings" section from `integrations/claude-code/CLAUDE.md` (insert between Development Workflow and Progress Files sections)
+3. In `CLAUDE.md` Development Workflow > Starting a Story, update step 5 to reference the Spec Briefing format
+4. In `CLAUDE.md` Development Workflow > Sprint Planning, update step 9 to reference the Sprint Plan Briefing format
+
+---
+
 ## 0.5.0
 
 Deterministic enforcement layer. Expands hooks from 3 git hooks to 7 git hooks + 4 Claude Code hooks, adds hook discovery workflow for project-specific hook graduation, and cross-tool adaptation guide for Copilot/Cursor/other tools. Fixes exit code bug in mesh isolation hook (was exit 1, should be exit 2). Inspired by Daniel Williams' articles on hooks as enforcement vs. prompts as guidance.
