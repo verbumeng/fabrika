@@ -213,7 +213,7 @@ Every conversation follows this lifecycle. No steps are optional.
 20. Check: were any technical decisions made that aren't captured in an ADR?
 21. Check: did we discuss anything that changes the architecture, data model, or other project docs?
 22. If an external task management system is configured, log a summary there
-23. Summarize what was done and what to review
+23. Present the session summary to the owner using the **Session Summary Briefing** format (see Owner Briefings below)
 24. **Issue the next-chat handoff prompt** (deterministic — do NOT skip; see Sprint Lifecycle below for which prompt fires when)
 
 ### Dev Log Format (`docs/session-logs/`)
@@ -285,7 +285,7 @@ Set `Cycle phase: maintenance` in STATUS.md. **Close-out prompt:** *"Sprint bran
 
 **Maintenance chat** — Run the full checklist at `docs/02-Engineering/maintenance-checklist.md`. Tag git: `git tag maintenance-YYYY-MM-DD && git tag -f maintenance-latest`. Set `Cycle phase: retro` in STATUS.md. **Close-out prompt:** *"Maintenance complete. Open a new chat with the scrum-master to run the sprint retro."*
 
-**Sprint Retro chat** — Invoke the scrum-master agent. It reads `Sprint-XX-progress.md`, the latest `docs/maintenance/*-YYYY-MM-DD.md` outputs, the previous sprint's retro file (if any), and writes `docs/04-Backlog/Sprints/Sprint-XX-retro.md` using `docs/Templates/Sprint-Retro-Template.md`. Set `Cycle phase: planning` in STATUS.md. **Close-out prompt:** *"Retro file written at Sprint-XX-retro.md. Open a new chat with the scrum-master to plan the next sprint."*
+**Sprint Retro chat** — Invoke the scrum-master agent. It reads `Sprint-XX-progress.md`, the latest `docs/maintenance/*-YYYY-MM-DD.md` outputs, the previous sprint's retro file (if any), and writes `docs/04-Backlog/Sprints/Sprint-XX-retro.md` using `docs/Templates/Sprint-Retro-Template.md`. Present the retro to the owner using the **Retro Briefing** format (see Owner Briefings below). Set `Cycle phase: planning` in STATUS.md. **Close-out prompt:** *"Retro file written at Sprint-XX-retro.md. Open a new chat with the scrum-master to plan the next sprint."*
 
 **Next Sprint Planning chat** — Scrum-master orientation must read the previous sprint's retro file before proposing scope. The retro's "process changes for next sprint" items are inputs to planning, not optional reading.
 
@@ -310,7 +310,7 @@ Claude Code drives the development process proactively. Don't wait for the owner
 2. Read relevant project docs on demand: Architecture Overview, Data Model, relevant ADRs, research notes
 3. Read the grading rubrics at `docs/02-Engineering/rubrics/` to understand evaluation criteria
 4. Invoke the **product-manager** agent in **planning mode** to expand the story into a full implementation spec (saved to `docs/plans/[TICKET]-spec.md`)
-5. Present the spec to the owner for approval
+5. Present the spec to the owner for approval using the **Spec Briefing** format (see Owner Briefings below)
 6. Create feature branch: `feature/[PROJECT_KEY]-S-042-description`
 7. Update story: `status: In Progress`
 8. Implement the feature against the approved spec
@@ -337,7 +337,7 @@ Before marking a story complete, run the full evaluation cycle automatically:
 13. Create an ADR for any significant technical decision made during implementation
 14. Update story: `status: In Review`, add `## Completion Summary`
 15. If an external task management system is configured, mark the corresponding task as done
-16. Tell the owner what was done and what to review
+16. Present the session summary to the owner using the **Session Summary Briefing** format (see Owner Briefings below)
 
 ### Sprint Planning
 1. Invoke the **scrum-master** agent to facilitate
@@ -351,7 +351,7 @@ Before marking a story complete, run the full evaluation cycle automatically:
 6. Create sprint file (`docs/04-Backlog/Sprints/Sprint-XX.md`), sprint contract (using the appropriate topology template from `docs/Templates/`), and sprint progress file
 7. Update story assignments and create `features.json` entries for the sprint
 8. If an external task management system is configured, create one task per sprint story linking to the story file
-9. Present the sprint plan and contract to the owner for approval
+9. Present the sprint plan and contract to the owner for approval using the **Sprint Plan Briefing** format (see Owner Briefings below)
 
 ### Ideation & Backlog Grooming
 When the owner is brainstorming features, re-prioritizing, or refining stories:
@@ -369,6 +369,18 @@ When the conversation involves investigating a technology or debating an approac
 
 ### Bug Reporting & Fix Workflow
 When the owner reports a bug, read and follow `docs/02-Engineering/bug-workflow.md`. Summary: file bug → trace root cause through evaluator reports → fix with regression test → invoke code-reviewer (always), test-writer (always), product-manager (if behavior changed or spec was root cause) → create eval case for the missed failure mode.
+
+---
+
+## Owner Briefings
+
+When presenting plans, results, or summaries to the owner, do not dump raw artifacts or tell the owner to go read files. Present a plain-language briefing that explains what happened, why it matters, and how it affects the product. Read the briefing principles first, then follow the appropriate format:
+
+- **Principles:** `[FABRIKA_PATH]/core/briefings/briefing-principles.md` — read this first; it applies to all briefings
+- **After spec expansion:** `[FABRIKA_PATH]/core/briefings/spec-briefing.md` — presenting a spec from product-manager planning mode
+- **After sprint planning:** `[FABRIKA_PATH]/core/briefings/sprint-plan-briefing.md` — presenting a sprint plan from scrum-master
+- **Session close-out / story completion:** `[FABRIKA_PATH]/core/briefings/session-summary-briefing.md` — summarizing what was done and what it means
+- **After sprint retro:** `[FABRIKA_PATH]/core/briefings/retro-briefing.md` — translating the retro artifact into plain-language takeaways
 
 ---
 
