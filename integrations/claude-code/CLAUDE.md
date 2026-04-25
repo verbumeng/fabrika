@@ -250,7 +250,7 @@ Every conversation follows this lifecycle. No steps are optional.
 15. Append to current sprint's progress file: what was done, what failed, what remains, **tokens consumed** (if available from the tool — measurement boundary is "begin story" to "ready for approval"), **any lessons / insights worth surfacing in the retro**, and **any agent quality observations** about subagents you invoked this session (missed bugs, false positives, judgment calls, useful catches — see the progress template for guidance). The orchestrating session is the right vantage point for this because it reads each subagent's output before acting on it.
 16. Update `features.json` pass/fail status
 17. Remove task lock file from `.claude/current_tasks/`
-18. Write **narrative dev log** to `docs/session-logs/YYYY-MM-DD-[topic].md` (see Dev Log Format below)
+18. Write **narrative dev log** to `docs/session-logs/YYYY-MM-DD-[topic].md` (see Progress Files below for format)
 19. If backlog mode is `jira` and Jira comments are enabled, post status summary as Jira comment to the sprint epic/ticket
 20. Check: were any technical decisions made that aren't captured in an ADR?
 21. Check: did we discuss anything that changes the architecture, data model, or other project docs?
@@ -258,88 +258,16 @@ Every conversation follows this lifecycle. No steps are optional.
 23. Present the session summary to the owner using the **Session Summary Briefing** format (see Owner Briefings below)
 24. **Issue the next-chat handoff prompt** (deterministic — do NOT skip; see Sprint Lifecycle below for which prompt fires when)
 
-### Dev Log Format (`docs/session-logs/`)
-Dev logs are the **primary fuel for social media content** via content generation workflows. They must be narrative, not just metrics.
-
-Write each dev log from **the user's first-person perspective** (as if they're telling a colleague what they built today). Include:
-
-- **What was built** — the feature, the implementation approach, what it does
-- **What decisions were made and why** — trade-offs considered, alternatives rejected
-- **What was interesting or surprising** — edge cases, things that worked unexpectedly well or poorly
-- **Lessons learned** — insights about the tech, the domain, or the process
-- **What's next** — what the next session should pick up
-
-**Tone:** Casual-smart, thinking-out-loud. Raw material for content generation.
-**Length:** 200-500 words. A builder's diary entry, not a formal report.
-
 ---
 
 ## Sprint Lifecycle
 
-A sprint runs across **multiple chats**, not one long conversation. Each phase boundary is a hard new-chat handoff. This is deliberate — see Sprint Lifecycle Hygiene below.
+A sprint runs across **multiple chats**, not one long conversation. Each phase boundary is a hard new-chat handoff.
+Phases: Planning → Story chats → Close-Out → Maintenance → Retro → Next Planning.
+Four chats between sprints (close-out, maintenance, retro, planning) — they are not bundled.
+STATUS.md's `Cycle phase` field tells each new chat which phase it is in and what to do next.
 
-### Phases (in order)
-
-```
-Sprint Planning chat
-    ↓ (planning produces sprint file, contract, progress file → prompts for new chat)
-Story 1 chat ─┐
-Story 2 chat  │  (one chat per story; close-out prompts for next story chat)
-...           │
-Story N chat ─┘ (last story close-out prompts for sprint close-out chat)
-    ↓
-Sprint Close-Out (Merge) chat   → prompts for new chat: maintenance
-    ↓
-Maintenance chat                → prompts for new chat: retro
-    ↓
-Sprint Retro chat               → produces Sprint-XX-retro.md → prompts for new chat: next planning
-    ↓
-Next Sprint Planning chat
-```
-
-**Four chats between sprints**: close-out merge, maintenance, retro, planning. They are not bundled.
-
-### Cycle phase indicator
-
-`STATUS.md` carries a `Cycle phase` field that any new chat reads during orientation to know where it is and what to do next. Allowed values:
-
-- `planning` — sprint planning chat is in progress or just finished
-- `story-in-progress` — a story chat is active or the previous story chat just closed (a non-last story)
-- `sprint-close` — last story is approved; merge chat needs to run
-- `maintenance` — merge done; maintenance chat needs to run
-- `retro` — maintenance done; retro chat needs to run
-
-### What each phase chat does
-
-**Sprint Planning chat** — Invoke the scrum-master agent. Produces `Sprint-XX.md`, `Sprint-XX-contract.md`, `Sprint-XX-progress.md`, `features.json` entries, and external task system entries (if configured). Sets `Cycle phase: story-in-progress` in STATUS.md. **Close-out prompt:** *"Sprint planning complete. Open a new chat to start [TICKET] — [Story 1 title]."*
-
-**Story chat (each)** — Standard Session Lifecycle. One story per chat. **Close-out prompt branches on whether more stories remain in the sprint:**
-- More stories remain → set `Cycle phase: story-in-progress`. Prompt: *"Story [TICKET] complete and reviewed. Open a new chat to start [NEXT-TICKET] — [Next title]."*
-- This was the last story → set `Cycle phase: sprint-close`. Prompt: *"Last sprint story is complete and reviewed. Open a new chat for sprint close-out (merge all sprint branches)."*
-
-**Sprint Close-Out (Merge) chat** — Verify branch hygiene gate before doing anything else:
-1. Working tree clean
-2. All `feature/[PROJECT_KEY]-S-XXX-*` branches for this sprint either merged to `main` or explicitly deferred (deferral noted in `Sprint-XX-progress.md`)
-3. `main` is the active branch
-4. Archive any sprint-specific scratch files; ensure `Sprint-XX-progress.md` is final
-
-Set `Cycle phase: maintenance` in STATUS.md. **Close-out prompt:** *"Sprint branches merged. Working tree clean. Open a new chat to run maintenance."*
-
-**Maintenance chat** — Run the full checklist at `docs/02-Engineering/maintenance-checklist.md`. Tag git: `git tag maintenance-YYYY-MM-DD && git tag -f maintenance-latest`. Set `Cycle phase: retro` in STATUS.md. **Close-out prompt:** *"Maintenance complete. Open a new chat with the scrum-master to run the sprint retro."*
-
-**Sprint Retro chat** — Invoke the scrum-master agent. It reads `Sprint-XX-progress.md`, the latest `docs/maintenance/*-YYYY-MM-DD.md` outputs, the previous sprint's retro file (if any), and writes `docs/04-Backlog/Sprints/Sprint-XX-retro.md` using `docs/Templates/Sprint-Retro-Template.md`. Present the retro to the owner using the **Retro Briefing** format (see Owner Briefings below). Set `Cycle phase: planning` in STATUS.md. **Close-out prompt:** *"Retro file written at Sprint-XX-retro.md. Open a new chat with the scrum-master to plan the next sprint."*
-
-**Next Sprint Planning chat** — Scrum-master orientation must read the previous sprint's retro file before proposing scope. The retro's "process changes for next sprint" items are inputs to planning, not optional reading.
-
-### Sprint Lifecycle Hygiene (why fresh chats matter)
-
-The phase boundaries are hard new-chat handoffs for three reasons:
-
-1. **Context window stays clean.** A single chat that spans planning → 5 stories → maintenance → retro will accumulate hundreds of file reads and tool calls irrelevant to the current task. Fresh chats start with the orientation routine reading the small set of files actually needed.
-2. **Fresh evaluator agents make better evaluators.** A code-reviewer that's already sat through three story implementations has anchored on patterns that aren't necessarily good. A new chat re-invokes the agent against the rubric without that bias.
-3. **Failure modes don't leak across stories.** If story 1 had a flaky test that got worked around, story 2 should not inherit "we ignore that test class." A new chat starts from STATUS.md and the sprint contract, not from the previous story's running context.
-
-Do not "optimize" away the new-chat boundaries by combining phases. The friction is the feature.
+**On phase transitions, read:** `[FABRIKA_PATH]/core/workflows/sprint-lifecycle.md`
 
 ---
 
@@ -347,94 +275,23 @@ Do not "optimize" away the new-chat boundaries by combining phases. The friction
 
 Claude Code drives the development process proactively. Don't wait for the owner to orchestrate each step.
 
-### Starting a Story
-1. Read the story file (or issue tracker ticket) and the sprint contract for this sprint
-2. Read relevant project docs on demand: Architecture Overview, Data Model, relevant ADRs, research notes
-3. Read the grading rubrics at `docs/02-Engineering/rubrics/` to understand evaluation criteria
-4. Invoke the **product-manager** agent in **planning mode** to expand the story into a full implementation spec (saved to `docs/plans/[TICKET]-spec.md`)
-5. Present the spec to the owner for approval using the **Spec Briefing** format (see Owner Briefings below)
-6. Create feature branch: `feature/[PROJECT_KEY]-S-042-description`
-7. Update story: `status: In Progress`
-8. Implement the feature against the approved spec
-9. Invoke the **test-writer** agent to write tests for the new code
+**Before starting any story, sprint planning, or bug fix, read:** `[FABRIKA_PATH]/core/workflows/development-workflow.md`
 
-### Completing a Story (Evaluation Cycle)
-Before marking a story complete, run the full evaluation cycle automatically:
-1. Run tests — all pass (including existing tests — no regressions)
-2. Run linter — no errors
-3. Commit with conventional format: `feat([PROJECT_KEY]-S-042): description`
-4. Invoke the **code-reviewer** agent — it reviews against the sprint contract acceptance criteria, grading rubrics, and runs semgrep
-5. Invoke the **test-writer** agent — it verifies test coverage meets rubric standards and runs E2E verification if applicable to this project type
-6. Invoke the **product-manager** agent in **validation mode** — it verifies acceptance criteria from the sprint contract are met
-7. Each evaluator writes a report to `docs/evaluations/[TICKET]-[agent]-review.md`
-
-**If any evaluator fails the implementation (Rollback Protocol):**
-8. Read all evaluation reports. Present the assessment to the owner: what failed, why, and proposed fix approach
-9. If fixable without reverting (missing handler, wrong endpoint, UI misalignment) → fix the specific issues, re-invoke the failing evaluator(s)
-10. If fundamental approach is wrong (wrong data model, architecture mismatch) → `git revert` to last passing commit, re-read sprint contract, propose a different approach to the owner
-11. **Maximum 2 retry cycles.** After 2 failed attempts, stop and present: all evaluation reports, summary of what was tried, recommended next steps (rescope, break into smaller stories, research the blocker)
-
-**If all evaluators pass:**
-12. Update project docs if implementation diverged (architecture, data model, research notes)
-13. Create an ADR for any significant technical decision made during implementation
-14. Update story: `status: In Review`, add `## Completion Summary`
-15. If an external task management system is configured, mark the corresponding task as done
-16. Present the session summary to the owner using the **Session Summary Briefing** format (see Owner Briefings below)
-
-### Sprint Planning
-1. Invoke the **scrum-master** agent to facilitate
-2. Check when the last maintenance session ran (read `maintenance-latest` git tag). If >1 week or >1 sprint ago, run maintenance first
-3. Query backlog (`status: To Do`) and check for unfinished stories from the previous sprint
-4. The scrum-master assesses **sprint topology** based on task coupling:
-   - **Pipeline** (default): Single feature through plan → build → evaluate cycle
-   - **Mesh**: Independent tasks, no shared state, can be worked in any order
-   - **Hierarchical**: Coupled tasks with dependencies, must be sequenced
-5. Propose 2-3 stories (10-15 points) based on priority, dependencies, and topology
-6. Create sprint file (`docs/04-Backlog/Sprints/Sprint-XX.md`), sprint contract (using the appropriate topology template from `docs/Templates/`), and sprint progress file
-7. Update story assignments and create `features.json` entries for the sprint
-8. If an external task management system is configured, create one task per sprint story linking to the story file
-9. Present the sprint plan and contract to the owner for approval using the **Sprint Plan Briefing** format (see Owner Briefings below)
-
-### Ideation & Backlog Grooming
-When the owner is brainstorming features, re-prioritizing, or refining stories:
-1. New stories defined → create story files (and Jira tickets if Jira mode) and update epic
-2. Existing stories re-scoped → update story frontmatter/body (and Jira ticket if Jira mode)
-3. Ideas that are exploratory and not committed → add to `docs/09-Personal-Tasks/Someday-Maybe.md`
-4. Scope moves between phases → update `docs/01-Product/Phase Definitions.md`
-
-### Research & Technical Discussion
-When the conversation involves investigating a technology or debating an approach:
-1. Technology evaluation → create or update a research doc in `05-Research/`
-2. Data source investigation → create or update a research note in `05-Research/Data Source Research/`
-3. If the discussion produces a decision → create an ADR in `02-Engineering/ADRs/`
-4. If the discussion changes the data model or architecture → update those docs
-
-### Bug Reporting & Fix Workflow
-When the owner reports a bug, read and follow `docs/02-Engineering/bug-workflow.md`. Summary: file bug → trace root cause through evaluator reports → fix with regression test → invoke code-reviewer (always), test-writer (always), product-manager (if behavior changed or spec was root cause) → create eval case for the missed failure mode.
+Summary of workflows covered:
+- **Starting a Story** — spec expansion → approval → branch → implement → test
+- **Completing a Story (Evaluation Cycle)** — tests → lint → commit → reviewer → validator → planner validation → rollback protocol (max 2 retries)
+- **Sprint Planning** — scrum-master → topology assessment → 2-3 stories → contract → approval
+- **Ideation & Backlog Grooming** — new stories, re-scoping, someday-maybe
+- **Research & Technical Discussion** — research docs, ADRs
+- **Bug Reporting & Fix Workflow** — see `docs/02-Engineering/bug-workflow.md`
 
 ---
 
 ## Analytics Workspace Workflow (analytics-workspace type only)
 
-No sprints. Work is organized as individual analysis tasks.
+No sprints. Work is organized as individual analysis tasks: Brief → Plan → Execute → Validate → Deliver.
 
-### Task Lifecycle
-1. **Brief** — Analysis planner takes the ask, writes `tasks/[date-name]/brief.md` (business question, stakeholder, deadline, desired output)
-2. **Plan** — Analysis planner writes `tasks/[date-name]/plan.md` (data sources, approach, SQL/logic, assumptions, validation strategy). Owner approves.
-3. **Execute** — Work happens in `tasks/[date-name]/work/`. SQL files, notebooks, scripts.
-4. **Validate** — Logic reviewer checks join/filter/aggregation logic. Data validator runs sanity checks (row counts, distributions, cross-references).
-5. **Deliver** — `tasks/[date-name]/outcome.md` — results, methodology, data quality notes, output location.
-
-### Advisory Mode (GUI Tools)
-For Tableau, Power BI, Alteryx, and similar tools the agent cannot directly access:
-- **Agent can:** Write SQL, draft DAX/M expressions, draft calculated fields, write validation queries, review described logic
-- **Human does:** Execute inside the tool, screenshot results, describe workflow steps for review
-
-### Source Registry
-`sources/README.md` is the index. Three categories:
-- `sources/connections/` — queryable data sources (warehouses, databases, ODBC, APIs)
-- `sources/tools/` — BI/ETL tools in advisory mode (Tableau Server, Power BI, Alteryx)
-- `sources/files/` — recurring flat file sources (CSVs, Excel, YXDBs)
+**For analytics-workspace projects, read:** `[FABRIKA_PATH]/core/workflows/analytics-workspace.md`
 
 ---
 
@@ -452,71 +309,22 @@ When presenting plans, results, or summaries to the owner, do not dump raw artif
 
 ## Progress Files
 
-### STATUS.md (Project Root)
+- **STATUS.md** — Project state snapshot, overwritten each session. Contains `Cycle phase` and `Next chat should:` fields for orientation.
+- **Sprint Progress File** — `docs/04-Backlog/Sprints/Sprint-XX-progress.md` — append-only sprint log.
+- **Dev Logs** — `docs/session-logs/YYYY-MM-DD-[topic].md` — narrative first-person dev diary entries (200-500 words).
 
-A **snapshot** of current project state, overwritten each session. Always small. Used for quick orientation.
-
-```markdown
-## [PROJECT_NAME] — Status
-Last updated: YYYY-MM-DD
-
-### Current Sprint: Sprint X
-- **Topology:** [pipeline | mesh | hierarchical]
-- **Cycle phase:** [planning | story-in-progress | sprint-close | maintenance | retro]
-- **Next chat should:** [one-line pointer — e.g., "Start S-007: Add export button" or "Run sprint close-out merge" or "Run sprint retro"]
-- **Sprint contract:** docs/04-Backlog/Sprints/Sprint-XX-contract.md
-- **Progress file:** docs/04-Backlog/Sprints/Sprint-XX-progress.md
-
-### Active Work
-- [TICKET]: [title] — [status: in-progress | blocked | in-review]
-
-### Blockers
-- [Any blockers or risks]
-
-### Last Maintenance
-- Date: YYYY-MM-DD
-- Tag: maintenance-YYYY-MM-DD
-```
-
-The `Cycle phase` and `Next chat should:` fields are how a fresh chat orients itself — see Sprint Lifecycle for what each phase means.
-
-### Sprint Progress File (Per-Sprint)
-
-`docs/04-Backlog/Sprints/Sprint-XX-progress.md` — append-only log for the current sprint. Archived when the sprint closes. Topology-tagged entries.
+**For templates and format details, read:** `[FABRIKA_PATH]/core/workflows/progress-files.md`
 
 ---
 
 ## Hooks
 
-Hooks enforce workflow conventions mechanically — the agent cannot rationalize around them. Two layers provide defense-in-depth:
+Hooks enforce workflow conventions mechanically — the agent cannot rationalize around them. Two layers: git hooks (universal) and Claude Code hooks (in `.claude/settings.json`).
 
-### Git Hooks (universal — work with any AI coding tool)
+Git hooks: pre-commit (branch protection, secret scanning, STATUS.md gate, mesh scope), commit-msg (conventional format), post-commit (STATUS.md advisory), pre-push (test gate).
+Claude Code hooks: destructive git guard, protected file guard, auto-format, lock file cleanup.
 
-**Pre-Commit (`.claude/hooks/pre-commit.sh`)** — Four checks, all blocking:
-1. **Branch protection** — blocks commits directly to `main` or `master`
-2. **Secret scanning** — blocks commits containing credential patterns (`password=`, `api_key=`, PEM headers, `sk-` tokens)
-3. **STATUS.md session gate** — if a task lock file exists (active Fabrika session), requires STATUS.md in the commit. Skipped for ad hoc work.
-4. **Mesh isolation scope** — for mesh topology sprints, verifies modified files fall within the declared scope for the active ticket. Inactive for pipeline and hierarchical topologies.
-
-**Commit-Msg (`.claude/hooks/commit-msg.sh`)** — Validates conventional commit format: `type(scope): description`. Blocks on mismatch.
-
-**Post-Commit (`.claude/hooks/post-commit.sh`)** — Advisory reminder if STATUS.md wasn't in the commit. Does not block (post-commit hooks run after the commit is done). Catches ad hoc commits where the session gate didn't fire.
-
-**Pre-Push (`.claude/hooks/pre-push.sh`)** — Runs the fast test command. Blocks push if any test fails.
-
-### Claude Code Hooks (tool-specific — configured in `.claude/settings.json`)
-
-**PreToolUse — Destructive Git Guard** (`.claude/hooks/claude-code/guard-destructive-git.sh`): Blocks `git push --force`, `git reset --hard`, `git checkout -- .`, `git restore .`, `git branch -D`, `git clean -f` before execution.
-
-**PreToolUse — Protected File Guard** (`.claude/hooks/claude-code/guard-protected-files.sh`): Blocks writes to `.env`, `*.key`, `*secret*`, `*credential*`, `.ssh/*` files. Defense-in-depth with the permissions deny list.
-
-**PostToolUse — Auto-Format** (`.claude/hooks/claude-code/auto-format.sh`): Runs `FORMAT_CMD` on files after Write/Edit. Empty by default — configure during bootstrap with your formatter (prettier, ruff, gofmt, etc.).
-
-**PostToolUse — Lock File Cleanup** (`.claude/hooks/claude-code/check-lock-cleanup.sh`): After git commit, warns if task lock files remain in `.claude/current_tasks/`. Advisory only.
-
-### Hook Discovery
-
-When a rule violation appears in evaluator feedback, session logs, or maintenance findings 3+ times, assess whether it should graduate to a mechanical hook. See `.fabrika/hook-discovery-workflow.md` for the evaluation criteria and creation process. For adapting hooks to other AI coding tools, see `.fabrika/hook-adaptation-guide.md`.
+**For full hook inventory and hook discovery workflow, read:** `[FABRIKA_PATH]/core/workflows/hooks-reference.md`
 
 ---
 
@@ -556,22 +364,9 @@ See `docs/evals/README.md` for detailed format and process.
 
 ## Document Creation Triggers
 
-During ongoing development, create new documents when these situations arise. Reference the **Document Catalog** for document structure and purpose.
+When technical decisions, data sources, schema changes, architecture divergences, bugs, or other trigger events occur during development, create the appropriate document.
 
-| Trigger | Action |
-|---------|--------|
-| Technical decision made (stack, library, pattern) | Create ADR in `02-Engineering/ADRs/` |
-| New data source discussed | Create Data Source Research note in `05-Research/Data Source Research/` |
-| Feature is getting complex (many edge cases, domain logic) | Create Feature Spec in `01-Product/Feature Specs/` |
-| Implementation diverges from Architecture Overview | Update `02-Engineering/Architecture Overview.md` |
-| Schema changes | Update `02-Engineering/Data Model.md` |
-| New transformation logic | Update `02-Engineering/Transformation Logic.md` (if `analytics-engineering` or `data-engineering`) |
-| Dashboard/report design discussed | Create or update spec in `03-Design/` |
-| User wants to demo or present the project | Create Stakeholder Presentation or Demo Script in `06-Visibility/` |
-| Deployment or infrastructure changes | Update `07-Operations/` docs |
-| Agent prompt modified | Log change + failure context to `docs/evals/agent-changelog.md` |
-| Owner reports a bug | Create bug file in `04-Backlog/Bugs/`, run Bug Reporting & Fix Workflow |
-| Idea for future work surfaces | Add to `09-Personal-Tasks/Someday-Maybe.md` |
+**For the full trigger table, read:** `[FABRIKA_PATH]/core/workflows/doc-triggers.md`
 
 ---
 
