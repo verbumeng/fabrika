@@ -8,10 +8,11 @@ Claude Code orchestrates the entire development workflow. The human's role is de
 
 ## Project Basics
 - **Project Key:** [PROJECT_KEY] (e.g. MYAPP — used for branch naming and story IDs)
-- **Project Type:** [data-app | data-platform | ml-project | web-app | automation] (can be multi-type)
+- **Project Type:** [web-app | data-app | analytics-engineering | data-engineering | ml-engineering | ai-engineering | automation | library | analytics-workspace] (can be multi-type for sprint-based types)
 - **Repo:** `~/projects/[project-name]`
 - **Project docs:** `~/projects/[project-name]/docs`
 - **Document Catalog:** `[FABRIKA_PATH]/core/Document-Catalog.md`
+- **Agent Catalog:** See `.fabrika/AGENT-CATALOG.md` or `[FABRIKA_PATH]/core/agents/AGENT-CATALOG.md` for which agents apply to this project type
 
 ## Current Phase
 
@@ -46,25 +47,29 @@ The verification approach depends on project type:
 
 | Project Type | Primary Verification | Tool |
 |-------------|---------------------|------|
-| Web app | Full browser automation — navigate, click, verify | Playwright MCP |
-| Data app (Dash, Streamlit) | Browser automation for UI + model assertion tests | Playwright MCP + test runner |
-| Data infrastructure (dbt, pipelines) | Output diffing against known-good oracle | Test runner + diff scripts |
-| Automation (scripts, scrapers) | Integration tests against real/mock targets | Test runner |
-| ML project | Model evaluation metrics + training reproducibility | Test runner + eval framework |
+| `web-app` | Full browser automation — navigate, click, verify | Playwright MCP |
+| `data-app` | Browser automation for UI + model assertion tests | Playwright MCP + test runner |
+| `analytics-engineering` | Output diffing against known-good oracle | Test runner + diff scripts |
+| `data-engineering` | Pipeline integration tests + per-stage data quality checks | Test runner + diff scripts |
+| `ml-engineering` | Model evaluation metrics + training reproducibility | Test runner + eval framework |
+| `ai-engineering` | Eval harness (LLM output quality) + guardrail tests | Test runner + eval framework |
+| `automation` | Integration tests against real/mock targets | Test runner |
+| `library` | Unit + integration + backward compat + API contract | Test runner |
+| `analytics-workspace` | Per-task validation (sanity checks, cross-references) | Data validator agent |
 
 **This project's verification method:** [Describe which approach applies and any project-specific details]
 
 ### Model Routing
 
-| Agent | Recommended Model | Rationale |
-|-------|------------------|-----------|
-| product-manager (planning) | Opus | Spec expansion needs strong reasoning |
-| product-manager (validation) | Opus | Needs to catch spec gaps |
-| code-reviewer | Opus | Subtle bug detection |
-| test-writer (strategy) | Opus | Designing what to test |
-| test-writer (execution) | Sonnet | Running mechanical test scripts |
-| scrum-master | Opus | Topology assessment, sprint planning |
-| maintenance session | Sonnet | Checklist-driven, documentation updates |
+| Role | Agent(s) | Recommended Model | Rationale |
+|------|----------|------------------|-----------|
+| Planner (planning mode) | product-manager, experiment-planner, api-designer, analysis-planner | Opus | Spec/plan expansion needs strong reasoning |
+| Planner (validation mode) | product-manager, experiment-planner, api-designer | Opus | Needs to catch spec gaps |
+| Reviewer | code-reviewer, logic-reviewer, prompt-reviewer | Opus | Subtle bug/logic detection |
+| Validator (strategy) | test-writer, model-evaluator, eval-engineer, data-quality-engineer, data-validator | Opus | Designing what to test/validate |
+| Validator (execution) | test-writer, model-evaluator, eval-engineer, data-quality-engineer, data-validator | Sonnet | Running mechanical test/check scripts |
+| Coordinator | scrum-master | Opus | Topology assessment, sprint planning |
+| Maintenance session | (orchestrating session) | Sonnet | Checklist-driven, documentation updates |
 
 ## Project Structure
 ```
@@ -133,6 +138,43 @@ The verification approach depends on project type:
 │   ├── fixtures/
 │   └── [test files]
 └── [other project-specific dirs]
+```
+
+### Task-based types (analytics-workspace)
+```
+[project-name]/
+├── CLAUDE.md                          # Central project control (this file)
+├── STATUS.md                          # Current state snapshot
+├── .claude/
+│   ├── settings.json
+│   ├── agents/
+│   │   ├── analysis-planner.md
+│   │   ├── logic-reviewer.md
+│   │   └── data-validator.md
+│   └── hooks/
+├── src/
+│   ├── queries/                       # Reusable SQL
+│   ├── scripts/                       # Python/R scripts
+│   └── notebooks/                     # Jupyter, etc.
+├── data/
+│   ├─�� input/                         # CSVs, Excel files people send you
+│   └── output/                        # Generated datasets, exports
+├── tasks/                             # One folder per analysis task
+│   └── YYYY-MM-DD-name/
+│       ├── brief.md                   # Business question
+│       ├── plan.md                    # Technical approach
+│       ├── outcome.md                 # Results and methodology
+│       └── work/                      # SQL, notebooks, scratch
+├── sources/
+│   ├── README.md                      # Source registry index
+│   ├── connections/                   # Queryable data sources
+│   ├── tools/                         # BI/ETL tools (advisory mode)
+│   └── files/                         # Recurring flat file sources
+├── docs/
+│   ├── Templates/
+│   ├── evaluations/
+│   └── evals/baseline/
+└── .fabrika/
 ```
 
 ---
@@ -372,6 +414,30 @@ When the owner reports a bug, read and follow `docs/02-Engineering/bug-workflow.
 
 ---
 
+## Analytics Workspace Workflow (analytics-workspace type only)
+
+No sprints. Work is organized as individual analysis tasks.
+
+### Task Lifecycle
+1. **Brief** — Analysis planner takes the ask, writes `tasks/[date-name]/brief.md` (business question, stakeholder, deadline, desired output)
+2. **Plan** — Analysis planner writes `tasks/[date-name]/plan.md` (data sources, approach, SQL/logic, assumptions, validation strategy). Owner approves.
+3. **Execute** — Work happens in `tasks/[date-name]/work/`. SQL files, notebooks, scripts.
+4. **Validate** — Logic reviewer checks join/filter/aggregation logic. Data validator runs sanity checks (row counts, distributions, cross-references).
+5. **Deliver** — `tasks/[date-name]/outcome.md` — results, methodology, data quality notes, output location.
+
+### Advisory Mode (GUI Tools)
+For Tableau, Power BI, Alteryx, and similar tools the agent cannot directly access:
+- **Agent can:** Write SQL, draft DAX/M expressions, draft calculated fields, write validation queries, review described logic
+- **Human does:** Execute inside the tool, screenshot results, describe workflow steps for review
+
+### Source Registry
+`sources/README.md` is the index. Three categories:
+- `sources/connections/` — queryable data sources (warehouses, databases, ODBC, APIs)
+- `sources/tools/` — BI/ETL tools in advisory mode (Tableau Server, Power BI, Alteryx)
+- `sources/files/` — recurring flat file sources (CSVs, Excel, YXDBs)
+
+---
+
 ## Owner Briefings
 
 When presenting plans, results, or summaries to the owner, do not dump raw artifacts or tell the owner to go read files. Present a plain-language briefing that explains what happened, why it matters, and how it affects the product. Read the briefing principles first, then follow the appropriate format:
@@ -499,7 +565,7 @@ During ongoing development, create new documents when these situations arise. Re
 | Feature is getting complex (many edge cases, domain logic) | Create Feature Spec in `01-Product/Feature Specs/` |
 | Implementation diverges from Architecture Overview | Update `02-Engineering/Architecture Overview.md` |
 | Schema changes | Update `02-Engineering/Data Model.md` |
-| New transformation logic | Update `02-Engineering/Transformation Logic.md` (if `data-platform`) |
+| New transformation logic | Update `02-Engineering/Transformation Logic.md` (if `analytics-engineering` or `data-engineering`) |
 | Dashboard/report design discussed | Create or update spec in `03-Design/` |
 | User wants to demo or present the project | Create Stakeholder Presentation or Demo Script in `06-Visibility/` |
 | Deployment or infrastructure changes | Update `07-Operations/` docs |
@@ -521,14 +587,32 @@ During ongoing development, create new documents when these situations arise. Re
 
 ## Subagents
 
-All agents are invoked proactively by Claude Code at the trigger points in the Development Workflow. Agent prompts are **stack-agnostic** — they read project-specific details from this CLAUDE.md file and on-demand reference docs.
+All agents are invoked proactively by Claude Code at the trigger points in the Development Workflow. Agent prompts are **stack-agnostic** — they read project-specific details from this CLAUDE.md file and on-demand reference docs. Which agents are installed depends on the project type — see the Agent Catalog.
 
-- **scrum-master** — Sprint planning (including topology assessment), maintenance scheduling, sprint retros. Also invoked when conversation drifts into prolonged deliberation.
-- **product-manager** — Two modes:
-  - **Planning mode:** Expands short story descriptions into full implementation specs with user stories, data models, and design direction. Invoked when starting a story.
-  - **Validation mode:** Verifies acceptance criteria are met against the sprint contract. Invoked before marking a story done.
-- **code-reviewer** — Reviews implementation against sprint contract acceptance criteria, grading rubrics (`docs/02-Engineering/rubrics/code-review-rubric.md`), and runs semgrep. Checks for duplicate implementations of existing functionality. Enforces isolation scope compliance for mesh topology. Do NOT skip.
-- **test-writer** — Writes tests during/after implementation. Verifies coverage against rubric standards (`docs/02-Engineering/rubrics/test-rubric.md`). Runs E2E verification using the project's verification method when applicable.
+### Sprint-based types
+
+| Role | Default Agent | Specialized Variants |
+|------|--------------|---------------------|
+| **Planner** | product-manager | experiment-planner (ml-engineering), api-designer (library) |
+| **Reviewer** | code-reviewer | + prompt-reviewer (ai-engineering, supplemental) |
+| **Validator** | test-writer | model-evaluator (ml-engineering), eval-engineer (ai-engineering), data-quality-engineer (data-engineering) |
+| **Coordinator** | scrum-master | (same for all sprint-based types) |
+
+**Role behaviors:**
+- **Planner** — Two modes: **planning mode** (expands stories into specs, invoked at story start) and **validation mode** (verifies acceptance criteria, invoked before marking done). Specialized planners adapt the spec format: experiment-planner produces experiment designs; api-designer produces API surface specs.
+- **Reviewer** — Reviews implementation against acceptance criteria, rubrics (`docs/02-Engineering/rubrics/code-review-rubric.md`), and security (semgrep). Checks for duplicates. Enforces mesh isolation scope. For ai-engineering, the prompt-reviewer is a supplemental reviewer that checks prompt quality, safety, and cost alongside the code-reviewer.
+- **Validator** — Writes tests and verifies coverage against rubric (`docs/02-Engineering/rubrics/test-rubric.md`). Runs E2E verification per project type. Specialized validators adapt: model-evaluator runs metric evals; eval-engineer runs LLM eval suites; data-quality-engineer tests at every pipeline lifecycle stage.
+- **Coordinator** — Sprint planning, topology assessment, maintenance scheduling, retros. Also invoked when conversation drifts into prolonged deliberation.
+
+### Task-based types (analytics-workspace)
+
+| Role | Agent |
+|------|-------|
+| **Planner** | analysis-planner — takes vague asks, produces briefs and technical plans |
+| **Reviewer** | logic-reviewer — validates SQL/Python/DAX logic |
+| **Validator** | data-validator — sanity checks, cross-references, spot-checks on output |
+
+No coordinator agent for analytics workspaces (no sprints to coordinate).
 
 ---
 

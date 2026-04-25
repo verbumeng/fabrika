@@ -1,13 +1,13 @@
 # Fabrika
 
-An agentic workflow methodology for software development. Fabrika gives AI coding agents (Claude Code, GitHub Copilot) a structured framework for sprint planning, code review, testing, and continuous improvement — so the human focuses on decisions and the agent drives execution.
+An agentic workflow methodology for software development and data work. Fabrika gives AI coding agents (Claude Code, GitHub Copilot) a structured framework for sprint planning, code review, testing, and continuous improvement — so the human focuses on decisions and the agent drives execution.
 
 ## What's in the box
 
-- **Four specialized agents** (scrum-master, product-manager, code-reviewer, test-writer) with defined roles, trigger points, and evaluation rubrics
-- **Three sprint topologies** (pipeline, mesh, hierarchical) that adapt the workflow to how tasks are coupled
-- **A complete project documentation structure** with a catalog of ~50 documents organized by project type and priority tier
-- **An evaluation harness** that builds itself over time from real observed failures — not synthetic benchmarks
+- **Thirteen specialized agents** organized by role archetype (planner, reviewer, validator, coordinator) — each project type gets the right set via the Agent Catalog
+- **Three sprint topologies** (pipeline, mesh, hierarchical) for sprint-based project types, plus a task lifecycle (brief, plan, execute, validate, deliver) for analytics workspaces
+- **A complete project documentation structure** with a catalog of 60+ documents organized by project type and priority tier
+- **An evaluation harness** with baseline evals that ship day one, plus a framework for building project-specific evals from real observed failures
 - **A sprint lifecycle** with deliberate chat boundaries, maintenance sessions, and structured retrospectives
 - **A harvest loop** for flowing learnings from individual projects back into the canonical framework
 
@@ -21,17 +21,26 @@ An agentic workflow methodology for software development. Fabrika gives AI codin
 
 ## Project types
 
-Fabrika is project-type-aware. The Document Catalog and bootstrap process adapt based on what you're building:
+Fabrika is project-type-aware. The Document Catalog, agents, and bootstrap process adapt based on what you're building:
 
+### Sprint-based types (plan, build, evaluate, iterate)
 | Type | Description |
 |------|-------------|
-| `data-app` | Dashboards, reporting tools, data entry apps — replacing Excel |
-| `data-platform` | Pipelines, transformations (dbt), analytics engineering (DuckDB) |
-| `ml-project` | Model development, training, evaluation |
 | `web-app` | Full-stack web applications, SaaS, APIs |
+| `data-app` | Dashboards, reporting tools, data entry apps — replacing Excel |
+| `analytics-engineering` | Modeled data layers — dbt, DuckDB, warehouse transformations |
+| `data-engineering` | Full pipeline infrastructure — ingestion, storage, orchestration, serving |
+| `ml-engineering` | Model development, training, evaluation |
+| `ai-engineering` | LLM-powered applications — RAG, agents, prompt engineering |
 | `automation` | Scripts, CLIs, bots, scheduled jobs |
+| `library` | Reusable packages, SDKs, shared modules |
 
-Projects can be multi-type. A data app with scrapers is `data-app` + `automation`.
+### Task-based types (brief, plan, execute, validate, deliver)
+| Type | Description |
+|------|-------------|
+| `analytics-workspace` | Ad hoc analysis, investigations, data requests |
+
+Sprint-based projects can be multi-type. A data app with scrapers is `data-app` + `automation`. An AI chatbot with a web frontend is `ai-engineering` + `web-app`.
 
 ## Integrations
 
@@ -40,7 +49,7 @@ Fabrika currently supports two AI coding tool integrations:
 - **Claude Code** — Full integration: project CLAUDE.md, `.claude/agents/`, hooks, settings
 - **GitHub Copilot** — Project instructions, `.github/agents/`
 
-The canonical agent definitions in `core/agents/` are tool-agnostic. Each integration adapts them to the tool's conventions (file naming, placement).
+The canonical agent definitions in `core/agents/` are tool-agnostic. The Agent Catalog (`core/agents/AGENT-CATALOG.md`) maps project types to the right set of agents. Each integration adapts them to the tool's conventions (file naming, placement).
 
 ## How it works
 

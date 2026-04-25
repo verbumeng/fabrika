@@ -7,7 +7,7 @@ Every consumer project that has Fabrika installed carries a `.fabrika/manifest.y
 ```yaml
 # .fabrika/manifest.yml
 fabrika_version: "0.1.0"                # version of Fabrika installed
-project_type: data-platform             # which project type was selected during bootstrap
+project_type: analytics-engineering      # which project type was selected during bootstrap
 integrations:                           # which tool integrations were installed
   - claude-code
   - copilot
@@ -36,7 +36,7 @@ installed_files:                        # every file Fabrika placed in this proj
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `fabrika_version` | string | yes | Semver string matching the Fabrika VERSION file at install/update time |
-| `project_type` | string | yes | One of: `data-app`, `data-platform`, `ml-project`, `web-app`, `automation`. Multi-type projects use the primary type. |
+| `project_type` | string | yes | One of: `web-app`, `data-app`, `analytics-engineering`, `data-engineering`, `ml-engineering`, `ai-engineering`, `automation`, `library`, `analytics-workspace`. Multi-type projects use the primary type. |
 | `integrations` | list | yes | Tool integrations installed: `claude-code`, `copilot`, or both |
 | `installed_at` | string | yes | ISO date of initial Fabrika installation |
 | `updated_at` | string | yes | ISO date of most recent Fabrika update |

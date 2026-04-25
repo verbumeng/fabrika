@@ -1,8 +1,10 @@
 # Project Bootstrap Guide
 
-> **Audience: the AI agent.** This document is your reference for bootstrapping a new software development project. Read it, execute the steps autonomously, and only ask the user for input when you genuinely need their answer. Do not ask the user to paste prompts — you drive the process.
+> **Audience: the AI agent.** This document is your reference for bootstrapping a new project. Read it, execute the steps autonomously, and only ask the user for input when you genuinely need their answer. Do not ask the user to paste prompts — you drive the process.
 >
 > **Note:** This guide is for agents bootstrapping **new** projects. For adding Fabrika to an existing project, see [ADOPT.md](ADOPT.md).
+>
+> **Note:** This guide covers both sprint-based project types (web-app, data-app, analytics-engineering, data-engineering, ml-engineering, ai-engineering, automation, library) and task-based types (analytics-workspace). The flow branches after type alignment in Phase 1.
 
 ## Path Configuration
 
@@ -19,13 +21,24 @@ All paths in this guide use the defaults above. Replace them with the actual pat
 
 ## What This Produces
 
+### Sprint-based types (web-app, data-app, analytics-engineering, data-engineering, ml-engineering, ai-engineering, automation, library)
 - A project repo with scaffold, git, agentic tool configuration, and hooks
 - A docs vault (`docs/`) with type-appropriate documentation fully populated
 - Progress files (STATUS.md, features.json) and evaluation scaffolding
 - Grading rubrics, maintenance checklist, and sprint contract templates
+- Type-appropriate agents installed (see Agent Catalog)
+- Baseline eval cases installed
 - A groomed backlog with epics, stories, and estimates
 - Sprint 1 scoped with a topology-aware sprint contract
 - If an external task management system is configured, one task per Sprint 1 story
+
+### Task-based types (analytics-workspace)
+- A workspace repo with task-centric folder structure, git, and agentic tool configuration
+- A source registry (`sources/`) documenting data connections, BI tools, and file sources
+- Task templates (brief, plan, outcome report)
+- Analytics-specific agents installed (analysis-planner, logic-reviewer, data-validator)
+- Baseline eval cases installed
+- Ready to accept the first analysis task
 
 ---
 
@@ -34,17 +47,45 @@ All paths in this guide use the defaults above. Replace them with the actual pat
 The user has said something like "I'm starting a new project" or "set up a project at ~/projects/foo."
 
 ### 1.1 Confirm the basics
-Ask only: **"What's the project name?"**
+Ask: **"What's the project name?"**
 
-That's it for now. Everything else — project type, tech stack, scope — will come out naturally during the brain dump in Phase 2.
+### 1.2 Type alignment
 
-### 1.2 Create the universal folder structure
+Before creating any folders, determine the project type. Ask:
+
+**"Before we set anything up — what kind of work is this? Give me a sentence or two about what you're trying to do."**
+
+From the response, identify the project type using these signals:
+
+| Type | Strong Signals | Disambiguating Question |
+|------|---------------|------------------------|
+| `web-app` | "app", "users", "auth", "SaaS", "frontend", "API", "mobile" | Is there a UI that end users interact with? |
+| `data-app` | "dashboard", "reporting tool", "data entry", "replace Excel", "visualization", "Streamlit", "Retool" | Is this an interactive tool stakeholders use, or a data layer other tools consume? |
+| `analytics-engineering` | "dbt", "DuckDB", "data warehouse", "transformations", "Alteryx migration", "data modeling", "star schema" | Are you building a modeled data layer, or the infrastructure that moves data into it? |
+| `data-engineering` | "pipeline", "ingestion", "CDC", "streaming", "Airflow", "Dagster", "orchestration", "data lake", "ELT" | Are you building the infrastructure that moves and stores data across systems? |
+| `ml-engineering` | "model", "training", "prediction", "classification", "features", "evaluation", "fine-tune" | Are you training/evaluating a model, or integrating a pre-trained one? |
+| `ai-engineering` | "LLM", "RAG", "embeddings", "prompt", "GPT", "Claude API", "agents", "guardrails", "eval harness" | Are you building an application powered by an LLM? |
+| `automation` | "script", "CLI", "bot", "cron", "scheduled", "scraper", "automate" | Is this a thing that runs on a schedule/trigger, or a package others import? |
+| `library` | "package", "SDK", "module", "npm publish", "PyPI", "reusable", "API design" | Will other developers import and use this in their own projects? |
+| `analytics-workspace` | "ad hoc", "analysis", "investigation", "data request", "one-off", "just need a place to work", "SQL queries" | Is this ongoing analytical work without a single end product? |
+
+Confirm with the user: **"Based on what you've described, this sounds like a [type] project — [one sentence explaining what that means]. Does that sound right?"**
+
+For sprint-based types, also explain briefly: "This means we'll do a brain dump to capture everything you know, set up documentation, and plan your first sprint with agents for [planner role], [reviewer role], [validator role], and sprint coordination."
+
+For `analytics-workspace`, explain: "This means we'll set up a workspace for ad hoc analysis — we'll catalog your data sources and BI tools, then you'll be ready to start tasks. No sprints — work is organized as individual analysis tasks."
+
+Multi-type is possible for sprint-based types (e.g., `data-app` + `automation`). Task-based types (`analytics-workspace`) cannot be combined with sprint-based types — use a separate repo.
+
+### 1.3 Create the type-appropriate folder structure
+
+**For sprint-based types**, create:
 ```
 [project-name]/
 ├── src/
 ├── tests/
 │   └── fixtures/
-├── docs/                              # docs vault root
+├── docs/
 │   ├── 00-Index/
 │   ├── 01-Product/
 │   │   └── Feature Specs/
@@ -55,6 +96,7 @@ That's it for now. Everything else — project type, tech stack, scope — will 
 │   ├── 04-Backlog/
 │   │   ├── Epics/
 │   │   ├── Stories/
+│   │   ├── Bugs/
 │   │   └── Sprints/
 │   ├── 05-Research/
 │   │   └── Data Source Research/
@@ -67,38 +109,72 @@ That's it for now. Everything else — project type, tech stack, scope — will 
 │   ├── plans/
 │   ├── session-logs/
 │   ├── evals/
-│   │   ├── code-reviewer/
-│   │   ├── test-writer/
-│   │   ├── product-manager/
-│   │   └── scrum-master/
+│   │   ├── baseline/
+│   │   │   ├── planner/
+│   │   │   ├── reviewer/
+│   │   │   ├── validator/
+│   │   │   └── coordinator/
+│   │   └── [per-agent directories — created based on installed agents]
 │   └── maintenance/
 ├── .fabrika/
 ├── .github/
 │   └── workflows/
 ├── .claude/
+│   ├── agents/
 │   ├── hooks/
 │   └── current_tasks/
 └── [other dirs added after brain dump]
 ```
 
-Add `.gitkeep` to all empty folders.
+**For `analytics-workspace`**, create:
+```
+[project-name]/
+├── src/
+│   ├── queries/                        # reusable SQL
+│   ├── scripts/                        # Python/R scripts
+│   └── notebooks/                      # Jupyter, etc.
+├── data/
+│   ├── input/                          # CSVs, Excel files people send you
+│   └── output/                         # generated datasets, exports
+├── tasks/                              # the core unit of work
+├── sources/
+│   ├── connections/                    # queryable data sources
+│   ├── tools/                          # BI/ETL tools (advisory mode)
+│   └── files/                          # recurring flat file sources
+├── docs/
+│   ├── Templates/
+│   ├── evaluations/
+│   └── evals/
+│       └── baseline/
+│           ├── planner/
+│           ├── reviewer/
+│           └── validator/
+├── .fabrika/
+├── .claude/
+│   ├── agents/
+│   └── hooks/
+└── STATUS.md
+```
 
-### 1.3 Initialize git
+Add `.gitkeep` to all empty folders. For `analytics-workspace`, also add `data/` to `.gitignore` (heavy data files should not be committed; small reference files can be force-added).
+
+### 1.4 Initialize git
 ```bash
 git init
 ```
 
-### 1.4 Create placeholder and scaffold files
+### 1.5 Create placeholder and scaffold files
 - `docs/00-Index/Home.md` — stub with project name
 - `docs/09-Personal-Tasks/Someday-Maybe.md` — empty
 - `STATUS.md` — copy from `[FABRIKA_PATH]/core/STATUS-template.md` (project in bootstrap phase)
 - `features.json` — copy from `[FABRIKA_PATH]/core/features-template.json`
-- `docs/evals/README.md` — copy from `[FABRIKA_PATH]/core/templates/`
-- `docs/evals/agent-changelog.md` — copy from `[FABRIKA_PATH]/core/templates/`
+- `docs/evals/README.md` — copy from `[FABRIKA_PATH]/core/evals/README.md`
+- `docs/evals/agent-changelog.md` — copy from `[FABRIKA_PATH]/core/evals/agent-changelog-template.md`
+- `docs/evals/baseline/` — copy entire directory from `[FABRIKA_PATH]/core/evals/baseline/` (baseline eval cases for all agent archetypes)
 - `.fabrika/FABRIKA.md` — copy from `[FABRIKA_PATH]/core/FABRIKA.md` (framework relationship guide, read on demand by agents)
 - Basic `.gitignore` with .env and `__pycache__` exclusions
 
-### 1.5 Generate the Fabrika manifest
+### 1.6 Generate the Fabrika manifest
 
 After all files have been copied, generate `.fabrika/manifest.yml` in the consumer project. The manifest records what was installed and enables future upgrade diffing.
 
@@ -128,13 +204,15 @@ files:
 
 The agent should compute the sha256 hash of each copied file's contents at install time. As more files are copied in later phases, append entries to the `files` list and update `project_type` and `integrations` once known.
 
-### 1.6 Initial commit
+### 1.7 Initial commit
 ```bash
 git add -A
 git commit -m "chore: initialize [project-name] with vault structure"
 ```
 
 Proceed immediately to Phase 2. Do **not** ask the user to open the docs vault yet — there's no content to look at.
+
+> **Branch point:** If the project type is `analytics-workspace`, skip to **Phase 2W** below. All other types continue to Phase 2.
 
 ---
 
@@ -145,21 +223,25 @@ This is the most important phase. The goal is to extract everything the user kno
 **This is NOT a single prompt-and-done step.** Expect multiple rounds of conversation. The user may brain-dump in pieces across one or more sessions.
 
 ### 2.1 Start the conversation
-Ask: **"Tell me everything you know about this project — what it does, why you're building it, who uses it, what data or systems are involved, any tech you're already thinking about, constraints, and what you want to build first. Don't worry about structure or completeness — just get it out and we'll go from there. If you're not sure about parts of it yet, that's fine — we'll work through those together."**
+The project type was already determined in Phase 1.2. Use the type-specific brain dump prompt:
 
-### 2.2 Determine project type, tech stack, and backlog mode
-From the brain dump, determine:
+**web-app:** "Tell me everything about this app — who uses it, what problem it solves, what the core user flows are, any tech you're already thinking about, and what you want to build first. If it's a consumer product, tell me about the market and competition. Don't worry about structure — just get it out."
 
-**Project type** (can be multi-type):
-| Type | Signals in Brain Dump |
-|------|----------------------|
-| `data-app` | "replace Excel", "dashboard", "reporting tool", "data entry", "visualization" |
-| `data-platform` | "dbt", "DuckDB", "pipeline", "ETL", "data warehouse", "Alteryx replacement", "transformations" |
-| `ml-project` | "model", "prediction", "training", "classification", "features", "evaluation" |
-| `web-app` | "app", "users", "auth", "SaaS", "API", "frontend", "mobile" |
-| `automation` | "script", "CLI", "bot", "cron", "scheduled", "automate" |
+**data-app:** "Tell me about this tool — what questions does it answer, who's the audience, what data feeds it, and what tool you're thinking of using (Streamlit, Retool, Dash, etc.). If it's replacing Excel or an existing report, tell me about the current process."
 
-Confirm with the user: **"Based on what you've described, this sounds like a [type] project. Does that sound right?"**
+**analytics-engineering:** "Tell me about this data layer — what sources feed in, what are you migrating from (Alteryx, Excel, manual SQL), what does the clean modeled layer need to look like, and who or what consumes it downstream (dashboards, analysts, exports). If you're using dbt or DuckDB, tell me about your setup."
+
+**data-engineering:** "Walk me through the data flow: where does data come from (sources, APIs, files), how does it get ingested, where does it land, what transformations happen, and who consumes the output. Tell me about your orchestration (Airflow, Dagster, cron), infrastructure (cloud, on-prem), and any reliability concerns."
+
+**ml-engineering:** "Tell me about this ML work — what are you predicting or classifying, what data exists for training, what's the current baseline (human process, simple heuristic), how will the model be served (batch, real-time, API), and how you plan to evaluate it."
+
+**ai-engineering:** "Tell me about this AI application — what's the core AI capability (generation, retrieval, classification, agents), which LLM(s) you're planning to use, what the quality and safety boundaries are, and how you plan to evaluate output quality."
+
+**automation:** "Tell me about what you're automating — what triggers it, what it does, where the output goes, what happens when it fails, and how often it runs."
+
+**library:** "Tell me about this library — who imports and uses it, what's the core functionality, what language and runtime, how it's distributed (npm, PyPI, internal), and what the public API surface looks like."
+
+### 2.2 Determine backlog mode and tech stack
 
 **Backlog mode:** Ask: **"Do you want to track stories in Jira (via MCP) or as local markdown files? If you have a Jira project set up, I can use that. Otherwise, markdown works great."**
 
@@ -175,10 +257,12 @@ Now that you know the project type and stack, create the stack-specific scaffold
 - Package manager initialization (e.g., `uv init --name [project-name]`)
 - `.github/workflows/ci.yml` with lint + test pipeline
 
-**Set up the agentic tool configuration.** Determine which agentic tool the project will use:
+**Set up the agentic tool configuration.** Determine which agentic tool the project will use.
 
-- **Claude Code:** Copy the project CLAUDE.md template from `[FABRIKA_PATH]/integrations/claude-code/CLAUDE.md`. Ask the user for a short project key (e.g., `MYAPP`). Copy agent prompts from `[FABRIKA_PATH]/core/agents/` to `.claude/agents/` in the project repo — these define the product-manager, code-reviewer, test-writer, and scrum-master agents referenced by the development workflow in CLAUDE.md. Copy settings from `[FABRIKA_PATH]/integrations/claude-code/settings-template.json` to `.claude/settings.json`.
-- **GitHub Copilot:** Copy `[FABRIKA_PATH]/integrations/copilot/copilot-instructions.md` to `.github/copilot-instructions.md`. Copy agent prompts from `[FABRIKA_PATH]/core/agents/` to `.github/agents/` (renaming `*.md` to `*.agent.md`). Fill in project name and key. Note: Claude Code hooks (`.claude/hooks/`) are not applicable to Copilot — instead, configure equivalent git hooks in `.git/hooks/` or use the CI pipeline for regression gating.
+First, read the **Agent Catalog** at `[FABRIKA_PATH]/core/agents/AGENT-CATALOG.md` to determine which agents to install for this project type.
+
+- **Claude Code:** Copy the project CLAUDE.md template from `[FABRIKA_PATH]/integrations/claude-code/CLAUDE.md`. Ask the user for a short project key (e.g., `MYAPP`). Copy the type-appropriate agent prompts from `[FABRIKA_PATH]/core/agents/` to `.claude/agents/` in the project repo — use the Agent Catalog mapping to select which agents apply. Copy settings from `[FABRIKA_PATH]/integrations/claude-code/settings-template.json` to `.claude/settings.json`.
+- **GitHub Copilot:** Copy `[FABRIKA_PATH]/integrations/copilot/copilot-instructions.md` to `.github/copilot-instructions.md`. Copy the type-appropriate agent prompts from `[FABRIKA_PATH]/core/agents/` to `.github/agents/` (renaming `*.md` to `*.agent.md`). Fill in project name and key. Note: Claude Code hooks (`.claude/hooks/`) are not applicable to Copilot — instead, configure equivalent git hooks in `.git/hooks/` or use the CI pipeline for regression gating.
 
 **Fill in the Project Stack section** of the project config with all tech details: language, framework, database, package manager, test runner, linter, dev server, CI. Determine and fill in the test commands:
 - Fast test command (for hooks and session health checks)
@@ -199,11 +283,14 @@ Now that you know the project type and stack, create the stack-specific scaffold
 Based on project type, determine the verification method:
 | Project Type | Verification | Setup Guidance |
 |-------------|-------------|----------------|
-| Web app | Playwright MCP | Ask user: "Would you like to set up Playwright for browser-based E2E testing? I'll guide you through the MCP configuration." |
-| Data app (Dash, Streamlit) | Playwright MCP + pytest | Same as web app — Dash/Streamlit render in browsers. Also set up model assertion tests. |
-| Data infrastructure | Output diffing | Create `tests/benchmarks/` directory. Ask about known-good oracle data. |
-| Automation | Integration tests | Standard pytest/vitest setup is sufficient. |
-| ML project | Eval framework | Create `tests/eval/` directory. Ask about baseline metrics. |
+| `web-app` | Playwright MCP | Ask user: "Would you like to set up Playwright for browser-based E2E testing? I'll guide you through the MCP configuration." |
+| `data-app` | Playwright MCP + pytest | Same as web app — Dash/Streamlit render in browsers. Also set up model assertion tests. |
+| `analytics-engineering` | Output diffing | Create `tests/benchmarks/` directory. Ask about known-good oracle data for transformation validation. |
+| `data-engineering` | Pipeline integration tests + output diffing | Create `tests/benchmarks/` directory. Set up per-stage data quality checks. |
+| `ml-engineering` | Eval framework | Create `tests/eval/` directory. Ask about baseline metrics and evaluation datasets. |
+| `ai-engineering` | Eval harness + guardrail tests | Create `tests/eval/` directory. Set up LLM eval framework (input → expected output characteristics). |
+| `automation` | Integration tests | Standard pytest/vitest setup is sufficient. |
+| `library` | Unit + integration + backward compat | Standard test suite plus public API contract tests. |
 
 If the user wants Playwright MCP, guide them through setup: install the Playwright MCP server, add it to `.claude/settings.json`, verify the connection works with a simple navigation test.
 
@@ -292,7 +379,96 @@ git commit -m "feat: populate vault with project context, epics, and stories"
 
 ---
 
+## Phase 2W: Analytics Workspace Onboarding (analytics-workspace only)
+
+> This phase replaces Phase 2 for `analytics-workspace` projects. There is no brain dump, no backlog, no sprint planning. Instead, the onboarding focuses on cataloging data sources and BI tools so the agent can be useful from the first task.
+
+### 2W.1 Set up agentic tool configuration
+
+Copy analytics-workspace agents from `[FABRIKA_PATH]/core/agents/` to the tool-appropriate location:
+
+- **Claude Code:** Copy to `.claude/agents/`:
+  - `analysis-planner.md`, `logic-reviewer.md`, `data-validator.md`
+  - Copy CLAUDE.md template from `[FABRIKA_PATH]/integrations/claude-code/CLAUDE.md`, set project type to `analytics-workspace`
+  - Copy settings from `[FABRIKA_PATH]/integrations/claude-code/settings-template.json` to `.claude/settings.json`
+- **GitHub Copilot:** Copy to `.github/agents/` (renaming `*.md` to `*.agent.md`):
+  - `analysis-planner.agent.md`, `logic-reviewer.agent.md`, `data-validator.agent.md`
+  - Copy copilot-instructions from `[FABRIKA_PATH]/integrations/copilot/copilot-instructions.md` to `.github/copilot-instructions.md`, set project type to `analytics-workspace`
+
+Copy templates from `[FABRIKA_PATH]/core/templates/`:
+- `Analysis-Brief-Template.md` → `docs/Templates/Analysis-Brief-Template.md`
+- `Analysis-Plan-Template.md` → `docs/Templates/Analysis-Plan-Template.md`
+- `Outcome-Report-Template.md` → `docs/Templates/Outcome-Report-Template.md`
+- `Task-Contract-Template.md` → `docs/Templates/Task-Contract-Template.md`
+- `Source-Connection-Template.md` → `docs/Templates/Source-Connection-Template.md`
+- `Source-Tool-Template.md` → `docs/Templates/Source-Tool-Template.md`
+- `Source-File-Template.md` → `docs/Templates/Source-File-Template.md`
+
+Copy baseline evals from `[FABRIKA_PATH]/core/evals/baseline/` → `docs/evals/baseline/` (skip coordinator evals — no scrum master in workspaces).
+
+Copy eval scaffold from `[FABRIKA_PATH]/core/evals/README.md` and `agent-changelog-template.md`.
+
+Set up the CLAUDE.md or copilot-instructions as applicable.
+
+### 2W.2 Source inventory conversation
+
+Run through these questions to catalog the workspace's data sources. Create source files as the user describes each one.
+
+**Step 1 — Connections:** "What databases, warehouses, or data systems do you connect to? For each one, tell me: the type (Snowflake, SQL Server, PostgreSQL, etc.), how you connect (ODBC, direct, VPN), and which schemas or tables you use most."
+
+For each source described, create a file in `sources/connections/` using the Source-Connection-Template.
+
+**Step 2 — BI/ETL Tools:** "What BI or ETL tools does your team use? Things like Tableau Server, Power BI, Alteryx, Looker, etc. For each one: where it lives (URL, network path), what key workbooks or workflows are there, and how often they refresh."
+
+For each tool described, create a file in `sources/tools/` using the Source-Tool-Template.
+
+**Step 3 — Flat files:** "Do you regularly receive flat files — CSVs, Excel files, YXDBs, etc.? Who sends them, how often, and where do they land?"
+
+For each recurring file source described, create a file in `sources/files/` using the Source-File-Template.
+
+**Step 4 — Local tools:** "What tools do you have locally for working with data? DuckDB, Python, R, Tableau Desktop, Alteryx Designer, Excel?"
+
+Record in `STATUS.md` under a "Local tools" section.
+
+**Step 5 — Domain context:** "What's your team's domain? What kind of questions do people typically ask you? This helps me understand the context when you bring analysis tasks."
+
+Record in `sources/README.md` as domain context.
+
+### 2W.3 Populate sources/README.md
+
+Write the source registry index with three sections:
+- **Connections** — links to each file in `sources/connections/`
+- **Tools** — links to each file in `sources/tools/`
+- **Files** — links to each file in `sources/files/`
+
+Each entry: name, one-line description, link to detail file.
+
+### 2W.4 Initialize STATUS.md
+
+Set `STATUS.md` with:
+- Project type: analytics-workspace
+- Active tasks: (none yet)
+- Local tools: (from Step 4)
+- Source count: N connections, N tools, N file sources
+
+### 2W.5 Commit
+
+```bash
+git add -A
+git commit -m "feat: initialize analytics workspace with source registry"
+```
+
+### 2W.6 Ready
+
+Tell the user: **"Your analytics workspace is set up with [N] data sources cataloged. To start an analysis task, just tell me what you need — a question to answer, data to pull, logic to review, or an investigation to run. I'll create a task folder and walk you through brief → plan → execute → validate → deliver."**
+
+**Do NOT proceed to Phase 3 or Phase 4.** Analytics workspaces do not have sprints or readiness checks. The workspace is ready for tasks.
+
+---
+
 ## Phase 3: Sprint Planning (Agent + User)
+
+> **Sprint-based types only.** Skip this phase for `analytics-workspace`.
 
 ### 3.1 Assess sprint topology
 Review the proposed Sprint 1 stories. Assess task coupling:
@@ -474,10 +650,23 @@ Use this during the Phase 4 readiness check.
 - [ ] Evaluation scaffold in place
 - [ ] `.fabrika/manifest.yml` generated with all installed files
 
-### Type-specific
+### Type-specific (sprint-based)
 - [ ] `data-app`: Dashboard Spec, Data Model, Data Pipeline Design populated
-- [ ] `data-platform`: Transformation Logic, Data Model, Data Pipeline Design populated
-- [ ] `ml-project`: Model Design, Training Data Spec, Evaluation Criteria populated
+- [ ] `analytics-engineering`: Transformation Logic, Data Model, Data Pipeline Design populated
+- [ ] `data-engineering`: Source System Contracts, Ingestion Design, Storage Architecture, Serving Contracts, Orchestration Design, Data Pipeline Design populated
+- [ ] `ml-engineering`: Model Design, Training Data Spec, Evaluation Criteria populated
+- [ ] `ai-engineering`: Prompt Library, Model Configuration, Evaluation Strategy populated
 - [ ] `web-app` (consumer): Vision & Positioning, UX Specification populated
+- [ ] `library`: API Design Guide populated
 - [ ] All with external data: Data Source Research notes for each known source
 - [ ] `web-app` or `data-app`: E2E verification configured (Playwright MCP or equivalent)
+- [ ] Agents installed match project type (per Agent Catalog)
+- [ ] Baseline evals copied to `docs/evals/baseline/`
+
+### Type-specific (analytics-workspace)
+- [ ] `sources/README.md` populated with source registry index
+- [ ] At least one source documented in `sources/connections/`, `sources/tools/`, or `sources/files/`
+- [ ] Analysis agents installed (analysis-planner, logic-reviewer, data-validator)
+- [ ] Task templates in `docs/Templates/`
+- [ ] Baseline evals copied (planner, reviewer, validator — not coordinator)
+- [ ] `STATUS.md` initialized with local tools and source count
