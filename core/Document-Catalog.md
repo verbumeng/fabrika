@@ -2,7 +2,7 @@
 type: reference
 status: active
 created: 2026-03-21
-updated: 2026-03-21
+updated: 2026-04-25
 tags: [project, documentation, catalog, reference]
 ---
 
@@ -17,15 +17,28 @@ tags: [project, documentation, catalog, reference]
 ### Project Types
 Every document is tagged with the project types that need it:
 
+### Sprint-Based Types
+These follow the full sprint lifecycle (plan → build → evaluate → retro):
+
 | Tag | Description | Examples |
 |-----|-------------|---------|
-| `data-app` | Interactive tools replacing Excel — dashboards, forms, data entry apps, reporting tools | Streamlit dashboard, internal reporting tool, data entry webapp |
-| `data-platform` | Data infrastructure — pipelines, transformations (dbt), local analytics layers (DuckDB), warehouse foundations, analytics engineering | DuckDB + dbt layer, Alteryx → SQL migration, ETL pipelines |
-| `ml-project` | Machine learning — model development, training data, feature engineering, evaluation | Predictive models, classification, forecasting |
 | `web-app` | Full-stack web applications — personal tools, SaaS products, consumer apps, APIs | Personal SaaS, consumer SaaS, internal web tools |
+| `data-app` | Interactive tools replacing Excel — dashboards, forms, data entry apps, reporting tools | Streamlit dashboard, internal reporting tool, data entry webapp |
+| `analytics-engineering` | Modeled data layers — dbt transformations, DuckDB analytics, warehouse modeling, tested datasets that downstream tools consume | DuckDB + dbt layer, Alteryx → SQL migration, star schema builds |
+| `data-engineering` | Full pipeline infrastructure — ingestion, storage, orchestration, serving across systems. Organized around the data engineering lifecycle (Reis): generation → ingestion → storage → transformation → serving | Airflow DAGs, CDC pipelines, warehouse-to-warehouse ETL, streaming ingestion |
+| `ml-engineering` | Machine learning — model development, training data, feature engineering, evaluation | Predictive models, classification, forecasting |
+| `ai-engineering` | LLM-powered applications — RAG systems, agent frameworks, prompt engineering, eval harnesses | RAG chatbot, AI-powered search, agent workflow, LLM-augmented tools |
 | `automation` | Scripts, CLIs, bots, workflow automation, scheduled jobs | Data scrapers, cron jobs, CLI tools, Slack bots |
+| `library` | Reusable packages, SDKs, shared modules published for other developers to import | npm packages, PyPI libraries, internal SDKs, shared utility modules |
 
-A project can be **multi-type**. A data app with scrapers feeding a dashboard is `data-app` + `automation`. A SaaS product with ML features is `web-app` + `ml-project`. The agent should union all applicable document sets.
+### Task-Based Types
+These follow the task lifecycle (brief → plan → execute → validate → deliver) with no sprint structure:
+
+| Tag | Description | Examples |
+|-----|-------------|---------|
+| `analytics-workspace` | Home base for ad hoc analysis, investigations, data requests. Work is organized as individual tasks, not stories in a backlog. | Revenue variance investigation, ad hoc SQL analysis, data quality audit, stakeholder data requests |
+
+A project can be **multi-type** (sprint-based types only). A data app with scrapers feeding a dashboard is `data-app` + `automation`. A SaaS product with ML features is `web-app` + `ml-engineering`. An AI chatbot with a web frontend is `ai-engineering` + `web-app`. The agent should union all applicable document sets. Task-based types (`analytics-workspace`) cannot be combined with sprint-based types — use a separate repo.
 
 ### Priority Tiers
 | Tier | When to Create | During Bootstrapping? |
@@ -48,9 +61,9 @@ A project can be **multi-type**. A data app with scrapers feeding a dashboard is
 
 ### Home.md
 - **Purpose:** Central navigation hub. Links to all major sections, shows project status at a glance.
-- **Types:** all | **Tier:** 1 | **Audience:** both
+- **Types:** all sprint-based types | **Tier:** 1 | **Audience:** both
 - **Structure:** Project name, one-line description, quick links to key docs, current phase, what to read first.
-- **Notes:** This is the first thing anyone opens. Keep it short — links, not content.
+- **Notes:** This is the first thing anyone opens. Keep it short — links, not content. For `analytics-workspace`, the equivalent is `sources/README.md` (the source registry index).
 
 ### Glossary.md
 - **Purpose:** Defines domain-specific terms used across the project. Prevents ambiguity when the agent encounters unfamiliar terminology.
@@ -72,11 +85,11 @@ A project can be **multi-type**. A data app with scrapers feeding a dashboard is
 - **Purpose:** Why this product exists, who it's for, what makes it different. Brand promise and competitive angle.
 - **Types:** web-app | **Tier:** 1 (consumer SaaS), 2 (personal SaaS) | **Audience:** human
 - **Structure:** Mission statement, target user, problem being solved, competitive positioning, success metrics.
-- **Notes:** For work projects (data-app, data-platform), this becomes a simpler "Project Justification" — why are we building this instead of using Excel/Alteryx.
+- **Notes:** For work projects (data-app, analytics-engineering), this becomes a simpler "Project Justification" — why are we building this instead of using Excel/Alteryx.
 
 ### User Stories.md
 - **Purpose:** Plain-language descriptions of what users need to accomplish. Bridges product thinking and engineering.
-- **Types:** web-app, data-app | **Tier:** 2 | **Audience:** both
+- **Types:** web-app, data-app, ai-engineering | **Tier:** 2 | **Audience:** both
 - **Structure:** Grouped by persona or feature area. Format: "As a [user], I want to [action] so that [outcome]."
 - **Notes:** For data-apps, "users" might be internal stakeholders. Stories can be simple.
 
@@ -92,7 +105,7 @@ A project can be **multi-type**. A data app with scrapers feeding a dashboard is
 
 ### Feature Specs/
 - **Purpose:** Detailed specification for complex features that deserve their own document (beyond what a story captures).
-- **Types:** web-app, data-app | **Tier:** 3 (create as needed) | **Audience:** both
+- **Types:** web-app, data-app, ai-engineering | **Tier:** 3 (create as needed) | **Audience:** both
 - **Structure:** One file per feature. Problem, proposed solution, user flow, edge cases, acceptance criteria.
 - **Notes:** Not every feature needs a spec. Use for features with complex domain logic (e.g., scoring algorithms, notification strategies, complex calculations).
 
@@ -119,65 +132,148 @@ A project can be **multi-type**. A data app with scrapers feeding a dashboard is
 
 ### Data Model.md
 - **Purpose:** What data the system stores. Schemas, relationships, key fields, evolution plan.
-- **Types:** all except automation (if stateless) | **Tier:** 1 | **Audience:** agent
+- **Types:** all sprint-based except automation (if stateless) and library (if stateless) | **Tier:** 1 | **Audience:** agent
 - **Structure:** Table/collection definitions with column types, relationships, indexes, example queries, migration/evolution notes.
-- **Notes:** For DuckDB/dbt projects, this documents the target schema. For web-apps, includes auth tables, RLS policies, etc.
+- **Notes:** For DuckDB/dbt projects, this documents the target schema. For web-apps, includes auth tables, RLS policies, etc. For `data-engineering`, documents schemas at each lifecycle stage (source, staging, transformed, served). For `ai-engineering`, documents embedding schemas, vector stores, and any persistent state.
 
 ### Data Pipeline Design.md
 - **Purpose:** How data moves through the system. Sources, extraction, transformation, loading, scheduling.
-- **Types:** data-app, data-platform, automation | **Tier:** 1 | **Audience:** agent
+- **Types:** data-app, analytics-engineering, data-engineering, automation | **Tier:** 1 | **Audience:** agent
 - **Structure:** Source inventory, extraction method per source, transformation steps, load targets, scheduling/orchestration approach, error handling, retry logic.
-- **Notes:** For dbt projects, this documents the DAG structure and transformation philosophy. For scrapers, documents the scraping pattern and per-source research template.
+- **Notes:** For dbt projects, this documents the DAG structure and transformation philosophy. For scrapers, documents the scraping pattern and per-source research template. For `data-engineering`, this is the central design document — covers the full Reis lifecycle from ingestion through serving.
 
 ### Data Dictionary.md
 - **Purpose:** Defines every field/column across the data layer. Business meaning, data type, source, transformations applied.
-- **Types:** data-app, data-platform | **Tier:** 2 | **Audience:** both
+- **Types:** data-app, analytics-engineering, data-engineering | **Tier:** 2 | **Audience:** both
 - **Structure:** Table per source/model. Columns: field name, type, description, source, business rules, example values.
 - **Notes:** Critical for analytics engineering — this is what stakeholders reference to understand reports.
 
 ### Data Quality Rules.md
 - **Purpose:** Validation rules, expected ranges, anomaly detection criteria. What makes data "suspicious."
-- **Types:** data-app, data-platform | **Tier:** 2 | **Audience:** agent
+- **Types:** data-app, analytics-engineering, data-engineering | **Tier:** 2 | **Audience:** agent
 - **Structure:** Per-table or per-field rules: not-null constraints, range checks, freshness requirements, referential integrity, custom business rules.
-- **Notes:** For dbt projects, these translate directly to dbt tests.
+- **Notes:** For dbt projects, these translate directly to dbt tests. For `data-engineering`, rules span all lifecycle stages.
 
 ### Transformation Logic.md
 - **Purpose:** Documents the business logic behind data transformations. Why certain calculations exist, what business rules drive them.
-- **Types:** data-platform | **Tier:** 1 | **Audience:** both
+- **Types:** analytics-engineering, data-engineering | **Tier:** 1 | **Audience:** both
 - **Structure:** Per-transformation: input sources, business rule, calculation/logic, output, edge cases, owner/stakeholder who defined it.
 - **Notes:** This is the "translation layer" between the Excel formulas you're replacing and the SQL/dbt models you're building. Critical for validation.
 
 ### Migration Plan.md
 - **Purpose:** Documents how to migrate from the current state (Excel, Alteryx, etc.) to the target state. What moves when, validation steps, rollback plan.
-- **Types:** data-platform, data-app | **Tier:** 2 | **Audience:** both
+- **Types:** analytics-engineering, data-engineering, data-app | **Tier:** 2 | **Audience:** both
 - **Structure:** Current state, target state, migration phases, per-phase: what moves, validation criteria, rollback, stakeholder sign-off.
 - **Notes:** Especially important for Alteryx → SQL migrations where you need to prove output parity.
 
 ### Model Design.md
 - **Purpose:** Documents the ML model architecture, algorithm choice, feature set, and training approach.
-- **Types:** ml-project | **Tier:** 1 | **Audience:** both
+- **Types:** ml-engineering | **Tier:** 1 | **Audience:** both
 - **Structure:** Problem statement, algorithm/approach, feature list with rationale, training data requirements, hyperparameters, baseline metrics.
 
 ### Training Data Spec.md
 - **Purpose:** What data the model trains on. Sources, labels, preprocessing, splits, known biases.
-- **Types:** ml-project | **Tier:** 1 | **Audience:** agent
+- **Types:** ml-engineering | **Tier:** 1 | **Audience:** agent
 - **Structure:** Data sources, labeling methodology, preprocessing pipeline, train/val/test split ratios, data volume, known issues/biases, refresh cadence.
 
 ### Model Evaluation Criteria.md
 - **Purpose:** How to judge if the model is good enough. Metrics, thresholds, comparison baselines.
-- **Types:** ml-project | **Tier:** 1 | **Audience:** both
+- **Types:** ml-engineering | **Tier:** 1 | **Audience:** both
 - **Structure:** Primary metrics (accuracy, F1, RMSE, etc.), threshold for production-readiness, baseline comparison (current process vs. model), evaluation dataset, re-evaluation cadence.
+
+### Source System Contracts.md
+- **Purpose:** Documents each source system's reliability characteristics: SLAs, schema ownership, change notification process, known instabilities.
+- **Types:** data-engineering | **Tier:** 1 | **Audience:** agent
+- **Structure:** Per-source: system name, owner/team, SLA (uptime, latency), schema change notification process, known issues, historical incidents, data freshness guarantees.
+- **Notes:** Goes deeper than Data Source Research — this is about operational reliability, not just access. Critical for pipeline engineering where source instability is the most common failure mode.
+
+### Ingestion Design.md
+- **Purpose:** How data gets from source systems into your infrastructure. Batch vs. streaming, CDC, idempotency, error handling.
+- **Types:** data-engineering | **Tier:** 1 | **Audience:** agent
+- **Structure:** Per-source ingestion pattern: method (batch/streaming/CDC/full-refresh), frequency, idempotency strategy, error handling, backfill procedure, schema evolution handling, data validation at ingestion.
+- **Notes:** Separated from Data Pipeline Design because ingestion has its own set of concerns (exactly-once semantics, late-arriving data, schema drift) distinct from transformation.
+
+### Storage Architecture.md
+- **Purpose:** Why data lives where it does. Storage tier decisions, lifecycle policies, cost considerations.
+- **Types:** data-engineering | **Tier:** 1 | **Audience:** both
+- **Structure:** Storage layers (raw/staging/transformed/served), technology per layer, data format choices, partitioning strategy, retention policies, cost model, backup/disaster recovery.
+- **Notes:** Storage is a cross-cutting concern in Reis's lifecycle — data passes through multiple storage layers. This doc captures the architectural decisions about where and why.
+
+### Serving Contracts.md
+- **Purpose:** What downstream consumers expect from the data you serve. SLAs, freshness requirements, format guarantees.
+- **Types:** data-engineering | **Tier:** 1 | **Audience:** both
+- **Structure:** Per-consumer: who they are, what they consume, freshness SLA, format, access method, what happens when data is late or wrong.
+- **Notes:** The counterpart to Source System Contracts — one documents what comes in, this documents what goes out.
+
+### Orchestration Design.md
+- **Purpose:** How pipeline tasks are coordinated. DAG structure, dependency management, alerting, retry policies.
+- **Types:** data-engineering | **Tier:** 1 | **Audience:** agent
+- **Structure:** Orchestrator choice (Airflow, Dagster, Prefect, cron), DAG topology, dependency graph, retry/backoff strategy, alerting channels, SLA monitoring, manual intervention procedures.
+
+### DataOps Runbook.md
+- **Purpose:** Operational reference for monitoring, incident response, and CI/CD for data pipelines.
+- **Types:** data-engineering | **Tier:** 2 | **Audience:** both
+- **Structure:** Monitoring dashboards, alerting rules, incident response playbook (common failure modes and fixes), CI/CD pipeline for data code, testing strategy for pipelines, deployment procedure.
+
+### Prompt Library.md
+- **Purpose:** Versioned prompt templates with test cases. The core artifact of an AI-powered application.
+- **Types:** ai-engineering | **Tier:** 1 | **Audience:** agent
+- **Structure:** Per-prompt: name, version, purpose, template text, input variables, expected output characteristics, test cases (input → expected output), known failure modes.
+- **Notes:** Prompts are code in AI applications. Version them, test them, review them. The prompt-reviewer agent grades against this document.
+
+### Model Configuration.md
+- **Purpose:** Which LLMs are used, with what parameters, and why. Routing strategy if multiple models are in play.
+- **Types:** ai-engineering | **Tier:** 1 | **Audience:** agent
+- **Structure:** Per-model: provider, model ID, temperature, token limits, use case, fallback model, cost per call estimate. Model routing logic if applicable.
+
+### RAG Architecture.md
+- **Purpose:** Retrieval-augmented generation pipeline design: embedding strategy, chunking, retrieval, reranking.
+- **Types:** ai-engineering | **Tier:** 1 (if RAG is used) | **Audience:** agent
+- **Structure:** Embedding model, chunk size/overlap strategy, vector store, retrieval method (similarity, hybrid, reranking), context window management, freshness/re-indexing cadence.
+- **Notes:** Only applicable if the project uses RAG. Skip if the AI application is generation-only.
+
+### Evaluation Strategy.md
+- **Purpose:** How AI output quality is measured. Eval datasets, metrics, automated checks, human review criteria.
+- **Types:** ai-engineering | **Tier:** 1 | **Audience:** both
+- **Structure:** Eval dimensions (relevance, groundedness, safety, helpfulness), per-dimension: metric, automated check, threshold, eval dataset with known-good answers. Human review sampling strategy if applicable.
+- **Notes:** Distinct from Testing Strategy — this is about evaluating LLM behavior, not testing code. Think of it as the acceptance criteria for AI quality.
+
+### Cost Model.md
+- **Purpose:** Token usage projections, caching strategy, model routing for cost optimization.
+- **Types:** ai-engineering | **Tier:** 2 | **Audience:** both
+- **Structure:** Per-feature: estimated calls/day, tokens/call, model used, monthly cost projection. Caching strategy, prompt optimization notes, model routing (cheap model for simple tasks, expensive for complex).
+
+### Guardrails Spec.md
+- **Purpose:** Input/output filtering, safety boundaries, fallback behavior when AI output is unacceptable.
+- **Types:** ai-engineering | **Tier:** 2 | **Audience:** agent
+- **Structure:** Input validation (prompt injection detection, content filtering), output validation (factuality checks, format enforcement, PII filtering), fallback behavior (what happens when guardrails trigger), logging/alerting for guardrail events.
+
+### API Design Guide.md
+- **Purpose:** Public API surface area design: naming conventions, versioning strategy, backward compatibility guarantees.
+- **Types:** library | **Tier:** 1 | **Audience:** both
+- **Structure:** Public exports inventory, naming conventions, versioning strategy (semver, calver), deprecation policy, breaking change process, type signature design principles.
+- **Notes:** This is the library equivalent of UX — the interface your consumers interact with. Design it deliberately.
+
+### Migration Guide Template.md
+- **Purpose:** Template for documenting how consumers upgrade between library versions. Per-version breaking changes and migration steps.
+- **Types:** library | **Tier:** 2 | **Audience:** both
+- **Structure:** Per-version: breaking changes list, migration steps (before/after code examples), automated migration scripts if applicable.
+
+### Publishing Checklist.md
+- **Purpose:** Checklist for publishing a new library version: registry, docs, changelog, semver, testing.
+- **Types:** library | **Tier:** 2 | **Audience:** both
+- **Structure:** Pre-publish checks (tests pass, lint clean, changelog updated, version bumped), publish steps (build, publish to registry, tag release), post-publish (verify install, update docs site, announce).
 
 ### API Conventions.md
 - **Purpose:** Standards for API design: naming, versioning, error format, auth patterns.
-- **Types:** web-app | **Tier:** 2 | **Audience:** agent
+- **Types:** web-app, library | **Tier:** 2 | **Audience:** agent
 - **Structure:** URL patterns, HTTP methods, request/response format, error codes, pagination, auth headers, rate limiting.
 
 ### Testing Strategy.md
 - **Purpose:** How the project is tested. What types of tests, coverage targets, fixture conventions, CI pipeline, verification method.
 - **Types:** all | **Tier:** 1 | **Audience:** agent
 - **Structure:** Test types (unit, integration, fixture-based, e2e), coverage targets, fixture conventions, CI pipeline description, what to mock vs. not mock, verification method (browser automation, output diffing, etc.), fast vs. full test commands.
-- **Notes:** For data projects, testing often means output validation (do SQL results match Excel?). For ML, testing means evaluation metrics. The verification method determines how the test-writer agent runs E2E checks.
+- **Notes:** For data projects, testing often means output validation (do SQL results match Excel?). For ML, testing means evaluation metrics. For AI, testing means eval suites against model behavior. For libraries, testing includes backward compatibility and public API contract tests. The verification method determines how the validator agent runs E2E checks. Not applicable to `analytics-workspace` (validation is per-task, handled by the data-validator agent).
 
 ### rubrics/code-review-rubric.md
 - **Purpose:** Weighted grading criteria for the code-reviewer agent. Defines what PASS/FAIL means for each criterion with skepticism calibration.
@@ -244,7 +340,7 @@ A project can be **multi-type**. A data app with scrapers feeding a dashboard is
 
 ### Output Specifications.md
 - **Purpose:** What reports, exports, or outputs the system produces. Format, content, delivery method, schedule.
-- **Types:** data-platform, automation, data-app | **Tier:** 2 | **Audience:** both
+- **Types:** analytics-engineering, data-engineering, automation, data-app | **Tier:** 2 | **Audience:** both
 - **Structure:** Per-output: name, format (CSV, PDF, email, dashboard), content/columns, delivery (email, file drop, API), schedule, recipients.
 - **Notes:** For Alteryx replacement projects, this documents the outputs that must match the current Alteryx workflow outputs.
 
@@ -303,9 +399,9 @@ A project can be **multi-type**. A data app with scrapers feeding a dashboard is
 
 ### Data Source Research/
 - **Purpose:** Per-source documentation for data pipeline projects. Login flows, APIs, file formats, access methods, quirks.
-- **Types:** data-app, data-platform, automation | **Tier:** 1 (for known sources) | **Audience:** agent
+- **Types:** data-app, analytics-engineering, data-engineering, automation | **Tier:** 1 (for known sources) | **Audience:** agent
 - **Structure:** One file per data source. See Data-Source-Research-Template.md. Overview, access method, authentication, data format, known issues, refresh cadence.
-- **Notes:** Critical for any project that pulls data from external sources. One file per source keeps research organized and agent-accessible.
+- **Notes:** Critical for any project that pulls data from external sources. One file per source keeps research organized and agent-accessible. For `analytics-workspace`, source documentation lives in `sources/` (see analytics-workspace folder structure) rather than here.
 
 ### Market Analysis.md
 - **Purpose:** Market size, trends, opportunity assessment.
@@ -325,7 +421,7 @@ A project can be **multi-type**. A data app with scrapers feeding a dashboard is
 
 ### Stakeholder Presentation.md
 - **Purpose:** Slide-ready content for presenting the project to leadership, peers, or cross-functional teams.
-- **Types:** data-app, data-platform | **Tier:** 3 | **Audience:** human
+- **Types:** data-app, analytics-engineering | **Tier:** 3 | **Audience:** human
 - **Structure:** Problem statement, what was built, before/after comparison, impact metrics, demo talking points, next steps.
 
 ### Demo Script.md
@@ -335,7 +431,7 @@ A project can be **multi-type**. A data app with scrapers feeding a dashboard is
 
 ### ROI / Impact Analysis.md
 - **Purpose:** Quantified impact of the project. Time saved, errors reduced, revenue impact, cost avoidance.
-- **Types:** data-app, data-platform | **Tier:** 3 | **Audience:** human
+- **Types:** data-app, analytics-engineering | **Tier:** 3 | **Audience:** human
 - **Structure:** Before state (manual effort, error rate), after state (automated, accurate), quantified impact (hours saved/week, error reduction %).
 - **Notes:** This is how you justify the project's existence and advocate for more resources or recognition.
 
@@ -406,6 +502,47 @@ A project can be **multi-type**. A data app with scrapers feeding a dashboard is
 - **Purpose:** Tasks to complete before starting implementation. Environment setup, access, accounts, research.
 - **Types:** all | **Tier:** 1 | **Audience:** both
 - **Structure:** Categorized checklists: before each story, before each sprint, before first deploy.
+
+---
+
+## analytics-workspace Documents
+
+> These documents live outside the standard `docs/` vault structure. The `analytics-workspace` type uses a flat, task-centric folder layout instead of the numbered docs hierarchy.
+
+### sources/README.md (Source Registry Index)
+- **Purpose:** Central index of all data sources, BI tools, and flat file sources available in this workspace. The equivalent of Home.md for analytics workspaces.
+- **Types:** analytics-workspace | **Tier:** 1 (populated during onboarding) | **Audience:** agent
+- **Structure:** Three sections: Connections (queryable data sources), Tools (BI/ETL tools), Files (recurring flat file sources). Each entry: name, one-line description, link to detail file.
+
+### sources/connections/*.md
+- **Purpose:** Per-connection documentation for data sources the agent can query programmatically: warehouses, databases, ODBC connections, APIs, SharePoint lists.
+- **Types:** analytics-workspace | **Tier:** 1 (one per known connection) | **Audience:** agent
+- **Structure:** Connection type, connection string/path, authentication method, key schemas/tables, known gotchas, SLA/reliability notes, who owns it.
+
+### sources/tools/*.md
+- **Purpose:** Per-tool documentation for BI and ETL tools the agent can reason about but cannot touch directly: Tableau Server, Power BI Service, Alteryx Server/Designer.
+- **Types:** analytics-workspace | **Tier:** 1 (one per known tool) | **Audience:** agent
+- **Structure:** Tool name, URL/location, key workbooks/workflows/reports, data sources used, refresh schedule, who maintains it. Advisory mode note: what the agent can do (write SQL, review logic, draft DAX) vs. what the human executes in the tool.
+
+### sources/files/*.md
+- **Purpose:** Per-source documentation for recurring flat files: CSVs, Excel files, YXDBs. Documents metadata about the file, not the file itself (files go in `data/input/`).
+- **Types:** analytics-workspace | **Tier:** 2 (as encountered) | **Audience:** agent
+- **Structure:** File name/pattern, who sends it, delivery frequency, format, known quality issues, expected columns/schema, where it lands in `data/input/`.
+
+### tasks/[date-name]/brief.md (Analysis Brief)
+- **Purpose:** Documents the business question, who asked, deadline, desired output format. The "why" of a task.
+- **Types:** analytics-workspace | **Tier:** 1 (created per task) | **Audience:** both
+- **Structure:** See Analysis-Brief-Template.md.
+
+### tasks/[date-name]/plan.md (Analysis Plan)
+- **Purpose:** Technical approach: what data sources to pull, joins/transforms, logic, assumptions, validation approach. The "how" of a task.
+- **Types:** analytics-workspace | **Tier:** 1 (created per task) | **Audience:** both
+- **Structure:** See Analysis-Plan-Template.md.
+
+### tasks/[date-name]/outcome.md (Outcome Report)
+- **Purpose:** Results, methodology summary, data quality notes, output location, follow-up recommendations. The "what we found" of a task.
+- **Types:** analytics-workspace | **Tier:** 1 (created per task at delivery) | **Audience:** both
+- **Structure:** See Outcome-Report-Template.md.
 
 ---
 
@@ -482,9 +619,9 @@ A project can be **multi-type**. A data app with scrapers feeding a dashboard is
 
 ## Templates/
 
-Templates live in the `Templates/` folder and are used by the agent when creating new documents (or by a templating plugin if the docs vault supports one).
+Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based projects) and are used by the agent when creating new documents.
 
-### Always included:
+### Always included (sprint-based types):
 - Epic-Template.md
 - Story-Template.md
 - Sprint-Template.md
@@ -494,40 +631,72 @@ Templates live in the `Templates/` folder and are used by the agent when creatin
 - Sprint-Contract-Hierarchical.md
 
 ### Included based on project type:
-- Data-Source-Research-Template.md — `data-app`, `data-platform`, `automation`
-- Feature-Spec-Template.md — `web-app`, `data-app`
-- Session-Log-Template.md — all types
+- Data-Source-Research-Template.md — `data-app`, `analytics-engineering`, `data-engineering`, `automation`
+- Feature-Spec-Template.md — `web-app`, `data-app`, `ai-engineering`
+- Session-Log-Template.md — all sprint-based types
 - Dashboard-Spec-Template.md — `data-app`
-- Model-Design-Template.md — `ml-project`
+- Model-Design-Template.md — `ml-engineering`
+- Source-Connection-Template.md — `analytics-workspace`, `data-engineering`
+- Source-Tool-Template.md — `analytics-workspace`
+- Source-File-Template.md — `analytics-workspace`
+- Analysis-Brief-Template.md — `analytics-workspace`
+- Analysis-Plan-Template.md — `analytics-workspace`
+- Outcome-Report-Template.md — `analytics-workspace`
+- Task-Contract-Template.md — `analytics-workspace`
 
 ---
 
 ## Quick Reference: Documents by Project Type
 
-### data-app (Excel replacement, dashboards, reporting tools)
+### Sprint-Based Types
+
+#### web-app (SaaS, personal tools, consumer apps)
+**Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
+**Tier 1 (consumer):** + Vision & Positioning, UX Specification
+**Tier 2:** API Conventions, Security & Privacy, Deployment Guide, User Stories, Wireframes, Seed Data, Structural Constraints
+**Tier 2 (consumer):** + Brand Guidelines, Design Tokens, GTM Strategy, Launch Plan, Business Setup, Legal
+**Tier 3:** Feature Specs, Revenue Model, Content Calendar, Demo Script, Session Logs
+
+#### data-app (Excel replacement, dashboards, reporting tools)
 **Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Data Pipeline Design, Dashboard Spec, Testing Strategy, Canonical Patterns, ADR (at least one), Epics, Stories, Someday-Maybe, Pre-Dev Checklist
 **Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, Wireframes, Seed Data, User Stories, Deployment Guide, Structural Constraints
 **Tier 3:** Stakeholder Presentation, Demo Script, ROI/Impact Analysis, Session Logs
 
-### data-platform (DuckDB, dbt, pipelines, analytics engineering)
+#### analytics-engineering (dbt, DuckDB, warehouse modeling, Alteryx migration)
 **Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Data Pipeline Design, Transformation Logic, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Data Source Research, Someday-Maybe, Pre-Dev Checklist
 **Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, Deployment Guide, Environment Config, Structural Constraints
 **Tier 3:** Stakeholder Presentation, ROI/Impact Analysis, Session Logs
 
-### ml-project (model development, training, evaluation)
+#### data-engineering (pipelines, ingestion, orchestration, full Reis lifecycle)
+**Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Data Pipeline Design, Source System Contracts, Ingestion Design, Storage Architecture, Serving Contracts, Orchestration Design, Transformation Logic, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Data Source Research, Someday-Maybe, Pre-Dev Checklist
+**Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, DataOps Runbook, Deployment Guide, Environment Config, Structural Constraints
+**Tier 3:** Stakeholder Presentation, ROI/Impact Analysis, Session Logs
+
+#### ml-engineering (model development, training, evaluation)
 **Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Model Design, Training Data Spec, Model Evaluation Criteria, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
 **Tier 2:** Data Pipeline Design, Data Dictionary, Deployment Guide, Structural Constraints
 **Tier 3:** Session Logs, Feature Specs
 
-### web-app (SaaS, personal tools, consumer apps)
-**Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
-**Tier 1 (consumer):** + Vision & Positioning, UX Specification
-**Tier 2:** API Conventions, Security & Privacy, Deployment Guide, User Stories, Wireframes, Seed Data
-**Tier 2:** + Structural Constraints
-**Tier 2 (consumer):** + Brand Guidelines, Design Tokens, GTM Strategy, Launch Plan, Business Setup, Legal
-**Tier 3:** Feature Specs, Revenue Model, Content Calendar, Demo Script, Session Logs
+#### ai-engineering (LLM apps, RAG, agents, prompt engineering)
+**Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Prompt Library, Model Configuration, Evaluation Strategy, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
+**Tier 1 (if RAG):** + RAG Architecture
+**Tier 2:** Guardrails Spec, Cost Model, User Stories, Deployment Guide, Security & Privacy, Structural Constraints
+**Tier 3:** Feature Specs, Session Logs
 
-### automation (scripts, CLIs, bots, scheduled jobs)
+#### automation (scripts, CLIs, bots, scheduled jobs)
 **Tier 1:** Home, Phase Definitions, Architecture Overview, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
 **Tier 2:** Data Pipeline Design (if data-moving), Output Specs, Deployment Guide, Structural Constraints
 **Tier 3:** Session Logs
+
+#### library (reusable packages, SDKs, shared modules)
+**Tier 1:** Home, Phase Definitions, Architecture Overview, API Design Guide, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
+**Tier 2:** API Conventions, Migration Guide Template, Publishing Checklist, Deployment Guide, Structural Constraints
+**Tier 3:** Session Logs
+
+### Task-Based Types
+
+#### analytics-workspace (ad hoc analysis, investigations, data requests)
+**Onboarding:** sources/README.md (Source Registry Index), sources/connections/*.md, sources/tools/*.md
+**Per-task:** brief.md, plan.md, outcome.md (in each `tasks/[date-name]/` folder)
+**As needed:** sources/files/*.md, reusable queries in `src/queries/`, scripts in `src/scripts/`
+**Note:** No sprint artifacts, no backlog, no Tier system. Work is organized as tasks, not stories.

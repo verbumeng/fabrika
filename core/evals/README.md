@@ -16,9 +16,17 @@ A test suite for your agents, not your code. Eval cases verify that agent prompt
 
 Without evals, prompt changes are guesswork. You change a code-reviewer prompt and hope it finds more bugs. With evals, you change the prompt, re-run the eval suite, and see: "Accuracy improved from 6/10 to 8/10, no regressions on other cases."
 
-## When to Build Evals
+## Baseline Evals (Ship Day 1)
 
-**Not immediately.** Evals should be built from real observed failures, not synthetic scenarios. The system graduates through three stages:
+Every project ships with baseline eval cases in `docs/evals/baseline/`. These test fundamental agent behaviors that should always work — catching obvious bugs, respecting scope boundaries, producing testable criteria. They are organized by role archetype (planner, reviewer, validator, coordinator) and apply to whichever specific agent fills that role in your project.
+
+See `docs/evals/baseline/README.md` for details on how to run them and when to skip.
+
+Baseline evals are your starting point. Project-specific evals (below) supplement them over time.
+
+## When to Build Project-Specific Evals
+
+Evals built from real observed failures are more valuable than synthetic scenarios. The system graduates through three stages:
 
 ### Stage 1: Capture (from project day 1)
 - Session logs (`docs/session-logs/`) capture agent activity every session
@@ -102,10 +110,14 @@ source: "Session log 2026-04-10 — missed route shadowing bug in MYAPP-28"
 docs/evals/
 ├── README.md              # This file
 ├── agent-changelog.md     # Running log of prompt modifications
-├── code-reviewer/         # Eval cases for code-reviewer
+├── baseline/              # Baseline evals (ship with every project)
+│   ├── README.md
+│   ├── planner/           # Evals for the planner-role agent
+│   ├── reviewer/          # Evals for the reviewer-role agent
+│   ├── validator/         # Evals for the validator-role agent
+│   └── coordinator/       # Evals for the scrum-master (sprint-based only)
+├── [agent-name]/          # Project-specific eval cases per agent
 │   ├── eval-001.md
 │   └── ...
-├── test-writer/           # Eval cases for test-writer
-├── product-manager/       # Eval cases for product-manager
-└── scrum-master/          # Eval cases for scrum-master
+└── ...
 ```

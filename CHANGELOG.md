@@ -6,6 +6,85 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.6.0
+
+Project type taxonomy expansion. Renames `data-platform` to `analytics-engineering` and `ml-project` to `ml-engineering`. Adds four new project types: `data-engineering` (full Reis lifecycle — ingestion, storage, orchestration, serving), `ai-engineering` (LLM apps, RAG, prompt engineering, eval harnesses), `library` (reusable packages and SDKs), and `analytics-workspace` (a task-based workspace for ad hoc analysis with no sprint structure). Expands the agent system from 4 agents to 13, organized by role archetype. Ships baseline evaluation cases for all agent archetypes. Restructures bootstrap onboarding to determine project type before creating folder structure, with type-specific brain dump prompts.
+
+### Core (new — consumer projects should copy as needed)
+
+**New agents:**
+- `core/agents/analysis-planner.md` — **NEW.** Planner for analytics-workspace. Takes vague data requests, produces structured briefs and technical plans. Includes advisory mode for GUI tools (Tableau, Power BI, Alteryx).
+- `core/agents/logic-reviewer.md` — **NEW.** Reviewer for analytics-workspace. Validates SQL/Python/DAX logic — join types, filter logic, aggregation, business rules, null handling. Writes validation queries.
+- `core/agents/data-validator.md` — **NEW.** Validator for analytics-workspace. Runs sanity checks on analysis output — row counts, null analysis, distribution checks, cross-references, spot-checks. Scales effort to task stakes.
+- `core/agents/experiment-planner.md` — **NEW.** Planner for ml-engineering. Produces experiment designs with hypothesis, baseline, evaluation plan. Replaces product-manager for ML projects.
+- `core/agents/model-evaluator.md` — **NEW.** Validator for ml-engineering. Writes evaluation harnesses, computes metrics against baselines, checks for data leakage and distribution shift. Replaces test-writer for ML projects.
+- `core/agents/prompt-reviewer.md` — **NEW.** Supplemental reviewer for ai-engineering. Reviews prompt quality, safety (injection resistance), cost efficiency, and eval coverage. Works alongside code-reviewer.
+- `core/agents/eval-engineer.md` — **NEW.** Validator for ai-engineering. Designs and runs LLM eval suites, tests guardrails, measures RAG quality, verifies cost projections. Replaces test-writer for AI projects.
+- `core/agents/data-quality-engineer.md` — **NEW.** Validator for data-engineering. Tests data at every Reis lifecycle stage — source freshness, ingestion completeness, transformation correctness, serving SLA compliance. Replaces test-writer for DE projects.
+- `core/agents/api-designer.md` — **NEW.** Planner for library projects. Designs public API surface area, versioning strategy, backward compatibility. Replaces product-manager for library projects.
+- `core/agents/AGENT-CATALOG.md` — **NEW.** Maps project types to agent sets. The bootstrap process reads this to determine which agents to install.
+
+**New templates:**
+- `core/templates/Analysis-Brief-Template.md` — **NEW.** Business-layer template for analytics-workspace tasks: the question, who asked, deadline, desired output format, constraints.
+- `core/templates/Analysis-Plan-Template.md` — **NEW.** Technical-layer template: data sources, step-by-step approach, key SQL/logic, assumptions, gotchas, validation approach.
+- `core/templates/Outcome-Report-Template.md` — **NEW.** Delivery-layer template: summary of findings, methodology, data quality notes, output location, follow-up recommendations.
+- `core/templates/Task-Contract-Template.md` — **NEW.** Lightweight contract for analytics-workspace tasks: acceptance criteria, validation requirements, scope boundaries, deliverables.
+- `core/templates/Source-Connection-Template.md` — **NEW.** Documents queryable data sources: connection details, key tables, access notes, known gotchas, reliability.
+- `core/templates/Source-Tool-Template.md` — **NEW.** Documents BI/ETL tools in advisory mode: key assets, data sources used, what the agent can help with, known quirks.
+- `core/templates/Source-File-Template.md` — **NEW.** Documents recurring flat file sources: delivery details, file format, schema, known issues.
+
+**New baseline evals:**
+- `core/evals/baseline/README.md` — **NEW.** Explains baseline eval purpose, organization by archetype, and relationship to project-specific evals.
+- `core/evals/baseline/planner/eval-001-vague-ask.md` — **NEW.** Tests that planners ask clarifying questions for ambiguous requests.
+- `core/evals/baseline/planner/eval-002-scope-boundaries.md` — **NEW.** Tests that planners respect phase/scope boundaries.
+- `core/evals/baseline/planner/eval-003-testable-acceptance-criteria.md` — **NEW.** Tests that planners produce specific, measurable acceptance criteria.
+- `core/evals/baseline/reviewer/eval-001-obvious-bug.md` — **NEW.** Tests that reviewers catch clear logic errors.
+- `core/evals/baseline/reviewer/eval-002-security-basic.md` — **NEW.** Tests that reviewers catch OWASP basics (SQL injection, etc.).
+- `core/evals/baseline/reviewer/eval-003-false-positive.md` — **NEW.** Tests that reviewers don't over-flag correct code.
+- `core/evals/baseline/validator/eval-001-tests-run.md` — **NEW.** Tests that validators write checks that actually execute.
+- `core/evals/baseline/validator/eval-002-edge-cases.md` — **NEW.** Tests that validators cover boundary conditions.
+- `core/evals/baseline/validator/eval-003-regression.md` — **NEW.** Tests that validators add regression coverage for bug fixes.
+- `core/evals/baseline/coordinator/eval-001-topology-selection.md` — **NEW.** Tests correct sprint topology selection.
+- `core/evals/baseline/coordinator/eval-002-scope-drift.md` — **NEW.** Tests detection of out-of-scope work during sprints.
+
+### Core (changed — consumer projects should update)
+- `core/Document-Catalog.md` — **CHANGED.** Renamed `data-platform` → `analytics-engineering`, `ml-project` → `ml-engineering`. Added document sets for `data-engineering` (Source System Contracts, Ingestion Design, Storage Architecture, Serving Contracts, Orchestration Design, DataOps Runbook), `ai-engineering` (Prompt Library, Model Configuration, RAG Architecture, Evaluation Strategy, Cost Model, Guardrails Spec), `library` (API Design Guide, Migration Guide Template, Publishing Checklist), and `analytics-workspace` (source registry, task briefs/plans/outcomes). Updated Quick Reference with all 9 types. Added analytics-workspace Documents section.
+- `core/evals/README.md` — **CHANGED.** Added Baseline Evals section explaining day-one eval cases. Updated directory structure to include `baseline/` subdirectories.
+
+### Integrations (changed — consumer projects should update)
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Updated Project Type list from 5 types to 9. Updated transformation logic doc trigger to reference `analytics-engineering` and `data-engineering`.
+- `integrations/copilot/copilot-instructions.md` — **CHANGED.** Major expansion to full parity with CLAUDE.md template. Now includes: Project Basics (type, key, stack), project structure for both sprint-based and task-based types, Backlog System, Session Lifecycle (start/work/close-out with dev log format), Sprint Lifecycle (phases, cycle phase indicator, per-phase instructions, fresh-chat rationale), full Development Workflow (story start, evaluation cycle, rollback protocol, ideation, research, bug workflow), Analytics Workspace Workflow (task lifecycle, advisory mode, source registry), Owner Briefings, Progress Files (STATUS.md format, sprint progress), Subagents table by type with Agent Catalog reference, Evaluation System (baseline + project-specific), Maintenance Sessions, Document Creation Triggers, Doc Standards, Testing Rules, Key Constraints, Fabrika Relationship. Hooks section updated but remains Copilot-specific (git hooks + instruction-based rules).
+
+### Operational Docs (changed — no consumer action needed)
+- `BOOTSTRAP.md` — **CHANGED.** Major restructure: Phase 1 now includes type alignment (1.2) before folder creation. Folder structure is type-dependent, not universal-first. Brain dump prompts are type-specific (one per type). Agent installation reads from AGENT-CATALOG.md. E2E verification table updated for all 9 types. Added Phase 2W for analytics-workspace onboarding (source inventory conversation). Readiness checklist updated with type-specific checks for all new types.
+- `MANIFEST_SPEC.md` — **CHANGED.** Updated project_type allowed values from 5 to 9 types.
+- `README.md` — **CHANGED.** Updated feature list (13 agents, baseline evals, 60+ docs). Replaced project type table with sprint-based and task-based sections covering all 9 types. Added Agent Catalog reference.
+
+### Consumer update instructions
+This is a major version change. Consumer projects on 0.5.x should:
+
+**Type rename (all projects):**
+1. In `.fabrika/manifest.yml`, rename `project_type`: `data-platform` → `analytics-engineering`, `ml-project` → `ml-engineering`
+2. Search-and-replace old type names in project CLAUDE.md / copilot-instructions
+3. No file renames needed — the document files themselves haven't changed names
+
+**Baseline evals (all projects):**
+4. Copy `core/evals/baseline/` directory to `docs/evals/baseline/`
+5. Update `docs/evals/README.md` from `core/evals/README.md` (adds Baseline Evals section)
+
+**Agent updates (type-dependent):**
+6. For `ml-engineering` projects: optionally copy `experiment-planner.md` and `model-evaluator.md` to replace `product-manager.md` and `test-writer.md` in your agents directory
+7. For `ai-engineering` projects: copy `prompt-reviewer.md` and `eval-engineer.md` to your agents directory
+8. For `data-engineering` projects: copy `data-quality-engineer.md` to your agents directory
+9. For `library` projects: optionally copy `api-designer.md` to your agents directory
+10. Copy `core/agents/AGENT-CATALOG.md` to `.fabrika/AGENT-CATALOG.md` for reference
+11. For Copilot users: update `.github/copilot-instructions.md` from `integrations/copilot/copilot-instructions.md` (adds project type, type-specific agent sets, analytics-workspace workflow)
+
+**New project types (if starting new projects):**
+11. New projects of type `analytics-workspace`, `data-engineering`, `ai-engineering`, or `library` should be bootstrapped fresh using the updated BOOTSTRAP.md
+
+---
+
 ## 0.5.2
 
 Session summary and retro briefing formats. Extends the owner briefing system (0.5.1) to cover session close-out summaries and sprint retro presentations. The agent now translates evaluation results, retro findings, and session outcomes into plain-language summaries focused on product impact, rather than telling the owner to go read raw report files.
