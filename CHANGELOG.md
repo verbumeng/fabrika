@@ -6,6 +6,34 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.7.0
+
+Progressive context decomposition. Extracts phase-specific and reference-only content from the two integration instruction files (CLAUDE.md and copilot-instructions.md) into shared, tool-agnostic workflow files under `core/workflows/`. Both instruction files now carry compact inline summaries with pointers to the full workflow docs, loaded on demand when the relevant phase is active. Reduces CLAUDE.md from ~676 to ~470 lines (30%) and copilot-instructions.md from ~490 to ~347 lines (29%). The extracted files are shared between integrations, reducing maintenance burden for cross-tool content.
+
+### Core (new — consumer projects should copy as needed)
+
+**New workflow files (on-demand reference docs):**
+- `core/workflows/sprint-lifecycle.md` — **NEW.** Full sprint lifecycle details: phase diagram, cycle phase indicator values, what each phase chat does, branch hygiene gate, sprint lifecycle hygiene rationale. Loaded on phase transitions.
+- `core/workflows/development-workflow.md` — **NEW.** Complete development workflow: starting a story (spec expansion through implementation), evaluation cycle (reviewer/validator/planner with rollback protocol), sprint planning steps, ideation/grooming, research/technical discussion, bug workflow pointer. Loaded when starting story, planning, or bug work.
+- `core/workflows/analytics-workspace.md` — **NEW.** Analytics workspace task lifecycle (brief → plan → execute → validate → deliver), advisory mode for GUI tools, source registry structure. Loaded for analytics-workspace project types.
+- `core/workflows/hooks-reference.md` — **NEW.** Full hook inventory: git hooks (pre-commit, commit-msg, post-commit, pre-push) and tool-specific hooks (destructive git guard, protected file guard, auto-format, lock file cleanup). Includes hook discovery pointer. Loaded on demand for reference.
+- `core/workflows/progress-files.md` — **NEW.** STATUS.md template with all fields, sprint progress file description, dev log format (first-person narrative, 200-500 words, content generation fuel). Loaded when writing STATUS.md or dev logs.
+- `core/workflows/doc-triggers.md` — **NEW.** Full document creation trigger table (12 triggers mapping situations to document actions). Loaded on demand during development.
+
+### Integrations (changed — consumer projects should update)
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Replaced 6 detailed sections with compact summaries and `[FABRIKA_PATH]/core/workflows/` pointers: Sprint Lifecycle, Development Workflow, Analytics Workspace Workflow, Hooks, Progress Files (including Dev Log Format), Document Creation Triggers. ~676 → ~470 lines.
+- `integrations/copilot/copilot-instructions.md` — **CHANGED.** Same 6 sections replaced with identical pointer pattern. ~490 → ~347 lines.
+
+### Consumer update instructions
+Projects on 0.6.x should:
+1. Copy the entire `core/workflows/` directory (6 files) to your Fabrika path
+2. Update your project's CLAUDE.md or copilot-instructions.md — replace the 6 detailed sections (Sprint Lifecycle, Development Workflow, Analytics Workspace Workflow, Hooks, Progress Files, Document Creation Triggers) with the compact pointer versions from the updated integration templates
+3. Replace `[FABRIKA_PATH]` in the pointers with your actual Fabrika path
+
+**No migration needed** — this is a pure refactor. All workflow content is preserved in the extracted files; nothing was removed or changed semantically.
+
+---
+
 ## 0.6.0
 
 Project type taxonomy expansion. Renames `data-platform` to `analytics-engineering` and `ml-project` to `ml-engineering`. Adds four new project types: `data-engineering` (full Reis lifecycle — ingestion, storage, orchestration, serving), `ai-engineering` (LLM apps, RAG, prompt engineering, eval harnesses), `library` (reusable packages and SDKs), and `analytics-workspace` (a task-based workspace for ad hoc analysis with no sprint structure). Expands the agent system from 4 agents to 13, organized by role archetype. Ships baseline evaluation cases for all agent archetypes. Restructures bootstrap onboarding to determine project type before creating folder structure, with type-specific brain dump prompts.
