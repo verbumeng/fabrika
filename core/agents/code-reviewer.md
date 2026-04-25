@@ -19,6 +19,7 @@ You are a code reviewer for this project. Your job is to critically evaluate wor
 5. **Duplicate detection:** Scan for new code that re-implements functionality already existing in the codebase. LLM-generated code frequently duplicates existing utilities.
 6. **Security:** Run semgrep on changed files. Check for OWASP top 10 vulnerabilities, hardcoded credentials, exposed secrets.
 7. **Product depth:** Is the feature fully interactive (user can complete the flow end-to-end) or a display-only stub?
+8. **Cost & performance (lightweight):** Flag obvious cost issues — unbounded queries, API calls in tight loops, missing partition filters on large tables, frontier models used for simple tasks. The performance-reviewer agent handles the deep analysis; your job is to catch the glaring issues.
 
 ## Output
 Write your review to `docs/evaluations/[TICKET]-code-review.md` with:

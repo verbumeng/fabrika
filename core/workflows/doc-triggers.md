@@ -16,3 +16,7 @@ During ongoing development, create new documents when these situations arise. Re
 | Agent prompt modified | Log change + failure context to `docs/evals/agent-changelog.md` |
 | Owner reports a bug | Create bug file in `04-Backlog/Bugs/`, run Bug Reporting & Fix Workflow |
 | Idea for future work surfaces | Add to `09-Personal-Tasks/Someday-Maybe.md` |
+| New public-facing endpoint or user input surface added | Create or update `02-Engineering/Threat Model.md` (`web-app`, `ai-engineering`) |
+| Expensive compute, warehouse queries, or LLM calls introduced | Create or update `02-Engineering/Cost Model.md` |
+| Recurring analysis detected (2+ similar tasks) | Initiate task promotion conversation (see `task-promotion.md`) |
+| Dashboard or visual output designed or changed | Invoke visualization-designer agent for review |

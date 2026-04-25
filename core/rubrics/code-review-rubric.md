@@ -72,12 +72,22 @@ Are there any OWASP top 10 vulnerabilities or other security concerns?
 - **Pass:** No vulnerabilities detected by semgrep or manual review. Input validation at system boundaries. No credentials in code.
 - **Fail:** XSS, SQL injection, command injection, insecure authentication, or exposed secrets.
 
-### 9. Interface Contract Compliance (Hierarchical Topology Only) — Weight: HIGH
+### 9. Cost & Performance Awareness — Weight: MEDIUM
+Does the implementation avoid unnecessarily expensive operations?
+
+- **Pass:** No unbounded queries, no expensive operations in loops without batching, no frontier-model LLM calls where a smaller model suffices, caching used where appropriate for repeated computations. Warehouse queries filter on partition keys where available.
+- **Partial:** Minor cost inefficiencies that are acceptable for one-off work but would be problematic at scale or on a recurring schedule (e.g., full table scan on a small table, missing LIMIT on exploratory queries).
+- **Fail:** Unbounded SELECT * on large tables in production paths, API/LLM calls in tight loops without batching, no cost consideration for recurring operations, missing partition filters on multi-TB tables.
+- **Notes:** Scale severity to context. A one-off analysis scanning 5GB is not a fail. A daily scheduled job scanning 500GB without partition filters is. For `ai-engineering`, check model selection, prompt caching, and token waste. The performance-reviewer agent does the deep dive; this criterion catches the obvious issues.
+
+### 10. Interface Contract Compliance (Hierarchical Topology Only) — Weight: HIGH
 Does the implementation respect shared interface contracts defined in the sprint contract?
 
 - **Pass:** All shared interfaces match the contract definitions exactly.
 - **Fail:** Interface deviates from contract without documented agreement to change.
 - **Only applies when the current sprint topology is `hierarchical`.** Skip for pipeline and mesh topologies.
+
+**Note:** The performance-reviewer agent provides a deeper cost and performance analysis. This criterion is the code-reviewer's lightweight first-pass check — flag the obvious issues, and the performance reviewer will handle query plans, compute estimates, and scale analysis.
 
 ## Verdict Scale
 - **PASS:** All CRITICAL criteria pass, no HIGH criteria fail, no more than 1 MEDIUM partial or N/A.
