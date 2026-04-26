@@ -40,23 +40,37 @@ Every project has up to four agent roles:
 
 When a project has multiple types (e.g., `web-app` + `ai-engineering`), install the union of all agents. If two types specify different agents for the same role, install both — they serve complementary purposes. For example, `ai-engineering` installs both `code-reviewer` and `prompt-reviewer` as reviewers.
 
+## Agent Archetypes
+
+Each agent implements one of five archetypes that define base tool profiles, dispatch contracts, and output contracts. Archetype templates live in `core/agents/archetypes/` and serve as starting points for new agents — existing agents may diverge where their specialization demands it.
+
+| Archetype | Base behavior | Dispatch tier |
+|-----------|--------------|---------------|
+| [Planner](archetypes/planner.md) | Synthesize context into specs; validate against acceptance criteria | Contextual (planning) / Strict (validation) |
+| [Reviewer](archetypes/reviewer.md) | Independent skeptical evaluation of work product | Strict |
+| [Validator](archetypes/validator.md) | Write and run verification code; prove correctness by execution | Strict |
+| [Coordinator](archetypes/coordinator.md) | Manage work sequencing, sprint planning, topology assessment | Contextual |
+| [Designer](archetypes/designer.md) | Propose and evaluate designs (visual, structural, interactive) | Strict |
+
+For dispatch contracts (what the orchestrator provides each agent at each invocation point), see `core/workflows/dispatch-protocol.md`.
+
 ## Agent Files
 
-| File | Role | Used by |
-|------|------|---------|
-| `product-manager.md` | Planner | web-app, data-app, analytics-engineering, data-engineering, ai-engineering, automation |
-| `experiment-planner.md` | Planner | ml-engineering |
-| `api-designer.md` | Planner | library |
-| `analysis-planner.md` | Planner | analytics-workspace |
-| `code-reviewer.md` | Reviewer | all sprint-based types |
-| `logic-reviewer.md` | Reviewer | analytics-workspace |
-| `prompt-reviewer.md` | Supplemental Reviewer | ai-engineering |
-| `security-reviewer.md` | Supplemental Reviewer | web-app, data-engineering, ai-engineering |
-| `performance-reviewer.md` | Supplemental Reviewer | all types |
-| `test-writer.md` | Validator | web-app, data-app, analytics-engineering, automation, library |
-| `data-quality-engineer.md` | Validator | data-engineering |
-| `model-evaluator.md` | Validator | ml-engineering |
-| `eval-engineer.md` | Validator | ai-engineering |
-| `data-validator.md` | Validator | analytics-workspace |
-| `visualization-designer.md` | Designer | analytics-workspace, data-app, analytics-engineering |
-| `scrum-master.md` | Coordinator | all sprint-based types |
+| File | Role | Archetype | Used by |
+|------|------|-----------|---------|
+| `product-manager.md` | Planner | Planner | web-app, data-app, analytics-engineering, data-engineering, ai-engineering, automation |
+| `experiment-planner.md` | Planner | Planner | ml-engineering |
+| `api-designer.md` | Planner | Planner | library |
+| `analysis-planner.md` | Planner | Planner | analytics-workspace |
+| `code-reviewer.md` | Reviewer | Reviewer | all sprint-based types |
+| `logic-reviewer.md` | Reviewer | Reviewer | analytics-workspace |
+| `prompt-reviewer.md` | Supplemental Reviewer | Reviewer | ai-engineering |
+| `security-reviewer.md` | Supplemental Reviewer | Reviewer | web-app, data-engineering, ai-engineering |
+| `performance-reviewer.md` | Supplemental Reviewer | Reviewer | all types |
+| `test-writer.md` | Validator | Validator | web-app, data-app, analytics-engineering, automation, library |
+| `data-quality-engineer.md` | Validator | Validator | data-engineering |
+| `model-evaluator.md` | Validator | Validator | ml-engineering |
+| `eval-engineer.md` | Validator | Validator | ai-engineering |
+| `data-validator.md` | Validator | Validator | analytics-workspace |
+| `visualization-designer.md` | Designer | Designer | analytics-workspace, data-app, analytics-engineering |
+| `scrum-master.md` | Coordinator | Coordinator | all sprint-based types |

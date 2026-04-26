@@ -2,6 +2,10 @@
 
 The agent drives the development process proactively. Do not wait for the owner to orchestrate each step.
 
+## Dispatch Protocol
+
+Before invoking any sub-agent, read `core/workflows/dispatch-protocol.md` for what to provide and what to withhold. The dispatch protocol defines per-agent input contracts (what the orchestrator must hand over) and output contracts (what the sub-agent must produce). Two tiers: strict dispatch for reviewers, validators, and designers (plan + file paths + rubric only — no editorial); contextual dispatch for planners and coordinators (richer project state).
+
 ## Starting a Story
 1. Read the story file (or issue tracker ticket) and the sprint contract for this sprint
 2. Read relevant project docs on demand: Architecture Overview, Data Model, relevant ADRs, research notes

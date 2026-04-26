@@ -384,6 +384,10 @@ When technical decisions, data sources, schema changes, architecture divergences
 
 All agents are invoked proactively by Claude Code at the trigger points in the Development Workflow. Agent prompts are **stack-agnostic** — they read project-specific details from this CLAUDE.md file and on-demand reference docs. Which agents are installed depends on the project type — see the Agent Catalog.
 
+**Dispatch protocol:** Before invoking any sub-agent, read `[FABRIKA_PATH]/core/workflows/dispatch-protocol.md`. It defines what to provide and what to withhold for each agent at each invocation point. Reviewers, validators, and designers get strict dispatch (plan + file paths + rubric only — no editorial, no hints); planners and coordinators get contextual dispatch (richer project state).
+
+**Archetypes:** Each agent implements one of five archetypes (Planner, Reviewer, Validator, Coordinator, Designer) that define base tool profiles and contracts. See `[FABRIKA_PATH]/core/agents/archetypes/` for templates.
+
 ### Sprint-based types
 
 | Role | Default Agent | Specialized Variants |
@@ -408,6 +412,22 @@ All agents are invoked proactively by Claude Code at the trigger points in the D
 | **Validator** | data-validator — sanity checks, cross-references, spot-checks on output |
 
 No coordinator agent for analytics workspaces (no sprints to coordinate).
+
+### Claude Code Tool Guidance
+
+When invoking sub-agents via the Agent tool, control tool access through the prompt and sub-agent configuration. Each archetype defines a recommended tool set in `[FABRIKA_PATH]/core/agents/archetypes/`:
+
+- **Planners:** Read, Glob, Grep, Write, Edit. No Bash.
+- **Reviewers (with commands):** Read, Glob, Grep, Write, Bash. No Edit.
+- **Reviewers (no commands):** Read, Glob, Grep, Write. No Edit, no Bash.
+- **Validators:** Read, Glob, Grep, Write, Edit, Bash. Edit constrained to `tests/` and `docs/evaluations/`.
+- **Coordinators:** Read, Glob, Grep, Write, Edit, Bash. Edit constrained to status files and backlog. Bash constrained to git and search.
+- **Designers:** Read, Glob, Grep, Write. No Edit, no Bash.
+
+Instruction-level constraints (enforced in the sub-agent prompt):
+- Reviewers create new files (reports) — they do not modify existing files
+- Validators write to `tests/` and `docs/evaluations/` only, never `src/`
+- Coordinators edit `STATUS.md`, `docs/04-Backlog/`, and `features.json` only
 
 ---
 

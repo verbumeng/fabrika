@@ -6,6 +6,53 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.9.0
+
+Agent archetypes, dispatch protocol, and Copilot tool declarations. Introduces five archetype templates that define base tool profiles, dispatch contracts, and output contracts for each agent role. Adds a dispatch protocol that specifies exactly what the orchestrator provides (and withholds) when invoking each sub-agent — with strict isolation for reviewers, validators, and designers, and contextual dispatch for planners and coordinators. Fixes the Copilot wildcard tool bug by documenting explicit `namespace/tool` syntax for all agent types. Establishes a retry protocol with versioned evaluation report filenames.
+
+### Core (new — consumer projects should copy as needed)
+
+**New archetype templates:**
+- `core/agents/archetypes/planner.md` — **NEW.** Base template for planner agents. Defines contextual dispatch contract (planning mode) and strict dispatch contract (validation mode), tool profile (read + search + write/edit docs, no terminal), and base behavioral rules.
+- `core/agents/archetypes/reviewer.md` — **NEW.** Base template for reviewer agents. Defines strict dispatch contract (spec + file paths + rubric only, no editorial), tool profile with two variants (with/without terminal access), createFile-only write access (no editFiles), and base review behavioral rules.
+- `core/agents/archetypes/validator.md` — **NEW.** Base template for validator agents. Defines strict dispatch contract, full tool profile including editFiles (constrained to tests/ and docs/evaluations/), and base verification behavioral rules.
+- `core/agents/archetypes/coordinator.md` — **NEW.** Base template for coordinator agents. Defines contextual dispatch contract, tool profile with editFiles constrained to status and backlog files, and base coordination behavioral rules.
+- `core/agents/archetypes/designer.md` — **NEW.** Base template for designer agents. Defines strict dispatch contract, createFile-only write access (no editFiles, no terminal), and base design behavioral rules.
+
+**New workflow:**
+- `core/workflows/dispatch-protocol.md` — **NEW.** Per-agent dispatch contracts specifying what the orchestrator provides and withholds at each invocation point. Covers all 16 agents across planning mode, validation mode, review, and coordination invocations. Includes retry protocol with versioned report filenames (v2, v3) and maximum 2 retry cycles.
+
+### Core (changed — consumer projects should update)
+
+- `core/agents/AGENT-CATALOG.md` — **CHANGED.** Added Agent Archetypes section with archetype table linking to template files. Added Archetype column to Agent Files table. Added dispatch protocol pointer.
+- `core/workflows/development-workflow.md` — **CHANGED.** Added Dispatch Protocol section with pointer to `core/workflows/dispatch-protocol.md`.
+
+### Integrations (changed — consumer projects should update)
+
+- `integrations/copilot/copilot-instructions.md` — **CHANGED.** Added dispatch protocol and archetype pointers to Subagents section. Added Copilot Agent Configuration subsection with explicit tool declaration guidance (no wildcards), per-archetype tool reference table, example frontmatter, and instruction-level constraints per role.
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Added dispatch protocol and archetype pointers to Subagents section. Added Claude Code Tool Guidance subsection with per-archetype tool sets and instruction-level constraints.
+
+### Consumer update instructions
+
+Projects on 0.8.x should:
+
+**New files (all projects):**
+1. Copy `core/agents/archetypes/` directory (5 files) to your Fabrika path — these are reference templates for future agent creation and tool profile documentation
+2. Copy `core/workflows/dispatch-protocol.md` to your Fabrika path — the orchestrator reads this before invoking any sub-agent
+
+**Updated files (all projects):**
+3. Update AGENT-CATALOG from `core/agents/AGENT-CATALOG.md` (adds archetype column and archetypes section)
+4. Update development-workflow from `core/workflows/development-workflow.md` (adds dispatch protocol pointer)
+
+**Updated integration files:**
+5. For Copilot projects: update `.github/copilot-instructions.md` from `integrations/copilot/copilot-instructions.md` (adds Copilot Agent Configuration with explicit tool lists, dispatch protocol pointer)
+6. For Claude Code projects: update `CLAUDE.md` from `integrations/claude-code/CLAUDE.md` (adds Claude Code Tool Guidance, dispatch protocol pointer)
+
+**Copilot-specific action (important):**
+7. For Copilot projects: update all `.github/agents/*.agent.md` frontmatter to use explicit `namespace/tool` format instead of wildcards. See the Copilot Agent Configuration section for the tool reference and per-archetype tool lists.
+
+---
+
 ## 0.8.0
 
 Cost awareness, security depth, performance review, visualization design, and recurring analysis promotion. Adds three new agents (performance-reviewer, security-reviewer, visualization-designer), a task promotion workflow for graduating recurring analytics into reusable assets, cost awareness across the review pipeline, and a Threat Model document type. Expands the Cost Model document from ai-engineering only to four project types. The agent system grows from 13 to 16 agents organized by role archetype (now including supplemental reviewers and designers).
