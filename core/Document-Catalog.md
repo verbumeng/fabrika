@@ -239,9 +239,14 @@ A project can be **multi-type** (sprint-based types only). A data app with scrap
 - **Notes:** Distinct from Testing Strategy — this is about evaluating LLM behavior, not testing code. Think of it as the acceptance criteria for AI quality.
 
 ### Cost Model.md
-- **Purpose:** Token usage projections, caching strategy, model routing for cost optimization.
-- **Types:** ai-engineering | **Tier:** 2 | **Audience:** both
-- **Structure:** Per-feature: estimated calls/day, tokens/call, model used, monthly cost projection. Caching strategy, prompt optimization notes, model routing (cheap model for simple tasks, expensive for complex).
+- **Purpose:** Projected operational costs for compute, storage, API usage, and infrastructure. For `ai-engineering`, focuses on token usage and model routing. For `data-engineering` and `analytics-engineering`, covers warehouse compute, storage multiplication, and egress.
+- **Types:** ai-engineering, data-engineering, analytics-engineering, ml-engineering | **Tier:** 2 | **Audience:** both
+- **Structure:**
+  - **ai-engineering:** Per-feature: estimated calls/day, tokens/call, model used, monthly cost projection. Caching strategy, prompt optimization notes, model routing (cheap model for simple tasks, expensive for complex).
+  - **data-engineering:** Per-pipeline: compute cost per run, storage cost across lifecycle stages (raw/staged/modeled/served), egress costs, orchestrator costs, idle infrastructure baseline. Monthly projection at current and projected data volume.
+  - **analytics-engineering:** Per-model: warehouse compute cost for full refresh vs. incremental, storage footprint, downstream query cost impact. Monthly projection.
+  - **ml-engineering:** Training compute (GPU hours per experiment), inference cost at projected volume, experiment tracking storage, model registry costs.
+- **Notes:** The performance-reviewer agent checks actual costs against this model during reviews. Track actual vs. projected over time to improve estimation accuracy.
 
 ### Guardrails Spec.md
 - **Purpose:** Input/output filtering, safety boundaries, fallback behavior when AI output is unacceptable.
@@ -293,6 +298,12 @@ A project can be **multi-type** (sprint-based types only). A data app with scrap
 - **Purpose:** Security architecture, data handling, authentication, encryption, compliance requirements.
 - **Types:** web-app | **Tier:** 2 | **Audience:** agent
 - **Structure:** Auth method, data encryption (at rest, in transit), PII handling, GDPR/CCPA considerations, credential management.
+
+### Threat Model.md
+- **Purpose:** Enumerates attack surfaces, threat actors, and mitigations. Maps each surface to a concrete mitigation or an accepted risk.
+- **Types:** web-app, ai-engineering | **Tier:** 2 | **Audience:** both
+- **Structure:** Per attack surface: entry point, threat actor (unauthenticated user, authenticated user, supply chain, insider), attack vector, impact (data breach, privilege escalation, denial of service), mitigation, status (mitigated, accepted risk, TODO). For `ai-engineering`: include prompt injection, data poisoning, model extraction, and PII leakage through model responses.
+- **Notes:** The security-reviewer agent references this during reviews. Start with the obvious surfaces (auth, user input, external APIs) and expand as the application grows. Not a one-time document — update when new attack surfaces are introduced.
 
 ### Deployment Guide.md
 - **Purpose:** How to deploy the project. Steps, environments, infrastructure, monitoring.
@@ -653,7 +664,7 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 #### web-app (SaaS, personal tools, consumer apps)
 **Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
 **Tier 1 (consumer):** + Vision & Positioning, UX Specification
-**Tier 2:** API Conventions, Security & Privacy, Deployment Guide, User Stories, Wireframes, Seed Data, Structural Constraints
+**Tier 2:** API Conventions, Security & Privacy, Threat Model, Deployment Guide, User Stories, Wireframes, Seed Data, Structural Constraints
 **Tier 2 (consumer):** + Brand Guidelines, Design Tokens, GTM Strategy, Launch Plan, Business Setup, Legal
 **Tier 3:** Feature Specs, Revenue Model, Content Calendar, Demo Script, Session Logs
 
@@ -664,23 +675,23 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 
 #### analytics-engineering (dbt, DuckDB, warehouse modeling, Alteryx migration)
 **Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Data Pipeline Design, Transformation Logic, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Data Source Research, Someday-Maybe, Pre-Dev Checklist
-**Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, Deployment Guide, Environment Config, Structural Constraints
+**Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, Deployment Guide, Environment Config, Cost Model, Structural Constraints
 **Tier 3:** Stakeholder Presentation, ROI/Impact Analysis, Session Logs
 
 #### data-engineering (pipelines, ingestion, orchestration, full Reis lifecycle)
 **Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Data Pipeline Design, Source System Contracts, Ingestion Design, Storage Architecture, Serving Contracts, Orchestration Design, Transformation Logic, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Data Source Research, Someday-Maybe, Pre-Dev Checklist
-**Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, DataOps Runbook, Deployment Guide, Environment Config, Structural Constraints
+**Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, DataOps Runbook, Deployment Guide, Environment Config, Cost Model, Structural Constraints
 **Tier 3:** Stakeholder Presentation, ROI/Impact Analysis, Session Logs
 
 #### ml-engineering (model development, training, evaluation)
 **Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Model Design, Training Data Spec, Model Evaluation Criteria, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
-**Tier 2:** Data Pipeline Design, Data Dictionary, Deployment Guide, Structural Constraints
+**Tier 2:** Data Pipeline Design, Data Dictionary, Deployment Guide, Cost Model, Structural Constraints
 **Tier 3:** Session Logs, Feature Specs
 
 #### ai-engineering (LLM apps, RAG, agents, prompt engineering)
 **Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Prompt Library, Model Configuration, Evaluation Strategy, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
 **Tier 1 (if RAG):** + RAG Architecture
-**Tier 2:** Guardrails Spec, Cost Model, User Stories, Deployment Guide, Security & Privacy, Structural Constraints
+**Tier 2:** Guardrails Spec, Cost Model, Threat Model, User Stories, Deployment Guide, Security & Privacy, Structural Constraints
 **Tier 3:** Feature Specs, Session Logs
 
 #### automation (scripts, CLIs, bots, scheduled jobs)

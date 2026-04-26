@@ -231,7 +231,11 @@ When presenting plans, results, or summaries to the owner, do not dump raw artif
 
 ## Subagents
 
-All agents are invoked proactively at trigger points in the Development Workflow. Agent prompts are **stack-agnostic** — they read project-specific details from this instructions file and on-demand reference docs. Which agents are installed depends on the project type (see Agent Catalog):
+All agents are invoked proactively at trigger points in the Development Workflow. Agent prompts are **stack-agnostic** — they read project-specific details from this instructions file and on-demand reference docs. Which agents are installed depends on the project type (see Agent Catalog).
+
+**Dispatch protocol:** Before invoking any sub-agent, read `[FABRIKA_PATH]/core/workflows/dispatch-protocol.md`. It defines what to provide and what to withhold for each agent at each invocation point. Reviewers, validators, and designers get strict dispatch (plan + file paths + rubric only); planners and coordinators get contextual dispatch (richer project state).
+
+**Archetypes:** Each agent implements one of five archetypes (Planner, Reviewer, Validator, Coordinator, Designer) that define base tool profiles and contracts. See `[FABRIKA_PATH]/core/agents/archetypes/` for templates.
 
 ### Sprint-based types
 | Role | Default Agent | Specialized Variants |
@@ -247,6 +251,53 @@ All agents are invoked proactively at trigger points in the Development Workflow
 | **Planner** | analysis-planner |
 | **Reviewer** | logic-reviewer |
 | **Validator** | data-validator |
+
+### Copilot Agent Configuration
+
+Agent prompt files live in `.github/agents/` as `[agent-name].agent.md` with YAML frontmatter. **Do not use wildcards (`*`) for tool assignment** — spell out each tool explicitly using `namespace/tool` format. Wildcards are unreliable in VS Code Copilot (see GitHub issue #12647).
+
+Each archetype defines a base tool set. Copy the tools list from the relevant archetype template at `[FABRIKA_PATH]/core/agents/archetypes/` and adjust if the specific agent needs more or fewer tools.
+
+**Tool reference (VS Code Copilot, current as of early 2025 — verify if behavior seems off):**
+
+| Namespace | Tools | Purpose |
+|-----------|-------|---------|
+| `read/` | readFile, problems, terminalLastCommand | Read file contents, workspace diagnostics, terminal output |
+| `search/` | codebase, fileSearch, textSearch, listDirectory, usages, changes | Find files, search code, list dirs, find references, view diffs |
+| `edit/` | createFile, createDirectory, editFiles | Create new files/dirs, modify existing files |
+| `execute/` | runInTerminal, getTerminalOutput, testFailure | Run commands, read output, get test failure details |
+
+**Tool set shorthands** (e.g., `edit` for all `edit/*` tools) exist but may not reliably grant all sub-tools. Prefer explicit tool names.
+
+**Example `.github/agents/code-reviewer.agent.md` frontmatter:**
+```yaml
+---
+name: code-reviewer
+description: Reviews implementation against acceptance criteria, rubrics, and security baseline
+tools:
+  - read/readFile
+  - read/problems
+  - read/terminalLastCommand
+  - search/codebase
+  - search/fileSearch
+  - search/textSearch
+  - search/listDirectory
+  - search/usages
+  - search/changes
+  - edit/createFile
+  - edit/createDirectory
+  - execute/runInTerminal
+  - execute/getTerminalOutput
+  - execute/testFailure
+---
+```
+
+**Instruction-level constraints** (enforced in the agent prompt, not mechanically by tools):
+- Reviewers: `createFile` only, no `editFiles` — they create reports, never modify code
+- Validators: `editFiles` restricted to `tests/` and `docs/evaluations/`
+- Planners: `editFiles` restricted to `docs/` and `tasks/`
+- Coordinators: `editFiles` restricted to `STATUS.md`, `docs/04-Backlog/`, and `features.json`
+- Designers: `createFile` only, no `editFiles`
 
 ---
 

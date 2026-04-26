@@ -6,6 +6,110 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.9.0
+
+Agent archetypes, dispatch protocol, and Copilot tool declarations. Introduces five archetype templates that define base tool profiles, dispatch contracts, and output contracts for each agent role. Adds a dispatch protocol that specifies exactly what the orchestrator provides (and withholds) when invoking each sub-agent — with strict isolation for reviewers, validators, and designers, and contextual dispatch for planners and coordinators. Fixes the Copilot wildcard tool bug by documenting explicit `namespace/tool` syntax for all agent types. Establishes a retry protocol with versioned evaluation report filenames.
+
+### Core (new — consumer projects should copy as needed)
+
+**New archetype templates:**
+- `core/agents/archetypes/planner.md` — **NEW.** Base template for planner agents. Defines contextual dispatch contract (planning mode) and strict dispatch contract (validation mode), tool profile (read + search + write/edit docs, no terminal), and base behavioral rules.
+- `core/agents/archetypes/reviewer.md` — **NEW.** Base template for reviewer agents. Defines strict dispatch contract (spec + file paths + rubric only, no editorial), tool profile with two variants (with/without terminal access), createFile-only write access (no editFiles), and base review behavioral rules.
+- `core/agents/archetypes/validator.md` — **NEW.** Base template for validator agents. Defines strict dispatch contract, full tool profile including editFiles (constrained to tests/ and docs/evaluations/), and base verification behavioral rules.
+- `core/agents/archetypes/coordinator.md` — **NEW.** Base template for coordinator agents. Defines contextual dispatch contract, tool profile with editFiles constrained to status and backlog files, and base coordination behavioral rules.
+- `core/agents/archetypes/designer.md` — **NEW.** Base template for designer agents. Defines strict dispatch contract, createFile-only write access (no editFiles, no terminal), and base design behavioral rules.
+
+**New workflow:**
+- `core/workflows/dispatch-protocol.md` — **NEW.** Per-agent dispatch contracts specifying what the orchestrator provides and withholds at each invocation point. Covers all 16 agents across planning mode, validation mode, review, and coordination invocations. Includes retry protocol with versioned report filenames (v2, v3) and maximum 2 retry cycles.
+
+### Core (changed — consumer projects should update)
+
+- `core/agents/AGENT-CATALOG.md` — **CHANGED.** Added Agent Archetypes section with archetype table linking to template files. Added Archetype column to Agent Files table. Added dispatch protocol pointer.
+- `core/workflows/development-workflow.md` — **CHANGED.** Added Dispatch Protocol section with pointer to `core/workflows/dispatch-protocol.md`.
+
+### Integrations (changed — consumer projects should update)
+
+- `integrations/copilot/copilot-instructions.md` — **CHANGED.** Added dispatch protocol and archetype pointers to Subagents section. Added Copilot Agent Configuration subsection with explicit tool declaration guidance (no wildcards), per-archetype tool reference table, example frontmatter, and instruction-level constraints per role.
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Added dispatch protocol and archetype pointers to Subagents section. Added Claude Code Tool Guidance subsection with per-archetype tool sets and instruction-level constraints.
+
+### Consumer update instructions
+
+Projects on 0.8.x should:
+
+**New files (all projects):**
+1. Copy `core/agents/archetypes/` directory (5 files) to your Fabrika path — these are reference templates for future agent creation and tool profile documentation
+2. Copy `core/workflows/dispatch-protocol.md` to your Fabrika path — the orchestrator reads this before invoking any sub-agent
+
+**Updated files (all projects):**
+3. Update AGENT-CATALOG from `core/agents/AGENT-CATALOG.md` (adds archetype column and archetypes section)
+4. Update development-workflow from `core/workflows/development-workflow.md` (adds dispatch protocol pointer)
+
+**Updated integration files:**
+5. For Copilot projects: update `.github/copilot-instructions.md` from `integrations/copilot/copilot-instructions.md` (adds Copilot Agent Configuration with explicit tool lists, dispatch protocol pointer)
+6. For Claude Code projects: update `CLAUDE.md` from `integrations/claude-code/CLAUDE.md` (adds Claude Code Tool Guidance, dispatch protocol pointer)
+
+**Copilot-specific action (important):**
+7. For Copilot projects: update all `.github/agents/*.agent.md` frontmatter to use explicit `namespace/tool` format instead of wildcards. See the Copilot Agent Configuration section for the tool reference and per-archetype tool lists.
+
+---
+
+## 0.8.0
+
+Cost awareness, security depth, performance review, visualization design, and recurring analysis promotion. Adds three new agents (performance-reviewer, security-reviewer, visualization-designer), a task promotion workflow for graduating recurring analytics into reusable assets, cost awareness across the review pipeline, and a Threat Model document type. Expands the Cost Model document from ai-engineering only to four project types. The agent system grows from 13 to 16 agents organized by role archetype (now including supplemental reviewers and designers).
+
+### Core (new — consumer projects should copy as needed)
+
+**New agents:**
+- `core/agents/performance-reviewer.md` — **NEW.** Supplemental reviewer for all project types. Evaluates query performance, compute cost estimation (one-off and recurring), storage impact, runtime efficiency, LLM/API cost efficiency, and scale readiness. Includes type-specific orientation for both sprint-based and analytics-workspace projects.
+- `core/agents/security-reviewer.md` — **NEW.** Supplemental reviewer for web-app, data-engineering, and ai-engineering. Deep security review: authentication/session management, injection attacks (SQL, XSS, command, prompt), data exposure, authorization/access control, dependency/supply chain audit, infrastructure/deployment, data pipeline security. Prompt injection treated with same severity as SQL injection for ai-engineering.
+- `core/agents/visualization-designer.md` — **NEW.** Designer for analytics-workspace, data-app, and analytics-engineering. Two modes: design (propose chart types, layouts, integration into existing dashboards) and review (evaluate clarity, accuracy, data-ink ratio, accessibility of existing visuals). Includes advisory mode for GUI tools (Tableau, Power BI). Chart type selection guide with data-relationship-to-visual-encoding table.
+
+**New workflow:**
+- `core/workflows/task-promotion.md` — **NEW.** Five-level graduation ladder for recurring analyses in analytics-workspace: Level 1 (Templatize), Level 2 (Scriptify), Level 3 (Visualize), Level 4 (Automate), Level 5 (Spin Out). Levels 1-4 stay within the current workspace. The analysis planner detects repetition patterns and initiates a structured promotion conversation with the owner. Documents the relationship between all agents during promotion.
+
+### Core (changed — consumer projects should update)
+
+- `core/agents/code-reviewer.md` — **CHANGED.** Added step 8 to review process: "Cost & performance (lightweight)" — flags obvious cost issues (unbounded queries, API calls in loops, missing partition filters). References performance-reviewer for deep analysis.
+- `core/agents/analysis-planner.md` — **CHANGED.** Added Step 2.5 (Cost Estimate) — compute cost, API/LLM cost, total estimate, recurring cost projection before owner approves the plan. Added Step 2.6 (Promotion Check) — checks for prior similar tasks in `templates/` and `recurring/`, flags repeats, initiates promotion conversation.
+- `core/agents/AGENT-CATALOG.md` — **CHANGED.** Added Supplemental Reviewer and Designer role types. Updated sprint-based and task-based mapping tables with new columns for supplemental reviewers and designers. Added performance-reviewer (all types), security-reviewer (web-app, data-engineering, ai-engineering), and visualization-designer (analytics-workspace, data-app, analytics-engineering) to agent files table.
+- `core/rubrics/code-review-rubric.md` — **CHANGED.** Added criterion #9 "Cost & Performance Awareness" (MEDIUM weight) — flags unbounded queries, expensive operations in loops, missing partition filters, mismatched model selection. Includes note referencing performance-reviewer for deep analysis. Renumbered Interface Contract Compliance to #10. Added performance-reviewer relationship note after criterion #10.
+- `core/workflows/analytics-workspace.md` — **CHANGED.** Updated task lifecycle: added cost estimate to Plan phase, added Promotion Check phase between Plan and Execute, added performance reviewer to Validate phase for high-compute/recurring tasks. Added Task Promotion section documenting promoted task asset locations (templates/, src/scripts/, src/queries/, recurring/).
+- `core/workflows/doc-triggers.md` — **CHANGED.** Added four new triggers: Threat Model creation (new endpoint/input surface), Cost Model creation (expensive compute introduced), task promotion conversation (recurring analysis detected), visualization-designer invocation (dashboard/visual output changed).
+- `core/Document-Catalog.md` — **CHANGED.** Added Threat Model document (Tier 2, web-app and ai-engineering) — attack surface enumeration with threat actors, vectors, mitigations, and status tracking. Expanded Cost Model from ai-engineering only to ai-engineering, data-engineering, analytics-engineering, and ml-engineering with type-specific structure. Updated Quick Reference: added Threat Model to web-app Tier 2 and ai-engineering Tier 2, added Cost Model to data-engineering Tier 2, analytics-engineering Tier 2, and ml-engineering Tier 2.
+
+### Consumer update instructions
+Projects on 0.7.x should:
+
+**New agents (all projects):**
+1. Copy `core/agents/performance-reviewer.md` to your agents directory (new file — applies to all project types)
+
+**New agents (type-dependent):**
+2. For `web-app` projects: copy `core/agents/security-reviewer.md` to your agents directory
+3. For `data-engineering` projects: copy `core/agents/security-reviewer.md` to your agents directory
+4. For `ai-engineering` projects: copy `core/agents/security-reviewer.md` to your agents directory
+5. For `analytics-workspace`, `data-app`, `analytics-engineering` projects: copy `core/agents/visualization-designer.md` to your agents directory
+
+**New workflow (analytics-workspace projects):**
+6. Copy `core/workflows/task-promotion.md` to your Fabrika path (new file)
+7. Create `templates/` and `recurring/` directories in your workspace root
+
+**Updated files (all projects):**
+8. Update code-reviewer agent from `core/agents/code-reviewer.md` (adds cost & performance step)
+9. Update code-review rubric from `core/rubrics/code-review-rubric.md` (adds Cost & Performance Awareness criterion #9, renumbers Interface Contract to #10)
+10. Update AGENT-CATALOG from `core/agents/AGENT-CATALOG.md` (adds new role types and agent mappings)
+11. Update Document Catalog from `core/Document-Catalog.md` (adds Threat Model, expands Cost Model)
+12. Update doc-triggers from `core/workflows/doc-triggers.md` (adds 4 new triggers)
+
+**Updated files (analytics-workspace projects):**
+13. Update analysis-planner agent from `core/agents/analysis-planner.md` (adds cost estimate and promotion check steps)
+14. Update analytics-workspace workflow from `core/workflows/analytics-workspace.md` (adds cost estimate, promotion check, performance review, task promotion section)
+
+**New documents to create (type-dependent):**
+15. For `web-app` and `ai-engineering` projects: create `docs/02-Engineering/Threat Model.md` (Tier 2 — create when first public endpoint or user input surface is added)
+16. For `data-engineering`, `analytics-engineering`, and `ml-engineering` projects: create `docs/02-Engineering/Cost Model.md` (Tier 2 — create when expensive compute is introduced)
+
+---
+
 ## 0.7.0
 
 Progressive context decomposition. Extracts phase-specific and reference-only content from the two integration instruction files (CLAUDE.md and copilot-instructions.md) into shared, tool-agnostic workflow files under `core/workflows/`. Both instruction files now carry compact inline summaries with pointers to the full workflow docs, loaded on demand when the relevant phase is active. Reduces CLAUDE.md from ~676 to ~470 lines (30%) and copilot-instructions.md from ~490 to ~347 lines (29%). The extracted files are shared between integrations, reducing maintenance burden for cross-tool content.

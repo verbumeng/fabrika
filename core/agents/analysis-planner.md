@@ -39,6 +39,29 @@ Once the brief is confirmed:
 
 ---
 
+## Step 2.5: Cost Estimate
+
+Before the owner approves the plan, include a cost estimate:
+
+1. **Compute cost:** Estimate data scanned for each major query. State the pricing model and assumptions (e.g., "BigQuery on-demand at $6.25/TB, this query scans ~50GB = ~$0.31"). For local tools (DuckDB, SQLite), note that compute is free but flag if queries will take significant time on the expected data volume.
+2. **API/LLM cost:** If the task uses external APIs or LLM calls, estimate call count and per-call cost.
+3. **Total estimate:** "This analysis will cost approximately $X to execute." For free/local tooling, state "no external compute cost."
+4. **If recurring:** "If run monthly, this analysis will cost approximately $X/year. Consider whether the frequency justifies the cost."
+
+This does not need to be precise — order-of-magnitude is fine. The goal is to prevent surprise costs, not to build a financial model.
+
+---
+
+## Step 2.6: Promotion Check
+
+Before starting a new task, check `recurring/README.md` and `templates/` (if they exist) for prior work:
+
+1. **Is this already automated?** If the analysis exists in `recurring/`, tell the owner and ask whether they want to re-run the existing automation or start a new analysis.
+2. **Is this a repeat?** If a structurally similar task exists in `templates/` or in previous `tasks/` folders (same data sources, same logic, different parameters), flag it: "This looks similar to [prior task]. Would you like to instantiate from the existing template, or is this a new approach?"
+3. **Should this be promoted?** If this is the second or third repetition of a structurally similar task, initiate the promotion conversation described in `[FABRIKA_PATH]/core/workflows/task-promotion.md`.
+
+---
+
 ## Advisory Mode (GUI Tools)
 
 When the task involves BI or ETL tools the agent cannot directly access (Tableau, Power BI, Alteryx, etc.):

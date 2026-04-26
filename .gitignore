@@ -1,5 +1,6 @@
 # Meta files — not shipped (root CLAUDE.md only, not the integration template)
 /CLAUDE.md
+/SYSTEM-UPDATE.md
 /SYNC-AGENTFLOW.md
 
 # OS files
