@@ -4,6 +4,16 @@ When a Fabrika update requires consumer projects to do more than a straight file
 
 ---
 
+## 0.10.0 — New Project Type (No Migration Needed)
+
+**Affects:** No existing consumer projects.
+
+**What changed:** A new project type `agentic-workflow` was added for systems where the methodology itself is the product. Two new agent archetypes (implementer, architect) and two agentic-workflow-specific agents (methodology-reviewer, structural-validator) were introduced.
+
+**Migration steps:** None. This is a purely additive change. Existing projects of any type continue to work without modification. The new type is only relevant when bootstrapping new agentic-workflow projects.
+
+---
+
 ## 0.6.0 — Type Taxonomy Rename
 
 **Affects:** All consumer projects using `data-platform` or `ml-project` as their project type.

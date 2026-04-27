@@ -68,6 +68,7 @@ From the response, identify the project type using these signals:
 | `automation` | "script", "CLI", "bot", "cron", "scheduled", "scraper", "automate" | Is this a thing that runs on a schedule/trigger, or a package others import? |
 | `library` | "package", "SDK", "module", "npm publish", "PyPI", "reusable", "API design" | Will other developers import and use this in their own projects? |
 | `analytics-workspace` | "ad hoc", "analysis", "investigation", "data request", "one-off", "just need a place to work", "SQL queries" | Is this ongoing analytical work without a single end product? |
+| `agentic-workflow` | "methodology", "operating system", "agent workflow", "prompts and workflows", "the system itself is the product", "maintaining a framework" | Is the methodology/workflow system itself the product you're building and maintaining? |
 
 Confirm with the user: **"Based on what you've described, this sounds like a [type] project — [one sentence explaining what that means]. Does that sound right?"**
 
@@ -75,7 +76,9 @@ For sprint-based types, also explain briefly: "This means we'll do a brain dump 
 
 For `analytics-workspace`, explain: "This means we'll set up a workspace for ad hoc analysis — we'll catalog your data sources and BI tools, then you'll be ready to start tasks. No sprints — work is organized as individual analysis tasks."
 
-Multi-type is possible for sprint-based types (e.g., `data-app` + `automation`). Task-based types (`analytics-workspace`) cannot be combined with sprint-based types — use a separate repo.
+For `agentic-workflow`, explain: "This means we'll set up a system where the methodology itself is the product — agent prompts, workflows, instruction files, and templates. Changes follow a 7-step protocol (plan, align, execute, verify, incorporate feedback, present, ship). No sprints — work is organized as structural changes with version tracking."
+
+Multi-type is possible for sprint-based types (e.g., `data-app` + `automation`). Task-based types (`analytics-workspace`) and methodology-based types (`agentic-workflow`) cannot be combined with sprint-based types — use a separate repo.
 
 ### 1.3 Create the type-appropriate folder structure
 
@@ -212,7 +215,7 @@ git commit -m "chore: initialize [project-name] with vault structure"
 
 Proceed immediately to Phase 2. Do **not** ask the user to open the docs vault yet — there's no content to look at.
 
-> **Branch point:** If the project type is `analytics-workspace`, skip to **Phase 2W** below. All other types continue to Phase 2.
+> **Branch point:** If the project type is `analytics-workspace`, skip to **Phase 2W** below. If `agentic-workflow`, skip to **Phase 2A** below. All other types continue to Phase 2.
 
 ---
 
@@ -466,6 +469,73 @@ Tell the user: **"Your analytics workspace is set up with [N] data sources catal
 
 ---
 
+## Phase 2A: Agentic-Workflow Setup (agentic-workflow only)
+
+> This phase replaces Phase 2 for `agentic-workflow` projects. There is no brain dump, no backlog, no sprint planning. The setup focuses on establishing the structural update infrastructure: version tracking, change protocol, and agent installation.
+
+### 2A.1 Set up agentic tool configuration
+
+Copy agentic-workflow agents from `[FABRIKA_PATH]/core/agents/` to the tool-appropriate location:
+
+- **Claude Code:** Copy to `.claude/agents/`:
+  - `methodology-reviewer.md`, `structural-validator.md`
+  - Copy CLAUDE.md template from `[FABRIKA_PATH]/integrations/claude-code/CLAUDE.md`, set project type to `agentic-workflow`
+  - Copy settings from `[FABRIKA_PATH]/integrations/claude-code/settings-template.json` to `.claude/settings.json`
+- **GitHub Copilot:** Copy to `.github/agents/` (renaming `*.md` to `*.agent.md`):
+  - `methodology-reviewer.agent.md`, `structural-validator.agent.md`
+  - Copy copilot-instructions from `[FABRIKA_PATH]/integrations/copilot/copilot-instructions.md` to `.github/copilot-instructions.md`, set project type to `agentic-workflow`
+
+The product-manager and scrum-master agents are used from the standard agent set (they serve the planner and coordinator roles through contextual dispatch).
+
+### 2A.2 Establish version tracking
+
+Create the core versioning files:
+- `VERSION` — set to `0.1.0` (or whatever the user specifies as the starting version)
+- `CHANGELOG.md` — initial entry for the starting version
+- `MIGRATIONS.md` — empty with header explaining its purpose
+
+### 2A.3 Establish the structural update protocol
+
+Ask: **"Does your system already have a change protocol (like SYSTEM-UPDATE.md), or should we create one based on the Fabrika agentic-workflow lifecycle?"**
+
+If creating fresh: adapt the 7-step protocol from `[FABRIKA_PATH]/core/workflows/agentic-workflow-lifecycle.md` into a project-specific `SYSTEM-UPDATE.md` or equivalent.
+
+If the project already has one: review it for compatibility with the agentic-workflow lifecycle and suggest adjustments if needed.
+
+### 2A.4 Structural conversation
+
+Ask: **"Tell me about this system — what does it do, what are its main components (prompts, workflows, instruction files, templates), and how are they organized. What are the key design principles that govern how the system is structured?"**
+
+From the response, populate:
+- A project README or equivalent overview
+- `STATUS.md` with current system state
+- Any existing structural docs the user describes
+
+### 2A.5 Mode selection
+
+Ask: **"Does this system have operational sessions (daily reviews, status checks, periodic rituals that you run interactively), or is it purely structural changes?"**
+
+Record the mode in the project config:
+- Structural only: note that all work follows the 7-step protocol
+- Structural + operational: note that structural changes follow the protocol; operational sessions are human-initiated and interactive
+
+### 2A.6 Generate manifest and commit
+
+Generate `.fabrika/manifest.yml` with all installed files. Commit:
+
+```bash
+git add -A
+git commit -m "feat: initialize agentic-workflow project with structural update infrastructure"
+```
+
+### 2A.7 Ready
+
+Tell the user: **"Your agentic-workflow project is set up with version tracking, change protocol, and [N] agents installed. To make structural changes, follow the 7-step lifecycle: plan → align → execute → verify → incorporate → present → ship. Each change gets a version bump and CHANGELOG entry."**
+
+**Do NOT proceed to Phase 3 or Phase 4.** Agentic-workflow projects do not have sprints or readiness checks.
+
+---
+
 ## Phase 3: Sprint Planning (Agent + User)
 
 > **Sprint-based types only.** Skip this phase for `analytics-workspace`.
@@ -670,3 +740,13 @@ Use this during the Phase 4 readiness check.
 - [ ] Task templates in `docs/Templates/`
 - [ ] Baseline evals copied (planner, reviewer, validator — not coordinator)
 - [ ] `STATUS.md` initialized with local tools and source count
+
+### Type-specific (agentic-workflow)
+- [ ] `VERSION` file exists with starting version
+- [ ] `CHANGELOG.md` exists with initial entry
+- [ ] `MIGRATIONS.md` exists
+- [ ] Structural update protocol established (SYSTEM-UPDATE.md or equivalent)
+- [ ] Mode documented (structural only, or structural + operational)
+- [ ] Agentic-workflow agents installed (methodology-reviewer, structural-validator)
+- [ ] `STATUS.md` initialized
+- [ ] `.fabrika/manifest.yml` generated with all installed files

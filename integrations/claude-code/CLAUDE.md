@@ -8,7 +8,7 @@ Claude Code orchestrates the entire development workflow. The human's role is de
 
 ## Project Basics
 - **Project Key:** [PROJECT_KEY] (e.g. MYAPP — used for branch naming and story IDs)
-- **Project Type:** [web-app | data-app | analytics-engineering | data-engineering | ml-engineering | ai-engineering | automation | library | analytics-workspace] (can be multi-type for sprint-based types)
+- **Project Type:** [web-app | data-app | analytics-engineering | data-engineering | ml-engineering | ai-engineering | automation | library | analytics-workspace | agentic-workflow] (can be multi-type for sprint-based types)
 - **Repo:** `~/projects/[project-name]`
 - **Project docs:** `~/projects/[project-name]/docs`
 - **Document Catalog:** `[FABRIKA_PATH]/core/Document-Catalog.md`
@@ -295,6 +295,16 @@ No sprints. Work is organized as individual analysis tasks: Brief → Plan → E
 
 ---
 
+## Agentic-Workflow Lifecycle (agentic-workflow type only)
+
+No sprints. Work is organized as structural changes following a 7-step protocol: Plan → Align → Execute → Verify → Incorporate Feedback → Present → Ship. Each change gets a version bump and CHANGELOG entry. Verification uses three independent agents (methodology-reviewer, structural-validator, architect) with strict dispatch.
+
+Operational mode (if enabled) is human-initiated and interactive — no agent orchestration for operational sessions.
+
+**For agentic-workflow projects, read:** `[FABRIKA_PATH]/core/workflows/agentic-workflow-lifecycle.md`
+
+---
+
 ## Owner Briefings
 
 When presenting plans, results, or summaries to the owner, do not dump raw artifacts or tell the owner to go read files. Present a plain-language briefing that explains what happened, why it matters, and how it affects the product. Read the briefing principles first, then follow the appropriate format:
@@ -386,7 +396,7 @@ All agents are invoked proactively by Claude Code at the trigger points in the D
 
 **Dispatch protocol:** Before invoking any sub-agent, read `[FABRIKA_PATH]/core/workflows/dispatch-protocol.md`. It defines what to provide and what to withhold for each agent at each invocation point. Reviewers, validators, and designers get strict dispatch (plan + file paths + rubric only — no editorial, no hints); planners and coordinators get contextual dispatch (richer project state).
 
-**Archetypes:** Each agent implements one of five archetypes (Planner, Reviewer, Validator, Coordinator, Designer) that define base tool profiles and contracts. See `[FABRIKA_PATH]/core/agents/archetypes/` for templates.
+**Archetypes:** Each agent implements one of seven archetypes (Planner, Reviewer, Validator, Coordinator, Designer, Implementer, Architect) that define base tool profiles and contracts. See `[FABRIKA_PATH]/core/agents/archetypes/` for templates.
 
 ### Sprint-based types
 
@@ -413,6 +423,19 @@ All agents are invoked proactively by Claude Code at the trigger points in the D
 
 No coordinator agent for analytics workspaces (no sprints to coordinate).
 
+### Methodology-based types (agentic-workflow)
+
+| Role | Agent |
+|------|-------|
+| **Planner** | product-manager — expands change requests into structured plans |
+| **Reviewer** | methodology-reviewer — evaluates cross-reference consistency, prompt patterns, instruction decomposition, smell tests |
+| **Validator** | structural-validator — mechanically verifies file existence, version consistency, catalog accuracy, reference resolution |
+| **Implementer** | *(archetype template — concrete agent in PRD-03)* — writes production changes against approved plan |
+| **Architect** | *(archetype template — concrete agent in PRD-04)* — evaluates instruction architecture: decomposition, pointer patterns, context budgets |
+| **Coordinator** | scrum-master — for change backlog sequencing (structural mode only) |
+
+No agent orchestration for operational mode sessions (human-driven).
+
 ### Claude Code Tool Guidance
 
 When invoking sub-agents via the Agent tool, control tool access through the prompt and sub-agent configuration. Each archetype defines a recommended tool set in `[FABRIKA_PATH]/core/agents/archetypes/`:
@@ -423,11 +446,15 @@ When invoking sub-agents via the Agent tool, control tool access through the pro
 - **Validators:** Read, Glob, Grep, Write, Edit, Bash. Edit constrained to `tests/` and `docs/evaluations/`.
 - **Coordinators:** Read, Glob, Grep, Write, Edit, Bash. Edit constrained to status files and backlog. Bash constrained to git and search.
 - **Designers:** Read, Glob, Grep, Write. No Edit, no Bash.
+- **Implementers:** Read, Glob, Grep, Write, Edit, Bash. Full toolset — they write production changes.
+- **Architects:** Read, Glob, Grep, Write. No Edit, no Bash — they evaluate and report, they do not change files.
 
 Instruction-level constraints (enforced in the sub-agent prompt):
 - Reviewers create new files (reports) — they do not modify existing files
 - Validators write to `tests/` and `docs/evaluations/` only, never `src/`
 - Coordinators edit `STATUS.md`, `docs/04-Backlog/`, and `features.json` only
+- Implementers modify production files according to the approved plan only — no unplanned changes
+- Architects create new files (assessment reports) — they do not modify production files
 
 ---
 

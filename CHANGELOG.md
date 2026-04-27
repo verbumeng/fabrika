@@ -6,6 +6,65 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.10.0
+
+Agentic-workflow project type, implementer and architect archetypes. Defines a new project type for systems where the methodology itself is the product — agent prompts, workflow definitions, instruction files, templates. Introduces two new agent archetypes (implementer, architect) and two agentic-workflow-specific agent stubs (methodology-reviewer, structural-validator). The agentic-workflow type uses a 7-step structural update lifecycle (plan, align, execute, verify, incorporate feedback, present, ship) with three independent verification agents. Operational mode (human-driven day-to-day sessions) is opt-in and does not add agent orchestration.
+
+### Core (new — consumer projects should copy as needed)
+
+**New archetype templates:**
+- `core/agents/archetypes/implementer.md` — **NEW.** Stub archetype for agents that write production changes against an approved plan. Contextual dispatch tier. Full tool access (read, search, create, edit, run commands). Full detail across all project types in PRD-03.
+- `core/agents/archetypes/architect.md` — **NEW.** Stub archetype for agents that evaluate structural design — instruction decomposition, pointer patterns, context budgets, integration surfaces. Strict dispatch tier. Read-only tools plus report creation. Full detail across all project types in PRD-04.
+
+**New agents (agentic-workflow type):**
+- `core/agents/methodology-reviewer.md` — **NEW.** Stub reviewer for agentic-workflow structural changes. Evaluates cross-reference consistency, prompt pattern adherence, instruction decomposition quality, smell test compliance, consumer update completeness, dispatch/output contract consistency. Uses Reviewer archetype as base. Full detail in PRD-03.
+- `core/agents/structural-validator.md` — **NEW.** Stub validator for agentic-workflow structural changes. Mechanically verifies file existence, version consistency, catalog accuracy, cross-reference resolution, integration template currency, pattern compliance. Uses Validator archetype as base. Full detail in PRD-03.
+
+**New workflow:**
+- `core/workflows/agentic-workflow-lifecycle.md` — **NEW.** The 7-step structural update lifecycle with agent dispatch points. Maps each step to an agent role: Step 1 (Plan) = planner, Step 3 (Execute) = implementer, Step 4 (Verify) = methodology-reviewer + structural-validator + architect. Includes operational mode description (human-driven, no agent orchestration). Defines the agent roster for agentic-workflow structural mode.
+
+### Core (changed — consumer projects should update)
+
+- `core/agents/AGENT-CATALOG.md` — **CHANGED.** Added Implementer and Architect to Agent Roles table (now 8 roles). Added both to Agent Archetypes table (now 7 archetypes). Added Methodology-Based Types section with agentic-workflow agent mapping table. Added methodology-reviewer and structural-validator to Agent Files table. Updated scrum-master "Used by" to include agentic-workflow.
+- `core/Document-Catalog.md` — **CHANGED.** Added Methodology-Based Types to project type taxonomy. Added agentic-workflow Documents section (System Update Plan, Change Verification Report, VERSION, CHANGELOG). Added agentic-workflow to Quick Reference.
+- `core/workflows/dispatch-protocol.md` — **CHANGED.** Added four new dispatch contracts: Implementer (Contextual tier), Methodology Reviewer (Strict), Structural Validator (Strict), Architect — Agentic-Workflow (Strict).
+
+### Integrations (changed — consumer projects should update)
+
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Added `agentic-workflow` to Project Type enum. Added Agentic-Workflow Lifecycle section with workflow pointer. Added methodology-based types table to Subagents section. Updated archetype count from five to seven. Added Implementer and Architect to Claude Code Tool Guidance with tool sets and instruction-level constraints.
+- `integrations/copilot/copilot-instructions.md` — **CHANGED.** Parallel changes: added `agentic-workflow` to type enum, Agentic-Workflow Lifecycle section, methodology-based types Subagents table, updated archetype count, added Implementer and Architect to instruction-level constraints.
+
+### Operational Docs (changed — no consumer action needed)
+
+- `BOOTSTRAP.md` — **CHANGED.** Added `agentic-workflow` to Phase 1.2 type alignment table with signal keywords. Added agentic-workflow explanation for type confirmation. Updated multi-type note to exclude methodology-based types. Added Phase 2A (Agentic-Workflow Setup) with 7 steps: tool configuration, version tracking, structural update protocol, structural conversation, mode selection, manifest generation, readiness. Added agentic-workflow readiness checklist items.
+- `MANIFEST_SPEC.md` — **CHANGED.** Added `agentic-workflow` to valid project_type values (now 10 types).
+- `MIGRATIONS.md` — **CHANGED.** Added 0.10.0 entry (no migration needed — new type available, existing projects unaffected).
+
+### Consumer update instructions
+
+Projects on 0.9.x should:
+
+**New files (all projects — copy as needed):**
+1. Copy `core/agents/archetypes/implementer.md` and `core/agents/archetypes/architect.md` to your Fabrika path — new archetype templates for future agent creation
+2. Copy `core/workflows/agentic-workflow-lifecycle.md` to your Fabrika path — reference doc for agentic-workflow projects
+
+**New files (agentic-workflow projects only):**
+3. Copy `core/agents/methodology-reviewer.md` to your agents directory
+4. Copy `core/agents/structural-validator.md` to your agents directory
+
+**Updated files (all projects):**
+5. Update AGENT-CATALOG from `core/agents/AGENT-CATALOG.md` (adds implementer, architect, agentic-workflow mapping)
+6. Update Document-Catalog from `core/Document-Catalog.md` (adds agentic-workflow type and documents)
+7. Update dispatch-protocol from `core/workflows/dispatch-protocol.md` (adds 4 new dispatch contracts)
+
+**Updated integration files:**
+8. For Claude Code projects: update `CLAUDE.md` from `integrations/claude-code/CLAUDE.md` (adds agentic-workflow type, lifecycle pointer, subagents, tool guidance)
+9. For Copilot projects: update `.github/copilot-instructions.md` from `integrations/copilot/copilot-instructions.md` (parallel changes)
+
+**No migration needed.** The agentic-workflow type is new — existing projects are not affected. No file renames, no configuration changes required for existing sprint-based, task-based, or multi-type projects.
+
+---
+
 ## 0.9.0
 
 Agent archetypes, dispatch protocol, and Copilot tool declarations. Introduces five archetype templates that define base tool profiles, dispatch contracts, and output contracts for each agent role. Adds a dispatch protocol that specifies exactly what the orchestrator provides (and withholds) when invoking each sub-agent — with strict isolation for reviewers, validators, and designers, and contextual dispatch for planners and coordinators. Fixes the Copilot wildcard tool bug by documenting explicit `namespace/tool` syntax for all agent types. Establishes a retry protocol with versioned evaluation report filenames.

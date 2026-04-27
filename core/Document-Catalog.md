@@ -38,7 +38,14 @@ These follow the task lifecycle (brief → plan → execute → validate → del
 |-----|-------------|---------|
 | `analytics-workspace` | Home base for ad hoc analysis, investigations, data requests. Work is organized as individual tasks, not stories in a backlog. | Revenue variance investigation, ad hoc SQL analysis, data quality audit, stakeholder data requests |
 
-A project can be **multi-type** (sprint-based types only). A data app with scrapers feeding a dashboard is `data-app` + `automation`. A SaaS product with ML features is `web-app` + `ml-engineering`. An AI chatbot with a web frontend is `ai-engineering` + `web-app`. The agent should union all applicable document sets. Task-based types (`analytics-workspace`) cannot be combined with sprint-based types — use a separate repo.
+### Methodology-Based Types
+These follow the agentic-workflow lifecycle (plan → align → execute → verify → incorporate → present → ship):
+
+| Tag | Description | Examples |
+|-----|-------------|---------|
+| `agentic-workflow` | Systems where the methodology itself is the product — agent prompts, workflow definitions, instruction files, templates, hooks. Has two modes: structural (required, full 7-step protocol) and operational (optional, human-driven day-to-day sessions). | Agentic workflow frameworks, personal operating systems maintained by agents |
+
+A project can be **multi-type** (sprint-based types only). A data app with scrapers feeding a dashboard is `data-app` + `automation`. A SaaS product with ML features is `web-app` + `ml-engineering`. An AI chatbot with a web frontend is `ai-engineering` + `web-app`. The agent should union all applicable document sets. Task-based types (`analytics-workspace`) and methodology-based types (`agentic-workflow`) cannot be combined with sprint-based types — use a separate repo.
 
 ### Priority Tiers
 | Tier | When to Create | During Bootstrapping? |
@@ -516,6 +523,34 @@ A project can be **multi-type** (sprint-based types only). A data app with scrap
 
 ---
 
+## agentic-workflow Documents
+
+> These documents support the agentic-workflow structural update lifecycle. The structural mode uses a 7-step protocol; documents track plans, verification, and version history. Operational mode documents (if enabled) are project-specific and human-maintained.
+
+### System Update Plan
+- **Purpose:** The structured plan produced in Step 1 of the structural update lifecycle. Documents what is changing, how it integrates, what could go wrong, and mitigations.
+- **Types:** agentic-workflow | **Audience:** both
+- **Structure:** File change list, integration points per file, risk analysis, mitigation strategy.
+- **Notes:** Written in conversation during Step 1, not as a separate file. Preserved in the conversation record. For projects that want persistent plan records, save to `docs/plans/`.
+
+### Change Verification Report
+- **Purpose:** Independent evaluation reports produced in Step 4 (Verify). Each verifying agent (methodology-reviewer, structural-validator, architect) writes its own report.
+- **Types:** agentic-workflow | **Audience:** agent
+- **Structure:** Verdict (PASS/FAIL or SOUND/CONCERNS/UNSOUND), per-criterion findings, specific issues with file paths and fix instructions.
+- **Notes:** Written to `docs/evaluations/` (or equivalent). The orchestrator reads these in Step 5 to decide what to fix.
+
+### VERSION
+- **Purpose:** Single-line file containing the current semantic version. The version authority for the system.
+- **Types:** agentic-workflow | **Audience:** agent
+- **Notes:** Bumped as part of every structural change (Step 3). Must match the latest CHANGELOG entry.
+
+### CHANGELOG
+- **Purpose:** Running log of all structural changes, organized by version. Lists every file changed, the nature of the change, and consumer update instructions.
+- **Types:** agentic-workflow | **Audience:** both
+- **Notes:** Entry added as part of every structural change (Step 3). Consumer update instructions must be complete — every file a consumer needs to update or copy is listed.
+
+---
+
 ## analytics-workspace Documents
 
 > These documents live outside the standard `docs/` vault structure. The `analytics-workspace` type uses a flat, task-centric folder layout instead of the numbered docs hierarchy.
@@ -711,3 +746,12 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 **Per-task:** brief.md, plan.md, outcome.md (in each `tasks/[date-name]/` folder)
 **As needed:** sources/files/*.md, reusable queries in `src/queries/`, scripts in `src/scripts/`
 **Note:** No sprint artifacts, no backlog, no Tier system. Work is organized as tasks, not stories.
+
+### Methodology-Based Types
+
+#### agentic-workflow (agent methodology systems, personal operating systems)
+**Core:** VERSION, CHANGELOG, MIGRATIONS (version history and consumer communication)
+**Per-change:** System Update Plan (in conversation), Change Verification Reports (in `docs/evaluations/`)
+**Structural:** Agent prompts, workflow definitions, archetype templates, catalogs, integration templates, dispatch protocol, rubrics, hooks
+**Operational (if enabled):** Status file, operational logs, ritual definitions (project-specific, not templated)
+**Note:** No sprint artifacts, no Tier system. Work is organized as structural changes following the 7-step lifecycle.
