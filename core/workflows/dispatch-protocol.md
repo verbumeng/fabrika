@@ -410,6 +410,91 @@ file, updated story assignments
 
 ---
 
+### Implementer
+
+**Tier:** Contextual
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Approved plan | Yes | The plan approved by the owner in Step 2 |
+| Architecture pointers | Yes | Paths to system architecture docs, catalogs, workflow files — whatever the plan references |
+| Version state | Yes | Current VERSION and CHANGELOG — needed for version bumps |
+| File paths to modify | Yes | Existing files the plan says to change |
+| Owner constraints | Optional | Preferences or constraints from the conversation |
+
+**Do not provide:** Raw evaluation reports from prior verification
+rounds. If retrying after a failed review, the orchestrator
+summarizes what needs to be fixed — the implementer does not read
+verifier reports directly.
+
+**Output expected:** Changed files on the feature branch, plus a
+summary of what was done and any implementation decisions that
+interpreted or deviated from the plan.
+
+---
+
+### Methodology Reviewer
+
+**Tier:** Strict
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Approved plan | Yes | The system update plan (what was intended) |
+| File paths | Yes | Every file created or changed |
+| CHANGELOG entry | Yes | The version entry describing the changes |
+| Verification checklist | Yes | The verification checklist (from SYSTEM-UPDATE.md Step 4 or agentic-workflow-lifecycle.md Step 4) |
+
+**Do not provide:** Opinions about the changes, suspected issues,
+implementer notes on what went well or poorly.
+
+**Output expected:** Review report at evaluation path. Verdict:
+PASS / PASS WITH NOTES / FAIL. Per-criterion findings against:
+cross-reference consistency, prompt pattern adherence, instruction
+decomposition quality, smell test compliance, consumer update
+completeness, dispatch/output contract consistency.
+
+---
+
+### Structural Validator
+
+**Tier:** Strict
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Approved plan | Yes | The system update plan |
+| File paths | Yes | Every file created or changed |
+| CHANGELOG entry | Yes | The version entry |
+| Verification checklist | Yes | The structural verification checklist |
+
+**Do not provide:** Opinions, suspected issues, implementation
+commentary.
+
+**Output expected:** Verification report at evaluation path.
+Verdict: PASS / FAIL. Per-check results with specific evidence for
+each checklist item.
+
+---
+
+### Architect — Agentic-Workflow
+
+**Tier:** Strict
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Approved plan | Yes | The system update plan |
+| File paths | Yes | Every file created or changed |
+| Structural reference pointers | Yes | Paths to catalogs, workflow files, integration templates — the system's structural reference docs |
+
+**Do not provide:** Opinions about change quality, reviewer or
+validator findings, suggested structural improvements.
+
+**Output expected:** Architectural assessment at evaluation path.
+Verdict: SOUND / CONCERNS / UNSOUND. Findings covering: instruction
+decomposition, pointer patterns, context budget (always-loaded vs.
+on-demand), pattern consistency, integration surface completeness.
+
+---
+
 ## Retry Protocol
 
 When a reviewer or validator FAILs an implementation and the
