@@ -264,8 +264,8 @@ Now that you know the project type and stack, create the stack-specific scaffold
 
 First, read the **Agent Catalog** at `[FABRIKA_PATH]/core/agents/AGENT-CATALOG.md` to determine which agents to install for this project type.
 
-- **Claude Code:** Copy the project CLAUDE.md template from `[FABRIKA_PATH]/integrations/claude-code/CLAUDE.md`. Ask the user for a short project key (e.g., `MYAPP`). Copy the type-appropriate agent prompts from `[FABRIKA_PATH]/core/agents/` to `.claude/agents/` in the project repo — use the Agent Catalog mapping to select which agents apply. Copy settings from `[FABRIKA_PATH]/integrations/claude-code/settings-template.json` to `.claude/settings.json`.
-- **GitHub Copilot:** Copy `[FABRIKA_PATH]/integrations/copilot/copilot-instructions.md` to `.github/copilot-instructions.md`. Copy the type-appropriate agent prompts from `[FABRIKA_PATH]/core/agents/` to `.github/agents/` (renaming `*.md` to `*.agent.md`). Fill in project name and key. Note: Claude Code hooks (`.claude/hooks/`) are not applicable to Copilot — instead, configure equivalent git hooks in `.git/hooks/` or use the CI pipeline for regression gating.
+- **Claude Code:** Copy the project CLAUDE.md template from `[FABRIKA_PATH]/integrations/claude-code/CLAUDE.md`. Ask the user for a short project key (e.g., `MYAPP`). Copy the type-appropriate agent prompts from `[FABRIKA_PATH]/core/agents/` to `.claude/agents/` in the project repo — use the Agent Catalog mapping to select which agents apply. Also copy the implementer agent for the project type (see the Sprint-Based Types and Task-Based Types mapping tables in `[FABRIKA_PATH]/core/agents/AGENT-CATALOG.md` for which implementer to install). Multi-type projects should install all implementer agents that match their types. Copy settings from `[FABRIKA_PATH]/integrations/claude-code/settings-template.json` to `.claude/settings.json`.
+- **GitHub Copilot:** Copy `[FABRIKA_PATH]/integrations/copilot/copilot-instructions.md` to `.github/copilot-instructions.md`. Copy the type-appropriate agent prompts from `[FABRIKA_PATH]/core/agents/` to `.github/agents/` (renaming `*.md` to `*.agent.md`). Include the implementer agent for the project type (see the AGENT-CATALOG mapping tables for which implementer to install). Fill in project name and key. Note: Claude Code hooks (`.claude/hooks/`) are not applicable to Copilot — instead, configure equivalent git hooks in `.git/hooks/` or use the CI pipeline for regression gating.
 
 **Fill in the Project Stack section** of the project config with all tech details: language, framework, database, package manager, test runner, linter, dev server, CI. Determine and fill in the test commands:
 - Fast test command (for hooks and session health checks)
@@ -731,6 +731,7 @@ Use this during the Phase 4 readiness check.
 - [ ] All with external data: Data Source Research notes for each known source
 - [ ] `web-app` or `data-app`: E2E verification configured (Playwright MCP or equivalent)
 - [ ] Agents installed match project type (per Agent Catalog)
+- [ ] Implementer agent for your project type(s) is installed (see AGENT-CATALOG mapping tables)
 - [ ] Baseline evals copied to `docs/evals/baseline/`
 
 ### Type-specific (analytics-workspace)

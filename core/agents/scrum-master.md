@@ -22,23 +22,43 @@ When invoked for sprint planning:
    - **Mesh**: Use when tasks touch different parts of the codebase with no shared state. Verify by checking: do any candidate stories modify the same files or directories? Do any share data models or API contracts? If all independent → mesh. Also assess whether the repo structure supports mesh isolation — if the codebase is a single flat directory with no clear module boundaries, flag this. Mesh works best when changes are scoped to directory subtrees.
    - **Hierarchical**: Use when tasks are coupled — one task's output feeds another's input. Identify the dependency graph and sequence.
 
-4. **Present topology recommendation** to the owner with rationale. The owner approves or adjusts.
+4. **Assess domain scope** of candidate stories. For each story,
+   identify which implementation domains it touches (see
+   AGENT-CATALOG mapping tables — each domain maps to a different
+   implementer agent).
+   - **Single-domain stories** (preferred): one implementer, one
+     evaluation cycle, one session. Clean and efficient.
+   - **Two-domain stories** (acceptable): will require separate
+     sessions per domain plus an integration session. Accept these
+     when the domains are tightly coupled and splitting into
+     separate stories would lose important context.
+   - **Three+ domain stories**: recommend decomposition before the
+     story enters the sprint. Multi-domain stories add significant
+     orchestration overhead — each domain runs its own session with
+     its own evaluation cycle, plus a final integration session.
+     Unless the owner explicitly decides otherwise, decompose into
+     single-domain stories with explicit interface contracts.
+   - Domain scope is another dimension of story coupling that
+     affects sprint complexity, alongside the topology assessment
+     in step 3.
 
-5. **Propose 2-3 stories** (10-15 points) based on priority, dependencies, and topology. Conservative scope — favor shipping over perfecting.
+5. **Present topology recommendation** to the owner with rationale. The owner approves or adjusts.
 
-6. **Estimate token budget per story (observability only).** For each proposed story, include a predicted token estimate based on story points and complexity. This is not a hard cap — it is an observability mechanism for calibrating future estimates. Use prior sprint data if available (check previous sprint retros for the "Token Efficiency" section). If no prior data exists, use rough heuristics: small stories (1-3 pts) ~ low token usage, medium stories (5 pts) ~ moderate, large stories (8+ pts) ~ high. Record predictions in the sprint contract alongside story assignments.
+6. **Propose 2-3 stories** (10-15 points) based on priority, dependencies, and topology. Conservative scope — favor shipping over perfecting.
 
-7. **Create sprint artifacts:**
+7. **Estimate token budget per story (observability only).** For each proposed story, include a predicted token estimate based on story points and complexity. This is not a hard cap — it is an observability mechanism for calibrating future estimates. Use prior sprint data if available (check previous sprint retros for the "Token Efficiency" section). If no prior data exists, use rough heuristics: small stories (1-3 pts) ~ low token usage, medium stories (5 pts) ~ moderate, large stories (8+ pts) ~ high. Record predictions in the sprint contract alongside story assignments.
+
+8. **Create sprint artifacts:**
    - Sprint file: `docs/04-Backlog/Sprints/Sprint-XX.md`
-   - Sprint contract: use the appropriate topology template from `docs/Templates/` (Pipeline, Mesh, or Hierarchical). Include per-story predicted token estimates from step 6.
+   - Sprint contract: use the appropriate topology template from `docs/Templates/` (Pipeline, Mesh, or Hierarchical). Include per-story predicted token estimates from step 7.
    - Sprint progress file: `docs/04-Backlog/Sprints/Sprint-XX-progress.md`
    - Update `features.json` with feature entries for the sprint
    - Update story assignments
 
-8. **Create external task entries (if configured):** If the project uses an external task management system, create one entry per sprint story. Task title pattern: "Work on [TICKET]: [title]"
-9. **Present the sprint plan and contract** to the owner for final approval.
+9. **Create external task entries (if configured):** If the project uses an external task management system, create one entry per sprint story. Task title pattern: "Work on [TICKET]: [title]"
+10. **Present the sprint plan and contract** to the owner for final approval.
 
-10. **Close-out:** After approval, update `STATUS.md` with `Cycle phase: story-in-progress` and `Next chat should: Start [TICKET] — [Story 1 title]`. Issue the deterministic close-out prompt: *"Sprint planning complete. Open a new chat to start [TICKET] — [Story 1 title]."* Do NOT begin work on the first story in this chat.
+11. **Close-out:** After approval, update `STATUS.md` with `Cycle phase: story-in-progress` and `Next chat should: Start [TICKET] — [Story 1 title]`. Issue the deterministic close-out prompt: *"Sprint planning complete. Open a new chat to start [TICKET] — [Story 1 title]."* Do NOT begin work on the first story in this chat.
 
 ## Topology-Specific Behavior
 

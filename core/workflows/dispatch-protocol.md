@@ -32,6 +32,35 @@ working blind on something it needs.
 
 ---
 
+## Lightweight Dispatch
+
+Lightweight dispatch is a reduced-ceremony invocation path for trivial
+implementation changes. It does NOT mean the orchestrator implements
+directly — the orchestrator NEVER writes production code. Lightweight
+dispatch reduces the ceremony of the dispatch payload, not the dispatch
+itself.
+
+**All three conditions must be true for lightweight dispatch:**
+
+1. The change touches exactly one file
+2. The spec fully specifies the edit (no design decisions required by
+   the implementer)
+3. The change is not a new feature, refactor, or architectural change
+
+**What changes under lightweight dispatch:**
+- The plan field can be inline text in the dispatch (not a spec file
+  path)
+- Architecture pointers are optional
+- Version state is only required if the change bumps a version
+
+**What does NOT change:**
+- The orchestrator still dispatches to the implementer agent
+- The implementer still produces the standard output (changed files,
+  summary, deviations)
+- The evaluation cycle still runs after implementation
+
+---
+
 ## Per-Agent Dispatch Contracts
 
 ### Product Manager — Planning Mode
@@ -410,26 +439,115 @@ file, updated story assignments
 
 ---
 
-### Implementer
+### Implementer Agents
+
+Five specialist implementers cover all sprint-based and task-based
+project types. Each inherits the base dispatch contract from the
+Implementer archetype and adds domain-specific conditional fields.
+The output contract is shared across all specialists.
+
+For the agentic-workflow implementer (context-engineer), see the
+Context Engineer contract below — it has its own dispatch contract
+tailored to methodology work.
+
+---
+
+### Software Engineer
 
 **Tier:** Contextual
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Approved plan | Yes | The plan approved by the owner in Step 2 |
-| Architecture pointers | Yes | Paths to system architecture docs, catalogs, workflow files — whatever the plan references |
-| Version state | Yes | Current VERSION and CHANGELOG — needed for version bumps |
-| File paths to modify | Yes | Existing files the plan says to change |
+| Approved spec | Yes | The spec from the planner, approved by the owner |
+| Architecture pointer | Yes | Path to Architecture Overview |
+| File paths to modify | Yes | Existing files the spec says to change |
+| Test conventions | Yes | Test runner, commands, coverage targets from project instructions |
+| Owner constraints | Optional | Preferences or constraints from the conversation |
+| API Design Guide pointer | Conditional | Required for library projects — path to API Design Guide |
+| Structural Constraints pointer | Conditional | Path to Structural Constraints doc if it exists |
+
+**Output expected:** Changed files, implementation summary, spec
+deviations flagged.
+
+---
+
+### Data Engineer
+
+**Tier:** Contextual
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Approved spec | Yes | The spec from the planner, approved by the owner |
+| Architecture pointer | Yes | Path to Architecture Overview |
+| File paths to modify | Yes | Existing files the spec says to change |
+| Test conventions | Yes | Test runner, commands from project instructions |
+| Owner constraints | Optional | Preferences or constraints from the conversation |
+| Pipeline Design pointer | Conditional | Required if touching pipeline code — path to Data Pipeline Design |
+| Source Contracts pointer | Conditional | Required if touching ingestion — path to Source System Contracts |
+| Serving Contracts pointer | Conditional | Required if touching serving layer — path to Serving Contracts |
+
+**Output expected:** Changed files, implementation summary, spec
+deviations flagged.
+
+---
+
+### Data Analyst
+
+**Tier:** Contextual
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Approved spec | Yes | The spec or task plan from the planner |
+| Source registry pointer | Yes | Path to sources/README.md |
+| Work directory | Yes | Path to the task directory (for analytics-workspace) or target directories |
+| Source detail pointers | Conditional | Specific source docs if the work targets known sources |
 | Owner constraints | Optional | Preferences or constraints from the conversation |
 
-**Do not provide:** Raw evaluation reports from prior verification
-rounds. If retrying after a failed review, the orchestrator
-summarizes what needs to be fixed — the implementer does not read
-verifier reports directly.
+**Output expected:** Changed files, implementation summary, spec
+deviations flagged.
 
-**Output expected:** Changed files on the feature branch, plus a
-summary of what was done and any implementation decisions that
-interpreted or deviated from the plan.
+---
+
+### ML Engineer
+
+**Tier:** Contextual
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Approved spec | Yes | The experiment or feature spec |
+| Architecture pointer | Yes | Path to Architecture Overview |
+| File paths to modify | Yes | Existing files the spec says to change |
+| Test conventions | Yes | Test runner, commands from project instructions |
+| Owner constraints | Optional | Preferences or constraints from the conversation |
+| Model Design pointer | Conditional | Required if touching model architecture — path to Model Design |
+| Training Data pointer | Conditional | Required if touching training pipeline — path to Training Data Spec |
+| Evaluation Criteria pointer | Conditional | Required if touching evaluation — path to Model Evaluation Criteria |
+| Prior experiments | Conditional | Paths to prior experiment reports if this is an iteration |
+
+**Output expected:** Changed files, implementation summary, spec
+deviations flagged. Include compute resource estimates if applicable.
+
+---
+
+### AI Engineer
+
+**Tier:** Contextual
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Approved spec | Yes | The spec from the planner, approved by the owner |
+| Architecture pointer | Yes | Path to Architecture Overview |
+| File paths to modify | Yes | Existing files the spec says to change |
+| Test conventions | Yes | Test runner, commands from project instructions |
+| Owner constraints | Optional | Preferences or constraints from the conversation |
+| Prompt Library pointer | Conditional | Required if touching prompts — path to Prompt Library |
+| Model Configuration pointer | Conditional | Required if changing model routing — path to Model Configuration |
+| Guardrails pointer | Conditional | Required if touching safety — path to Guardrails Spec |
+| Evaluation Strategy pointer | Conditional | Required if touching eval — path to Evaluation Strategy |
+| RAG Architecture pointer | Conditional | Required if touching retrieval — path to RAG Architecture |
+
+**Output expected:** Changed files, implementation summary, spec
+deviations flagged. Include token usage impact estimates if applicable.
 
 ---
 
@@ -541,15 +659,26 @@ on-demand), pattern consistency, integration surface completeness.
 
 ## Retry Protocol
 
-When a reviewer or validator FAILs an implementation and the
-orchestrator fixes the issues, the sub-agent is re-invoked. On retry:
+When an evaluator FAILs an implementation, the orchestrator mediates
+between the evaluator and the implementer:
 
-1. The orchestrator provides the same dispatch payload as the original
-   invocation — same spec, same rubric, same file paths (updated to
-   reflect fixes)
-2. The orchestrator does NOT include the prior evaluation report in
-   the dispatch — the sub-agent reviews fresh
-3. The sub-agent writes its new report with a versioned filename:
-   `[TICKET]-code-review-v2.md` (not overwriting the original)
-4. Maximum 2 retry cycles. After 2 failures, the orchestrator stops
-   and presents all reports to the owner.
+1. The orchestrator reads all evaluation reports and synthesizes
+   findings into implementer-actionable fix instructions. It does NOT
+   forward raw evaluation reports to the implementer.
+2. The orchestrator dispatches the fix instructions to the
+   implementer, along with the original spec and relevant file paths.
+3. The implementer addresses each finding and returns an updated
+   output summary.
+4. The orchestrator sanity-checks the fixes: does the implementer's
+   summary address each evaluator finding? If a finding was missed,
+   dispatch clarification back to the implementer before re-invoking
+   evaluators.
+5. Once the orchestrator is satisfied the fixes are addressed, it
+   re-invokes the failing evaluator(s) with fresh dispatch — same
+   payload as the original invocation, updated file paths, no prior
+   evaluation report included.
+6. The evaluator writes its new report with a versioned filename:
+   `[TICKET]-code-review-v2.md` (not overwriting the original).
+7. **Maximum 2 retry cycles.** After 2 failures, the orchestrator
+   stops and presents all reports to the owner with a summary of what
+   was tried and recommended next steps.

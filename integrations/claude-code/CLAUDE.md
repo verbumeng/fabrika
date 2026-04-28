@@ -278,7 +278,7 @@ Claude Code drives the development process proactively. Don't wait for the owner
 **Before starting any story, sprint planning, or bug fix, read:** `[FABRIKA_PATH]/core/workflows/development-workflow.md`
 
 Summary of workflows covered:
-- **Starting a Story** — spec expansion → approval → branch → implement → test
+- **Starting a Story** — spec expansion → approval → branch → dispatch to implementer → evaluate → fix cycle
 - **Completing a Story (Evaluation Cycle)** — tests → lint → commit → reviewer → validator → planner validation → rollback protocol (max 2 retries)
 - **Sprint Planning** — scrum-master → topology assessment → 2-3 stories → contract → approval
 - **Ideation & Backlog Grooming** — new stories, re-scoping, someday-maybe
@@ -406,12 +406,14 @@ All agents are invoked proactively by Claude Code at the trigger points in the D
 | **Reviewer** | code-reviewer | + prompt-reviewer (ai-engineering, supplemental) |
 | **Validator** | test-writer | model-evaluator (ml-engineering), eval-engineer (ai-engineering), data-quality-engineer (data-engineering) |
 | **Coordinator** | scrum-master | (same for all sprint-based types) |
+| **Implementer** | software-engineer | data-engineer (data-engineering, analytics-engineering), data-analyst (analytics-workspace, data-app), ml-engineer (ml-engineering), ai-engineer (ai-engineering) |
 
 **Role behaviors:**
 - **Planner** — Two modes: **planning mode** (expands stories into specs, invoked at story start) and **validation mode** (verifies acceptance criteria, invoked before marking done). Specialized planners adapt the spec format: experiment-planner produces experiment designs; api-designer produces API surface specs.
 - **Reviewer** — Reviews implementation against acceptance criteria, rubrics (`docs/02-Engineering/rubrics/code-review-rubric.md`), and security (semgrep). Checks for duplicates. Enforces mesh isolation scope. For ai-engineering, the prompt-reviewer is a supplemental reviewer that checks prompt quality, safety, and cost alongside the code-reviewer.
 - **Validator** — Writes tests and verifies coverage against rubric (`docs/02-Engineering/rubrics/test-rubric.md`). Runs E2E verification per project type. Specialized validators adapt: model-evaluator runs metric evals; eval-engineer runs LLM eval suites; data-quality-engineer tests at every pipeline lifecycle stage.
 - **Coordinator** — Sprint planning, topology assessment, maintenance scheduling, retros. Also invoked when conversation drifts into prolonged deliberation.
+- **Implementer** — Writes production code against the approved spec. Dispatched by the orchestrator after spec approval — the orchestrator never writes code directly, even for trivial tasks. Specialized implementers carry domain expertise for their project type(s). For lightweight changes (single-file, fully specified, not a new feature), uses reduced-ceremony dispatch but still goes through the implementer agent.
 
 ### Task-based types (analytics-workspace)
 
@@ -420,6 +422,7 @@ All agents are invoked proactively by Claude Code at the trigger points in the D
 | **Planner** | analysis-planner — takes vague asks, produces briefs and technical plans |
 | **Reviewer** | logic-reviewer — validates SQL/Python/DAX logic |
 | **Validator** | data-validator — sanity checks, cross-references, spot-checks on output |
+| **Implementer** | data-analyst — implements analysis scripts, SQL, notebooks, dashboard code |
 
 No coordinator agent for analytics workspaces (no sprints to coordinate).
 
@@ -505,6 +508,7 @@ If a stale lock file exists (from a session that didn't clean up), the session o
 - **Progressive context disclosure.** This CLAUDE.md is front-loaded into every session — keep it to what every session needs (identity, lifecycle, git conventions, stack config). Phase-specific context (sprint planning rules, evaluation workflow, maintenance checklist) lives in agent prompt files and referenced docs, loaded only when that phase is active. If a section of this file has not been relevant in 3+ sprints, move it to an on-demand doc and add a pointer here.
 - **Stack-agnostic agent prompts.** Never put technology-specific references in global agent prompts. All tech details live in this CLAUDE.md's Project Stack section.
 - **Prefer improving existing agents over adding new ones.** If a new capability is needed, first check if it belongs in an existing agent's scope. Only create a new agent if the capability requires a fundamentally different evaluation lens.
+- **Pure orchestrator.** The orchestrator dispatches to implementer agents for all production code changes — it does not implement directly, even for trivial tasks. Lightweight dispatch reduces ceremony, not the dispatch itself.
 
 ---
 
