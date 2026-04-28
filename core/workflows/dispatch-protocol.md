@@ -433,6 +433,50 @@ interpreted or deviated from the plan.
 
 ---
 
+### Workflow Planner — Planning Mode
+
+**Tier:** Contextual
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Change request | Yes | The PRD, issue, or conversation context describing what needs to change |
+| Current file state | Yes | Paths to files that will be affected, so the planner can read their current state |
+| Integration point map | Yes | The project's known cross-reference chains (from the project instruction file) |
+| Version state | Yes | Current VERSION and latest CHANGELOG entry — needed for bump determination |
+| Owner context | Optional | Constraints, preferences, or prior decisions from the conversation |
+
+**Output expected:** Structured implementation plan in the
+conversation covering: file change inventory, integration point
+analysis, risk identification, mitigations, and version bump
+determination.
+
+---
+
+### Context Engineer
+
+**Tier:** Contextual
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Approved plan | Yes | The plan approved by the owner — the implementation contract |
+| Architecture pointers | Yes | Paths to catalogs, workflow files, integration templates, and other structural reference docs |
+| Version state | Yes | Current VERSION and CHANGELOG — needed for version bumps and changelog entries |
+| File paths to modify | Yes | Existing files the plan says to change |
+| Project constraints | Yes | Versioning discipline, smell tests, context decomposition rules from the project instruction file |
+| Owner constraints | Optional | Preferences or constraints from the conversation |
+
+**Do not provide:** Raw evaluation reports from prior verification
+rounds. If retrying after a failed review, the orchestrator summarizes
+what needs to be fixed — the context engineer does not read verifier
+reports directly.
+
+**Output expected:** Changed files on the feature branch, VERSION
+bump, CHANGELOG entry, MIGRATIONS entry if applicable, plus a summary
+of what was done and any implementation decisions that deviated from
+the plan.
+
+---
+
 ### Methodology Reviewer
 
 **Tier:** Strict
@@ -442,7 +486,7 @@ interpreted or deviated from the plan.
 | Approved plan | Yes | The system update plan (what was intended) |
 | File paths | Yes | Every file created or changed |
 | CHANGELOG entry | Yes | The version entry describing the changes |
-| Verification checklist | Yes | The verification checklist (from SYSTEM-UPDATE.md Step 4 or agentic-workflow-lifecycle.md Step 4) |
+| Verification checklist | Yes | The project's verification checklist from its instruction file |
 
 **Do not provide:** Opinions about the changes, suspected issues,
 implementer notes on what went well or poorly.
@@ -475,7 +519,7 @@ each checklist item.
 
 ---
 
-### Architect — Agentic-Workflow
+### Context Architect
 
 **Tier:** Strict
 

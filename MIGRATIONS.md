@@ -4,6 +4,16 @@ When a Fabrika update requires consumer projects to do more than a straight file
 
 ---
 
+## 0.11.0 — Agentic-Workflow Agent Roster Completion (No Migration Needed)
+
+**Affects:** Consumer projects using the `agentic-workflow` project type.
+
+**What changed:** Three new specialized agent stubs were added for the agentic-workflow type: workflow-planner (planner), context-engineer (implementer), context-architect (architect). These replace the generic product-manager and archetype placeholders in the agentic-workflow agent roster. The "Architect — Agentic-Workflow" dispatch contract was renamed to "Context Architect." Verification checklist references in methodology-reviewer and structural-validator dispatch contracts were updated to point to the project's instruction file generically.
+
+**Migration steps:** None beyond the file updates listed in the CHANGELOG. The new agents are additive — they fill previously empty slots in the agentic-workflow roster. No existing configurations break. Copy the three new agent files and update the changed files per the CHANGELOG consumer update instructions.
+
+---
+
 ## 0.10.0 — New Project Type (No Migration Needed)
 
 **Affects:** No existing consumer projects.

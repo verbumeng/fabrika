@@ -42,8 +42,10 @@ files to get full context:
 1. planning/ROADMAP.md — the overall roadmap and sequencing
 2. planning/PRD-[XX]-[description].md — the specific PRD we're
    executing
-3. SYSTEM-UPDATE.md — the protocol to follow (should reflect the
-   agentic-workflow process after PRD-02 landed)
+3. CLAUDE.md — project-level instructions (Fabrika is an
+   agentic-workflow project)
+4. core/workflows/agentic-workflow-lifecycle.md — the structural
+   update protocol to follow
 
 This PRD was produced during an alignment session where the owner and
 I reached agreement on all key decisions. The "Key Decisions" section
@@ -51,10 +53,13 @@ in the PRD captures what was already aligned — do not re-litigate those.
 The "Open Items" section lists things we acknowledged need resolution
 during execution — those are fair game for discussion.
 
-Execute this PRD following the system update protocol step by step.
-Start with Step 1 (Plan) — produce the detailed implementation plan
-based on the PRD, then present it for my approval before proceeding
-to execution.
+Execute this PRD following the agentic-workflow structural update
+lifecycle step by step. Dispatch to agents as the lifecycle specifies:
+workflow-planner for planning, context-engineer for execution,
+methodology-reviewer + structural-validator + context-architect for
+verification. Start with Step 1 (Plan) — dispatch the workflow-planner
+to produce the implementation plan, then present it for my approval
+before proceeding to execution.
 ```
 
 ---

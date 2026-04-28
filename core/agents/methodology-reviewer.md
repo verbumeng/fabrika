@@ -58,7 +58,7 @@ analysis — they do not modify files.
 | Approved plan | Yes | The system update plan (what was intended) |
 | File paths | Yes | Every file created or changed |
 | CHANGELOG entry | Yes | The version entry describing the changes |
-| Verification checklist | Yes | The verification checklist from SYSTEM-UPDATE.md Step 4 (or equivalent) |
+| Verification checklist | Yes | The project's verification checklist from its instruction file |
 
 **Do not provide:** Opinions about the changes, suspected issues,
 the implementer's notes on what went well or poorly.
