@@ -44,9 +44,9 @@ Methodology-based types use the agentic-workflow lifecycle (`core/workflows/agen
 
 | Type | Planner | Reviewer | Validator | Implementer | Architect | Coordinator |
 |------|---------|----------|-----------|-------------|-----------|-------------|
-| `agentic-workflow` (structural) | product-manager | methodology-reviewer | structural-validator | *(archetype)* | *(archetype)* | scrum-master *(for change backlog sequencing)* |
+| `agentic-workflow` (structural) | workflow-planner | methodology-reviewer | structural-validator | context-engineer | context-architect | scrum-master *(for change backlog sequencing)* |
 
-**Note on agent maturity (0.10.0):** The implementer and architect columns reference archetype templates, not concrete agent files. The methodology-reviewer and structural-validator are stub agents. PRD-03 will create full concrete agents across all project types, including agentic-workflow specializations.
+**Note on agent maturity (0.11.0):** All five agentic-workflow-specific agents (workflow-planner, methodology-reviewer, structural-validator, context-engineer, context-architect) are stubs. PRD-03 will create full concrete agent implementations across all project types.
 
 **Operational mode:** Agentic-workflow projects may optionally have an operational mode for day-to-day system operation. Operational sessions are human-initiated and interactive — no additional agents are added. See the workflow file for details.
 
@@ -92,3 +92,6 @@ For dispatch contracts (what the orchestrator provides each agent at each invoca
 | `scrum-master.md` | Coordinator | Coordinator | all sprint-based types, agentic-workflow (structural — change backlog sequencing) |
 | `methodology-reviewer.md` | Reviewer | Reviewer | agentic-workflow |
 | `structural-validator.md` | Validator | Validator | agentic-workflow |
+| `workflow-planner.md` | Planner | Planner | agentic-workflow |
+| `context-engineer.md` | Implementer | Implementer | agentic-workflow |
+| `context-architect.md` | Architect | Architect | agentic-workflow |

@@ -170,11 +170,11 @@ changes align with their intent.
 
 | Role | Agent | Invoked at |
 |------|-------|-----------|
-| Planner | product-manager | Step 1 (planning mode) |
+| Planner | workflow-planner | Step 1 (planning mode) |
 | Reviewer | methodology-reviewer | Step 4 |
 | Validator | structural-validator | Step 4 |
-| Implementer | *(archetype, concrete agent in PRD-03)* | Steps 3, 5 |
-| Architect | *(archetype, concrete agent in PRD-04)* | Step 4 |
+| Implementer | context-engineer | Steps 3, 5 |
+| Architect | context-architect | Step 4 |
 | Coordinator | scrum-master | When multiple PRDs/changes need sequencing |
 
 The coordinator is not part of the 7-step protocol itself. It is
@@ -184,12 +184,10 @@ similar to sprint planning in sprint-based projects.
 
 ### Note on agent maturity
 
-For 0.10.0, the implementer and architect roles are defined by their
-archetype templates (`core/agents/archetypes/implementer.md` and
-`core/agents/archetypes/architect.md`). The methodology-reviewer and
-structural-validator are stub agent files. PRD-03 creates concrete
-agent implementations across all project types, including
-agentic-workflow.
+All five agentic-workflow-specific agents (workflow-planner,
+methodology-reviewer, structural-validator, context-engineer,
+context-architect) are stubs introduced in 0.10.0-0.11.0. PRD-03
+creates full concrete agent implementations across all project types.
 
 ---
 

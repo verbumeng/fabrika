@@ -6,6 +6,54 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.11.0
+
+Apply agentic-workflow to canonical Fabrika. Fabrika now eats its own cooking — it follows the agentic-workflow structural update lifecycle instead of a separate governance document. Three new specialized agent stubs complete the agentic-workflow agent roster: workflow-planner (planner), context-engineer (implementer), and context-architect (architect). The legacy SYSTEM-UPDATE.md protocol is retired; Fabrika's structural update instructions now live in the project-level CLAUDE.md, which points to the standard agentic-workflow lifecycle. All subsequent PRDs (03-10) execute through the agentic-workflow process.
+
+### Core (new — consumer projects should copy as needed)
+
+**New agents (agentic-workflow type):**
+- `core/agents/workflow-planner.md` — **NEW.** Stub planner for agentic-workflow structural changes. Expands PRDs and change requests into structured implementation plans with file inventories, integration point analysis, risk identification, and version bump determination. Uses Planner archetype as base. Full detail in PRD-03.
+- `core/agents/context-engineer.md` — **NEW.** Stub implementer for agentic-workflow structural changes. Writes methodology artifacts — agent prompts, workflow definitions, instruction files, catalog entries, integration templates, hooks. Uses Implementer archetype as base. Full detail in PRD-03.
+- `core/agents/context-architect.md` — **NEW.** Stub architect for agentic-workflow structural changes. Evaluates instruction decomposition, pointer patterns, context budgets, integration surface completeness. Uses Architect archetype as base. Full detail in PRD-03.
+
+### Core (changed — consumer projects should update)
+
+- `core/agents/AGENT-CATALOG.md` — **CHANGED.** Updated Methodology-Based Types mapping table: workflow-planner replaces product-manager as planner, context-engineer and context-architect replace archetype references for implementer and architect. Added three new rows to Agent Files table. Updated agent maturity note to reflect 0.11.0 status.
+- `core/workflows/dispatch-protocol.md` — **CHANGED.** Added three new dispatch contracts: Workflow Planner (Contextual tier), Context Engineer (Contextual tier), Context Architect (Strict tier — renamed from "Architect — Agentic-Workflow"). Updated methodology-reviewer verification checklist reference to use generic project instruction file pointer instead of SYSTEM-UPDATE.md reference.
+- `core/workflows/agentic-workflow-lifecycle.md` — **CHANGED.** Updated agent roster table: workflow-planner, context-engineer, context-architect replace product-manager and archetype placeholders. Updated agent maturity note.
+- `core/agents/methodology-reviewer.md` — **CHANGED.** Updated dispatch contract verification checklist field to reference project instruction file instead of SYSTEM-UPDATE.md.
+
+### Integrations (changed — consumer projects should update)
+
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Updated methodology-based types Subagents table with workflow-planner, context-engineer, and context-architect replacing product-manager and archetype placeholders.
+- `integrations/copilot/copilot-instructions.md` — **CHANGED.** Parallel changes to Claude Code template.
+
+### Operational Docs (changed — no consumer action needed)
+
+- `BOOTSTRAP.md` — **CHANGED.** Updated Phase 2A.1 agentic-workflow agent installation to include all five agents (workflow-planner, methodology-reviewer, structural-validator, context-engineer, context-architect). Updated readiness checklist to list all five agents. Updated note about shared agents (scrum-master only, since workflow-planner now fills the planner role).
+- `MIGRATIONS.md` — **CHANGED.** Added 0.11.0 entry.
+- `.gitignore` — **CHANGED.** Removed SYSTEM-UPDATE.md entry (file retired).
+- `planning/EXECUTION-PROMPT.md` — **CHANGED.** Updated PRDs 03-10 execution prompt to reference agentic-workflow lifecycle and agent dispatch instead of SYSTEM-UPDATE.md.
+
+### Consumer update instructions
+
+Projects on 0.10.x should:
+
+**New files (agentic-workflow projects — copy to your agent path):**
+1. Copy `core/agents/workflow-planner.md` — new planner for agentic-workflow structural changes
+2. Copy `core/agents/context-engineer.md` — new implementer for agentic-workflow structural changes
+3. Copy `core/agents/context-architect.md` — new architect for agentic-workflow structural changes
+
+**Changed files (all projects — update from Fabrika source):**
+4. Update `core/agents/AGENT-CATALOG.md` — new agent entries and updated agentic-workflow mapping table
+5. Update `core/workflows/dispatch-protocol.md` — three new dispatch contracts, renamed architect contract, updated verification checklist references
+6. Update `core/workflows/agentic-workflow-lifecycle.md` — updated agent roster table
+7. Update `core/agents/methodology-reviewer.md` — updated dispatch contract reference
+8. Update your integration template (CLAUDE.md or copilot-instructions.md) — updated agentic-workflow Subagents table
+
+---
+
 ## 0.10.0
 
 Agentic-workflow project type, implementer and architect archetypes. Defines a new project type for systems where the methodology itself is the product — agent prompts, workflow definitions, instruction files, templates. Introduces two new agent archetypes (implementer, architect) and two agentic-workflow-specific agent stubs (methodology-reviewer, structural-validator). The agentic-workflow type uses a 7-step structural update lifecycle (plan, align, execute, verify, incorporate feedback, present, ship) with three independent verification agents. Operational mode (human-driven day-to-day sessions) is opt-in and does not add agent orchestration.

@@ -478,14 +478,14 @@ Tell the user: **"Your analytics workspace is set up with [N] data sources catal
 Copy agentic-workflow agents from `[FABRIKA_PATH]/core/agents/` to the tool-appropriate location:
 
 - **Claude Code:** Copy to `.claude/agents/`:
-  - `methodology-reviewer.md`, `structural-validator.md`
+  - `workflow-planner.md`, `methodology-reviewer.md`, `structural-validator.md`, `context-engineer.md`, `context-architect.md`
   - Copy CLAUDE.md template from `[FABRIKA_PATH]/integrations/claude-code/CLAUDE.md`, set project type to `agentic-workflow`
   - Copy settings from `[FABRIKA_PATH]/integrations/claude-code/settings-template.json` to `.claude/settings.json`
 - **GitHub Copilot:** Copy to `.github/agents/` (renaming `*.md` to `*.agent.md`):
-  - `methodology-reviewer.agent.md`, `structural-validator.agent.md`
+  - `workflow-planner.agent.md`, `methodology-reviewer.agent.md`, `structural-validator.agent.md`, `context-engineer.agent.md`, `context-architect.agent.md`
   - Copy copilot-instructions from `[FABRIKA_PATH]/integrations/copilot/copilot-instructions.md` to `.github/copilot-instructions.md`, set project type to `agentic-workflow`
 
-The product-manager and scrum-master agents are used from the standard agent set (they serve the planner and coordinator roles through contextual dispatch).
+The scrum-master agent is used from the standard agent set (it serves the coordinator role for change backlog sequencing).
 
 ### 2A.2 Establish version tracking
 
@@ -747,6 +747,6 @@ Use this during the Phase 4 readiness check.
 - [ ] `MIGRATIONS.md` exists
 - [ ] Structural update protocol established (SYSTEM-UPDATE.md or equivalent)
 - [ ] Mode documented (structural only, or structural + operational)
-- [ ] Agentic-workflow agents installed (methodology-reviewer, structural-validator)
+- [ ] Agentic-workflow agents installed (workflow-planner, methodology-reviewer, structural-validator, context-engineer, context-architect)
 - [ ] `STATUS.md` initialized
 - [ ] `.fabrika/manifest.yml` generated with all installed files
