@@ -184,10 +184,14 @@ similar to sprint planning in sprint-based projects.
 
 ### Note on agent maturity
 
-All five agentic-workflow-specific agents (workflow-planner,
+The five agentic-workflow-specific agents (workflow-planner,
 methodology-reviewer, structural-validator, context-engineer,
-context-architect) are stubs introduced in 0.10.0-0.11.0. PRD-03
-creates full concrete agent implementations across all project types.
+context-architect) reached full maturity in 0.12.0 — detailed
+evaluation criteria, calibration examples, and step-by-step
+procedures were added to each. Five specialist implementer agents
+(software-engineer, data-engineer, data-analyst, ml-engineer,
+ai-engineer) were also introduced in 0.12.0, covering all sprint-based
+and task-based project types.
 
 ---
 

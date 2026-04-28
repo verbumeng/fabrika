@@ -57,8 +57,31 @@ status: draft
 [Anything that needs the owner's input before building]
 ```
 
-4. Be **ambitious about scope** (what the feature could be) but **disciplined about specification** (don't over-specify implementation details — that causes cascading errors downstream)
-5. Present the spec to the main session, which presents it to the owner for approval. **Owner approval is required before implementation begins.** This spec is the contract for implementation — an unreviewed plan encodes potentially bad instructions that waste tokens and produce wrong code. The agent must not proceed without explicit approval.
+4. **Assess domain scope.** Before finalizing the spec, check whether
+   the story spans multiple implementation domains (e.g., pipeline
+   work + frontend work, or model training + API serving). Each
+   domain maps to a different implementer agent (see AGENT-CATALOG
+   mapping tables).
+   - **Single domain** (most stories): proceed normally. One
+     implementer will handle the entire implementation.
+   - **Two domains** (occasionally warranted): add a **Task
+     Decomposition** section to the spec. For each task, specify:
+     the implementation scope, the assigned implementer's domain,
+     the files involved, and the **interface contracts** between
+     tasks (data formats, API contracts, file paths, schema
+     expectations). Sequence the tasks by dependency.
+   - **Three+ domains**: flag to the orchestrator and recommend
+     decomposing the story into separate single-domain stories with
+     explicit interface contracts. Multi-domain stories of this
+     scope add significant orchestration overhead (separate sessions
+     per task, domain-specific evaluation cycles, integration
+     verification).
+   - When the spec has a Task Decomposition, ensure the story's
+     acceptance criteria include **integration criteria** that span
+     the full feature ("data flows end-to-end from ingestion through
+     the user-facing display"), not just per-domain criteria.
+5. Be **ambitious about scope** (what the feature could be) but **disciplined about specification** (don't over-specify implementation details — that causes cascading errors downstream)
+6. Present the spec to the main session, which presents it to the owner for approval. **Owner approval is required before implementation begins.** This spec is the contract for implementation — an unreviewed plan encodes potentially bad instructions that waste tokens and produce wrong code. The agent must not proceed without explicit approval.
 
 ---
 

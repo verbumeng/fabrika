@@ -190,7 +190,7 @@ The agent drives the development process proactively. Don't wait for the owner t
 **Before starting any story, sprint planning, or bug fix, read:** `[FABRIKA_PATH]/core/workflows/development-workflow.md`
 
 Summary of workflows covered:
-- **Starting a Story** — spec expansion → approval → branch → implement → test
+- **Starting a Story** — spec expansion → approval → branch → dispatch to implementer → evaluate → fix cycle
 - **Completing a Story (Evaluation Cycle)** — tests → lint → commit → reviewer → validator → planner validation → rollback protocol (max 2 retries)
 - **Sprint Planning** — scrum-master → topology assessment → 2-3 stories → contract → approval
 - **Ideation & Backlog Grooming** — new stories, re-scoping, someday-maybe
@@ -254,6 +254,7 @@ All agents are invoked proactively at trigger points in the Development Workflow
 | **Reviewer** | code-reviewer | + prompt-reviewer (ai-engineering, supplemental) |
 | **Validator** | test-writer | model-evaluator (ml-engineering), eval-engineer (ai-engineering), data-quality-engineer (data-engineering) |
 | **Coordinator** | scrum-master | (same for all sprint-based types) |
+| **Implementer** | software-engineer | data-engineer (data-engineering, analytics-engineering), data-analyst (analytics-workspace, data-app), ml-engineer (ml-engineering), ai-engineer (ai-engineering) |
 
 ### Task-based types (analytics-workspace)
 | Role | Agent |
@@ -261,6 +262,7 @@ All agents are invoked proactively at trigger points in the Development Workflow
 | **Planner** | analysis-planner |
 | **Reviewer** | logic-reviewer |
 | **Validator** | data-validator |
+| **Implementer** | data-analyst — implements analysis scripts, SQL, notebooks, dashboard code |
 
 ### Methodology-based types (agentic-workflow)
 
@@ -413,6 +415,7 @@ This project uses **Fabrika**, an agentic workflow framework. Local agent change
 - **Conservative sprint scope.** 2-3 stories per sprint. Favor shipping over perfecting.
 - **Context window hygiene.** Load docs on demand, not up front. Return concise summaries.
 - **Stack-agnostic agent prompts.** Tech details live in this file's Project Stack section.
+- **Pure orchestrator.** The orchestrator dispatches to implementer agents for all production code changes — it does not implement directly, even for trivial tasks. Lightweight dispatch reduces ceremony, not the dispatch itself.
 
 ---
 

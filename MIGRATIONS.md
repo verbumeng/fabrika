@@ -4,6 +4,32 @@ When a Fabrika update requires consumer projects to do more than a straight file
 
 ---
 
+## 0.12.0 — Implementer Archetype + Pure Orchestrator
+
+**Affects:** All consumer projects (sprint-based, task-based, and agentic-workflow).
+
+**What changed:** The orchestrator is now a pure dispatcher — it never writes production code directly, even for trivial tasks. Five specialist implementer agents handle all implementation work, each carrying domain expertise for their project types. The development workflow's "Starting a Story" section dispatches to implementers instead of implementing directly. The evaluation feedback loop routes evaluator findings through the orchestrator (as translator) to the implementer rather than having the orchestrator fix issues directly. Lightweight dispatch provides a reduced-ceremony path for trivial changes while maintaining the implementer-always-implements principle. Multi-domain story support adds task decomposition with per-domain sessions and integration verification. All agentic-workflow agents (previously stubs) are fleshed out to full implementations. The product-manager and scrum-master gain domain scope assessment guidance.
+
+**Migration steps:**
+
+1. **Copy implementer agent(s) for your project type.** See the CHANGELOG consumer update instructions table for which agent(s) to copy. Place them in your agent directory (`.claude/agents/` or `.github/agents/`).
+
+2. **Update development-workflow.md.** This is a behavioral change — the "Starting a Story" section and "Completing a Story" section are significantly rewritten. The orchestrator no longer implements directly. Review the new workflow and update your copy.
+
+3. **Update dispatch-protocol.md.** The generic Implementer contract is replaced by 5 per-specialist contracts with domain-specific conditional fields. A new Lightweight Dispatch section defines the reduced-ceremony path. The Retry Protocol is rewritten with the orchestrator-as-translator pattern.
+
+4. **Update AGENT-CATALOG.md.** New Implementer column added to Sprint-Based and Task-Based mapping tables. 5 new rows in Agent Files table.
+
+5. **Update your integration template** (CLAUDE.md or copilot-instructions.md). Add Implementer to subagent tables and add the pure-orchestrator constraint to Key Constraints.
+
+6. **For agentic-workflow projects:** Update all 5 agent stubs (workflow-planner, methodology-reviewer, structural-validator, context-engineer, context-architect) to the full implementations.
+
+7. **For all sprint-based/task-based projects:** Update product-manager.md (domain scope assessment in planning mode) and scrum-master.md (domain scope assessment in sprint planning).
+
+**Why this matters:** The pure orchestrator model prevents context window degradation during implementation — the orchestrator stays focused on routing and synthesis while implementers handle domain-specific work. This also enables future domain specialization without changing the orchestration layer.
+
+---
+
 ## 0.11.0 — Agentic-Workflow Agent Roster Completion (No Migration Needed)
 
 **Affects:** Consumer projects using the `agentic-workflow` project type.

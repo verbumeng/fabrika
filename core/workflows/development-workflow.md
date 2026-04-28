@@ -14,31 +14,122 @@ Before invoking any sub-agent, read `core/workflows/dispatch-protocol.md` for wh
 5. Present the spec to the owner for approval using the **Spec Briefing** format (see briefing docs)
 6. Create feature branch: `feature/[PROJECT_KEY]-S-042-description`
 7. Update story: `status: In Progress`
-8. Implement the feature against the approved spec
+8. **Dispatch to implementer.** Identify the appropriate implementer by looking up the project type(s) in the AGENT-CATALOG mapping tables. Provide contextual dispatch per the dispatch protocol. The orchestrator does NOT implement — it dispatches.
+   - **Lightweight dispatch** (trivial changes — single-file edits where the spec fully specifies the change and it's not a new feature, refactor, or architectural change): the orchestrator still dispatches to the implementer, but uses the lightweight dispatch path. The plan field is inline text rather than a spec file path.
+   - **Cross-domain stories** (spec contains a Task Decomposition section): each task runs in its own session with the appropriate domain implementer and its own evaluation cycle. See "Multi-Domain Story Completion" below.
 9. Invoke the **validator** agent to write tests for the new code
 
 ## Completing a Story (Evaluation Cycle)
-Before marking a story complete, run the full evaluation cycle automatically:
-1. Run tests — all pass (including existing tests — no regressions)
-2. Run linter — no errors
-3. Commit with conventional format: `feat([PROJECT_KEY]-S-042): description`
-4. Invoke the **reviewer** agent — it reviews against the sprint contract acceptance criteria, grading rubrics, and runs semgrep
-5. Invoke the **validator** agent — it verifies test coverage meets rubric standards and runs E2E verification if applicable to this project type
-6. Invoke the **planner** agent in **validation mode** — it verifies acceptance criteria from the sprint contract are met
-7. Each evaluator writes a report to `docs/evaluations/[TICKET]-[agent]-review.md`
 
-**If any evaluator fails the implementation (Rollback Protocol):**
-8. Read all evaluation reports. Present the assessment to the owner: what failed, why, and proposed fix approach
-9. If fixable without reverting (missing handler, wrong endpoint, UI misalignment) → fix the specific issues, re-invoke the failing evaluator(s)
-10. If fundamental approach is wrong (wrong data model, architecture mismatch) → `git revert` to last passing commit, re-read sprint contract, propose a different approach to the owner
-11. **Maximum 2 retry cycles.** After 2 failed attempts, stop and present: all evaluation reports, summary of what was tried, recommended next steps (rescope, break into smaller stories, research the blocker)
+Before marking a story complete, run the full evaluation cycle:
+
+1. Confirm the implementer's output: review the implementation summary,
+   verify files were created/modified as expected
+2. Run tests — all pass (including existing tests — no regressions)
+3. Run linter — no errors
+4. Commit with conventional format: `feat([PROJECT_KEY]-S-042): description`
+5. Invoke the **reviewer** agent — strict dispatch with spec, file
+   paths, and rubric pointer. The reviewer reviews against acceptance
+   criteria, rubrics, and runs security scans
+6. Invoke the **validator** agent — strict dispatch. It verifies test
+   coverage meets rubric standards and runs E2E verification if
+   applicable
+7. Invoke the **planner** agent in **validation mode** — strict
+   dispatch. It verifies acceptance criteria from the sprint contract
+   are met
+8. Each evaluator writes a report to
+   `docs/evaluations/[TICKET]-[agent]-review.md`
+
+**If any evaluator fails the implementation (Feedback Loop):**
+
+9. Read all evaluation reports. Synthesize findings into
+   implementer-actionable fix instructions — specific issues, specific
+   file paths, specific expected behavior. Do NOT forward raw reports
+   to the implementer.
+10. Dispatch fix instructions to the implementer. The implementer
+    addresses each finding and returns an updated output summary.
+11. Sanity-check the fixes: does the implementer's summary address
+    each evaluator finding? If a finding was clearly missed, dispatch
+    clarification back to the implementer before burning a retry cycle.
+12. Re-invoke the failing evaluator(s) with fresh dispatch — same
+    spec, same rubric, updated file paths. No prior evaluation report
+    included.
+13. **Maximum 2 retry cycles** through steps 9-12. After 2 failed
+    attempts, stop and present: all evaluation reports, summary of
+    what was tried, recommended next steps (rescope, break into
+    smaller stories, research the blocker).
 
 **If all evaluators pass:**
-12. Update project docs if implementation diverged (architecture, data model, research notes)
-13. Create an ADR for any significant technical decision made during implementation
-14. Update story: `status: In Review`, add `## Completion Summary`
-15. If an external task management system is configured, mark the corresponding task as done
-16. Present the session summary to the owner using the **Session Summary Briefing** format (see briefing docs)
+
+14. Update project docs if implementation diverged (architecture, data
+    model, research notes)
+15. Create an ADR for any significant technical decision made during
+    implementation
+16. Update story: `status: In Review`, add `## Completion Summary`
+17. If an external task management system is configured, mark the
+    corresponding task as done
+18. Present the session summary to the owner using the **Session
+    Summary Briefing** format (see briefing docs)
+
+## Multi-Domain Story Completion
+
+When a story's spec contains a Task Decomposition section (multiple
+implementation domains), each task runs as its own session:
+
+### Per-Task Sessions
+
+Each task runs in a separate session with the domain's implementer:
+
+1. Read the spec's Task Decomposition for this task — scope, files,
+   interface contracts
+2. Dispatch to the domain implementer with: task section from the
+   spec, interface contracts, file paths, relevant architecture docs
+3. After implementation, run the evaluation cycle above — with the
+   domain-appropriate validator (data-quality-engineer for pipeline
+   tasks, model-evaluator for ML tasks, etc.)
+4. Include prior task output summaries as context when dispatching
+   subsequent implementers — so later tasks can implement against the
+   interfaces produced by earlier tasks
+5. **Session handoff:** After the task's evaluation cycle passes, run
+   the standard session close-out (commit, update STATUS.md, append
+   to sprint progress file). Update STATUS.md's `Next chat should:`
+   field to point to the next task: *"Continue [TICKET] — Task N:
+   [task name] ([domain] implementer)"*. Issue the deterministic
+   handoff prompt: *"Task N-1 complete. Open a new chat to continue
+   [TICKET] — Task N: [task name]."* Do NOT start the next task in
+   the same chat.
+
+### Integration Session (Final)
+
+After all per-task sessions complete, the final handoff prompt
+from the last task session should read: *"All tasks complete. Open
+a new chat for [TICKET] integration verification."*
+
+The integration session:
+
+1. No implementer dispatch — this session verifies integration
+2. Invoke the **planner** agent in **validation mode** — check the
+   unified story's acceptance criteria, especially integration criteria
+   ("data flows end-to-end from ingestion through serving")
+3. Invoke the **reviewer** agent on the full change set — looking
+   specifically at the seams between domains (interface contracts
+   honored, data formats match, error handling at boundaries)
+4. If integration issues are found, dispatch to the relevant domain
+   implementer in a follow-up session with specific fix instructions
+
+### Guidance for Orchestrators
+
+- **Prefer single-domain stories.** Multi-domain stories are the
+  exception, not the norm.
+- **Two-domain stories** are acceptable when the domains are tightly
+  coupled (e.g., pipeline + dashboard for the same data).
+- **Three+ domain stories** should be decomposed by the planner
+  during spec expansion. The scrum-master should flag these during
+  sprint planning.
+- The planner defines interface contracts between tasks at spec time.
+  These contracts are the alignment mechanism — they specify data
+  formats, API contracts, file paths, and schema expectations so each
+  implementer can work independently.
 
 ## Sprint Planning
 1. Invoke the **scrum-master** (coordinator) agent to facilitate

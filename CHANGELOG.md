@@ -6,6 +6,83 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.12.0
+
+Implementer archetype, pure orchestrator, and full agent maturity. The orchestrator is now a pure dispatcher — it never writes production code, even for trivial tasks. Five specialist implementer agents cover all project types: software-engineer (web-app, automation, library), data-engineer (data-engineering, analytics-engineering), data-analyst (analytics-workspace, data-app), ml-engineer (ml-engineering), ai-engineer (ai-engineering). The development workflow is rewritten so "Starting a Story" dispatches to the appropriate implementer after spec approval, and the evaluation feedback loop routes through the orchestrator-as-translator pattern rather than direct fixes. Lightweight dispatch provides reduced-ceremony invocation for trivial changes without reverting to orchestrator implementation. Multi-domain story support is added with task decomposition, per-domain sessions, and integration verification. All five agentic-workflow agents (workflow-planner, methodology-reviewer, structural-validator, context-engineer, context-architect) are fleshed out from stubs to full implementations with detailed procedures, calibration examples, and context window hygiene. The product-manager and scrum-master gain domain scope assessment guidance for identifying and managing cross-domain stories.
+
+### Core (new — consumer projects should copy as needed)
+
+**New implementer agents (all project types):**
+- `core/agents/software-engineer.md` — **NEW.** Implementer for web-app, automation, library. Domain expertise: web frameworks, APIs, CLI tools, package design, backward compatibility. Uses Implementer archetype as base.
+- `core/agents/data-engineer.md` — **NEW.** Implementer for data-engineering, analytics-engineering. Domain expertise: pipeline construction, dbt models, orchestration, source/serving contracts, data quality at stage boundaries. Uses Implementer archetype as base.
+- `core/agents/data-analyst.md` — **NEW.** Implementer for analytics-workspace, data-app. Domain expertise: SQL, analysis scripts, notebook structure, dashboard/visualization code, advisory mode for GUI tools. Uses Implementer archetype as base.
+- `core/agents/ml-engineer.md` — **NEW.** Implementer for ml-engineering. Domain expertise: training pipelines, feature engineering, model serving, experiment management, evaluation harnesses. Uses Implementer archetype as base.
+- `core/agents/ai-engineer.md` — **NEW.** Implementer for ai-engineering. Domain expertise: LLM integration, prompt engineering, RAG pipelines, guardrails/safety, eval harnesses, cost optimization. Uses Implementer archetype as base.
+
+### Core (changed — consumer projects should update)
+
+- `core/agents/archetypes/implementer.md` — **CHANGED.** Full archetype definition replacing the 0.10.0 stub. Added: domain specialization model (5 specialists mapped to project types), full vs. lightweight dispatch distinction, cross-domain dispatch protocol, refactor handling, evaluation feedback loop (orchestrator-as-translator pattern), expanded behavioral rules, context window hygiene.
+- `core/agents/AGENT-CATALOG.md` — **CHANGED.** Added Implementer column to Sprint-Based Types and Task-Based Types mapping tables. Added 5 new rows to Agent Files table (software-engineer, data-engineer, data-analyst, ml-engineer, ai-engineer). Updated agent maturity note to reflect 0.12.0 status.
+- `core/workflows/development-workflow.md` — **CHANGED.** Major rewrite. "Starting a Story" now dispatches to implementer instead of implementing directly. Added lightweight dispatch path and cross-domain story handling. "Completing a Story" rewritten with orchestrator-mediated feedback loop (orchestrator translates evaluator findings into implementer fix instructions). Added "Multi-Domain Story Completion" section with per-task sessions and integration verification.
+- `core/workflows/dispatch-protocol.md` — **CHANGED.** Added Lightweight Dispatch section defining the reduced-ceremony path. Replaced generic Implementer contract with 5 per-specialist dispatch contracts (Software Engineer, Data Engineer, Data Analyst, ML Engineer, AI Engineer) with domain-specific conditional fields. Rewrote Retry Protocol with orchestrator-as-translator pattern.
+- `core/agents/methodology-reviewer.md` — **CHANGED.** Fleshed out from stub. Added: evaluation procedure with step-by-step process for each of 6 criteria, calibration examples (PASS / PASS WITH NOTES / FAIL), context window hygiene, detailed sub-checks for cross-reference consistency and contract verification.
+- `core/agents/structural-validator.md` — **CHANGED.** Fleshed out from stub. Added: verification procedures with mechanical checks for each of 8 items, structured output format (per-check results table, summary statistics, blocking findings), calibration examples (PASS and 4 distinct FAIL scenarios), context window hygiene.
+- `core/agents/workflow-planner.md` — **CHANGED.** Fleshed out from stub. Added: orientation steps, 9-step planning procedure, plan quality criteria, calibration examples (GOOD / BAD / EDGE CASE), context window hygiene.
+- `core/agents/context-engineer.md` — **CHANGED.** Fleshed out from stub. Added: orientation steps, 8-step implementation procedure, quality criteria, calibration examples, context window hygiene.
+- `core/agents/context-architect.md` — **CHANGED.** Fleshed out from stub. Added: orientation steps, 8-step evaluation procedure, assessment quality criteria with verdict calibration, calibration examples (SOUND / CONCERNS / UNSOUND), context window hygiene.
+- `core/agents/product-manager.md` — **CHANGED.** Added domain scope assessment step to Planning Mode. When expanding a story, the planner now checks domain scope and produces a Task Decomposition section for multi-domain stories with interface contracts.
+- `core/agents/scrum-master.md` — **CHANGED.** Added domain scope assessment step to Sprint Planning. The scrum-master now evaluates stories for domain scope during planning and recommends decomposition for 3+ domain stories.
+- `core/workflows/agentic-workflow-lifecycle.md` — **CHANGED.** Updated agent maturity note to reflect 0.12.0 status (all agents at full maturity, 5 specialist implementers added).
+
+### Integrations (changed — consumer projects should update)
+
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Added Implementer row to Sprint-based and Task-based Subagents tables with all 5 specialists. Added Implementer role behavior description. Updated Development Workflow summary to reflect implementer dispatch. Added pure-orchestrator constraint to Key Constraints.
+- `integrations/copilot/copilot-instructions.md` — **CHANGED.** Parallel changes to Claude Code template: Implementer in subagent tables, updated workflow summary, pure-orchestrator constraint.
+
+### Operational Docs (changed — no consumer action needed)
+
+- `BOOTSTRAP.md` — **CHANGED.** Updated Phase 2 agent installation to include implementer agent for the project type. Updated readiness checklist.
+- `MIGRATIONS.md` — **CHANGED.** Added 0.12.0 entry.
+
+### Consumer update instructions
+
+Projects on 0.11.x should:
+
+**New files (copy the implementer agent(s) for your project type):**
+
+| Your project type(s) | Copy this agent |
+|---|---|
+| web-app, automation, library | `core/agents/software-engineer.md` |
+| data-engineering, analytics-engineering | `core/agents/data-engineer.md` |
+| analytics-workspace, data-app | `core/agents/data-analyst.md` |
+| ml-engineering | `core/agents/ml-engineer.md` |
+| ai-engineering | `core/agents/ai-engineer.md` |
+
+Multi-type projects: copy all implementer agents that match your types.
+
+**Changed files (all projects — update from Fabrika source):**
+1. Update `core/agents/archetypes/implementer.md` — full archetype replacing stub
+2. Update `core/agents/AGENT-CATALOG.md` — new Implementer columns and Agent Files rows
+3. Update `core/workflows/development-workflow.md` — pure orchestrator rewrite (behavioral change: orchestrator no longer implements)
+4. Update `core/workflows/dispatch-protocol.md` — 5 specialist contracts replace generic Implementer, lightweight dispatch, revised retry protocol
+5. Update your integration template (CLAUDE.md or copilot-instructions.md) — Implementer in subagent tables, pure-orchestrator constraint
+
+**Changed files (agentic-workflow projects — update from Fabrika source):**
+6. Update `core/agents/methodology-reviewer.md` — fleshed out from stub
+7. Update `core/agents/structural-validator.md` — fleshed out from stub
+8. Update `core/agents/workflow-planner.md` — fleshed out from stub
+9. Update `core/agents/context-engineer.md` — fleshed out from stub
+10. Update `core/agents/context-architect.md` — fleshed out from stub
+11. Update `core/workflows/agentic-workflow-lifecycle.md` — maturity note update
+
+**Changed files (all sprint-based and task-based projects):**
+12. Update `core/agents/product-manager.md` — domain scope assessment in planning mode
+13. Update `core/agents/scrum-master.md` — domain scope assessment in sprint planning
+
+**Behavioral change (important):** The development workflow now requires the orchestrator to dispatch all implementation work to implementer agents. The orchestrator no longer writes production code directly. This changes how the orchestrating session works — instead of implementing features, it dispatches to the appropriate implementer and mediates the feedback loop between evaluators and implementers. Lightweight dispatch handles trivial changes with reduced ceremony but still routes through an implementer agent.
+
+---
+
 ## 0.11.0
 
 Apply agentic-workflow to canonical Fabrika. Fabrika now eats its own cooking — it follows the agentic-workflow structural update lifecycle instead of a separate governance document. Three new specialized agent stubs complete the agentic-workflow agent roster: workflow-planner (planner), context-engineer (implementer), and context-architect (architect). The legacy SYSTEM-UPDATE.md protocol is retired; Fabrika's structural update instructions now live in the project-level CLAUDE.md, which points to the standard agentic-workflow lifecycle. All subsequent PRDs (03-10) execute through the agentic-workflow process.
