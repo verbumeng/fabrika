@@ -190,12 +190,13 @@ The agent drives the development process proactively. Don't wait for the owner t
 **Before starting any story, sprint planning, or bug fix, read:** `[FABRIKA_PATH]/core/workflows/development-workflow.md`
 
 Summary of workflows covered:
-- **Starting a Story** — spec expansion → approval → branch → dispatch to implementer → evaluate → fix cycle
-- **Completing a Story (Evaluation Cycle)** — tests → lint → commit → reviewer → validator → planner validation → rollback protocol (max 2 retries)
+- **Starting a Story** — spec expansion → approval → optional architect design review → branch → dispatch to implementer → evaluate → fix cycle
+- **Completing a Story (Evaluation Cycle)** — tests → lint → commit → reviewer → validator → planner validation → optional architect structural evaluation → rollback protocol (max 2 retries)
 - **Sprint Planning** — scrum-master → topology assessment → 2-3 stories → contract → approval
 - **Ideation & Backlog Grooming** — new stories, re-scoping, someday-maybe
 - **Research & Technical Discussion** — research docs, ADRs
 - **Bug Reporting & Fix Workflow** — see `docs/02-Engineering/bug-workflow.md`
+- **Architecture Assessment (Ad Hoc)** — owner-initiated or orchestrator-detected structural review of existing code
 
 ---
 
@@ -255,6 +256,7 @@ All agents are invoked proactively at trigger points in the Development Workflow
 | **Validator** | test-writer | model-evaluator (ml-engineering), eval-engineer (ai-engineering), data-quality-engineer (data-engineering) |
 | **Coordinator** | scrum-master | (same for all sprint-based types) |
 | **Implementer** | software-engineer | data-engineer (data-engineering, analytics-engineering), data-analyst (analytics-workspace, data-app), ml-engineer (ml-engineering), ai-engineer (ai-engineering) |
+| **Architect** | software-architect | data-architect (data-engineering, analytics-engineering, data-app, ml-engineering) |
 
 ### Task-based types (analytics-workspace)
 | Role | Agent |
@@ -345,7 +347,7 @@ See `docs/evals/README.md` for detailed format and process.
 
 Run between sprints or weekly. See full checklist at `docs/02-Engineering/maintenance-checklist.md`.
 
-**Summary:** Documentation sync, code quality (dedup, TODO scan), evaluation findings sweep, test health, bug review, progress reconciliation, dependency health, context efficiency review, hook health, evaluation health (run evals, propose prompt improvements).
+**Summary:** Documentation sync, code quality (dedup, TODO scan), evaluation findings sweep, test health, bug review, progress reconciliation, dependency health, architecture review (conditional — after major features, on request, or when code-reviewer flags structural concerns), context efficiency review, hook health, evaluation health (run evals, propose prompt improvements).
 
 **Git convention:** `maint:` commit prefix. `git tag maintenance-YYYY-MM-DD && git tag -f maintenance-latest`.
 

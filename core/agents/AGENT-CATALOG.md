@@ -21,22 +21,22 @@ Every project has a subset of these agent roles:
 
 ### Sprint-Based Types
 
-| Type | Planner | Reviewer | Supplemental Reviewers | Validator | Designer | Coordinator | Implementer |
-|------|---------|----------|----------------------|-----------|----------|-------------|-------------|
-| `web-app` | product-manager | code-reviewer | security-reviewer, performance-reviewer | test-writer | — | scrum-master | software-engineer |
-| `data-app` | product-manager | code-reviewer | performance-reviewer | test-writer | visualization-designer | scrum-master | data-analyst |
-| `analytics-engineering` | product-manager | code-reviewer | performance-reviewer | test-writer | visualization-designer | scrum-master | data-engineer |
-| `data-engineering` | product-manager | code-reviewer | security-reviewer, performance-reviewer | data-quality-engineer | — | scrum-master | data-engineer |
-| `ml-engineering` | experiment-planner | code-reviewer | performance-reviewer | model-evaluator | — | scrum-master | ml-engineer |
-| `ai-engineering` | product-manager | code-reviewer, prompt-reviewer | security-reviewer, performance-reviewer | eval-engineer | — | scrum-master | ai-engineer |
-| `automation` | product-manager | code-reviewer | performance-reviewer | test-writer | — | scrum-master | software-engineer |
-| `library` | api-designer | code-reviewer | performance-reviewer | test-writer | — | scrum-master | software-engineer |
+| Type | Planner | Reviewer | Supplemental Reviewers | Validator | Designer | Coordinator | Implementer | Architect |
+|------|---------|----------|----------------------|-----------|----------|-------------|-------------|-----------|
+| `web-app` | product-manager | code-reviewer | security-reviewer, performance-reviewer | test-writer | — | scrum-master | software-engineer | software-architect |
+| `data-app` | product-manager | code-reviewer | performance-reviewer | test-writer | visualization-designer | scrum-master | data-analyst | data-architect |
+| `analytics-engineering` | product-manager | code-reviewer | performance-reviewer | test-writer | visualization-designer | scrum-master | data-engineer | data-architect |
+| `data-engineering` | product-manager | code-reviewer | security-reviewer, performance-reviewer | data-quality-engineer | — | scrum-master | data-engineer | data-architect |
+| `ml-engineering` | experiment-planner | code-reviewer | performance-reviewer | model-evaluator | — | scrum-master | ml-engineer | data-architect |
+| `ai-engineering` | product-manager | code-reviewer, prompt-reviewer | security-reviewer, performance-reviewer | eval-engineer | — | scrum-master | ai-engineer | software-architect |
+| `automation` | product-manager | code-reviewer | performance-reviewer | test-writer | — | scrum-master | software-engineer | software-architect |
+| `library` | api-designer | code-reviewer | performance-reviewer | test-writer | — | scrum-master | software-engineer | software-architect |
 
 ### Task-Based Types
 
-| Type | Planner | Reviewer | Supplemental Reviewers | Validator | Designer | Coordinator | Implementer |
-|------|---------|----------|----------------------|-----------|----------|-------------|-------------|
-| `analytics-workspace` | analysis-planner | logic-reviewer | performance-reviewer | data-validator | visualization-designer | *(none)* | data-analyst |
+| Type | Planner | Reviewer | Supplemental Reviewers | Validator | Designer | Coordinator | Implementer | Architect |
+|------|---------|----------|----------------------|-----------|----------|-------------|-------------|-----------|
+| `analytics-workspace` | analysis-planner | logic-reviewer | performance-reviewer | data-validator | visualization-designer | *(none)* | data-analyst | *(none)* |
 
 ### Methodology-Based Types
 
@@ -46,7 +46,7 @@ Methodology-based types use the agentic-workflow lifecycle (`core/workflows/agen
 |------|---------|----------|-----------|-------------|-----------|-------------|
 | `agentic-workflow` (structural) | workflow-planner | methodology-reviewer | structural-validator | context-engineer | context-architect | scrum-master *(for change backlog sequencing)* |
 
-**Note on agent maturity (0.12.0):** The five agentic-workflow-specific agents (workflow-planner, methodology-reviewer, structural-validator, context-engineer, context-architect) reached full maturity in 0.12.0. Five specialist implementer agents (software-engineer, data-engineer, data-analyst, ml-engineer, ai-engineer) were also introduced in 0.12.0, covering all project types.
+**Note on agent maturity (0.12.0):** The five agentic-workflow-specific agents (workflow-planner, methodology-reviewer, structural-validator, context-engineer, context-architect) reached full maturity in 0.12.0. Five specialist implementer agents (software-engineer, data-engineer, data-analyst, ml-engineer, ai-engineer) were also introduced in 0.12.0, covering all project types. Two specialist architect agents (software-architect, data-architect) were introduced in 0.13.0, covering all sprint-based project types.
 
 **Operational mode:** Agentic-workflow projects may optionally have an operational mode for day-to-day system operation. Operational sessions are human-initiated and interactive — no additional agents are added. See the workflow file for details.
 
@@ -95,6 +95,8 @@ For dispatch contracts (what the orchestrator provides each agent at each invoca
 | `workflow-planner.md` | Planner | Planner | agentic-workflow |
 | `context-engineer.md` | Implementer | Implementer | agentic-workflow |
 | `context-architect.md` | Architect | Architect | agentic-workflow |
+| `software-architect.md` | Architect | Architect | web-app, automation, library, ai-engineering |
+| `data-architect.md` | Architect | Architect | data-engineering, analytics-engineering, data-app, ml-engineering |
 | `software-engineer.md` | Implementer | Implementer | web-app, automation, library |
 | `data-engineer.md` | Implementer | Implementer | data-engineering, analytics-engineering |
 | `data-analyst.md` | Implementer | Implementer | analytics-workspace, data-app |
