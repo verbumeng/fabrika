@@ -4,6 +4,40 @@ When a Fabrika update requires consumer projects to do more than a straight file
 
 ---
 
+## 0.14.0 — Design Alignment + Project Charter + PRD
+
+**Affects:** All sprint-based consumer projects and agentic-workflow projects. Analytics-workspace projects are affected only if they use Design Alignment for complex analyses.
+
+**What changed:** The orchestrator now runs a Design Alignment protocol before sprint planning to produce durable requirements documents. Brain dumps no longer go directly to story creation — they flow through Design Alignment to produce a Project Charter (once per project) and PRDs (per phase/feature). The scrum master receives the approved PRD as primary input for story decomposition. Sprint retros check for PRD drift. The maintenance checklist gains Story-to-PRD Traceability. Analytics-workspace projects can optionally trigger Design Alignment for complex analyses, producing an enhanced Analysis Brief instead of Charter/PRD.
+
+**Migration steps:**
+
+1. **Copy new files.** Copy `core/workflows/design-alignment.md`, `core/templates/Project-Charter-Template.md`, and `core/templates/PRD-Template.md` to your Fabrika path.
+
+2. **Update changed core files.** Update the following from the Fabrika source: `core/Document-Catalog.md`, `core/workflows/doc-triggers.md`, `core/workflows/sprint-lifecycle.md`, `core/workflows/development-workflow.md`, `core/workflows/dispatch-protocol.md`, `core/agents/scrum-master.md`, `core/maintenance-checklist.md`.
+
+3. **Update changed integration and root-level files.** Update your integration template (CLAUDE.md or copilot-instructions.md) and `BOOTSTRAP.md`.
+
+4. **Update analytics-workspace workflow** (analytics-workspace projects only). Update `core/workflows/analytics-workspace.md`.
+
+5. **Create PRDs directory.** Create `docs/01-Product/PRDs/` in your project.
+
+6. **Produce retroactive Charter and PRDs for existing projects.** This is the key adoption step. Run a Design Alignment session against your existing codebase and documentation:
+
+   - **Retroactive Project Charter:** The orchestrator reads existing docs (Vision & Positioning, Phase Definitions, Architecture Overview, story history) and synthesizes them into a Project Charter at `docs/01-Product/Project-Charter.md`. This does not require the full Design Alignment question protocol — the information already exists in your docs, it just needs to be consolidated into Charter form.
+
+   - **Retroactive PRDs for past phases:** For each completed phase, produce a lightweight PRD that documents what was built. These are retrospective — they record decisions already made, not planning documents. Place them in `docs/01-Product/PRDs/` with a naming convention like `PRD-001-[phase-name].md`.
+
+   - **Active PRD for the current phase:** For the current active phase, produce a full PRD that functions as a planning document. This is the one the scrum master will reference for future sprint planning. If you're mid-sprint, this PRD should reflect the current state — what's been built, what remains, what the acceptance criteria are.
+
+   The retroactive synthesis is a single-session exercise. The orchestrator does the reading and consolidation; the owner reviews and approves the result.
+
+7. **Behavioral change.** After migration, the orchestrator no longer creates stories directly from brain dumps or ad hoc requests. New work flows through Design Alignment (when triggered) to produce or update a PRD, which the scrum master then decomposes into stories. Existing stories that are already in progress are unaffected — this applies to new work going forward.
+
+**Why this matters:** Design Alignment catches requirements misalignment before it becomes implementation waste. The Charter provides a stable reference point that prevents scope creep across phases. PRDs create a traceable chain from requirements to stories to implementation, making retros and maintenance reviews more effective. The fresh-chat boundary between alignment and planning prevents context window bloat from carrying the full requirements conversation into sprint planning.
+
+---
+
 ## 0.13.0 — Architect Archetype
 
 **Affects:** All sprint-based consumer projects. Task-based projects (analytics-workspace) are not affected — no architect is assigned to that type.

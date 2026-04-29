@@ -415,6 +415,7 @@ the spec and the source code.
 | Features.json | Yes | Current pass/fail state |
 | Git log | Yes | Recent commit history (last 10-20 commits) |
 | Maintenance tag | Yes | When the last maintenance session ran |
+| PRD pointer | Conditional | Path to the approved PRD — required for the first sprint of a new project or phase. If no PRD exists (legacy projects, subsequent sprints where all PRD stories are already in the backlog), the scrum master plans from backlog as before |
 | Owner priorities | Optional | Any priorities or constraints from the conversation |
 | Unfinished stories | Conditional | Stories from previous sprint that were not completed |
 

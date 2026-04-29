@@ -146,6 +146,12 @@ If none of the above conditions are true, skip this section entirely.
 - [ ] Review CLAUDE.md for sections that are always loaded but rarely relevant (candidates for on-demand loading)
 - [ ] Flag any redundant verification steps between agents
 
+### Story-to-PRD Traceability
+- [ ] If an active PRD exists in `docs/01-Product/`, verify all active stories (`status: To Do` or `status: In Progress`) trace to an active PRD
+- [ ] Flag orphan stories — stories with no PRD parent (created ad hoc, from brain dumps, or from a PRD that has since been superseded)
+- [ ] Flag stale PRD sections — user stories or module changes described in the PRD with no corresponding stories in the backlog
+- [ ] This is a lightweight documentation health check, not a blocking gate. Orphan stories are not invalid — they may be legitimate ad hoc work. The purpose is visibility, not enforcement.
+
 ## Session End
 1. Commit all changes: `maint: [summary of maintenance work]`
 2. Tag git: `git tag maintenance-YYYY-MM-DD && git tag -f maintenance-latest`

@@ -4,6 +4,11 @@ During ongoing development, create new documents when these situations arise. Re
 
 | Trigger | Action |
 |---------|--------|
+| New project starting | Orchestrator enters Design Alignment mode (`core/workflows/design-alignment.md`), produces Project Charter + first PRD in `01-Product/` |
+| New phase or major feature | Orchestrator enters Design Alignment mode, produces PRD in `01-Product/` |
+| Orchestrator detects ambiguity (can't describe what user wants in 2-3 sentences) | Orchestrator enters Design Alignment mode |
+| Owner explicitly requests alignment | Orchestrator enters Design Alignment mode |
+| Major pivot in project direction | Update or replace Project Charter in `01-Product/` via Design Alignment |
 | Technical decision made (stack, library, pattern) | Create ADR in `02-Engineering/ADRs/` |
 | New data source discussed | Create Data Source Research note in `05-Research/Data Source Research/` |
 | Feature is getting complex (many edge cases, domain logic) | Create Feature Spec in `01-Product/Feature Specs/` |

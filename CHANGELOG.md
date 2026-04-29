@@ -6,6 +6,75 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.14.0
+
+Design Alignment protocol, Project Charter, and PRD document types. The orchestrator now has a structured requirements-gathering protocol that captures design intent in durable documents before sprint planning begins. Brain dumps no longer go directly to story creation; they flow through Design Alignment to produce a Project Charter (once per project) and PRDs (per phase/feature), which the scrum master then decomposes into sprint stories. Analytics-workspace gets a lighter version for complex analyses that produces an enhanced Analysis Brief instead of Charter/PRD. Scope drift is caught at retro and maintenance checkpoints via Story-to-PRD traceability.
+
+### Core (new — consumer projects should copy as needed)
+
+- `core/workflows/design-alignment.md` — **NEW.** Orchestrator protocol for structured requirements gathering. Triggers: new project, new phase, ambiguity detected, owner request. Covers question categories, convergence checks, project-type branching (sprint-based produces Charter/PRD, analytics-workspace produces enhanced Analysis Brief), architect review of PRD Module Changes section, and fresh-chat handoff to sprint planning.
+- `core/templates/Project-Charter-Template.md` — **NEW.** Template for the Project Charter: problem space, target user, core capabilities, key constraints, success criteria, exclusions, design principles. Created once at project inception via Design Alignment.
+- `core/templates/PRD-Template.md` — **NEW.** Template for PRD documents: problem statement, solution, user stories, module changes (architect-reviewed), implementation decisions, testing decisions, out of scope, open questions. Created per phase/feature via Design Alignment.
+
+### Core (changed — consumer projects should update)
+
+- `core/Document-Catalog.md` — **CHANGED.** Added Project Charter (Tier 1, all sprint-based + agentic-workflow) and PRD (Tier 1, per phase/feature) entries. Updated Phase Definitions and Vision & Positioning descriptions to clarify relationship triad. Updated Quick Reference for all project types.
+- `core/workflows/doc-triggers.md` — **CHANGED.** Added triggers for Project Charter (new project, major pivot), PRD (new phase, major feature), and Design Alignment initiation.
+- `core/workflows/sprint-lifecycle.md` — **CHANGED.** Added `alignment` cycle phase value. Added pre-sprint phase showing Design Alignment before planning. Added fresh-chat boundary prompt at Charter/PRD approval.
+- `core/workflows/development-workflow.md` — **CHANGED.** Added Design Alignment section before sprint planning. Updated sprint planning to reference PRD as scrum master input. Documented document hierarchy: brain dump → alignment → Charter/PRD → sprint planning → specs → implementation.
+- `core/workflows/analytics-workspace.md` — **CHANGED.** Added Design Alignment trigger for complex analyses (3+ sources, multiple stakeholders, novel domain, >2 day effort, significant decision). Output is enhanced Analysis Brief, not Charter/PRD.
+- `core/agents/scrum-master.md` — **CHANGED.** Sprint planning now reads approved PRD for story decomposition. Sprint retro now checks for PRD drift (compares completed stories against active PRD). Updated dispatch contract reference for conditional PRD pointer.
+- `core/workflows/dispatch-protocol.md` — **CHANGED.** Added conditional PRD pointer field to Scrum Master Sprint Planning contract.
+- `core/maintenance-checklist.md` — **CHANGED.** Added Story-to-PRD Traceability check: verify active stories trace to active PRDs, flag orphans and stale PRD sections.
+
+### Integrations (changed — consumer projects should update)
+
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Added Design Alignment section in development workflow. Added Project Charter and PRD to document hierarchy and project structure. Updated session lifecycle with `alignment` cycle phase and fresh-chat boundary. Updated sprint planning references for PRD input.
+- `integrations/copilot/copilot-instructions.md` — **CHANGED.** Parallel changes to Claude Code template.
+
+### Root-level docs (changed — consumer projects should update)
+
+- `BOOTSTRAP.md` — **CHANGED.** Integrated Design Alignment into bootstrap flow. New projects now begin with Design Alignment (step 2.7) after brain dump to produce Charter + first PRD before epic/story creation. Added `docs/01-Product/PRDs/` to folder structure. Updated analytics-workspace section with Design Alignment note.
+
+### Operational Docs (changed — no consumer action needed)
+
+- `MIGRATIONS.md` — **CHANGED.** Added 0.14.0 entry.
+
+### Consumer update instructions
+
+Projects on 0.13.x should:
+
+**New files (copy to your Fabrika path):**
+1. Copy `core/workflows/design-alignment.md`
+2. Copy `core/templates/Project-Charter-Template.md`
+3. Copy `core/templates/PRD-Template.md`
+
+**Changed files (all sprint-based + agentic-workflow projects):**
+4. Update `core/Document-Catalog.md`
+5. Update `core/workflows/doc-triggers.md`
+6. Update `core/workflows/sprint-lifecycle.md`
+7. Update `core/workflows/development-workflow.md`
+8. Update `core/workflows/dispatch-protocol.md`
+9. Update `core/agents/scrum-master.md`
+10. Update `core/maintenance-checklist.md`
+11. Update your integration template (CLAUDE.md or copilot-instructions.md)
+12. Update `BOOTSTRAP.md`
+
+**Changed files (analytics-workspace projects):**
+13. Update `core/workflows/analytics-workspace.md`
+
+**New directories to create:**
+14. Create `docs/01-Product/PRDs/` directory in your project
+
+**Behavioral change:** The orchestrator no longer creates epics/stories directly from brain dumps. All new work flows through Design Alignment to produce a Charter/PRD, then the scrum master decomposes the approved PRD into sprint stories. Existing projects should run a retroactive Design Alignment session to produce a Charter and PRDs for current/past phases (see MIGRATIONS.md for adoption guidance).
+
+### Known gaps (to be addressed in future versions)
+
+- ADR to PRD update signal chain (when an ADR contradicts a PRD's Module Changes, the PRD should be flagged for update). Planned for 0.15.0+ alongside Domain Language (PRD-06).
+- BOOTSTRAP.md integration with Design Alignment will mature as the protocol is used in practice.
+
+---
+
 ## 0.13.0
 
 Architect archetype with two specialist agents. The architect evaluates and improves structural design — module depth, interface simplicity, component boundaries, dependency structure. Two specialists: software-architect (web-app, automation, library, ai-engineering) covers code architecture; data-architect (data-engineering, analytics-engineering, data-app, ml-engineering) covers schema design, pipeline topology, and data flow boundaries. The archetype stub from 0.10.0 is replaced with a full definition covering the shared behavioral contract: standardized Ousterhout/Pocock vocabulary, dual dispatch tiers (contextual for design, strict for review), owner-gated proposals, and done thresholds. Domain-specific expertise lives in each specialist agent, not the archetype. Architect invocation is integrated at three points in the development workflow: after spec approval (design review), during evaluation (structural assessment supplement to code-reviewer), and ad hoc (owner-initiated assessment of existing code). Spiral mitigation ensures architecture reviews don't create infinite optimization loops: conditional maintenance trigger, owner-gated proposals, done thresholds, assessment tracking, and a cap of 2 refactor stories per review. The code-review rubric gains a Module Depth / Interface Simplicity criterion as a lightweight first-pass structural check.
