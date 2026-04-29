@@ -4,6 +4,36 @@ When a Fabrika update requires consumer projects to do more than a straight file
 
 ---
 
+## 0.13.0 — Architect Archetype
+
+**Affects:** All sprint-based consumer projects. Task-based projects (analytics-workspace) are not affected — no architect is assigned to that type.
+
+**What changed:** Two architect agents (software-architect, data-architect) evaluate structural design across all sprint-based project types. The architect archetype stub from 0.10.0 is replaced with a full definition scoped to the shared behavioral contract (standardized vocabulary, dispatch tiers, output format, base rules). Domain-specific expertise lives in each specialist agent file. Architecture review is added to the maintenance checklist with conditional triggers and spiral mitigation (not every cycle, max 2 refactor stories). The code-review rubric gains a Module Depth criterion for lightweight structural assessment.
+
+**Migration steps:**
+
+1. **Copy the architect agent for your project type.** software-architect for web-app/automation/library/ai-engineering, data-architect for data-engineering/analytics-engineering/data-app/ml-engineering. Place in your agent directory (`.claude/agents/` or `.github/agents/`). Multi-type projects spanning both categories: copy both.
+
+2. **Update architect archetype.** Replace `core/agents/archetypes/architect.md` — the stub is now a full definition. Note: the archetype no longer contains agentic-workflow-specific evaluation criteria (instruction decomposition, pointer patterns) — those live in context-architect.md's own file. If you have an agentic-workflow project, verify context-architect.md is self-contained (it should be if you updated to 0.12.0).
+
+3. **Update AGENT-CATALOG.md.** New Architect column in Sprint-Based and Task-Based mapping tables. 2 new rows in Agent Files table.
+
+4. **Update development-workflow.md.** Three new architect invocation points: optional design review after spec approval, optional structural evaluation during the evaluation cycle, and an ad hoc architecture assessment section.
+
+5. **Update dispatch-protocol.md.** 6 new dispatch contracts for software-architect and data-architect (design mode, review mode, ad hoc — each with appropriate tier and field tables).
+
+6. **Update code-review-rubric.md.** New criterion #11 Module Depth / Interface Simplicity (MEDIUM weight).
+
+7. **Update maintenance-checklist.md.** New Architecture Review (Conditional) section with conditional triggers, assessment tracking, and spiral mitigation.
+
+8. **Update your integration template** (CLAUDE.md or copilot-instructions.md). Architect in subagent tables, architect invocation points in workflow summary, architecture review in maintenance summary.
+
+9. **Create architecture tracking log.** Create `docs/maintenance/architecture-tracking.md` (empty initially — populated during first architecture review maintenance session).
+
+**Why this matters:** Structural design evaluation catches architectural drift — the slow accumulation of shallow modules and unstable interfaces — before it compounds into a codebase that's hard to change. The conditional trigger and spiral mitigation prevent the architect from generating infinite refactor work.
+
+---
+
 ## 0.12.0 — Implementer Archetype + Pure Orchestrator
 
 **Affects:** All consumer projects (sprint-based, task-based, and agentic-workflow).

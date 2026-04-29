@@ -82,6 +82,32 @@ tags: [maintenance, workflow]
 - [ ] If `docs/02-Engineering/Structural-Constraints.md` exists, verify all declared constraints still have working enforcement (tests or lint rules that actually run)
 - [ ] Log pattern and lint curation findings to `docs/maintenance/patterns-YYYY-MM-DD.md`
 
+### Architecture Review (Conditional)
+
+This section only runs when at least one of these conditions is true:
+- A major feature (5+ story points) landed since the last architecture review
+- The owner explicitly requests an architecture review
+- The code-reviewer flagged structural concerns (Module Depth / Interface Simplicity criterion scored Partial or Fail) in the current sprint
+- No architecture review has been run in the last 3 sprints
+
+If none of the above conditions are true, skip this section entirely.
+
+- [ ] Identify the appropriate architect agent for this project type (software-architect or data-architect — see AGENT-CATALOG)
+- [ ] Dispatch the architect in ad hoc mode with: Architecture Overview pointer, target scope (modules changed in the current sprint), any code-reviewer structural findings from this sprint's evaluation reports
+- [ ] Review the architect's assessment. For each finding:
+  - **Trivial** (naming, minor reorganization) — fix in this maintenance session
+  - **Refactor story** (module deepening, interface redesign) — create a story in backlog with the architect's recommendation as acceptance criteria and the done threshold from the assessment
+  - **Deferred** (stable module, low impact) — log as assessed with date in the architecture assessment tracking log
+- [ ] Update architecture assessment tracking log at `docs/maintenance/architecture-tracking.md`:
+  - Module/component assessed
+  - Date assessed
+  - Verdict (SOUND / CONCERNS / UNSOUND)
+  - Action taken (fixed / story created / deferred)
+  - Done threshold (when to re-assess)
+- [ ] If the tracking log shows a module has been assessed SOUND in the last 2 reviews, skip it in future assessments unless new functionality is added
+
+**Spiral mitigation:** Do not create more than 2 refactor stories per architecture review. If the architect identifies more than 2 significant issues, document them all but only create stories for the highest-impact 2. The rest go to the backlog as future candidates.
+
 ### Token Usage Review
 - [ ] Scan the current sprint's progress file for "Tokens (actual)" entries
 - [ ] If token data exists, calculate: total tokens this sprint, per-story averages, stories that consumed >2x the sprint average
@@ -138,5 +164,6 @@ tags: [maintenance, workflow]
 - Context efficiency: [findings or "no notable issues"]
 - Evals: [X cases run, accuracy: Y/Z per agent / no cases yet]
 - Agent improvements: [proposed X changes / none needed]
+- Architecture review: [X modules assessed, Y stories created, Z deferred / skipped — conditional trigger not met]
 - Hooks: [verified / updated X]
 ```

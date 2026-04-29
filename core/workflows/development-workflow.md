@@ -12,12 +12,13 @@ Before invoking any sub-agent, read `core/workflows/dispatch-protocol.md` for wh
 3. Read the grading rubrics at `docs/02-Engineering/rubrics/` to understand evaluation criteria
 4. Invoke the **planner** agent in **planning mode** to expand the story into a full implementation spec (saved to `docs/plans/[TICKET]-spec.md`)
 5. Present the spec to the owner for approval using the **Spec Briefing** format (see briefing docs)
-6. Create feature branch: `feature/[PROJECT_KEY]-S-042-description`
-7. Update story: `status: In Progress`
-8. **Dispatch to implementer.** Identify the appropriate implementer by looking up the project type(s) in the AGENT-CATALOG mapping tables. Provide contextual dispatch per the dispatch protocol. The orchestrator does NOT implement — it dispatches.
+6. **(Optional) Invoke the architect agent for design review.** If the spec proposes new modules, significant restructuring, or changes to component boundaries, dispatch the appropriate architect (software-architect or data-architect based on project type) in **design mode** with the spec's module section. The architect reviews proposed module depth, interface design, and component boundaries. Present the architect's findings alongside the spec for owner approval. Skip if the story is a small feature change within existing module boundaries.
+7. Create feature branch: `feature/[PROJECT_KEY]-S-042-description`
+8. Update story: `status: In Progress`
+9. **Dispatch to implementer.** Identify the appropriate implementer by looking up the project type(s) in the AGENT-CATALOG mapping tables. Provide contextual dispatch per the dispatch protocol. The orchestrator does NOT implement — it dispatches.
    - **Lightweight dispatch** (trivial changes — single-file edits where the spec fully specifies the change and it's not a new feature, refactor, or architectural change): the orchestrator still dispatches to the implementer, but uses the lightweight dispatch path. The plan field is inline text rather than a spec file path.
    - **Cross-domain stories** (spec contains a Task Decomposition section): each task runs in its own session with the appropriate domain implementer and its own evaluation cycle. See "Multi-Domain Story Completion" below.
-9. Invoke the **validator** agent to write tests for the new code
+10. Invoke the **validator** agent to write tests for the new code
 
 ## Completing a Story (Evaluation Cycle)
 
@@ -37,38 +38,39 @@ Before marking a story complete, run the full evaluation cycle:
 7. Invoke the **planner** agent in **validation mode** — strict
    dispatch. It verifies acceptance criteria from the sprint contract
    are met
-8. Each evaluator writes a report to
+8. **(Optional) Invoke the architect agent for structural evaluation.** If the implementation creates new modules, changes component boundaries, or the code-reviewer flagged structural concerns (Module Depth / Interface Simplicity criterion scored Partial or Fail), dispatch the appropriate architect in **review mode** with strict dispatch. The architect evaluates whether the implementation maintains or degrades module depth. This supplements the code-reviewer — the code-reviewer evaluates code quality, the architect evaluates structural design. Skip for implementations that work entirely within existing module boundaries.
+9. Each evaluator writes a report to
    `docs/evaluations/[TICKET]-[agent]-review.md`
 
 **If any evaluator fails the implementation (Feedback Loop):**
 
-9. Read all evaluation reports. Synthesize findings into
-   implementer-actionable fix instructions — specific issues, specific
-   file paths, specific expected behavior. Do NOT forward raw reports
-   to the implementer.
-10. Dispatch fix instructions to the implementer. The implementer
+10. Read all evaluation reports. Synthesize findings into
+    implementer-actionable fix instructions — specific issues, specific
+    file paths, specific expected behavior. Do NOT forward raw reports
+    to the implementer.
+11. Dispatch fix instructions to the implementer. The implementer
     addresses each finding and returns an updated output summary.
-11. Sanity-check the fixes: does the implementer's summary address
+12. Sanity-check the fixes: does the implementer's summary address
     each evaluator finding? If a finding was clearly missed, dispatch
     clarification back to the implementer before burning a retry cycle.
-12. Re-invoke the failing evaluator(s) with fresh dispatch — same
+13. Re-invoke the failing evaluator(s) with fresh dispatch — same
     spec, same rubric, updated file paths. No prior evaluation report
     included.
-13. **Maximum 2 retry cycles** through steps 9-12. After 2 failed
+14. **Maximum 2 retry cycles** through steps 10-13. After 2 failed
     attempts, stop and present: all evaluation reports, summary of
     what was tried, recommended next steps (rescope, break into
     smaller stories, research the blocker).
 
 **If all evaluators pass:**
 
-14. Update project docs if implementation diverged (architecture, data
+15. Update project docs if implementation diverged (architecture, data
     model, research notes)
-15. Create an ADR for any significant technical decision made during
+16. Create an ADR for any significant technical decision made during
     implementation
-16. Update story: `status: In Review`, add `## Completion Summary`
-17. If an external task management system is configured, mark the
+17. Update story: `status: In Review`, add `## Completion Summary`
+18. If an external task management system is configured, mark the
     corresponding task as done
-18. Present the session summary to the owner using the **Session
+19. Present the session summary to the owner using the **Session
     Summary Briefing** format (see briefing docs)
 
 ## Multi-Domain Story Completion
@@ -161,3 +163,11 @@ When the conversation involves investigating a technology or debating an approac
 
 ## Bug Reporting & Fix Workflow
 When the owner reports a bug, read and follow `docs/02-Engineering/bug-workflow.md`. Summary: file bug → trace root cause through evaluator reports → fix with regression test → invoke reviewer (always), validator (always), planner (if behavior changed or spec was root cause) → create eval case for the missed failure mode.
+
+## Architecture Assessment (Ad Hoc)
+When the owner requests an architectural review of existing code, or when the orchestrator detects the owner is discussing refactoring, module organization, or code structure:
+1. Identify the appropriate architect agent based on project type (software-architect for web-app/automation/library/ai-engineering, data-architect for data-engineering/analytics-engineering/data-app/ml-engineering)
+2. Dispatch with **contextual dispatch (ad hoc mode):** Architecture Overview pointer, the target module/directory/codebase scope, owner's specific concern (if any)
+3. The architect produces an assessment report with findings, recommendations, and done thresholds
+4. Present the assessment to the owner. Architect proposals are owner-gated — they go on the backlog only if the owner approves
+5. For approved refactor proposals: create stories in the backlog with the architect's recommendations as acceptance criteria and the done threshold from the assessment

@@ -278,12 +278,13 @@ Claude Code drives the development process proactively. Don't wait for the owner
 **Before starting any story, sprint planning, or bug fix, read:** `[FABRIKA_PATH]/core/workflows/development-workflow.md`
 
 Summary of workflows covered:
-- **Starting a Story** — spec expansion → approval → branch → dispatch to implementer → evaluate → fix cycle
-- **Completing a Story (Evaluation Cycle)** — tests → lint → commit → reviewer → validator → planner validation → rollback protocol (max 2 retries)
+- **Starting a Story** — spec expansion → approval → optional architect design review → branch → dispatch to implementer → evaluate → fix cycle
+- **Completing a Story (Evaluation Cycle)** — tests → lint → commit → reviewer → validator → planner validation → optional architect structural evaluation → rollback protocol (max 2 retries)
 - **Sprint Planning** — scrum-master → topology assessment → 2-3 stories → contract → approval
 - **Ideation & Backlog Grooming** — new stories, re-scoping, someday-maybe
 - **Research & Technical Discussion** — research docs, ADRs
 - **Bug Reporting & Fix Workflow** — see `docs/02-Engineering/bug-workflow.md`
+- **Architecture Assessment (Ad Hoc)** — owner-initiated or orchestrator-detected structural review of existing code
 
 ---
 
@@ -350,6 +351,7 @@ Run between sprints or weekly (whichever comes first). See full checklist at `do
 - Bug review (open bugs, missed-by patterns, eval case coverage, root cause clusters)
 - Progress file reconciliation (STATUS.md accuracy, sprint progress completeness)
 - Dependency health (outdated packages, security advisories — report only, do NOT auto-update)
+- Architecture review (conditional — after major features, on request, or when code-reviewer flags structural concerns)
 - Context efficiency review (scan session logs for wasteful patterns)
 - Hook health (verify hooks match current test runner and sprint configuration)
 - Evaluation health (review agent-changelog.md, build/update eval cases, run evals, propose prompt improvements)
@@ -407,6 +409,7 @@ All agents are invoked proactively by Claude Code at the trigger points in the D
 | **Validator** | test-writer | model-evaluator (ml-engineering), eval-engineer (ai-engineering), data-quality-engineer (data-engineering) |
 | **Coordinator** | scrum-master | (same for all sprint-based types) |
 | **Implementer** | software-engineer | data-engineer (data-engineering, analytics-engineering), data-analyst (analytics-workspace, data-app), ml-engineer (ml-engineering), ai-engineer (ai-engineering) |
+| **Architect** | software-architect | data-architect (data-engineering, analytics-engineering, data-app, ml-engineering) |
 
 **Role behaviors:**
 - **Planner** — Two modes: **planning mode** (expands stories into specs, invoked at story start) and **validation mode** (verifies acceptance criteria, invoked before marking done). Specialized planners adapt the spec format: experiment-planner produces experiment designs; api-designer produces API surface specs.
@@ -414,6 +417,7 @@ All agents are invoked proactively by Claude Code at the trigger points in the D
 - **Validator** — Writes tests and verifies coverage against rubric (`docs/02-Engineering/rubrics/test-rubric.md`). Runs E2E verification per project type. Specialized validators adapt: model-evaluator runs metric evals; eval-engineer runs LLM eval suites; data-quality-engineer tests at every pipeline lifecycle stage.
 - **Coordinator** — Sprint planning, topology assessment, maintenance scheduling, retros. Also invoked when conversation drifts into prolonged deliberation.
 - **Implementer** — Writes production code against the approved spec. Dispatched by the orchestrator after spec approval — the orchestrator never writes code directly, even for trivial tasks. Specialized implementers carry domain expertise for their project type(s). For lightweight changes (single-file, fully specified, not a new feature), uses reduced-ceremony dispatch but still goes through the implementer agent.
+- **Architect** — Evaluates structural design: module depth, interface simplicity, component boundaries. Three modes: **design mode** (reviews proposed modules in a spec, invoked after spec approval), **review mode** (evaluates implemented changes, optional supplement to code-reviewer), and **ad hoc** (owner-initiated assessment of existing code). Specialized architects adapt: software-architect for web-app/automation/library/ai-engineering; data-architect for data-engineering/analytics-engineering/data-app/ml-engineering. Output is proposals and assessments, never code changes — refactor proposals require owner approval.
 
 ### Task-based types (analytics-workspace)
 

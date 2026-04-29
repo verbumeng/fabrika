@@ -6,6 +6,62 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.13.0
+
+Architect archetype with two specialist agents. The architect evaluates and improves structural design — module depth, interface simplicity, component boundaries, dependency structure. Two specialists: software-architect (web-app, automation, library, ai-engineering) covers code architecture; data-architect (data-engineering, analytics-engineering, data-app, ml-engineering) covers schema design, pipeline topology, and data flow boundaries. The archetype stub from 0.10.0 is replaced with a full definition covering the shared behavioral contract: standardized Ousterhout/Pocock vocabulary, dual dispatch tiers (contextual for design, strict for review), owner-gated proposals, and done thresholds. Domain-specific expertise lives in each specialist agent, not the archetype. Architect invocation is integrated at three points in the development workflow: after spec approval (design review), during evaluation (structural assessment supplement to code-reviewer), and ad hoc (owner-initiated assessment of existing code). Spiral mitigation ensures architecture reviews don't create infinite optimization loops: conditional maintenance trigger, owner-gated proposals, done thresholds, assessment tracking, and a cap of 2 refactor stories per review. The code-review rubric gains a Module Depth / Interface Simplicity criterion as a lightweight first-pass structural check.
+
+### Core (new — consumer projects should copy as needed)
+
+- `core/agents/software-architect.md` — **NEW.** Architect for web-app, automation, library, ai-engineering. Evaluates module depth, interface design, dependency structure, seam stability, and component boundaries. Three modes: design (reviews proposed modules), review (evaluates implemented changes), ad hoc (assesses existing codebase). Includes calibration examples (SOUND, CONCERNS, UNSOUND) and 8-step evaluation procedure. Uses Architect archetype as base.
+- `core/agents/data-architect.md` — **NEW.** Architect for data-engineering, analytics-engineering, data-app, ml-engineering. Evaluates schema design, pipeline topology, storage layering, query patterns, and data flow boundaries. Three modes matching software-architect. Includes calibration examples specific to data architecture and 8-step evaluation procedure. Uses Architect archetype as base.
+
+### Core (changed — consumer projects should update)
+
+- `core/agents/archetypes/architect.md` — **CHANGED.** Full archetype definition replacing the 0.10.0 stub. Scoped to the shared behavioral contract only: role definition, domain specialization model (3 specialists), standardized vocabulary (8 Ousterhout/Pocock terms), base tool profile, dual dispatch tiers, output contract (SOUND/CONCERNS/UNSOUND verdicts, proposals with done thresholds), base behavioral rules (propose never implement, owner-gated, deletion test). Domain-specific evaluation criteria removed from archetype and placed in specialist agent files.
+- `core/agents/AGENT-CATALOG.md` — **CHANGED.** Added Architect column to Sprint-Based Types mapping table (software-architect for web-app/automation/library/ai-engineering, data-architect for data-engineering/analytics-engineering/data-app/ml-engineering). Added Architect column to Task-Based Types table (none for analytics-workspace). Added 2 new rows to Agent Files table (software-architect.md, data-architect.md). Updated agent maturity note for 0.13.0.
+- `core/workflows/development-workflow.md` — **CHANGED.** Added 3 architect invocation points: step 6 (optional design review after spec approval), step 8 (optional structural evaluation during evaluation cycle), and new "Architecture Assessment (Ad Hoc)" section for owner-initiated or orchestrator-detected structural review. Step numbers adjusted accordingly.
+- `core/workflows/dispatch-protocol.md` — **CHANGED.** Added 6 new dispatch contracts: Software Architect (Design Mode — Contextual, Review Mode — Strict, Ad Hoc — Contextual) and Data Architect (Design Mode — Contextual, Review Mode — Strict, Ad Hoc — Contextual). Data Architect contracts include domain-specific conditional fields (Data Model, Pipeline Design, Source/Serving Contracts).
+- `core/rubrics/code-review-rubric.md` — **CHANGED.** Added criterion #11 "Module Depth / Interface Simplicity" (MEDIUM weight) — lightweight structural check by the code-reviewer, with guidance to invoke the architect agent for deep analysis. Updated existing note to reference architect relationship.
+- `core/maintenance-checklist.md` — **CHANGED.** Added "Architecture Review (Conditional)" section between Pattern & Lint Rule Curation and Token Usage Review. Includes conditional trigger (major feature, owner request, code-reviewer structural flag, or 3 sprints since last review), assessment tracking log at `docs/maintenance/architecture-tracking.md`, and spiral mitigation (max 2 refactor stories per review). Added architecture review line to Maintenance Summary Format.
+
+### Integrations (changed — consumer projects should update)
+
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Added Architect row to Sprint-based subagents table with software-architect and data-architect specialization. Added Architect role behavior description. Updated Development Workflow summary with architect invocation points and Architecture Assessment (Ad Hoc) workflow. Added architecture review to Maintenance Sessions summary.
+- `integrations/copilot/copilot-instructions.md` — **CHANGED.** Parallel changes to Claude Code template: Architect in subagent table, updated workflow summary with architect invocation points and ad hoc workflow, architecture review in maintenance summary.
+
+### Operational Docs (changed — no consumer action needed)
+
+- `MIGRATIONS.md` — **CHANGED.** Added 0.13.0 entry.
+
+### Consumer update instructions
+
+Projects on 0.12.x should:
+
+**New files (copy the architect agent for your project type):**
+
+| Your project type(s) | Copy this agent |
+|---|---|
+| web-app, automation, library | `core/agents/software-architect.md` |
+| ai-engineering | `core/agents/software-architect.md` |
+| data-engineering, analytics-engineering | `core/agents/data-architect.md` |
+| data-app, ml-engineering | `core/agents/data-architect.md` |
+
+Multi-type projects: copy both architect agents if your types span both categories.
+
+**Changed files (all projects — update from Fabrika source):**
+1. Update `core/agents/archetypes/architect.md` — full archetype replacing stub
+2. Update `core/agents/AGENT-CATALOG.md` — new Architect columns and Agent Files rows
+3. Update `core/workflows/development-workflow.md` — architect invocation points (design review, evaluation supplement, ad hoc)
+4. Update `core/workflows/dispatch-protocol.md` — 6 new architect dispatch contracts
+5. Update `core/rubrics/code-review-rubric.md` — new Module Depth / Interface Simplicity criterion (#11)
+6. Update `core/maintenance-checklist.md` — new Architecture Review (Conditional) section with spiral mitigation
+7. Update your integration template (CLAUDE.md or copilot-instructions.md) — Architect in subagent tables, architect invocation points in workflow summary, architecture review in maintenance summary
+
+**New file to create (all projects):**
+8. Create `docs/maintenance/architecture-tracking.md` (empty initially — populated during first architecture review maintenance session)
+
+---
+
 ## 0.12.0
 
 Implementer archetype, pure orchestrator, and full agent maturity. The orchestrator is now a pure dispatcher — it never writes production code, even for trivial tasks. Five specialist implementer agents cover all project types: software-engineer (web-app, automation, library), data-engineer (data-engineering, analytics-engineering), data-analyst (analytics-workspace, data-app), ml-engineer (ml-engineering), ai-engineer (ai-engineering). The development workflow is rewritten so "Starting a Story" dispatches to the appropriate implementer after spec approval, and the evaluation feedback loop routes through the orchestrator-as-translator pattern rather than direct fixes. Lightweight dispatch provides reduced-ceremony invocation for trivial changes without reverting to orchestrator implementation. Multi-domain story support is added with task decomposition, per-domain sessions, and integration verification. All five agentic-workflow agents (workflow-planner, methodology-reviewer, structural-validator, context-engineer, context-architect) are fleshed out from stubs to full implementations with detailed procedures, calibration examples, and context window hygiene. The product-manager and scrum-master gain domain scope assessment guidance for identifying and managing cross-domain stories.

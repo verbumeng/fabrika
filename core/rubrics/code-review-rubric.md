@@ -87,7 +87,15 @@ Does the implementation respect shared interface contracts defined in the sprint
 - **Fail:** Interface deviates from contract without documented agreement to change.
 - **Only applies when the current sprint topology is `hierarchical`.** Skip for pipeline and mesh topologies.
 
-**Note:** The performance-reviewer agent provides a deeper cost and performance analysis. This criterion is the code-reviewer's lightweight first-pass check — flag the obvious issues, and the performance reviewer will handle query plans, compute estimates, and scale analysis.
+**Note:** The performance-reviewer agent provides deeper cost and performance analysis. The architect agent (if configured for this project type) provides deeper structural/module design analysis. These criteria are the code-reviewer's lightweight first-pass checks — flag the obvious issues, and the specialist agents will handle the deep analysis.
+
+### 11. Module Depth / Interface Simplicity — Weight: MEDIUM
+Does the implementation favor deep modules with simple interfaces over shallow modules with complex interfaces?
+
+- **Pass:** New modules hide complexity behind simple interfaces. No pass-through methods or wrapper classes that add interface complexity without adding functionality. Changes are localized — modifying the implementation doesn't require interface changes.
+- **Partial:** Some shallow modules exist (e.g., a service class that delegates every method to another class), but the overall structure is navigable. Flag for architect review if the project has an architect agent configured.
+- **Fail:** Implementation adds significant interface complexity relative to functionality. Multiple new modules that are just pass-throughs. Changes to one module cascade interface changes through 3+ other modules.
+- **Notes:** This is the code-reviewer's lightweight structural check. The architect agent (if configured) performs the deep module depth analysis. When grading Partial, recommend invoking the architect as an evaluation supplement.
 
 ## Verdict Scale
 - **PASS:** All CRITICAL criteria pass, no HIGH criteria fail, no more than 1 MEDIUM partial or N/A.
