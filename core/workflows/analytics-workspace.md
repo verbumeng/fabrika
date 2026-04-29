@@ -2,6 +2,28 @@
 
 For `analytics-workspace` project types only. No sprints. Work is organized as individual analysis tasks.
 
+## Design Alignment for Complex Analyses
+
+Before the standard task lifecycle, the orchestrator checks whether the
+analysis warrants structured alignment. If any of the following
+complexity triggers are met, the orchestrator runs the Design Alignment
+protocol (`core/workflows/design-alignment.md`) before creating the
+brief:
+
+- 3+ data sources involved
+- Multiple stakeholder groups with different needs
+- Novel domain requiring terminology alignment
+- Estimated effort exceeds 2 days
+- Analysis informs a significant decision (budget, strategy, headcount)
+
+When triggered, Design Alignment produces an enhanced Analysis Brief
+with deeper coverage of scope, terminology, and success criteria. The
+output uses the standard brief template — it is NOT a Charter or PRD
+(analytics-workspace is task-based, not sprint-based).
+
+Simple analyses skip alignment and proceed directly to the task
+lifecycle below.
+
 ## Task Lifecycle
 1. **Brief** — Analysis planner takes the ask, writes `tasks/[date-name]/brief.md` (business question, stakeholder, deadline, desired output)
 2. **Plan** — Analysis planner writes `tasks/[date-name]/plan.md` (data sources, approach, SQL/logic, assumptions, validation strategy). Includes a cost estimate (compute, API/LLM, total). Owner approves.

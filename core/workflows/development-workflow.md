@@ -2,6 +2,28 @@
 
 The agent drives the development process proactively. Do not wait for the owner to orchestrate each step.
 
+## Design Alignment (Pre-Sprint)
+
+Before sprint planning begins, the orchestrator runs Design Alignment
+when triggered. Triggers: new project starting, new phase or major
+feature, owner explicitly requests alignment, or the orchestrator
+detects ambiguity (can't describe what the user wants in 2-3
+sentences). See `core/workflows/design-alignment.md` for the full
+protocol.
+
+The document hierarchy:
+
+1. Brain dump / owner idea
+2. Design Alignment conversation (orchestrator mode)
+3. Charter (first time) + PRD (per phase/feature)
+4. Scrum master sprint planning (decomposes PRD into stories)
+5. Per-story specs (planner agent)
+6. Implementation
+
+The orchestrator no longer creates epics and stories directly from
+brain dumps. Brain dumps feed into Design Alignment, which produces
+structured requirements that the scrum master then decomposes.
+
 ## Dispatch Protocol
 
 Before invoking any sub-agent, read `core/workflows/dispatch-protocol.md` for what to provide and what to withhold. The dispatch protocol defines per-agent input contracts (what the orchestrator must hand over) and output contracts (what the sub-agent must produce). Two tiers: strict dispatch for reviewers, validators, and designers (plan + file paths + rubric only — no editorial); contextual dispatch for planners and coordinators (richer project state).
@@ -134,7 +156,7 @@ The integration session:
   implementer can work independently.
 
 ## Sprint Planning
-1. Invoke the **scrum-master** (coordinator) agent to facilitate
+1. Invoke the **scrum-master** (coordinator) agent to facilitate. If an approved PRD exists for this phase, provide the PRD pointer — the scrum master decomposes the PRD into epics and stories for the first sprint of the phase
 2. Check when the last maintenance session ran (read `maintenance-latest` git tag). If >1 week or >1 sprint ago, run maintenance first
 3. Query backlog (`status: To Do`) and check for unfinished stories from the previous sprint
 4. The scrum-master assesses **sprint topology** based on task coupling:
