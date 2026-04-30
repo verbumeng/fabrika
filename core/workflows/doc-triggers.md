@@ -27,3 +27,5 @@ During ongoing development, create new documents when these situations arise. Re
 | Expensive compute, warehouse queries, or LLM calls introduced | Create or update `02-Engineering/Cost Model.md` |
 | Recurring analysis detected (2+ similar tasks) | Initiate task promotion conversation (see `task-promotion.md`) |
 | Dashboard or visual output designed or changed | Invoke visualization-designer agent for review |
+| Recurring theme identified across 2+ artifacts during maintenance (when wiki/ exists) | Write or update wiki topic article in `wiki/topics/` using `core/templates/Wiki-Topic-Template.md`. Notify owner (notice-and-proceed). Use Domain Language terms. |
+| Wiki backfill needed (project adopting wiki with existing artifacts) | Run the backfill procedure in `core/workflows/knowledge-synthesis.md`. Assess artifact count for chat-size decision. |

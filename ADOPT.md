@@ -44,6 +44,22 @@ Ask the user: **"I've read your project structure. Which Fabrika integration tie
 7. Generate `.fabrika/manifest.yml` recording what was installed
 8. Report to the user what was placed and where
 
+### Wiki Knowledge Layer (all tiers)
+
+After completing the tier-specific steps above, offer the wiki:
+
+Ask: **"Would you like a project wiki? The wiki automatically consolidates knowledge from your project artifacts (ADRs, retros, evaluation reports, research docs) into organized topic articles. It helps both you and the agent understand the project holistically — you can point someone to the wiki index and they'll get a progressive narrative from zero to full understanding. Recommended for most projects. Would you like one?"**
+
+**Default: yes.** If the user agrees:
+1. Create `wiki/` directory with `index.md` (stub), `topics/`, and `meta/`
+2. Add `.gitkeep` to `wiki/topics/` and `wiki/meta/`
+3. **Backfill assessment:** Count existing project artifacts (ADRs, evaluation reports, retros, session logs, stories, PRDs, etc.)
+   - Under ~30 artifacts: run the backfill in the current chat (see `[FABRIKA_PATH]/core/workflows/knowledge-synthesis.md` — Phase 0: Backfill)
+   - 30+ artifacts: tell the user: "This project has N existing artifacts. I recommend running the wiki backfill in a dedicated chat to keep context clean. After we finish this adoption, start a new chat and ask me to run the wiki backfill."
+4. Update the manifest with wiki files
+
+If the user declines, skip wiki creation. The knowledge synthesis step in maintenance will be skipped automatically (conditional gate).
+
 **The user's existing project structure is not modified.** No docs reorganization, no hooks, no templates.
 
 ### Tier 2: Agents + Sprint Framework

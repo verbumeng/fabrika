@@ -674,6 +674,39 @@ A project can be **multi-type** (sprint-based types only). A data app with scrap
 - **Purpose:** Context efficiency analysis from session logs. Identifies wasteful patterns and recommends tuning.
 - **Types:** all | **Tier:** 3 | **Audience:** agent
 
+### knowledge-synthesis-YYYY-MM-DD.md
+- **Purpose:** Knowledge synthesis report from maintenance session. Records what was indexed, which topics were created or updated, and terms flagged for Domain Language.
+- **Types:** all | **Tier:** 3 (created during maintenance sessions when wiki/ exists) | **Audience:** agent
+
+---
+
+## wiki/
+
+> The wiki knowledge layer synthesizes scattered project artifacts (ADRs, retros, evaluation reports, research docs) into organized, continuously updated topic articles. Created during bootstrap or adoption when the owner opts in (default recommended). Maintained incrementally during maintenance sessions and quarterly reintegration passes.
+
+### wiki/index.md
+- **Purpose:** Progressive narrative overview of the project's knowledge. Reads from zero understanding to full context: project overview → knowledge domains → key decisions → current state → active questions → sources summary. The primary "explain this project" document for both humans and agents.
+- **Types:** all | **Tier:** 2 (created when wiki is first populated, either during bootstrap backfill or first maintenance synthesis) | **Audience:** both
+- **Structure:** Project overview, knowledge domains with one-paragraph summaries and topic links, key decisions (top 5-10 from S1 articles), current state, active questions, sources summary.
+- **Notes:** This is a narrative, not a list of links. Updated every synthesis pass. Fully rewritten during quarterly reintegration.
+
+### wiki/topics/[topic-name].md
+- **Purpose:** Synthesized topic article consolidating knowledge from multiple source artifacts on a specific subject. Each article is self-contained with links to related topics and source artifacts.
+- **Types:** all | **Tier:** 2 (created during maintenance when 2+ source artifacts converge on a theme) | **Audience:** both
+- **Template:** `core/templates/Wiki-Topic-Template.md`
+- **Structure:** Summary, Key Decisions, Current State, Open Questions, Related Topics, Sources.
+- **Notes:** Requires the single-source synthesis threshold: content from at least 2 independent source artifacts. Created via the notice-and-proceed model (agent creates and notifies owner, proceeds unless owner objects). Uses Domain Language terms — does not define terms that belong in Domain Language.
+
+### wiki/meta/batch-YYYY-MM-DD.json
+- **Purpose:** Batch index file produced by the Extract+Index phases of the knowledge pipeline. Stable intermediate that decouples synthesis from source file lifecycle. Contains extracted content, salience scores, topic candidates, and deduplication keys.
+- **Types:** all | **Tier:** 3 (created during each pipeline run) | **Audience:** agent
+- **Schema:** `core/templates/Batch-Index-Schema.md`
+- **Notes:** Agent-facing artifact — humans do not need to read batch indexes. Survives source file renames and deletions. Stale entries cleaned up during quarterly reintegration.
+
+### wiki/meta/last-reintegration.md
+- **Purpose:** Timestamp and summary of the most recent quarterly reintegration pass. Used by the maintenance checklist to determine when the next reintegration is due.
+- **Types:** all | **Tier:** 3 | **Audience:** agent
+
 ---
 
 ## Templates/
@@ -691,6 +724,8 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 - Sprint-Contract-Mesh.md
 - Sprint-Contract-Hierarchical.md
 - Domain-Language-Template.md
+- Wiki-Topic-Template.md
+- Batch-Index-Schema.md
 
 ### Included based on project type:
 - Data-Source-Research-Template.md — `data-app`, `analytics-engineering`, `data-engineering`, `automation`
@@ -715,53 +750,53 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 #### web-app (SaaS, personal tools, consumer apps)
 **Tier 1:** Home, Domain Language, Project Charter, PRD, Phase Definitions, Architecture Overview, Data Model, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
 **Tier 1 (consumer):** + Vision & Positioning, UX Specification
-**Tier 2:** API Conventions, Security & Privacy, Threat Model, Deployment Guide, User Stories, Wireframes, Seed Data, Structural Constraints
+**Tier 2:** API Conventions, Security & Privacy, Threat Model, Deployment Guide, User Stories, Wireframes, Seed Data, Structural Constraints, wiki/index.md, wiki/topics/
 **Tier 2 (consumer):** + Brand Guidelines, Design Tokens, GTM Strategy, Launch Plan, Business Setup, Legal
-**Tier 3:** Feature Specs, Revenue Model, Content Calendar, Demo Script, Session Logs
+**Tier 3:** Feature Specs, Revenue Model, Content Calendar, Demo Script, Session Logs, wiki/meta/
 
 #### data-app (Excel replacement, dashboards, reporting tools)
 **Tier 1:** Home, Domain Language, Project Charter, PRD, Phase Definitions, Architecture Overview, Data Model, Data Pipeline Design, Dashboard Spec, Testing Strategy, Canonical Patterns, ADR (at least one), Epics, Stories, Someday-Maybe, Pre-Dev Checklist
-**Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, Wireframes, Seed Data, User Stories, Deployment Guide, Structural Constraints
-**Tier 3:** Stakeholder Presentation, Demo Script, ROI/Impact Analysis, Session Logs
+**Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, Wireframes, Seed Data, User Stories, Deployment Guide, Structural Constraints, wiki/index.md, wiki/topics/
+**Tier 3:** Stakeholder Presentation, Demo Script, ROI/Impact Analysis, Session Logs, wiki/meta/
 
 #### analytics-engineering (dbt, DuckDB, warehouse modeling, Alteryx migration)
 **Tier 1:** Home, Domain Language, Project Charter, PRD, Phase Definitions, Architecture Overview, Data Model, Data Pipeline Design, Transformation Logic, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Data Source Research, Someday-Maybe, Pre-Dev Checklist
-**Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, Deployment Guide, Environment Config, Cost Model, Structural Constraints
-**Tier 3:** Stakeholder Presentation, ROI/Impact Analysis, Session Logs
+**Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, Deployment Guide, Environment Config, Cost Model, Structural Constraints, wiki/index.md, wiki/topics/
+**Tier 3:** Stakeholder Presentation, ROI/Impact Analysis, Session Logs, wiki/meta/
 
 #### data-engineering (pipelines, ingestion, orchestration, full Reis lifecycle)
 **Tier 1:** Home, Domain Language, Project Charter, PRD, Phase Definitions, Architecture Overview, Data Model, Data Pipeline Design, Source System Contracts, Ingestion Design, Storage Architecture, Serving Contracts, Orchestration Design, Transformation Logic, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Data Source Research, Someday-Maybe, Pre-Dev Checklist
-**Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, DataOps Runbook, Deployment Guide, Environment Config, Cost Model, Structural Constraints
-**Tier 3:** Stakeholder Presentation, ROI/Impact Analysis, Session Logs
+**Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, DataOps Runbook, Deployment Guide, Environment Config, Cost Model, Structural Constraints, wiki/index.md, wiki/topics/
+**Tier 3:** Stakeholder Presentation, ROI/Impact Analysis, Session Logs, wiki/meta/
 
 #### ml-engineering (model development, training, evaluation)
 **Tier 1:** Home, Domain Language, Project Charter, PRD, Phase Definitions, Architecture Overview, Data Model, Model Design, Training Data Spec, Model Evaluation Criteria, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
-**Tier 2:** Data Pipeline Design, Data Dictionary, Deployment Guide, Cost Model, Structural Constraints
-**Tier 3:** Session Logs, Feature Specs
+**Tier 2:** Data Pipeline Design, Data Dictionary, Deployment Guide, Cost Model, Structural Constraints, wiki/index.md, wiki/topics/
+**Tier 3:** Session Logs, Feature Specs, wiki/meta/
 
 #### ai-engineering (LLM apps, RAG, agents, prompt engineering)
 **Tier 1:** Home, Domain Language, Project Charter, PRD, Phase Definitions, Architecture Overview, Data Model, Prompt Library, Model Configuration, Evaluation Strategy, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
 **Tier 1 (if RAG):** + RAG Architecture
-**Tier 2:** Guardrails Spec, Cost Model, Threat Model, User Stories, Deployment Guide, Security & Privacy, Structural Constraints
-**Tier 3:** Feature Specs, Session Logs
+**Tier 2:** Guardrails Spec, Cost Model, Threat Model, User Stories, Deployment Guide, Security & Privacy, Structural Constraints, wiki/index.md, wiki/topics/
+**Tier 3:** Feature Specs, Session Logs, wiki/meta/
 
 #### automation (scripts, CLIs, bots, scheduled jobs)
 **Tier 1:** Home, Domain Language, Project Charter, PRD, Phase Definitions, Architecture Overview, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
-**Tier 2:** Data Pipeline Design (if data-moving), Output Specs, Deployment Guide, Structural Constraints
-**Tier 3:** Session Logs
+**Tier 2:** Data Pipeline Design (if data-moving), Output Specs, Deployment Guide, Structural Constraints, wiki/index.md, wiki/topics/
+**Tier 3:** Session Logs, wiki/meta/
 
 #### library (reusable packages, SDKs, shared modules)
 **Tier 1:** Home, Domain Language, Project Charter, PRD, Phase Definitions, Architecture Overview, API Design Guide, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
-**Tier 2:** API Conventions, Migration Guide Template, Publishing Checklist, Deployment Guide, Structural Constraints
-**Tier 3:** Session Logs
+**Tier 2:** API Conventions, Migration Guide Template, Publishing Checklist, Deployment Guide, Structural Constraints, wiki/index.md, wiki/topics/
+**Tier 3:** Session Logs, wiki/meta/
 
 ### Task-Based Types
 
 #### analytics-workspace (ad hoc analysis, investigations, data requests)
 **Onboarding:** sources/README.md (Source Registry Index), sources/connections/*.md, sources/tools/*.md, Domain Language
 **Per-task:** brief.md, plan.md, outcome.md (in each `tasks/[date-name]/` folder)
-**As needed:** sources/files/*.md, reusable queries in `src/queries/`, scripts in `src/scripts/`
-**Note:** No sprint artifacts, no backlog, no Tier system. Work is organized as tasks, not stories.
+**As needed:** sources/files/*.md, reusable queries in `src/queries/`, scripts in `src/scripts/`, wiki/index.md, wiki/topics/
+**Note:** No sprint artifacts, no backlog, no Tier system. Work is organized as tasks, not stories. Wiki is opt-in during workspace onboarding and populated via backfill and incremental synthesis after task deliveries.
 
 ### Methodology-Based Types
 
@@ -769,5 +804,6 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 **Core:** Domain Language, Project Charter, PRD, VERSION, CHANGELOG, MIGRATIONS (version history and consumer communication)
 **Per-change:** System Update Plan (in conversation), Change Verification Reports (in `docs/evaluations/`)
 **Structural:** Agent prompts, workflow definitions, archetype templates, catalogs, integration templates, dispatch protocol, rubrics, hooks
+**Knowledge layer:** wiki/index.md, wiki/topics/, wiki/meta/ (opt-in, cadence defined by operational mode or manual trigger — see PRD-10 for Fabrika-specific wiki)
 **Operational (if enabled):** Status file, operational logs, ritual definitions (project-specific, not templated)
 **Note:** No sprint artifacts, no Tier system. Work is organized as structural changes following the 7-step lifecycle.

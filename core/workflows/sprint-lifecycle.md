@@ -71,3 +71,27 @@ The phase boundaries are hard new-chat handoffs for three reasons:
 3. **Failure modes don't leak across stories.** If story 1 had a flaky test that got worked around, story 2 should not inherit "we ignore that test class." A new chat starts from STATUS.md and the sprint contract, not from the previous story's running context.
 
 Do not "optimize" away the new-chat boundaries by combining phases. The friction is the feature.
+
+---
+
+## Knowledge Pipeline Cadence
+
+When a project has a `wiki/` directory, the knowledge pipeline runs
+at defined cadences tied to the sprint lifecycle. The pipeline
+transforms scattered project artifacts into synthesized wiki
+knowledge. For the full pipeline specification, see
+`core/workflows/knowledge-pipeline.md`. For the step-by-step
+maintenance procedure, see `core/workflows/knowledge-synthesis.md`.
+
+| Cadence | Pipeline Phases | What Happens |
+|---------|----------------|--------------|
+| Per sprint (during maintenance) | Phases 1-2 (Extract + Index) | Scan artifacts created since last maintenance, assign salience, produce batch index in `wiki/meta/` |
+| Every 2-3 sprints or on demand | Phases 3-4 (Synthesize + Link) | Write/update topic articles in `wiki/topics/`, run cross-reference pass, update `wiki/index.md` narrative. Triggered when 3+ batch indexes exist without a synthesis pass, or on owner request. |
+| Quarterly or on demand | All phases (full reintegration) | Re-score salience, rewrite stale articles, merge/retire topics, rebuild `wiki/index.md` narrative, clean up stale batch entries. Triggered when 3+ months since last reintegration (tracked in `wiki/meta/last-reintegration.md`). |
+
+The maintenance chat handles Phases 1-2 as part of the Knowledge
+Synthesis checklist section. Phases 3-4 trigger automatically when
+the batch index count threshold is met. The quarterly reintegration
+runs as a deeper pass within the same maintenance session — it does
+not require its own chat unless the project has an unusually large
+artifact base.

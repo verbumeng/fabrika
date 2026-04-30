@@ -4,6 +4,45 @@ When a Fabrika update requires consumer projects to do more than a straight file
 
 ---
 
+## 0.18.0 — Wiki Knowledge Layer
+
+**Affects:** All consumer projects. Sprint-based and analytics-workspace projects have additional workflow file changes.
+
+**What changed:** A wiki knowledge layer is now available for consumer projects. It automatically consolidates scattered project artifacts (ADRs, retros, evaluation reports, research docs) into organized topic articles during maintenance sessions. The system uses a 5-phase pipeline (Extract, Index, Synthesize, Link, Glossary) with batch JSON indexes as stable intermediates, a comprehensive salience model (S1/S2/S3) mapping all Document Catalog artifact types, and cadence mappings for sprint-based and analytics-workspace projects. Topic articles are created via a notice-and-proceed model (the agent creates and notifies the owner, proceeding unless the owner objects). The wiki serves dual audiences: humans get a progressive narrative overview; agents get structured topic references. Bootstrap and adoption flows now offer the wiki (default recommended). A backfill mechanism populates the wiki from existing artifacts during adoption or update.
+
+**Migration steps:**
+
+1. **Copy new files.** Copy `core/workflows/knowledge-pipeline.md`, `core/workflows/knowledge-synthesis.md`, `core/templates/Wiki-Topic-Template.md`, and `core/templates/Batch-Index-Schema.md` to your Fabrika path.
+
+2. **Update changed core files.** Update the following from the Fabrika source: `core/maintenance-checklist.md`, `core/Document-Catalog.md`, `core/workflows/doc-triggers.md`.
+
+3. **Update changed workflow files (sprint-based projects).** Update `core/workflows/sprint-lifecycle.md`.
+
+4. **Update changed workflow files (analytics-workspace projects).** Update `core/workflows/analytics-workspace.md`.
+
+5. **Update changed integration file.** Update your integration template (CLAUDE.md or copilot-instructions.md).
+
+6. **Update bootstrap/adopt files (if applicable).** Update `BOOTSTRAP.md` and `ADOPT.md`.
+
+7. **Set up the wiki (recommended).** Create `wiki/` directory at the project root with three items:
+   - `wiki/index.md` — stub file with project name and a note that the wiki will be populated during maintenance
+   - `wiki/topics/` — empty directory (add `.gitkeep`)
+   - `wiki/meta/` — empty directory (add `.gitkeep`)
+
+8. **Run backfill (for projects with existing artifacts).** If your project has existing ADRs, evaluation reports, retros, session logs, or other project artifacts, run the backfill procedure from `core/workflows/knowledge-synthesis.md` (Phase 0: Backfill). This is a one-time operation that populates the wiki from existing content. Under ~30 artifacts: run in the current chat. 30+ artifacts: run in a dedicated chat to keep context clean.
+
+9. **Behavioral changes.** After migration:
+   - Maintenance sessions include a Knowledge Synthesis step (after Architecture Review) that runs when `wiki/` exists. It extracts and indexes new artifacts every maintenance, and triggers topic synthesis when 3+ batch indexes accumulate without a synthesis pass.
+   - Topic articles are created automatically with inline notification (notice-and-proceed). The owner can object, but the default is proceed.
+   - Quarterly reintegration runs when 3+ months have elapsed since the last pass, re-scoring salience and rebuilding the wiki narrative.
+   - The Glossary pipeline phase checks for concepts not yet in Domain Language and flags them for addition — the wiki does not define its own vocabulary.
+   - Agents are instructed to check `wiki/index.md` and `wiki/topics/` before searching raw artifacts, and to draw on wiki knowledge during brainstorming and alignment conversations.
+   - For analytics-workspace projects: Extract+Index runs automatically after each task delivery as part of the Deliver step.
+
+**Why this matters:** Projects generate knowledge continuously but store it as disconnected artifacts. The wiki consolidates this into a queryable, topic-organized knowledge base that helps both humans understand the project holistically and agents surface relevant history during planning and alignment. The progressive narrative in wiki/index.md lets someone go from zero understanding to full context without reading dozens of individual files.
+
+---
+
 ## 0.17.0 — Briefing System Improvements
 
 **Affects:** All consumer projects (briefing files are used by all project types). Analytics-workspace and agentic-workflow projects have additional workflow file changes.

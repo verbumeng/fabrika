@@ -122,6 +122,10 @@ Multi-type is possible for sprint-based types (e.g., `data-app` + `automation`).
 │   │   └── [per-agent directories — created based on installed agents]
 │   └── maintenance/
 ├── .fabrika/
+├── wiki/                              # Knowledge layer (created if user opts in — default yes)
+│   ├── index.md                       # Progressive narrative overview (stub until backfill)
+│   ├── topics/                        # Synthesized topic articles
+│   └── meta/                         # Pipeline intermediates (batch indexes)
 ├── .github/
 │   └── workflows/
 ├── .claude/
@@ -154,6 +158,10 @@ Multi-type is possible for sprint-based types (e.g., `data-app` + `automation`).
 │           ├── planner/
 │           ├── reviewer/
 │           └── validator/
+├── wiki/                              # Knowledge layer (created if user opts in — default yes)
+│   ├── index.md                       # Progressive narrative overview
+│   ├── topics/
+│   └── meta/
 ├── .fabrika/
 ├── .claude/
 │   ├── agents/
@@ -162,6 +170,21 @@ Multi-type is possible for sprint-based types (e.g., `data-app` + `automation`).
 ```
 
 Add `.gitkeep` to all empty folders. For `analytics-workspace`, also add `data/` to `.gitignore` (heavy data files should not be committed; small reference files can be force-added).
+
+### 1.3a Wiki knowledge layer (all project types)
+
+Ask: **"Would you like a project wiki? The wiki automatically consolidates knowledge from your project artifacts (ADRs, retros, evaluation reports, research docs) into organized topic articles. It helps both you and the agent understand the project holistically — you can point someone to the wiki index and they'll get a progressive narrative from zero to full understanding. Recommended for most projects. Would you like one?"**
+
+**Default: yes.** If the user says yes (or accepts the recommendation):
+- Create the `wiki/` directory structure shown in the folder trees above (it is already included in the directory creation step)
+- Create `wiki/index.md` as a stub: project name, "This wiki will be populated as the project accumulates artifacts" note
+- Add `.gitkeep` to `wiki/topics/` and `wiki/meta/`
+
+If the user says no:
+- Remove the `wiki/` directory (or skip creating it)
+- The knowledge synthesis step in maintenance will be skipped automatically (conditional gate checks for wiki/ existence)
+
+**If the project type is `analytics-workspace` or the bootstrap includes a brain dump with substantial content,** note that a wiki backfill can be run after bootstrap completes to populate the wiki from existing artifacts. The backfill is described in `[FABRIKA_PATH]/core/workflows/knowledge-synthesis.md`. If the artifact count is under ~30, the backfill can run in this chat; if 30+, recommend a dedicated chat.
 
 ### 1.4 Initialize git
 ```bash
@@ -752,6 +775,11 @@ Use this during the Phase 4 readiness check.
 - [ ] Agents installed match project type (per Agent Catalog)
 - [ ] Implementer agent for your project type(s) is installed (see AGENT-CATALOG mapping tables)
 - [ ] Baseline evals copied to `docs/evals/baseline/`
+
+### Wiki (all types, if opted in)
+- [ ] `wiki/` directory exists with `index.md`, `topics/`, and `meta/`
+- [ ] `wiki/index.md` has at least a stub with the project name
+- [ ] If the project has existing artifacts (brain dump content, adopted docs), backfill has been run or is scheduled for a follow-up chat
 
 ### Type-specific (analytics-workspace)
 - [ ] `sources/README.md` populated with source registry index

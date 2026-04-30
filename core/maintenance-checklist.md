@@ -121,6 +121,31 @@ If none of the above conditions are true, skip this section entirely.
 
 **Spiral mitigation:** Do not create more than 2 refactor stories per architecture review. If the architect identifies more than 2 significant issues, document them all but only create stories for the highest-impact 2. The rest go to the backlog as future candidates.
 
+### Knowledge Synthesis
+
+This section only runs when a `wiki/` directory exists in the project.
+If no wiki directory exists, skip this section entirely.
+
+Follow the incremental synthesis workflow at
+`core/workflows/knowledge-synthesis.md` (or the project's local copy).
+
+- [ ] Identify artifacts created or modified since the last batch index in `wiki/meta/`
+- [ ] Run Extract + Index (Phases 1-2): read each new artifact, extract content, assign salience, write batch index to `wiki/meta/batch-YYYY-MM-DD.json`
+- [ ] Check synthesis trigger: 3+ batch indexes since last synthesis pass, or owner request, or quarterly reintegration due
+- [ ] If synthesis trigger is met:
+  - [ ] Run Synthesize (Phase 3): cluster artifacts by topic, create/update topic articles using `core/templates/Wiki-Topic-Template.md`, notify owner of new topics (notice-and-proceed)
+  - [ ] Run Link (Phase 4): update Related Topics cross-references across all topic articles
+  - [ ] Run Glossary (Phase 5): check key concepts against Domain Language, flag new terms for addition
+  - [ ] Update `wiki/index.md` narrative overview
+- [ ] If quarterly reintegration is due (3+ months since `wiki/meta/last-reintegration.md`):
+  - [ ] Re-score salience across all batch indexes
+  - [ ] Review topic set: retire stale topics, merge converged topics
+  - [ ] Rewrite stale Current State sections
+  - [ ] Rebuild `wiki/index.md` narrative from scratch
+  - [ ] Clean up stale batch index entries
+  - [ ] Update `wiki/meta/last-reintegration.md`
+- [ ] Log synthesis findings to `docs/maintenance/knowledge-synthesis-YYYY-MM-DD.md`
+
 ### Token Usage Review
 - [ ] Scan the current sprint's progress file for "Tokens (actual)" entries
 - [ ] If token data exists, calculate: total tokens this sprint, per-story averages, stories that consumed >2x the sprint average
@@ -186,4 +211,5 @@ If none of the above conditions are true, skip this section entirely.
 - Architecture review: [X modules assessed, Y stories created, Z deferred / skipped — conditional trigger not met]
 - Hooks: [verified / updated X]
 - Terminology drift: [X drifts found, Y fixed, Z Domain Language updates / clean / skipped — no Domain Language document]
+- Knowledge synthesis: [X batch entries indexed, Y topics proposed, Z created, W updated, V terms flagged for Domain Language / skipped — no wiki directory]
 ```
