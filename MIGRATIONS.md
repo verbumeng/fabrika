@@ -4,6 +4,37 @@ When a Fabrika update requires consumer projects to do more than a straight file
 
 ---
 
+## 0.17.0 — Briefing System Improvements
+
+**Affects:** All consumer projects (briefing files are used by all project types). Analytics-workspace and agentic-workflow projects have additional workflow file changes.
+
+**What changed:** The briefing system is expanded and refined across all three project type categories. Sprint-based briefings gain concrete translation examples (topology choices, evaluation findings), token cost visibility in session summaries (previously restricted), and a restructured retro token efficiency section with sprint totals prominent and per-agent drill-down detail. Spec briefings gain explicit guidance on framing design alternatives in user-impact terms. Analytics-workspace gains two new briefing formats (task plan, task outcome). Agentic-workflow gains two new briefing formats (structural plan, change summary). A canonical token cost format is established in briefing-principles.md using approximate model-tier ranges with per-agent-role breakdowns.
+
+**Migration steps:**
+
+1. **Copy new files.** Copy `core/briefings/task-plan-briefing.md`, `core/briefings/task-outcome-briefing.md`, `core/briefings/structural-plan-briefing.md`, and `core/briefings/change-summary-briefing.md` to your Fabrika path.
+
+2. **Update changed briefing files.** Update the following from the Fabrika source: `core/briefings/sprint-plan-briefing.md`, `core/briefings/session-summary-briefing.md`, `core/briefings/retro-briefing.md`, `core/briefings/spec-briefing.md`, `core/briefings/briefing-principles.md`.
+
+3. **Update changed workflow files (analytics-workspace projects).** Update `core/workflows/analytics-workspace.md`.
+
+4. **Update changed workflow files (agentic-workflow projects).** Update `core/workflows/agentic-workflow-lifecycle.md`.
+
+5. **Update changed integration file.** Update your integration template (CLAUDE.md or copilot-instructions.md).
+
+6. **Behavioral changes.** After migration:
+   - Session summaries include a token efficiency section with per-agent-role cost breakdown. The old "no token counts in owner summary" restriction is removed — the owner sees costs.
+   - Sprint retro token efficiency is restructured: sprint total prominent at top, per-story costs in the main table, per-agent breakdown as drill-down detail underneath.
+   - Token costs use approximate model-tier ranges (high-end / mid-tier / economy) instead of naming specific models. The canonical format is defined in briefing-principles.md.
+   - Spec briefings frame design alternatives in user-impact terms. Technical terminology used in briefings is defined in the jargon glossary and flagged for Domain Language.
+   - Sprint plan briefings have topology translation examples for reference.
+   - Analytics-workspace: task plans are presented using the Task Plan Briefing format; task outcomes are presented using the Task Outcome Briefing format.
+   - Agentic-workflow: Step 2 (Align) uses the Structural Plan Briefing format; Step 6 (Present) uses the Change Summary Briefing format.
+
+**Why this matters:** The briefing system now covers all three project type categories consistently. Token cost visibility gives the owner financial context for every piece of work. Translation examples provide concrete models for plain-language communication, reducing the gap between what the agent writes internally and what the owner reads. The canonical token cost format using model tiers instead of model names means the briefing system doesn't need updating every time pricing or model names change.
+
+---
+
 ## 0.16.0 — TDD Integration
 
 **Affects:** All sprint-based consumer projects. Analytics-workspace and agentic-workflow projects are not affected (TDD is a sprint-based workflow concept).

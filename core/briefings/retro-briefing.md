@@ -26,7 +26,41 @@ Explain the concrete process changes in plain terms. For each change: what the c
 - "Test plans will be written before implementation starts, not after. We caught two edge cases in retro that would have been caught earlier."
 
 ### 5. Token efficiency
-Include the token efficiency table from the retro artifact (predicted vs. actual per story). Explain the calibration pattern in plain language: are predictions consistently over or under? Which types of stories are hardest to predict? What adjustment should be made going forward?
+Lead with the sprint total — this is the headline number the owner
+sees first:
+
+```
+Sprint total: [X] tokens
+Approximate cost: ~$[high] at high-end / ~$[mid] at mid-tier / ~$[low] at economy tier
+```
+
+Then include the per-story table from the retro artifact with a cost
+column added. This is the primary detail level:
+
+| Story | Predicted | Actual | Cost (mid-tier) | Testing approach |
+|-------|-----------|--------|-----------------|-----------------|
+| S-XXX | [X] | [Y] | ~$[Z] | TDD / test-informed / test-after |
+
+Explain the calibration pattern in plain language: are predictions
+consistently over or under? Which types of stories are hardest to
+predict? Do TDD stories consume more tokens than test-after stories
+(expected — multiple red-green cycles)? What adjustment should be
+made going forward?
+
+Below the per-story table, include a drill-down section with
+per-agent breakdown per story. This is detail the owner can gloss
+over unless a number catches their eye:
+
+#### Agent cost breakdown (drill-down)
+
+For each story, the per-agent-role split:
+
+| Story | Planner | Implementer | Reviewer | Validator | Total |
+|-------|---------|-------------|----------|-----------|-------|
+| S-XXX | ~$[X] | ~$[Y] | ~$[Z] | ~$[W] | ~$[T] |
+
+Adjust agent columns to match what was actually dispatched (e.g.,
+add Architect column if architect reviews ran this sprint).
 
 ### 6. Agent quality and eval accuracy
 Include the eval accuracy table from the retro artifact (per-agent scores and deltas). Explain what the numbers mean: which agents are improving, which are regressing, and why. If there are proposed prompt changes or new eval cases, list them with enough context for the owner to approve or reject.

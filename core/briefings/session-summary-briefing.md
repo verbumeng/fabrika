@@ -21,6 +21,17 @@ Summarize what the evaluator agents found. Do not say "see `docs/evaluations/TIC
 
 If an evaluator failed and was retried, explain what went wrong and how it was fixed.
 
+#### Translation examples
+
+- NOT: "Code review flagged a missing null check on the user input parser."
+- YES: "The code reviewer found that if a user submits a form with a blank field, the system would crash instead of showing an error message. This has been fixed."
+
+- NOT: "Test coverage is at 85% with one untested edge case on empty datasets."
+- YES: "Tests cover the main paths. One gap was found: if the system receives completely empty data, we hadn't tested what happens. It's non-blocking but noted for a future pass."
+
+- NOT: "Semgrep flagged a potential SQL injection vector in the search endpoint."
+- YES: "The security scan found that the search feature was accepting user input in a way that could let someone tamper with the database query. This has been fixed by using parameterized queries."
+
 ### 4. What to look at (if anything)
 If there are specific things the owner should review — a UI that's worth clicking through, a behavior that's worth verifying, a design choice that could go either way — call them out here with a brief explanation of what to look for and why.
 
@@ -29,9 +40,27 @@ If there's nothing that needs the owner's attention beyond this summary, say so:
 ### 5. What's next
 One sentence: what should the next session pick up? This should match the deterministic handoff prompt.
 
+### 6. Token efficiency
+Include a cost summary for the session's work. Use the token cost
+format from briefing-principles.md:
+
+```
+Token usage: [X] tokens
+Approximate cost: ~$[high] at high-end / ~$[mid] at mid-tier / ~$[low] at economy tier
+```
+
+Include a per-agent-role breakdown:
+
+```
+Breakdown: Planner ~$[X] | Implementer ~$[X] | Reviewer ~$[X] | Validator ~$[X]
+```
+
+Adjust the agent roles to match what was actually dispatched this
+session. If token data is not available from the tool, note that and
+skip.
+
 ## What NOT to include
 
 - File paths to evaluation reports, spec files, or sprint contracts (the owner doesn't need to read those)
 - Raw test output or linter results
-- Token counts or context window metrics (those go in the progress file, not the owner summary)
 - Implementation details unless they're relevant to a decision the owner needs to make

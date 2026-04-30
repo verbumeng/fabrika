@@ -15,6 +15,20 @@ For each proposed story: what it does (user-facing impact), why it's in this spr
 ### 3. Topology choice and why
 Explain in plain terms which topology (pipeline, mesh, or hierarchical) was chosen. Define what that topology means practically: will stories be worked one at a time through a full cycle, in parallel because they don't touch the same code, or in a specific order because they depend on each other? Explain why this topology fits these particular stories.
 
+#### Translation examples
+
+**Pipeline** —
+- NOT: "Pipeline topology — stories have sequential dependencies and shared state."
+- YES: "These stories need to be done in order: Story 2 builds on what Story 1 creates, and Story 3 connects them together. We'll finish each one completely before starting the next."
+
+**Mesh** —
+- NOT: "We chose mesh topology because stories don't share state."
+- YES: "Each story can be worked independently because they touch different parts of the system. No one is waiting on anyone else, so we can work them in whatever order makes sense."
+
+**Hierarchical** —
+- NOT: "Hierarchical topology with a foundation story and dependent feature stories."
+- YES: "Story 1 builds the base that the other two depend on, so it goes first. After that, Stories 2 and 3 can be worked in either order — they both use what Story 1 created but don't depend on each other."
+
 ### 4. Jargon glossary
 Define topology terms, any backlog/sprint terminology that isn't self-evident, technology names, data model concepts, and any other loaded terms. Even terms defined in previous sprints — the owner may not remember them.
 

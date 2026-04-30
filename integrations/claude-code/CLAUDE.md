@@ -336,6 +336,12 @@ When presenting plans, results, or summaries to the owner, do not dump raw artif
 - **After sprint planning:** `[FABRIKA_PATH]/core/briefings/sprint-plan-briefing.md` — presenting a sprint plan from scrum-master
 - **Session close-out / story completion:** `[FABRIKA_PATH]/core/briefings/session-summary-briefing.md` — summarizing what was done and what it means
 - **After sprint retro:** `[FABRIKA_PATH]/core/briefings/retro-briefing.md` — translating the retro artifact into plain-language takeaways
+- **After analytics-workspace plan creation:** `[FABRIKA_PATH]/core/briefings/task-plan-briefing.md` — presenting an analysis plan from the analysis planner
+- **After analytics-workspace task delivery:** `[FABRIKA_PATH]/core/briefings/task-outcome-briefing.md` — summarizing analysis results and their business impact
+- **After agentic-workflow plan (Step 2):** `[FABRIKA_PATH]/core/briefings/structural-plan-briefing.md` — presenting a structural update plan for approval
+- **After agentic-workflow execution (Step 6):** `[FABRIKA_PATH]/core/briefings/change-summary-briefing.md` — presenting completed changes before shipping
+
+All briefings that report on completed work (session summaries, retros, task outcomes, change summaries) should include token efficiency data when available. See briefing-principles.md for the canonical token cost format.
 
 ---
 
