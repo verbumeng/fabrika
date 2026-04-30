@@ -804,6 +804,6 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 **Core:** Domain Language, Project Charter, PRD, VERSION, CHANGELOG, MIGRATIONS (version history and consumer communication)
 **Per-change:** System Update Plan (in conversation), Change Verification Reports (in `docs/evaluations/`)
 **Structural:** Agent prompts, workflow definitions, archetype templates, catalogs, integration templates, dispatch protocol, rubrics, hooks
-**Knowledge layer:** wiki/index.md, wiki/topics/, wiki/meta/ (opt-in, cadence defined by operational mode or manual trigger — see PRD-10 for Fabrika-specific wiki)
+**Knowledge layer:** wiki/index.md, wiki/topics/, wiki/meta/ (opt-in, cadence driven by the structural update lifecycle — wiki is updated during the Ship step of each system update, during alignment sessions, when harvest findings arrive, and on demand)
 **Operational (if enabled):** Status file, operational logs, ritual definitions (project-specific, not templated)
 **Note:** No sprint artifacts, no Tier system. Work is organized as structural changes following the 7-step lifecycle.

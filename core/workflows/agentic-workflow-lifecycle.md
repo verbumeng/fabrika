@@ -164,8 +164,17 @@ changes align with their intent.
    including VERSION and CHANGELOG)
 2. Create a pull request against main
 3. After owner approval, merge
+4. If `wiki/` exists, update the wiki: review the changes and their
+   rationale, update relevant topic articles in `wiki/topics/`, and
+   update `wiki/index.md` if the change introduces a new knowledge
+   domain. Also assess whether the conversation contained design
+   rationale worth capturing beyond what the CHANGELOG covers —
+   decisions considered but rejected, trade-offs debated, philosophy
+   articulated. If so, flag it to the owner: "This session discussed
+   [X] that should be incorporated into [topic]. Want me to update
+   the wiki before closing out?"
 
-**Output:** Changes on main
+**Output:** Changes on main, wiki updated (if applicable)
 
 ---
 

@@ -6,6 +6,49 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.19.0
+
+Wiki Knowledge Layer for Canonical Fabrika. Applies the wiki knowledge layer (defined in 0.18.0 for consumer projects) to Fabrika itself, creating a persistent, topic-organized knowledge base that captures framework design philosophy, agent model rationale, workflow evolution, cross-consumer patterns, and communication design decisions. Lighter than the consumer version — cadence is driven by system updates and alignment sessions rather than sprint maintenance. The wiki captures the "why" behind the CHANGELOG's "what," giving future sessions organized access to design rationale that previously lived only in git history and evaporating conversation context. Also adds Fabrika's own Domain Language document defining the framework's ubiquitous vocabulary (archetype, dispatch, contract, topology, etc.), distinct from the consumer Domain Language template. The Ship step (Step 7) of the structural update lifecycle now includes a wiki update sub-step: the orchestrator reviews changes and their rationale, updates relevant topic articles, and proactively flags conversation-level design rationale worth capturing.
+
+### Repo root (new — committed to git, internal to canonical Fabrika)
+
+- `wiki/index.md` — **NEW.** Navigational entry point to Fabrika's knowledge base. Progressive narrative overview with links to five knowledge domain topic articles, explanation of wiki cadence and relationship to other artifacts (CHANGELOG, MIGRATIONS, Domain Language), and sources summary.
+- `wiki/topics/framework-philosophy.md` — **NEW.** Comprehensive synthesis of Fabrika's core design principles and their evolution from v0.1.0 through v0.18.0. Covers canonical vs. consumer separation, smell tests, context decomposition, progressive disclosure, stack-agnostic agents, bootstrap/adopt/update model, versioning discipline, and dual-audience documentation. Nine key decisions traced to specific versions.
+- `wiki/topics/agent-model.md` — **NEW.** Comprehensive synthesis of the agent architecture: role-based decomposition, archetypes (Planner, Reviewer, Implementer, Coordinator, Architect, Designer, Validator), dispatch tiers (strict vs. contextual), pure orchestrator principle, specialist implementers, lightweight dispatch, architect specialists, agent maturity progression, and Domain Language integration. Eleven key decisions with version provenance.
+- `wiki/topics/workflow-design.md` — **NEW.** Comprehensive synthesis of workflow patterns: 7-step structural update lifecycle, sprint lifecycle, analytics-workspace task lifecycle, dispatch protocol, design alignment, graduated testing (TDD integration), briefing system evolution, wiki knowledge pipeline, evaluation cycles, and Domain Language integration. Documents the open design question about agentic-workflow plan persistence (aligned plan is conversation-only, unlike sprint-based and analytics-workspace which persist plans as files) — slated for resolution in a future update.
+- `wiki/topics/harvest-patterns.md` — **NEW.** Documents the harvest mechanism for flowing generalizable improvements from consumer projects back to canonical Fabrika. Currently sparse — mechanism is documented but no harvest data has been collected yet. Describes expected pattern categories and how findings will flow into the wiki.
+- `wiki/topics/owner-preferences.md` — **NEW.** Framework-level communication design decisions: plain-language briefings, product-impact-first principle, define-terms-every-time, audience calibration, alignment protocol, narrate-and-explain, version discipline as communication contract. Framed as codified methodology choices, not personal preferences of a specific individual.
+- `Domain-Language.md` — **NEW.** Fabrika's own ubiquitous language document with 70+ framework terms organized into 8 sections: Agent Model, Agent Roles, Workflow, Framework Structure, Knowledge, Versioning, Project Types, and Maintenance. Distinct from `core/templates/Domain-Language-Template.md` (the consumer template). Includes version annotations for when terms were introduced or formalized.
+
+### Core (changed — consumer agentic-workflow projects may optionally update)
+
+- `core/workflows/agentic-workflow-lifecycle.md` — **CHANGED.** Added conditional wiki update sub-step to Step 7 (Ship): if `wiki/` exists, review changes and their rationale, update relevant topic articles, and proactively flag conversation-level design rationale worth capturing. No-op for projects without a wiki directory. Existing step structure and numbering unchanged.
+- `core/workflows/knowledge-pipeline.md` — **CHANGED.** Replaced PRD-10 forward reference in Agentic-workflow cadence section with concrete cadence definition: after system updates (Ship step), during alignment sessions, when harvest findings arrive, on demand, and reintegration after defined structural change counts. Notes that the formal 5-phase pipeline does not apply at the same cadence as sprint-based projects.
+- `core/Document-Catalog.md` — **CHANGED.** Replaced PRD-10 forward reference in agentic-workflow Quick Reference knowledge layer entry with concrete cadence description (Ship step, alignment sessions, harvest, on demand).
+
+### Operational docs (changed — no consumer action needed)
+
+- `CLAUDE.md` (project-level, gitignored) — **CHANGED.** Added wiki update reminder to structural update protocol section (Ship step). Added "Wiki and Domain Language" section with pointers to `wiki/index.md`, `wiki/topics/`, and `Domain-Language.md`, including note distinguishing Fabrika's Domain Language from the consumer template.
+
+### Consumer update instructions
+
+Projects on 0.18.x:
+
+**Optional updates (agentic-workflow projects with wiki/):**
+1. Update `core/workflows/agentic-workflow-lifecycle.md` — adds conditional wiki indexing to Step 7 (Ship). No-op if your project has no `wiki/` directory.
+2. Update `core/workflows/knowledge-pipeline.md` — replaces PRD-10 forward reference with concrete agentic-workflow cadence definition.
+3. Update `core/Document-Catalog.md` — replaces PRD-10 forward reference with concrete guidance.
+
+**No action required for:**
+- Sprint-based projects (no changes to sprint-related files)
+- Analytics-workspace projects (no changes to analytics-related files)
+- Projects without a `wiki/` directory (lifecycle change is conditional)
+- Integration templates (no changes to CLAUDE.md or copilot-instructions.md templates)
+- BOOTSTRAP.md, ADOPT.md (no changes)
+- MIGRATIONS.md (no migration steps needed — changes are additive and conditional)
+
+---
+
 ## 0.18.0
 
 Wiki Knowledge Layer for consumer projects. Adds a structured pipeline that automatically consolidates scattered project artifacts (ADRs, retro findings, evaluation reports, research docs) into organized, continuously updated topic articles in a `wiki/` directory. The pipeline has five phases: Extract (pull content from artifacts), Index (score salience, produce batch JSON intermediates), Synthesize (cluster by topic, write/update articles), Link (cross-reference related topics), Glossary (feed new terms back to Domain Language). Topic articles are created via a notice-and-proceed model — the agent creates and notifies the owner, proceeding unless the owner objects. The wiki serves dual audiences: humans get a progressive narrative overview from zero understanding to full context; agents get structured topic articles for on-demand domain reference. A comprehensive salience model maps all Document Catalog artifact types to S1 (high — owner-approved foundational documents), S2 (medium — reviewed workflow output), or S3 (foundational — unvalidated raw material). Sprint-based projects run Extract+Index during maintenance, Synthesize+Link every 2-3 sprints, and full reintegration quarterly. Analytics-workspace projects index after each task delivery and synthesize monthly. A backfill mechanism (Phase 0) handles one-time population for projects with existing artifacts during bootstrap, adoption, or Fabrika update, with chat-size assessment for large projects. Domain Language alignment is enforced: wiki articles use Domain Language terms, and the Glossary phase flags new concepts for addition.
