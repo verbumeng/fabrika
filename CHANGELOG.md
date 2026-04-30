@@ -6,6 +6,77 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.17.0
+
+Briefing system improvements across all three project type categories. Adds concrete translation examples to sprint-based briefings (topology choices, evaluation findings), resolves the token cost visibility conflict (the owner now sees token costs in session summaries, not just retros), and establishes a canonical token cost format using approximate model-tier ranges that survive pricing changes. Per-agent-role cost breakdowns are always included so the owner can see where tokens are being spent. Sprint retros gain a drill-down structure: sprint total prominent, per-story costs in the main table, per-agent breakdown as glossable detail underneath. Analytics-workspace gains two new briefing formats (task plan, task outcome) so analysis projects get the same structured communication as sprint-based projects. Agentic-workflow gains two new briefing formats (structural plan, change summary) codifying the informal pattern used at Steps 2 and 6 of the lifecycle. Spec briefings gain explicit guidance on explaining design alternatives in user-impact terms rather than implementation technology. All briefing formats are now listed in briefing-principles.md and both integration templates.
+
+### Core (new — consumer projects should copy)
+
+- `core/briefings/task-plan-briefing.md` — **NEW.** Analytics-workspace briefing format for presenting analysis plans after plan creation. Covers: business question, approach in plain language, cost estimate, assumptions and risks, jargon glossary with Domain Language integration.
+- `core/briefings/task-outcome-briefing.md` — **NEW.** Analytics-workspace briefing format for presenting analysis results after task delivery. Covers: headline finding, business impact, confidence/caveats, what to look at, token efficiency with per-agent breakdown, follow-up recommendations.
+- `core/briefings/structural-plan-briefing.md` — **NEW.** Agentic-workflow briefing format for Step 2 (Align). Covers: what the change does for the system, what's changing (file-by-file), open items with recommendations, what's NOT changing, execution order, jargon glossary.
+- `core/briefings/change-summary-briefing.md` — **NEW.** Agentic-workflow briefing format for Step 6 (Present). Covers: what changed in the system, file-by-file summary, deviations from plan, verification results in plain language, consumer implications, token efficiency with per-agent breakdown, follow-up items.
+
+### Core (changed — consumer projects should update)
+
+- `core/briefings/sprint-plan-briefing.md` — **CHANGED.** Added concrete topology translation examples (before/after) for all three topologies: pipeline, mesh, hierarchical. Each example shows the technical framing to avoid and the plain-language version to use.
+- `core/briefings/session-summary-briefing.md` — **CHANGED.** Added evaluation findings translation examples (before/after) showing how to translate technical findings to user-impact language. Added new "Token efficiency" section (section 6) with canonical cost format and per-agent-role breakdown. Removed the "no token counts in owner summary" restriction that contradicted the owner's preference for cost visibility.
+- `core/briefings/retro-briefing.md` — **CHANGED.** Restructured "Token efficiency" section: sprint total prominent at top, per-story table with cost column, per-agent breakdown as drill-down detail underneath. Added model tier cost format. Added note on TDD stories naturally consuming more tokens across multiple red-green cycles.
+- `core/briefings/spec-briefing.md` — **CHANGED.** Added technical language guidance to "Key design decisions" section: explain alternatives in user-impact terms, not implementation technology. If technical terminology is necessary, define in jargon glossary and flag for Domain Language.
+- `core/briefings/briefing-principles.md` — **CHANGED.** Added analytics-workspace briefing pointers (task-plan, task-outcome) and agentic-workflow briefing pointers (structural-plan, change-summary) to "When to Brief" section. Added canonical "Token Cost Reporting" section defining the standard format: approximate model-tier ranges, always-included per-agent-role breakdown, skip-if-unavailable guidance.
+- `core/workflows/analytics-workspace.md` — **CHANGED.** Added briefing references to task lifecycle: Step 2 (Plan) now references Task Plan Briefing format, Step 6 (Deliver) now references Task Outcome Briefing format.
+- `core/workflows/agentic-workflow-lifecycle.md` — **CHANGED.** Step 2 (Align) now references Structural Plan Briefing format. Step 6 (Present) now references Change Summary Briefing format with verification results, consumer implications, and token efficiency.
+
+### Integrations (changed — consumer projects should update)
+
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Expanded Owner Briefings section from 5 to 9 briefing pointers: added task-plan-briefing (analytics-workspace), task-outcome-briefing (analytics-workspace), structural-plan-briefing (agentic-workflow), change-summary-briefing (agentic-workflow). Added token cost visibility note referencing briefing-principles.md canonical format.
+- `integrations/copilot/copilot-instructions.md` — **CHANGED.** Parallel changes for Copilot parity: same 4 new briefing pointers and token cost visibility note.
+
+### Operational docs (changed — no consumer action needed)
+
+- `MIGRATIONS.md` — **CHANGED.** Added 0.17.0 entry with briefing system migration guidance.
+
+### Consumer update instructions
+
+Projects on 0.16.x should:
+
+**New files (copy to your Fabrika path):**
+1. Copy `core/briefings/task-plan-briefing.md`
+2. Copy `core/briefings/task-outcome-briefing.md`
+3. Copy `core/briefings/structural-plan-briefing.md`
+4. Copy `core/briefings/change-summary-briefing.md`
+
+**Changed files (all projects — update from Fabrika source):**
+5. Update `core/briefings/sprint-plan-briefing.md`
+6. Update `core/briefings/session-summary-briefing.md`
+7. Update `core/briefings/retro-briefing.md`
+8. Update `core/briefings/spec-briefing.md`
+9. Update `core/briefings/briefing-principles.md`
+10. Update your integration template (CLAUDE.md or copilot-instructions.md)
+
+**Changed files (analytics-workspace projects):**
+11. Update `core/workflows/analytics-workspace.md`
+
+**Changed files (agentic-workflow projects):**
+12. Update `core/workflows/agentic-workflow-lifecycle.md`
+
+**Behavioral changes (all projects):**
+13. Session summaries now include a token efficiency section with per-agent-role breakdown. The old "no token counts" restriction is removed.
+14. Sprint retro token efficiency is restructured: sprint total at top, per-story costs in the table, per-agent drill-down underneath.
+15. Spec briefings frame design alternatives in user-impact terms. Technical terminology is defined and flagged for Domain Language.
+16. Sprint plan briefings have topology translation examples as a reference for plain-language framing.
+17. Token costs use approximate model-tier ranges (high-end / mid-tier / economy) — not specific model names.
+
+**Behavioral changes (analytics-workspace projects):**
+18. Task plans are presented using the Task Plan Briefing format after plan creation.
+19. Task outcomes are presented using the Task Outcome Briefing format after delivery.
+
+**Behavioral changes (agentic-workflow projects):**
+20. Step 2 (Align) uses the Structural Plan Briefing format.
+21. Step 6 (Present) uses the Change Summary Briefing format.
+
+---
+
 ## 0.16.0
 
 TDD Integration introduces a graduated testing approach to the development workflow. Instead of a single "implement then test" flow, each sprint story is now assigned a testing approach by the scrum master during sprint planning: TDD (high complexity — spec-first tests before code, implementation in vertical slices), test-informed (medium complexity — implementer codes with awareness of test boundaries, then test-writer verifies), or test-after (low complexity — implement, then verify). The test-writer gains a spec-first mode for TDD stories: it writes behavioral tests from the approved spec without seeing code, producing tests that verify public interfaces rather than implementation details. The development workflow branches on testing approach, and sprint contracts carry the approach per story. For tools that support persistent agent sessions (Claude Code), the orchestrator reuses test-writer and implementer sessions across TDD cycles; for tools that don't (Copilot subagents), each dispatch is self-contained.

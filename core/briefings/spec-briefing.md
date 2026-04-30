@@ -15,6 +15,8 @@ Walk through the feature from the user's perspective, not the code's. What happe
 ### 3. Key design decisions
 List the non-obvious choices the spec makes. For each one: what was chosen, what the alternative would be, and why this direction was picked. These are the places where the owner's taste and judgment matter most.
 
+When framing design alternatives, explain in terms of user impact, not implementation technology. Instead of "Option A uses a B-tree index, Option B uses a hash index," say "Option A is faster for range queries (finding all orders between two dates), Option B is faster for exact lookups (finding one specific order by ID)." If technical terminology is necessary for the owner to understand a trade-off, define it in the jargon glossary below AND flag it for addition to the Domain Language document.
+
 ### 4. Jargon glossary
 Define every technical term, framework concept, data model name, API name, or loaded term that appears in the spec and wouldn't be obvious to someone who hasn't read the codebase recently. Even terms that were defined in previous sprints — the owner may not remember them.
 

@@ -59,8 +59,9 @@ for X; dispatch-protocol.md needs entries for Y and Z."
 
 **Owner:** Orchestrator (presents to the project owner)
 
-Present the plan as a plain-language briefing. Follow the briefing
-principles:
+Present the plan using the **Structural Plan Briefing** format
+(`core/briefings/structural-plan-briefing.md`). Follow the briefing
+principles (`core/briefings/briefing-principles.md`):
 - Lead with what the change does for the system, not implementation
   details
 - Define any jargon
@@ -141,10 +142,14 @@ owner with a summary of what was tried.
 
 **Owner:** Orchestrator (presents to the project owner)
 
-Present the completed changes. For each change:
+Present the completed changes using the **Change Summary Briefing**
+format (`core/briefings/change-summary-briefing.md`). The briefing
+covers:
 - What specifically changed
 - Why it matters — how it fits into the broader system
-- Implications for future work or consumer projects
+- Verification results (translated to plain language)
+- Implications for consumer projects
+- Token efficiency with per-agent breakdown
 
 The owner should be able to read this and understand whether the
 changes align with their intent.

@@ -22,4 +22,29 @@ The owner's job is different: make decisions, catch design problems, guide taste
 
 - After product-manager planning mode returns a spec → use Spec Briefing format
 - After scrum-master sprint planning returns a plan → use Sprint Plan Briefing format
+- After analysis-planner creates a task plan (analytics-workspace) → use Task Plan Briefing format
+- After task delivery (analytics-workspace) → use Task Outcome Briefing format
+- After workflow-planner produces a structural update plan (agentic-workflow) → use Structural Plan Briefing format
+- After structural changes are complete, before shipping (agentic-workflow) → use Change Summary Briefing format
 - Any time the owner needs to approve a direction or make a decision that will be hard to reverse once implementation starts
+
+## Token Cost Reporting
+
+When a briefing includes token efficiency data, use approximate cost ranges at model tiers rather than naming specific models or citing exact per-token prices. Model names and pricing change; approximate tiers stay useful longer.
+
+**Canonical format:**
+
+```
+Token usage: [X] tokens
+Approximate cost: ~$[high] at high-end / ~$[mid] at mid-tier / ~$[low] at economy tier
+```
+
+Always include a per-agent-role breakdown showing the cost contribution of each dispatched agent:
+
+```
+Breakdown: Planner ~$[X] | Implementer ~$[X] | Reviewer ~$[X] | Validator ~$[X]
+```
+
+Adjust the agent roles listed to match the agents actually dispatched (e.g., agentic-workflow updates include Architect; analytics-workspace tasks may not include Validator).
+
+If token data is not available from the tool, note that and skip — do not fabricate numbers.
