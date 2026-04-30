@@ -44,24 +44,47 @@ When invoked for sprint planning:
      affects sprint complexity, alongside the topology assessment
      in step 4.
 
-6. **Present topology recommendation** to the owner with rationale. The owner approves or adjusts.
+6. **Assess testing approach per story.** For each candidate story,
+   assign one of three testing approaches:
+   - **TDD:** New modules, complex logic, new public interfaces,
+     greenfield features, high-risk behaviors. Tests are written from
+     the spec before code exists, implementation proceeds in vertical
+     slices (one test → make it pass → next test).
+   - **Test-informed:** Modifying existing modules, adding
+     capabilities to existing interfaces, medium complexity. The spec
+     identifies test boundaries upfront, the implementer codes with
+     awareness of what will be tested, then the test-writer verifies.
+   - **Test-after:** Config changes, copy updates, minor fixes,
+     non-behavioral changes, low risk. The implementer makes the
+     change, the test-writer verifies nothing broke during the
+     evaluation cycle.
 
-7. **Propose 2-3 stories** (10-15 points) based on priority, dependencies, and topology. Conservative scope — favor shipping over perfecting.
+   Assessment criteria: Is this greenfield or modification of
+   existing code? How many modules or interfaces does it touch? Is
+   the expected behavior clearly specifiable from the story? What
+   breaks if this is wrong? When in doubt, default to test-informed.
 
-8. **Estimate token budget per story (observability only).** For each proposed story, include a predicted token estimate based on story points and complexity. This is not a hard cap — it is an observability mechanism for calibrating future estimates. Use prior sprint data if available (check previous sprint retros for the "Token Efficiency" section). If no prior data exists, use rough heuristics: small stories (1-3 pts) ~ low token usage, medium stories (5 pts) ~ moderate, large stories (8+ pts) ~ high. Record predictions in the sprint contract alongside story assignments.
+   Record the testing approach in the sprint contract alongside each
+   story.
 
-9. **Create sprint artifacts:**
-   - Sprint file: `docs/04-Backlog/Sprints/Sprint-XX.md`
-   - Sprint contract: use the appropriate topology template from `docs/Templates/` (Pipeline, Mesh, or Hierarchical). Include per-story predicted token estimates from step 8.
-   - Sprint progress file: `docs/04-Backlog/Sprints/Sprint-XX-progress.md`
-   - Update `features.json` with feature entries for the sprint
-   - Update story assignments
+7. **Present topology recommendation** to the owner with rationale. The owner approves or adjusts.
 
-10. **Create external task entries (if configured):** If the project uses an external task management system, create one entry per sprint story. Task title pattern: "Work on [TICKET]: [title]"
+8. **Propose 2-3 stories** (10-15 points) based on priority, dependencies, and topology. Conservative scope — favor shipping over perfecting.
 
-11. **Present the sprint plan and contract** to the owner for final approval.
+9. **Estimate token budget per story (observability only).** For each proposed story, include a predicted token estimate based on story points and complexity. This is not a hard cap — it is an observability mechanism for calibrating future estimates. Use prior sprint data if available (check previous sprint retros for the "Token Efficiency" section). If no prior data exists, use rough heuristics: small stories (1-3 pts) ~ low token usage, medium stories (5 pts) ~ moderate, large stories (8+ pts) ~ high. Record predictions in the sprint contract alongside story assignments.
 
-12. **Close-out:** After approval, update `STATUS.md` with `Cycle phase: story-in-progress` and `Next chat should: Start [TICKET] — [Story 1 title]`. Issue the deterministic close-out prompt: *"Sprint planning complete. Open a new chat to start [TICKET] — [Story 1 title]."* Do NOT begin work on the first story in this chat.
+10. **Create sprint artifacts:**
+    - Sprint file: `docs/04-Backlog/Sprints/Sprint-XX.md`
+    - Sprint contract: use the appropriate topology template from `docs/Templates/` (Pipeline, Mesh, or Hierarchical). Include per-story predicted token estimates from step 9 and testing approach from step 6.
+    - Sprint progress file: `docs/04-Backlog/Sprints/Sprint-XX-progress.md`
+    - Update `features.json` with feature entries for the sprint
+    - Update story assignments
+
+11. **Create external task entries (if configured):** If the project uses an external task management system, create one entry per sprint story. Task title pattern: "Work on [TICKET]: [title]"
+
+12. **Present the sprint plan and contract** to the owner for final approval.
+
+13. **Close-out:** After approval, update `STATUS.md` with `Cycle phase: story-in-progress` and `Next chat should: Start [TICKET] — [Story 1 title]`. Issue the deterministic close-out prompt: *"Sprint planning complete. Open a new chat to start [TICKET] — [Story 1 title]."* Do NOT begin work on the first story in this chat.
 
 ## Topology-Specific Behavior
 

@@ -209,7 +209,7 @@ The agent drives the development process proactively. Don't wait for the owner t
 
 Summary of workflows covered:
 - **Design Alignment** — structured requirements gathering → Project Charter + PRD → fresh-chat handoff to sprint planning (see Design Alignment section above)
-- **Starting a Story** — spec expansion → approval → optional architect design review → branch → dispatch to implementer → evaluate → fix cycle
+- **Starting a Story** — spec expansion → approval → optional architect design review → branch → testing approach branching (TDD: test-writer spec-first → implementer vertical slices → refactor; test-informed: implementer → test-writer coverage; test-after: implementer → evaluation cycle) → evaluate → fix cycle
 - **Completing a Story (Evaluation Cycle)** — tests → lint → commit → reviewer → validator → planner validation → optional architect structural evaluation → rollback protocol (max 2 retries)
 - **Sprint Planning** — scrum-master receives approved PRD → topology assessment → 2-3 stories → contract → approval
 - **Ideation & Backlog Grooming** — new stories, re-scoping, someday-maybe
@@ -413,6 +413,31 @@ Auto-formatting: use VS Code's `editor.formatOnSave: true`.
 ---
 
 ## Testing Rules
+
+### Graduated Testing Approach
+Each sprint story is assigned a testing approach by the scrum master
+during sprint planning. The approach is recorded in the sprint
+contract per story and determines the implementation flow:
+
+- **TDD** (high complexity — new modules, complex logic, greenfield):
+  Test-writer writes spec-first tests before code exists,
+  implementer codes to pass them in vertical slices (one behavior at
+  a time), then refactor. The orchestrator alternates between
+  test-writer and implementer dispatches. In tools without persistent
+  agent sessions (Copilot subagents), each dispatch is self-contained
+  — include all prior test files and implementation in the payload.
+- **Test-informed** (medium complexity — modifying existing modules):
+  Implementer codes with awareness of test boundaries from the spec,
+  then test-writer writes tests in coverage mode.
+- **Test-after** (low complexity — config changes, minor fixes):
+  Implementer codes, test-writer verifies during the evaluation
+  cycle.
+
+The development workflow branches on testing approach. See
+`[FABRIKA_PATH]/core/workflows/development-workflow.md` for the
+full flow.
+
+### General Testing Rules
 - **No mocking the database.** Use in-memory or temp-file instances.
 - **Fixture-based tests** where applicable. Save real response snapshots in `tests/fixtures/`.
 - **Coverage:** 80%+ on core logic and storage.

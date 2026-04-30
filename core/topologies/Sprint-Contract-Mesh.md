@@ -19,6 +19,9 @@ The scrum-master has verified that the following stories have no overlapping fil
 
 ## [TICKET-1]: [Title]
 
+### Testing Approach
+- **Testing approach:** [TDD | Test-informed | Test-after]
+
 ### Isolation Scope
 This story works exclusively within:
 - `src/[directory]/`
@@ -35,6 +38,9 @@ This story works exclusively within:
 ---
 
 ## [TICKET-2]: [Title]
+
+### Testing Approach
+- **Testing approach:** [TDD | Test-informed | Test-after]
 
 ### Isolation Scope
 This story works exclusively within:

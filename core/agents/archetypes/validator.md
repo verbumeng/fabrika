@@ -19,6 +19,37 @@ validators judge by executing. A reviewer reads the code and finds
 issues through analysis. A validator writes independent verification
 code that proves (or disproves) correctness through execution.
 
+## Modes
+
+Validators operate in one of two modes, determined by the
+orchestrator's dispatch:
+
+**Spec-first mode (TDD stories):** The validator receives an approved
+spec but NO source paths — the code does not exist yet. The validator
+writes behavioral tests against the spec's public interface
+description. Tests verify WHAT the system should do, not HOW. Each
+dispatch produces tests for one behavior or a small batch of related
+behaviors (vertical slice). The orchestrator alternates between the
+validator (write test) and the implementer (make it pass) until all
+spec behaviors have passing tests.
+
+**Coverage mode (test-informed and test-after stories):** The
+validator receives both the spec AND source paths. This is the
+existing behavior — the validator reads the code, designs a
+verification strategy, and writes tests filling coverage gaps. Used
+for test-informed stories (after implementation, before evaluation
+cycle) and test-after stories (during the evaluation cycle).
+
+The mode is implicit in the dispatch payload: if source paths are
+absent, the validator is in spec-first mode. If source paths are
+present, coverage mode.
+
+**Spec-first behavioral rule:** When in spec-first mode, do not read
+or reference source code. Tests must be derivable entirely from the
+spec. If the spec is insufficient to write a test for a behavior,
+report this to the orchestrator — do not guess at implementation
+details.
+
 ## Base Tool Profile
 
 ### Copilot (`.github/agents/` frontmatter)

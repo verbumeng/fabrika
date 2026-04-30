@@ -37,10 +37,66 @@ Before invoking any sub-agent, read `core/workflows/dispatch-protocol.md` for wh
 6. **(Optional) Invoke the architect agent for design review.** If the spec proposes new modules, significant restructuring, or changes to component boundaries, dispatch the appropriate architect (software-architect or data-architect based on project type) in **design mode** with the spec's module section. The architect reviews proposed module depth, interface design, and component boundaries. Present the architect's findings alongside the spec for owner approval. Skip if the story is a small feature change within existing module boundaries.
 7. Create feature branch: `feature/[PROJECT_KEY]-S-042-description`
 8. Update story: `status: In Progress`
-9. **Dispatch to implementer.** Identify the appropriate implementer by looking up the project type(s) in the AGENT-CATALOG mapping tables. Provide contextual dispatch per the dispatch protocol. The orchestrator does NOT implement — it dispatches.
-   - **Lightweight dispatch** (trivial changes — single-file edits where the spec fully specifies the change and it's not a new feature, refactor, or architectural change): the orchestrator still dispatches to the implementer, but uses the lightweight dispatch path. The plan field is inline text rather than a spec file path.
-   - **Cross-domain stories** (spec contains a Task Decomposition section): each task runs in its own session with the appropriate domain implementer and its own evaluation cycle. See "Multi-Domain Story Completion" below.
-10. Invoke the **validator** agent to write tests for the new code
+9. **Branch on testing approach.** Read the sprint contract's testing
+   approach for this story (assigned by the scrum master during sprint
+   planning). The testing approach determines implementation flow:
+
+   **If testing approach = TDD:**
+   1. Dispatch the **test-writer** in **spec-first mode** — strict
+      dispatch with approved spec and test conventions only (no source
+      paths). The test-writer writes tests for one behavior or a small
+      batch of related behaviors (one vertical slice).
+   2. Dispatch the **implementer** — contextual dispatch per the
+      dispatch protocol, plus a "Tests to pass" field pointing to the
+      failing tests from step 1. The implementer writes the minimum
+      code necessary to make those specific tests pass.
+   3. Repeat steps 1-2 for each remaining behavior identified in the
+      spec. The orchestrator manages the loop. When the tool supports
+      persistent agent sessions (e.g., Claude Code), reuse the same
+      test-writer and implementer sessions across cycles to preserve
+      context. When it does not (e.g., Copilot subagents), each
+      dispatch is self-contained — include all prior test files and
+      implementation files in the dispatch payload.
+   4. Once all spec behaviors have passing tests, dispatch the
+      implementer for **refactor** — same dispatch plus instruction
+      to improve code structure while keeping tests green.
+   5. (Optional, if story is architecturally flagged or code-reviewer's
+      Module Depth criterion scored Partial/Fail) Dispatch the
+      **architect** in review mode after refactor.
+   6. Proceed to Completing a Story (Evaluation Cycle).
+
+   **If testing approach = Test-informed:**
+   1. Dispatch the **implementer** — contextual dispatch per the
+      dispatch protocol. The implementer has access to the spec's
+      Test Boundaries section (if produced by the planner), which
+      identifies expected behaviors, I/O contracts, and edge cases
+      that tests will cover. This shapes implementation choices
+      (keeping interfaces testable, not hiding logic in private
+      methods) but does not change the dispatch mechanics.
+   2. Dispatch the **test-writer** in **coverage mode** — strict
+      dispatch with spec, source paths, and test conventions.
+   3. (Optional) Dispatch the implementer for refactor if the
+      test-writer identified structural issues.
+   4. Proceed to Completing a Story (Evaluation Cycle).
+
+   **If testing approach = Test-after (or not specified):**
+   1. Dispatch the **implementer** — contextual dispatch per the
+      dispatch protocol.
+   2. Proceed to Completing a Story (Evaluation Cycle). The
+      test-writer is invoked during the evaluation cycle as before.
+
+   **Lightweight dispatch** (trivial changes — single-file edits where
+   the spec fully specifies the change and it's not a new feature,
+   refactor, or architectural change): the orchestrator still
+   dispatches to the implementer, but uses the lightweight dispatch
+   path. Testing approach defaults to test-after for lightweight
+   dispatch.
+
+   **Cross-domain stories** (spec contains a Task Decomposition
+   section): each task runs in its own session with the appropriate
+   domain implementer and its own evaluation cycle. The testing
+   approach applies per-task. See "Multi-Domain Story Completion"
+   below.
 
 ## Completing a Story (Evaluation Cycle)
 
@@ -54,9 +110,12 @@ Before marking a story complete, run the full evaluation cycle:
 5. Invoke the **reviewer** agent — strict dispatch with spec, file
    paths, and rubric pointer. The reviewer reviews against acceptance
    criteria, rubrics, and runs security scans
-6. Invoke the **validator** agent — strict dispatch. It verifies test
-   coverage meets rubric standards and runs E2E verification if
-   applicable
+6. Invoke the **validator** agent — strict dispatch (coverage mode).
+   For TDD stories, the test-writer verifies that no tests were
+   broken during refactor and checks for coverage gaps beyond the
+   spec-first tests. For test-informed stories, the test-writer
+   verifies coverage. For test-after stories, the test-writer writes
+   and verifies tests. Runs E2E verification if applicable.
 7. Invoke the **planner** agent in **validation mode** — strict
    dispatch. It verifies acceptance criteria from the sprint contract
    are met

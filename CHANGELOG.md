@@ -6,6 +6,65 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.16.0
+
+TDD Integration introduces a graduated testing approach to the development workflow. Instead of a single "implement then test" flow, each sprint story is now assigned a testing approach by the scrum master during sprint planning: TDD (high complexity — spec-first tests before code, implementation in vertical slices), test-informed (medium complexity — implementer codes with awareness of test boundaries, then test-writer verifies), or test-after (low complexity — implement, then verify). The test-writer gains a spec-first mode for TDD stories: it writes behavioral tests from the approved spec without seeing code, producing tests that verify public interfaces rather than implementation details. The development workflow branches on testing approach, and sprint contracts carry the approach per story. For tools that support persistent agent sessions (Claude Code), the orchestrator reuses test-writer and implementer sessions across TDD cycles; for tools that don't (Copilot subagents), each dispatch is self-contained.
+
+### Core (new — consumer projects should copy)
+
+- `core/evals/baseline/validator/eval-004-spec-first-no-code.md` — **NEW.** Baseline eval case for spec-first mode: tests whether the test-writer can produce behavioral tests from a spec without reading source code. Synthetic — should be refined from real observations once projects use TDD.
+
+### Core (changed — consumer projects should update)
+
+- `core/agents/archetypes/validator.md` — **CHANGED.** Added Modes section defining spec-first and coverage modes. Spec-first mode: input is spec only (no source paths), output is behavioral tests against the public interface. Coverage mode: existing behavior, now explicitly labeled. Added spec-first behavioral rule: do not read or reference source code in spec-first mode.
+- `core/agents/test-writer.md` — **CHANGED.** Added role description noting two modes. Added Spec-First Mode section before existing Test Writing section (now renamed to Coverage Mode): input is spec only, anti-patterns (no horizontal slicing, no implementation details, no reading source code), insufficient-spec reporting. Coverage Mode section gets a brief introductory sentence.
+- `core/agents/product-manager.md` — **CHANGED.** Added optional "Test Boundaries" section to the spec template for test-informed stories. Identifies expected behaviors, I/O contracts, and edge cases so the implementer keeps interfaces testable.
+- `core/agents/scrum-master.md` — **CHANGED.** Added step 6 "Assess testing approach per story" to Sprint Planning: TDD/test-informed/test-after assignment criteria, assessment questions, recording in sprint contract. Subsequent steps renumbered (old 6→7 through old 12→13). Step 10 (create sprint artifacts) updated to include testing approach from step 6.
+- `core/workflows/development-workflow.md` — **CHANGED.** Replaced step 9 (dispatch to implementer) and step 10 (invoke validator) with testing approach branching: TDD flow (spec-first test-writer → implementer vertical slices → repeat → refactor → optional architect), test-informed flow (implementer → test-writer coverage → optional refactor), test-after flow (implementer → evaluation cycle). Added note on persistent agent session reuse for TDD. Updated evaluation cycle step 6 to note test-writer behavior varies by testing approach.
+- `core/workflows/dispatch-protocol.md` — **CHANGED.** Split Test Writer contract into two: "Test Writer — Spec-First Mode" (no source paths, spec is only source of truth) and "Test Writer — Coverage Mode" (existing contract, now labeled). Added conditional "Tests to pass" field to all 5 implementer contracts (Software Engineer, Data Engineer, Data Analyst, ML Engineer, AI Engineer) — required for TDD stories, includes vertical slice discipline instruction. Data Analyst field scoped to data-app projects only (not applicable to analytics-workspace tasks).
+- `core/rubrics/test-rubric.md` — **CHANGED.** Added criterion #9 "Spec-First Quality" (HIGH weight, TDD stories only): Pass/Partial/Fail grading for behavioral focus, interface-level testing, implementation independence. N/A for non-TDD stories. Added N/A clarification note to Verdict Scale.
+- `core/topologies/Sprint-Contract-Pipeline.md` — **CHANGED.** Added "Testing approach" field to Overview section. Updated Stage 2 Build agent description to reference testing approach flow.
+- `core/topologies/Sprint-Contract-Mesh.md` — **CHANGED.** Added "Testing Approach" section with testing approach field to each per-story template block.
+- `core/topologies/Sprint-Contract-Hierarchical.md` — **CHANGED.** Added "Testing Approach" section with testing approach field to each per-story template block.
+
+### Integrations (changed — consumer projects should update)
+
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Added "Graduated Testing Approach" subsection to Testing Rules with TDD/test-informed/test-after descriptions and Claude Code-specific guidance (reuse agent sessions via SendMessage). Existing testing rules moved under "General Testing Rules" subheading. Updated Development Workflow summary to include testing approach branching. Updated Validator role behavior to describe spec-first and coverage modes.
+- `integrations/copilot/copilot-instructions.md` — **CHANGED.** Parallel changes: Graduated Testing Approach in Testing Rules with Copilot-specific guidance (self-contained dispatches for subagents without session persistence). Updated Development Workflow summary.
+
+### Operational docs (changed — no consumer action needed)
+
+- `MIGRATIONS.md` — **CHANGED.** Added 0.16.0 entry with TDD integration migration guidance.
+
+### Consumer update instructions
+
+Projects on 0.15.x should:
+
+**New files (copy to your Fabrika path):**
+1. Copy `core/evals/baseline/validator/eval-004-spec-first-no-code.md`
+
+**Changed files (all projects — update from Fabrika source):**
+2. Update `core/agents/archetypes/validator.md`
+3. Update `core/agents/test-writer.md`
+4. Update `core/agents/product-manager.md`
+5. Update `core/agents/scrum-master.md`
+6. Update `core/workflows/development-workflow.md`
+7. Update `core/workflows/dispatch-protocol.md`
+8. Update `core/rubrics/test-rubric.md`
+9. Update `core/topologies/Sprint-Contract-Pipeline.md`
+10. Update `core/topologies/Sprint-Contract-Mesh.md`
+11. Update `core/topologies/Sprint-Contract-Hierarchical.md`
+12. Update your integration template (CLAUDE.md or copilot-instructions.md)
+
+**Behavioral changes (all sprint-based projects):**
+13. Sprint planning now assigns a testing approach per story (TDD, test-informed, or test-after). The scrum master handles this automatically.
+14. The development workflow branches on testing approach. TDD stories go through RED-GREEN-REFACTOR cycles; test-informed and test-after stories follow their respective flows.
+15. Sprint contracts carry a testing approach field per story. Existing sprint contracts don't need retroactive updating — the field will be added in future sprints.
+16. The test-writer now has two modes. Spec-first mode activates automatically when dispatched without source paths (TDD stories). Coverage mode is the existing behavior.
+17. For test-informed stories, the planner produces a Test Boundaries section in the spec. This is optional — omit for TDD and test-after stories.
+
+---
+
 ## 0.15.0
 
 Domain Language elevates the old Glossary (Tier 4, static, optional) to a first-class living vocabulary document (Tier 1, all project types). Each term carries a plain-language definition, a mandatory code-level name (populated at implementation), relationships to other terms, and anti-terms. Terms are captured during Design Alignment, consumed by planners and implementers via dispatch contracts, checked during code review (Terminology Consistency criterion), and audited during maintenance (Terminology Drift Check). Briefings draw their jargon glossary from Domain Language rather than inventing definitions ad hoc. For multi-type projects, domain area sections disambiguate term collisions. For analytics-workspace, Domain Language covers business vocabulary while the source registry covers data infrastructure vocabulary.

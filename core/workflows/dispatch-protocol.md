@@ -318,7 +318,29 @@ its own assessment.
 
 ---
 
-### Test Writer
+### Test Writer — Spec-First Mode (TDD Stories)
+
+**Tier:** Strict
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Approved spec | Yes | The spec defining expected behavior — this is the ONLY source of truth (no code exists yet) |
+| Sprint contract criteria | Yes | Acceptance criteria for this story |
+| Rubric pointer | Yes | Path to `docs/02-Engineering/rubrics/test-rubric.md` |
+| Test conventions | Yes | Test runner, commands, coverage targets, fixture patterns (from project instructions) |
+| Existing test files | Yes | Paths to existing tests so the validator avoids duplication |
+| Structural constraints | Conditional | Path to `docs/02-Engineering/Structural-Constraints.md` if it exists |
+
+**Do not provide:** Source paths (code does not exist yet), hints
+about implementation approach, suggested test cases. The test writer
+designs its own tests from the spec.
+
+**Output expected:** Test file(s) in `tests/`, concise summary of
+what behavior each test verifies.
+
+---
+
+### Test Writer — Coverage Mode (Test-Informed and Test-After Stories)
 
 **Tier:** Strict
 
@@ -472,6 +494,7 @@ tailored to methodology work.
 | API Design Guide pointer | Conditional | Required for library projects — path to API Design Guide |
 | Structural Constraints pointer | Conditional | Path to Structural Constraints doc if it exists |
 | Domain Language pointer | Conditional | Path to Domain Language doc if it exists — implementer uses its terms for naming and populates code-level names for newly implemented concepts |
+| Tests to pass | Conditional | Paths to failing tests the implementer must make pass — required for TDD stories, omitted for test-informed and test-after. The implementer writes the minimum code necessary to make these specific tests pass, not the full spec implementation. This enforces vertical slice discipline in TDD. |
 
 **Output expected:** Changed files, implementation summary, spec
 deviations flagged.
@@ -493,6 +516,7 @@ deviations flagged.
 | Source Contracts pointer | Conditional | Required if touching ingestion — path to Source System Contracts |
 | Serving Contracts pointer | Conditional | Required if touching serving layer — path to Serving Contracts |
 | Domain Language pointer | Conditional | Path to Domain Language doc if it exists — implementer uses its terms for naming and populates code-level names for newly implemented concepts |
+| Tests to pass | Conditional | Paths to failing tests the implementer must make pass — required for TDD stories. The implementer writes the minimum code necessary to make these specific tests pass. |
 
 **Output expected:** Changed files, implementation summary, spec
 deviations flagged.
@@ -511,6 +535,7 @@ deviations flagged.
 | Source detail pointers | Conditional | Specific source docs if the work targets known sources |
 | Owner constraints | Optional | Preferences or constraints from the conversation |
 | Domain Language pointer | Conditional | Path to Domain Language doc if it exists — implementer uses its terms for naming and populates code-level names for newly implemented concepts |
+| Tests to pass | Conditional | Paths to failing tests the implementer must make pass — required for TDD stories in data-app projects. Not applicable to analytics-workspace tasks (no sprint lifecycle). The implementer writes the minimum code necessary to make these specific tests pass. |
 
 **Output expected:** Changed files, implementation summary, spec
 deviations flagged.
@@ -533,6 +558,7 @@ deviations flagged.
 | Evaluation Criteria pointer | Conditional | Required if touching evaluation — path to Model Evaluation Criteria |
 | Prior experiments | Conditional | Paths to prior experiment reports if this is an iteration |
 | Domain Language pointer | Conditional | Path to Domain Language doc if it exists — implementer uses its terms for naming and populates code-level names for newly implemented concepts |
+| Tests to pass | Conditional | Paths to failing tests the implementer must make pass — required for TDD stories. The implementer writes the minimum code necessary to make these specific tests pass. |
 
 **Output expected:** Changed files, implementation summary, spec
 deviations flagged. Include compute resource estimates if applicable.
@@ -556,6 +582,7 @@ deviations flagged. Include compute resource estimates if applicable.
 | Evaluation Strategy pointer | Conditional | Required if touching eval — path to Evaluation Strategy |
 | RAG Architecture pointer | Conditional | Required if touching retrieval — path to RAG Architecture |
 | Domain Language pointer | Conditional | Path to Domain Language doc if it exists — implementer uses its terms for naming and populates code-level names for newly implemented concepts |
+| Tests to pass | Conditional | Paths to failing tests the implementer must make pass — required for TDD stories. The implementer writes the minimum code necessary to make these specific tests pass. |
 
 **Output expected:** Changed files, implementation summary, spec
 deviations flagged. Include token usage impact estimates if applicable.
