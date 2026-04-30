@@ -6,6 +6,79 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.18.0
+
+Wiki Knowledge Layer for consumer projects. Adds a structured pipeline that automatically consolidates scattered project artifacts (ADRs, retro findings, evaluation reports, research docs) into organized, continuously updated topic articles in a `wiki/` directory. The pipeline has five phases: Extract (pull content from artifacts), Index (score salience, produce batch JSON intermediates), Synthesize (cluster by topic, write/update articles), Link (cross-reference related topics), Glossary (feed new terms back to Domain Language). Topic articles are created via a notice-and-proceed model — the agent creates and notifies the owner, proceeding unless the owner objects. The wiki serves dual audiences: humans get a progressive narrative overview from zero understanding to full context; agents get structured topic articles for on-demand domain reference. A comprehensive salience model maps all Document Catalog artifact types to S1 (high — owner-approved foundational documents), S2 (medium — reviewed workflow output), or S3 (foundational — unvalidated raw material). Sprint-based projects run Extract+Index during maintenance, Synthesize+Link every 2-3 sprints, and full reintegration quarterly. Analytics-workspace projects index after each task delivery and synthesize monthly. A backfill mechanism (Phase 0) handles one-time population for projects with existing artifacts during bootstrap, adoption, or Fabrika update, with chat-size assessment for large projects. Domain Language alignment is enforced: wiki articles use Domain Language terms, and the Glossary phase flags new concepts for addition.
+
+### Core (new — consumer projects should copy)
+
+- `core/workflows/knowledge-pipeline.md` — **NEW.** Full 5-phase pipeline specification: Extract, Index, Synthesize, Link, Glossary. Includes comprehensive salience model mapping all Document Catalog artifact types, cadence tables for sprint-based and analytics-workspace projects, wiki directory structure with progressive narrative index, backfill (Phase 0) specification, and design properties (batch index stability, per-domain wikis, synthesis threshold, deduplication).
+- `core/workflows/knowledge-synthesis.md` — **NEW.** Step-by-step maintenance workflow for the knowledge pipeline. Covers incremental synthesis (Phases 1-2 every maintenance, Phases 3-5 when synthesis trigger met), quarterly reintegration (full pipeline with topic retirement and narrative rebuild), backfill (Phase 0 for adoption/update with chat-size assessment), and wiki knowledge usage guidance for agents (check wiki first, use during brainstorming/alignment).
+- `core/templates/Wiki-Topic-Template.md` — **NEW.** Template for wiki topic articles. Sections: Summary, Key Decisions, Current State, Open Questions, Related Topics, Sources. Includes dual-audience writing guidelines, Domain Language alignment rules, synthesis threshold, and progressive depth guidance.
+- `core/templates/Batch-Index-Schema.md` — **NEW.** JSON schema for batch index files (`wiki/meta/batch-YYYY-MM-DD.json`). Defines per-artifact fields (source path, type, hash, salience, extracted content, topic candidates, dedup key) and index statistics. Documents deduplication rules across and within batches.
+
+### Core (changed — consumer projects should update)
+
+- `core/maintenance-checklist.md` — **CHANGED.** Added "Knowledge Synthesis" section after Architecture Review with conditional gate (only runs when `wiki/` exists). Steps: identify new artifacts, run Extract+Index, check synthesis trigger, run Synthesize+Link+Glossary when triggered, run quarterly reintegration when due. Added `knowledge-synthesis-YYYY-MM-DD.md` to maintenance output files. Added knowledge synthesis line to Maintenance Summary Format.
+- `core/Document-Catalog.md` — **CHANGED.** Added `wiki/` section with four entries: wiki/index.md (Tier 2), wiki/topics/ (Tier 2), wiki/meta/ (Tier 3), wiki/meta/last-reintegration.md (Tier 3). Added knowledge-synthesis-YYYY-MM-DD.md to maintenance/ section. Added Wiki-Topic-Template.md and Batch-Index-Schema.md to Templates section. Updated Quick Reference for all project types: wiki/index.md and wiki/topics/ added to Tier 2 (sprint-based), As needed (analytics-workspace), and Knowledge layer (agentic-workflow). wiki/meta/ added to Tier 3 for all types.
+- `core/workflows/doc-triggers.md` — **CHANGED.** Added two trigger rows: recurring theme across 2+ artifacts during maintenance (write/update wiki topic) and wiki backfill needed (run backfill procedure with chat-size assessment).
+- `core/workflows/sprint-lifecycle.md` — **CHANGED.** Added "Knowledge Pipeline Cadence" section after Sprint Lifecycle Hygiene. Documents per-sprint Extract+Index, 2-3 sprint Synthesize+Link trigger, and quarterly reintegration trigger with date-based conditional.
+- `core/workflows/analytics-workspace.md` — **CHANGED.** Added "Knowledge Pipeline Cadence" section after Task Promotion. Documents per-task-delivery Extract+Index, monthly Synthesize+Link, and quarterly reintegration. Notes that Extract+Index runs automatically as part of the Deliver step when wiki/ exists.
+
+### Root-level docs (changed — consumer projects should update if applicable)
+
+- `BOOTSTRAP.md` — **CHANGED.** Added wiki/ to both sprint-based and analytics-workspace directory trees. Added step 1.3a "Wiki knowledge layer" with user question (default yes), directory creation, and backfill guidance. Added "Wiki" section to readiness checklist.
+- `ADOPT.md` — **CHANGED.** Added "Wiki Knowledge Layer" subsection to Tier 1 (applies to all tiers). Includes user question (default yes), directory creation, backfill assessment with chat-size threshold (~30 artifacts), and manifest update.
+
+### Integrations (changed — consumer projects should update)
+
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Added wiki/ to both sprint-based and analytics-workspace project structure trees. Added knowledge synthesis bullet to Maintenance Sessions summary. Added "Wiki Knowledge Layer" section with agent guidance: check wiki/index.md first for project narrative, check wiki/topics/ before grepping raw artifacts, draw on wiki during brainstorming/alignment. Includes workflow and pipeline file pointers.
+- `integrations/copilot/copilot-instructions.md` — **CHANGED.** Parallel changes for Copilot parity: wiki/ in project structure trees, knowledge synthesis in maintenance summary, Wiki Knowledge Layer section with same agent guidance.
+
+### Operational docs (changed — no consumer action needed)
+
+- `MIGRATIONS.md` — **CHANGED.** Added 0.18.0 entry with wiki knowledge layer migration guidance.
+
+### Consumer update instructions
+
+Projects on 0.17.x should:
+
+**New files (copy to your Fabrika path):**
+1. Copy `core/workflows/knowledge-pipeline.md`
+2. Copy `core/workflows/knowledge-synthesis.md`
+3. Copy `core/templates/Wiki-Topic-Template.md`
+4. Copy `core/templates/Batch-Index-Schema.md`
+
+**Changed files (all projects — update from Fabrika source):**
+5. Update `core/maintenance-checklist.md`
+6. Update `core/Document-Catalog.md`
+7. Update `core/workflows/doc-triggers.md`
+8. Update your integration template (CLAUDE.md or copilot-instructions.md)
+
+**Changed files (sprint-based projects):**
+9. Update `core/workflows/sprint-lifecycle.md`
+
+**Changed files (analytics-workspace projects):**
+10. Update `core/workflows/analytics-workspace.md`
+
+**Changed files (projects using bootstrap/adopt):**
+11. Update `BOOTSTRAP.md`
+12. Update `ADOPT.md`
+
+**Wiki setup (all projects — recommended):**
+13. Create `wiki/` directory with `index.md` (stub with project name), `topics/`, and `meta/` subdirectories
+14. If the project has existing artifacts (ADRs, retros, eval reports, etc.), run the backfill procedure from `core/workflows/knowledge-synthesis.md` to populate the wiki. Under 30 artifacts: run inline. 30+ artifacts: run in a dedicated chat.
+15. The knowledge synthesis step in maintenance will activate automatically once `wiki/` exists
+
+**Behavioral changes (all projects with wiki/):**
+16. Maintenance sessions include a Knowledge Synthesis step (after Architecture Review) that extracts+indexes new artifacts and triggers synthesis when 3+ batch indexes accumulate
+17. Topic articles are created via notice-and-proceed: the agent creates and notifies, proceeding unless the owner objects
+18. Quarterly reintegration runs automatically when 3+ months have elapsed, re-scoring salience and rebuilding the wiki narrative
+19. The Glossary pipeline phase checks for concepts not in Domain Language and flags them for addition
+20. Agents are instructed to check wiki/index.md and wiki/topics/ before grepping raw artifacts, and to draw on wiki knowledge during brainstorming and alignment conversations
+
+---
+
 ## 0.17.0
 
 Briefing system improvements across all three project type categories. Adds concrete translation examples to sprint-based briefings (topology choices, evaluation findings), resolves the token cost visibility conflict (the owner now sees token costs in session summaries, not just retros), and establishes a canonical token cost format using approximate model-tier ranges that survive pricing changes. Per-agent-role cost breakdowns are always included so the owner can see where tokens are being spent. Sprint retros gain a drill-down structure: sprint total prominent, per-story costs in the main table, per-agent breakdown as glossable detail underneath. Analytics-workspace gains two new briefing formats (task plan, task outcome) so analysis projects get the same structured communication as sprint-based projects. Agentic-workflow gains two new briefing formats (structural plan, change summary) codifying the informal pattern used at Steps 2 and 6 of the lifecycle. Spec briefings gain explicit guidance on explaining design alternatives in user-impact terms rather than implementation technology. All briefing formats are now listed in briefing-principles.md and both integration templates.

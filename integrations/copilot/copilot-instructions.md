@@ -79,6 +79,10 @@ The AI agent orchestrates the entire development workflow. The human's role is d
 │   │   ├── baseline/               # Shipped eval cases by archetype
 │   │   └── [agent-name]/           # Project-specific eval cases
 │   └── maintenance/
+├── wiki/                           # Knowledge layer (opt-in, default recommended)
+│   ├── index.md                    # Progressive narrative overview
+│   ├── topics/                     # Synthesized topic articles
+│   └── meta/                      # Pipeline intermediates (agent-only)
 ├── .fabrika/
 ├── src/
 ├── tests/
@@ -111,6 +115,10 @@ The AI agent orchestrates the entire development workflow. The human's role is d
 │   ├── connections/
 │   ├── tools/
 │   └── files/
+├── wiki/                           # Knowledge layer (opt-in, default recommended)
+│   ├── index.md                    # Progressive narrative overview
+│   ├── topics/                     # Synthesized topic articles
+│   └── meta/                      # Pipeline intermediates (agent-only)
 ├── docs/
 │   ├── Templates/
 │   ├── evaluations/
@@ -374,9 +382,24 @@ See `docs/evals/README.md` for detailed format and process.
 
 Run between sprints or weekly. See full checklist at `docs/02-Engineering/maintenance-checklist.md`.
 
-**Summary:** Documentation sync, code quality (dedup, TODO scan), evaluation findings sweep, test health, bug review, progress reconciliation, dependency health, architecture review (conditional — after major features, on request, or when code-reviewer flags structural concerns), context efficiency review, hook health, evaluation health (run evals, propose prompt improvements).
+**Summary:** Documentation sync, code quality (dedup, TODO scan), evaluation findings sweep, test health, bug review, progress reconciliation, dependency health, architecture review (conditional — after major features, on request, or when code-reviewer flags structural concerns), knowledge synthesis (conditional — when `wiki/` exists: extract+index new artifacts, synthesize topic articles when trigger met, update wiki narrative), context efficiency review, hook health, evaluation health (run evals, propose prompt improvements).
 
 **Git convention:** `maint:` commit prefix. `git tag maintenance-YYYY-MM-DD && git tag -f maintenance-latest`.
+
+---
+
+## Wiki Knowledge Layer
+
+If this project has a `wiki/` directory, it contains a knowledge layer that synthesizes scattered project artifacts (ADRs, retros, evaluation reports, research docs) into organized, continuously updated topic articles. The wiki serves both humans and agents:
+
+- **Check `wiki/index.md` first** for a narrative overview of the project — from what it is and why it exists, through its major knowledge domains, to its current state and open questions. This is faster and more complete than searching individual files.
+- **Check `wiki/topics/`** for synthesized knowledge on specific subjects before grepping through raw artifacts.
+- **During brainstorming and alignment conversations**, draw on wiki topics to surface relevant project history, past decisions, and open questions.
+
+The wiki is maintained automatically during maintenance sessions (see the Knowledge Synthesis section of the maintenance checklist). Topic articles are created via a notice-and-proceed model — the agent creates and notifies the owner, proceeding unless the owner objects. All topic articles use Domain Language terms.
+
+**For the synthesis workflow, read:** `[FABRIKA_PATH]/core/workflows/knowledge-synthesis.md`
+**For the pipeline specification, read:** `[FABRIKA_PATH]/core/workflows/knowledge-pipeline.md`
 
 ---
 

@@ -136,6 +136,10 @@ The verification approach depends on project type:
 │       ├── full-test-*.md
 │       ├── deps-*.md
 │       └── context-review-*.md
+├── wiki/                              # Knowledge layer (opt-in, default recommended)
+│   ├── index.md                       # Progressive narrative overview of project knowledge
+│   ├── topics/                        # Synthesized topic articles
+│   └── meta/                         # Pipeline intermediates (batch indexes, agent-only)
 ├── src/
 ├── tests/
 │   ├── fixtures/
@@ -173,6 +177,10 @@ The verification approach depends on project type:
 │   ├── connections/                   # Queryable data sources
 │   ├── tools/                         # BI/ETL tools (advisory mode)
 │   └── files/                         # Recurring flat file sources
+├── wiki/                              # Knowledge layer (opt-in, default recommended)
+│   ├── index.md                       # Progressive narrative overview
+│   ├── topics/                        # Synthesized topic articles
+│   └── meta/                         # Pipeline intermediates (agent-only)
 ├── docs/
 │   ├── Templates/
 │   ├── evaluations/
@@ -379,11 +387,27 @@ Run between sprints or weekly (whichever comes first). See full checklist at `do
 - Progress file reconciliation (STATUS.md accuracy, sprint progress completeness)
 - Dependency health (outdated packages, security advisories — report only, do NOT auto-update)
 - Architecture review (conditional — after major features, on request, or when code-reviewer flags structural concerns)
+- Knowledge synthesis (conditional — when `wiki/` exists: extract+index new artifacts, synthesize topic articles when trigger met, update wiki narrative)
 - Context efficiency review (scan session logs for wasteful patterns)
 - Hook health (verify hooks match current test runner and sprint configuration)
 - Evaluation health (review agent-changelog.md, build/update eval cases, run evals, propose prompt improvements)
 
 **Git convention:** `maint:` commit prefix. `git tag maintenance-YYYY-MM-DD && git tag -f maintenance-latest` after completion.
+
+---
+
+## Wiki Knowledge Layer
+
+If this project has a `wiki/` directory, it contains a knowledge layer that synthesizes scattered project artifacts (ADRs, retros, evaluation reports, research docs) into organized, continuously updated topic articles. The wiki serves both humans and agents:
+
+- **Check `wiki/index.md` first** for a narrative overview of the project — from what it is and why it exists, through its major knowledge domains, to its current state and open questions. This is faster and more complete than searching individual files.
+- **Check `wiki/topics/`** for synthesized knowledge on specific subjects before grepping through raw artifacts.
+- **During brainstorming and alignment conversations**, draw on wiki topics to surface relevant project history, past decisions, and open questions.
+
+The wiki is maintained automatically during maintenance sessions (see the Knowledge Synthesis section of the maintenance checklist). Topic articles are created via a notice-and-proceed model — the agent creates and notifies the owner, proceeding unless the owner objects. All topic articles use Domain Language terms.
+
+**For the synthesis workflow, read:** `[FABRIKA_PATH]/core/workflows/knowledge-synthesis.md`
+**For the pipeline specification, read:** `[FABRIKA_PATH]/core/workflows/knowledge-pipeline.md`
 
 ---
 

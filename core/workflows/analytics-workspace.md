@@ -51,3 +51,23 @@ Promoted task assets:
 - `src/scripts/` and `src/queries/` — parameterized scripts (Level 2)
 - `recurring/` — automated, scheduled analyses (Level 4)
 - `recurring/README.md` — index of all recurring analyses
+
+## Knowledge Pipeline Cadence
+
+When an analytics workspace has a `wiki/` directory, the knowledge
+pipeline runs at cadences tied to task delivery rather than sprints.
+For the full pipeline specification, see
+`[FABRIKA_PATH]/core/workflows/knowledge-pipeline.md`. For the
+step-by-step procedure, see
+`[FABRIKA_PATH]/core/workflows/knowledge-synthesis.md`.
+
+| Cadence | Pipeline Phases | What Happens |
+|---------|----------------|--------------|
+| After each task delivery | Phases 1-2 (Extract + Index) | Index the task's brief, plan, and outcome as a batch in `wiki/meta/` |
+| Monthly or on demand | Phases 3-4 (Synthesize + Link) | Synthesize recurring themes across tasks, update topic articles and `wiki/index.md` narrative. Triggered when 3+ batch indexes exist without a synthesis pass, or on owner request. |
+| Quarterly | All phases (full reintegration) | Re-score salience, rewrite stale articles, merge/retire topics, rebuild narrative, clean up batch entries. Triggered when 3+ months since last reintegration. |
+
+Extract+Index runs as part of the Deliver step (step 6 in the task
+lifecycle) when a `wiki/` directory exists. After the outcome report
+is written, the agent indexes the task's brief, plan, and outcome
+as a batch. This is automatic — no additional user action required.
