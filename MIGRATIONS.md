@@ -4,6 +4,35 @@ When a Fabrika update requires consumer projects to do more than a straight file
 
 ---
 
+## 0.16.0 — TDD Integration
+
+**Affects:** All sprint-based consumer projects. Analytics-workspace and agentic-workflow projects are not affected (TDD is a sprint-based workflow concept).
+
+**What changed:** The development workflow now supports three testing approaches per story: TDD (spec-first tests before code, implementation in vertical slices), test-informed (implementer codes with awareness of test boundaries, then test-writer verifies), and test-after (existing behavior — implement, then test during evaluation cycle). The scrum master assigns the approach during sprint planning based on story complexity and risk. Sprint contracts carry the testing approach per story. The test-writer has two modes: spec-first (TDD — writes behavioral tests from the spec without seeing code) and coverage (test-informed/test-after — existing behavior). The test rubric gains a spec-first quality criterion for TDD stories. All five implementer dispatch contracts gain a conditional "Tests to pass" field for TDD stories.
+
+**Migration steps:**
+
+1. **Copy new file.** Copy `core/evals/baseline/validator/eval-004-spec-first-no-code.md` to your Fabrika path.
+
+2. **Update changed core files.** Update the following from the Fabrika source: `core/agents/archetypes/validator.md`, `core/agents/test-writer.md`, `core/agents/product-manager.md`, `core/agents/scrum-master.md`, `core/workflows/development-workflow.md`, `core/workflows/dispatch-protocol.md`, `core/rubrics/test-rubric.md`, `core/topologies/Sprint-Contract-Pipeline.md`, `core/topologies/Sprint-Contract-Mesh.md`, `core/topologies/Sprint-Contract-Hierarchical.md`.
+
+3. **Update changed integration file.** Update your integration template (CLAUDE.md or copilot-instructions.md).
+
+4. **No retroactive sprint contract updates needed.** Existing sprint contracts don't have the testing approach field — that's fine. The scrum master will add it during future sprint planning. Stories without a testing approach default to test-after (the previous behavior), so nothing breaks.
+
+5. **Behavioral changes.** After migration:
+   - The scrum master assigns TDD, test-informed, or test-after per story during sprint planning
+   - The development workflow branches on this field at story start
+   - TDD stories go through RED-GREEN-REFACTOR cycles: test-writer writes spec-first tests → implementer writes minimal code to pass → repeat → refactor
+   - Test-informed stories: implementer codes with test boundary awareness → test-writer verifies
+   - Test-after stories: no change from previous behavior
+   - The test-writer activates spec-first mode automatically when dispatched without source paths
+   - The test rubric's new Spec-First Quality criterion is N/A for non-TDD stories — no impact on existing grading
+
+**Why this matters:** The previous workflow was "implement everything, then test." This produced tests shaped by the implementation (testing what the code does, not what it should do) and let agents outrun their headlights on complex stories. The graduated approach matches testing discipline to story risk: tight feedback loops for high-complexity work, light-touch verification for simple changes.
+
+---
+
 ## 0.15.0 — Domain Language
 
 **Affects:** All consumer projects. All project types now have Domain Language as Tier 1 (sprint-based types) or Onboarding/Core (analytics-workspace, agentic-workflow).

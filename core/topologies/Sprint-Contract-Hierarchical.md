@@ -37,6 +37,9 @@ Define all interfaces shared between tickets. All agents reference these definit
 
 ## [TICKET-1]: [Title] (Upstream — no dependencies)
 
+### Testing Approach
+- **Testing approach:** [TDD | Test-informed | Test-after]
+
 ### Produces
 - [What this ticket creates that downstream tickets depend on]
 - [e.g., "Exports `calculateScore(homeId)` function returning `HealthScore` type from `src/lib/health-score.ts`"]
@@ -50,6 +53,9 @@ Define all interfaces shared between tickets. All agents reference these definit
 ---
 
 ## [TICKET-2]: [Title] (Depends on: [TICKET-1])
+
+### Testing Approach
+- **Testing approach:** [TDD | Test-informed | Test-after]
 
 ### Dependency Context
 [Explain what this ticket needs from the upstream ticket. Be specific about the interface, function, data shape, or component it consumes.]

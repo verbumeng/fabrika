@@ -12,6 +12,7 @@ created: YYYY-MM-DD
 - **Topology:** Pipeline (plan → build → evaluate)
 - **Feature:** [TICKET] — [Feature Name]
 - **Story points:** [X]
+- **Testing approach:** [TDD | Test-informed | Test-after]
 - **Sprint dates:** YYYY-MM-DD to YYYY-MM-DD
 
 ## Stage 1: Plan
@@ -24,7 +25,7 @@ created: YYYY-MM-DD
 
 ## Stage 2: Build
 - **Entry condition:** Approved spec document
-- **Agent:** Main session (generator), with test-writer
+- **Agent:** Implementer + test-writer (flow depends on testing approach — see `core/workflows/development-workflow.md`)
 - **Exit condition:** Feature implemented, all tests passing, committed to feature branch
 - **Exit artifacts:**
   - [ ] Implementation complete per spec

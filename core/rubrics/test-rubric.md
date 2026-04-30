@@ -74,10 +74,33 @@ Is test output concise and agent-friendly?
 - **Partial:** Output is functional but verbose.
 - **Fail:** Test failures produce wall-of-text stack traces with no summary.
 
+### 9. Spec-First Quality — Weight: HIGH (TDD stories only)
+Are spec-first tests behavioral and implementation-independent?
+
+- **Pass:** Tests assert behavior through the public interface
+  described in the spec. Tests would survive a complete
+  reimplementation that satisfies the same spec. Each test covers
+  one behavior or a small group of related behaviors (vertical
+  slice). No tests reference internal functions, private methods, or
+  implementation-specific data structures.
+- **Partial:** Tests are behavioral but some couple to implementation
+  details — e.g., testing internal helper functions not part of the
+  public interface, or asserting specific implementation patterns
+  rather than outcomes.
+- **Fail:** Tests reference source code structure, test
+  implementation details, or were clearly written by reading the
+  implementation rather than the spec. Tests that would break on a
+  valid reimplementation are a hard fail.
+- **N/A:** Story's testing approach is not TDD. Skip this criterion.
+
 ## Verdict Scale
 - **PASS:** All CRITICAL criteria pass, no HIGH criteria fail.
 - **PASS WITH NOTES:** All CRITICAL criteria pass, 1 HIGH partial. Notes describe gaps.
 - **FAIL:** Any CRITICAL fail, OR 2+ HIGH fails. Specific gaps listed with instructions for what tests to add.
+
+N/A criteria (Structural Constraint Enforcement when no constraints
+doc exists, E2E Verification when not applicable, Spec-First Quality
+when not a TDD story) do not count toward the pass/fail threshold.
 
 ## Output Format
 Write your verification report to `docs/evaluations/[TICKET]-test-review.md` with:

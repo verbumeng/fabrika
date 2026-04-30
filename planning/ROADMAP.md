@@ -31,6 +31,12 @@ user starts a new Claude Code session and provides the execution prompt
 (see below). Each chat follows the system update protocol end-to-end:
 plan → align → execute → verify → incorporate → present → ship.
 
+## Follow-Up PRDs (Outside Original Roadmap)
+
+| PRD | Version | Status | Notes |
+|---|---|---|---|
+| [PRD-11: Analytics Pre-Execution Review](PRD-11-analytics-pre-execution-review.md) | TBD | Needs Design Alignment | Add pre-execution review gate to analytics-workspace so reviewers assess SQL before it hits the warehouse. Identified during PRD-07 alignment (2026-04-30). |
+
 ## Themes
 
 - **Agent model evolution** (PRDs 01-04): Pure orchestrator, implementer

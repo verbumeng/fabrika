@@ -297,7 +297,7 @@ Claude Code drives the development process proactively. Don't wait for the owner
 
 Summary of workflows covered:
 - **Design Alignment** — structured requirements gathering → Project Charter + PRD → fresh-chat handoff to sprint planning (see Design Alignment section above)
-- **Starting a Story** — spec expansion → approval → optional architect design review → branch → dispatch to implementer → evaluate → fix cycle
+- **Starting a Story** — spec expansion → approval → optional architect design review → branch → testing approach branching (TDD: test-writer spec-first → implementer vertical slices → refactor; test-informed: implementer → test-writer coverage; test-after: implementer → evaluation cycle) → evaluate → fix cycle
 - **Completing a Story (Evaluation Cycle)** — tests → lint → commit → reviewer → validator → planner validation → optional architect structural evaluation → rollback protocol (max 2 retries)
 - **Sprint Planning** — scrum-master receives approved PRD → topology assessment → 2-3 stories → contract → approval
 - **Ideation & Backlog Grooming** — new stories, re-scoping, someday-maybe
@@ -435,7 +435,7 @@ All agents are invoked proactively by Claude Code at the trigger points in the D
 **Role behaviors:**
 - **Planner** — Two modes: **planning mode** (expands stories into specs, invoked at story start) and **validation mode** (verifies acceptance criteria, invoked before marking done). Specialized planners adapt the spec format: experiment-planner produces experiment designs; api-designer produces API surface specs.
 - **Reviewer** — Reviews implementation against acceptance criteria, rubrics (`docs/02-Engineering/rubrics/code-review-rubric.md`), and security (semgrep). Checks for duplicates. Enforces mesh isolation scope. For ai-engineering, the prompt-reviewer is a supplemental reviewer that checks prompt quality, safety, and cost alongside the code-reviewer.
-- **Validator** — Writes tests and verifies coverage against rubric (`docs/02-Engineering/rubrics/test-rubric.md`). Runs E2E verification per project type. Specialized validators adapt: model-evaluator runs metric evals; eval-engineer runs LLM eval suites; data-quality-engineer tests at every pipeline lifecycle stage.
+- **Validator** — Two modes: **spec-first** (TDD stories — writes behavioral tests from the spec before code exists, one vertical slice at a time) and **coverage** (test-informed and test-after stories — writes tests after implementation, verifies coverage against rubric at `docs/02-Engineering/rubrics/test-rubric.md`). Mode is determined by dispatch: no source paths = spec-first, source paths present = coverage. Runs E2E verification per project type. Specialized validators adapt: model-evaluator runs metric evals; eval-engineer runs LLM eval suites; data-quality-engineer tests at every pipeline lifecycle stage.
 - **Coordinator** — Sprint planning, topology assessment, maintenance scheduling, retros. Also invoked when conversation drifts into prolonged deliberation.
 - **Implementer** — Writes production code against the approved spec. Dispatched by the orchestrator after spec approval — the orchestrator never writes code directly, even for trivial tasks. Specialized implementers carry domain expertise for their project type(s). For lightweight changes (single-file, fully specified, not a new feature), uses reduced-ceremony dispatch but still goes through the implementer agent.
 - **Architect** — Evaluates structural design: module depth, interface simplicity, component boundaries. Three modes: **design mode** (reviews proposed modules in a spec, invoked after spec approval), **review mode** (evaluates implemented changes, optional supplement to code-reviewer), and **ad hoc** (owner-initiated assessment of existing code). Specialized architects adapt: software-architect for web-app/automation/library/ai-engineering; data-architect for data-engineering/analytics-engineering/data-app/ml-engineering. Output is proposals and assessments, never code changes — refactor proposals require owner approval.
@@ -503,6 +503,31 @@ When creating or editing any doc in `docs/`:
 ---
 
 ## Testing Rules
+
+### Graduated Testing Approach
+Each sprint story is assigned a testing approach by the scrum master
+during sprint planning. The approach is recorded in the sprint
+contract per story and determines the implementation flow:
+
+- **TDD** (high complexity — new modules, complex logic, greenfield):
+  Test-writer writes spec-first tests before code exists,
+  implementer codes to pass them in vertical slices (one behavior at
+  a time), then refactor. The orchestrator alternates between
+  test-writer and implementer dispatches. Reuse agent sessions
+  across cycles when using Claude Code's Agent tool (SendMessage to
+  continue an existing agent preserves context).
+- **Test-informed** (medium complexity — modifying existing modules):
+  Implementer codes with awareness of test boundaries from the spec,
+  then test-writer writes tests in coverage mode.
+- **Test-after** (low complexity — config changes, minor fixes):
+  Implementer codes, test-writer verifies during the evaluation
+  cycle.
+
+The development workflow branches on testing approach. See
+`[FABRIKA_PATH]/core/workflows/development-workflow.md` for the
+full flow.
+
+### General Testing Rules
 - **No mocking the database.** Use in-memory or temp-file instances — fast and honest.
 - **Fixture-based tests** where applicable. Save real response snapshots in `tests/fixtures/`.
 - **Coverage:** 80%+ on core logic and storage.

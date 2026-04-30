@@ -50,6 +50,14 @@ status: draft
 - [ ] [Specific testable behavior 2]
 - [ ] [Specific testable behavior 3]
 
+## Test Boundaries (test-informed stories only)
+[For stories with a test-informed testing approach: identify the
+expected behaviors, input/output contracts, and edge cases that tests
+should cover. This shapes the implementer's decisions — keeping
+interfaces testable, not hiding logic in private methods. Omit this
+section for TDD stories (tests come from spec-first mode) and
+test-after stories (no upfront test planning).]
+
 ## Out of Scope
 [What this feature explicitly does NOT include. Prevents scope creep during implementation.]
 
