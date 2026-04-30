@@ -82,6 +82,19 @@ tags: [maintenance, workflow]
 - [ ] If `docs/02-Engineering/Structural-Constraints.md` exists, verify all declared constraints still have working enforcement (tests or lint rules that actually run)
 - [ ] Log pattern and lint curation findings to `docs/maintenance/patterns-YYYY-MM-DD.md`
 
+### Terminology Drift Check
+
+This section only runs when a Domain Language document exists at
+`docs/00-Index/Domain-Language.md`. If no Domain Language document
+exists, skip this section entirely.
+
+- [ ] Scan code for class names, function names, database columns, and variables that use different terms than the Domain Language definitions
+- [ ] Scan for Domain Language concepts that have been implemented in code but still have "not yet implemented" in the code-level name field — these need to be populated
+- [ ] Scan Domain Language for terms that no longer appear anywhere in the codebase or docs (candidates for removal or marking as deprecated)
+- [ ] Scan recent PRDs and specs for new domain concepts that were introduced but not added to Domain Language
+- [ ] If drift is found: either update the code to match Domain Language (trivial rename) or update Domain Language to reflect legitimate vocabulary evolution (with a note explaining the change)
+- [ ] Log terminology drift findings to `docs/maintenance/terminology-drift-YYYY-MM-DD.md`
+
 ### Architecture Review (Conditional)
 
 This section only runs when at least one of these conditions is true:
@@ -172,4 +185,5 @@ If none of the above conditions are true, skip this section entirely.
 - Agent improvements: [proposed X changes / none needed]
 - Architecture review: [X modules assessed, Y stories created, Z deferred / skipped — conditional trigger not met]
 - Hooks: [verified / updated X]
+- Terminology drift: [X drifts found, Y fixed, Z Domain Language updates / clean / skipped — no Domain Language document]
 ```

@@ -97,12 +97,21 @@ Does the implementation favor deep modules with simple interfaces over shallow m
 - **Fail:** Implementation adds significant interface complexity relative to functionality. Multiple new modules that are just pass-throughs. Changes to one module cascade interface changes through 3+ other modules.
 - **Notes:** This is the code-reviewer's lightweight structural check. The architect agent (if configured) performs the deep module depth analysis. When grading Partial, recommend invoking the architect as an evaluation supplement.
 
+### 12. Terminology Consistency — Weight: MEDIUM
+Do code names align with the project's Domain Language document?
+
+- **Pass:** Code uses terms from Domain Language consistently. Class names, function names, database columns, and variables align with the domain vocabulary. No ad hoc synonyms for terms that have Domain Language definitions. If the implementer implemented a Domain Language concept, the code-level name field in the Domain Language document has been populated.
+- **Partial:** Code uses some Domain Language terms but introduces alternative names for some concepts (e.g., Domain Language defines "Order" but code uses "Purchase" in some places). Or code-level names are populated for some implemented concepts but not all.
+- **Fail:** Code systematically uses different terminology from Domain Language, creating a translation layer between the domain model and the code. Or multiple Domain Language concepts were implemented without populating their code-level names.
+- **N/A:** Skip if no Domain Language document exists for this project.
+- **Notes:** This is a naming alignment check, not a deep semantic analysis. If the code introduces a legitimate new concept not yet in the Domain Language, the reviewer should flag it for addition rather than marking it as a failure. The code-level name field in the Domain Language is mandatory — "not yet implemented" is acceptable only for concepts that have not been implemented in code yet.
+
 ## Verdict Scale
 - **PASS:** All CRITICAL criteria pass, no HIGH criteria fail, no more than 1 MEDIUM partial or N/A.
 - **PASS WITH NOTES:** All CRITICAL criteria pass, 1 HIGH partial or 2+ MEDIUM partials. Notes describe what should be improved.
 - **FAIL:** Any CRITICAL fail, OR 2+ HIGH fails. Specific failures listed with fix instructions.
 
-**Note:** Criteria marked N/A (topology-specific criteria that don't apply, or Pattern Conformance when Canonical Patterns doesn't exist yet) are excluded from the verdict calculation.
+**Note:** Criteria marked N/A (topology-specific criteria that don't apply, Pattern Conformance when Canonical Patterns doesn't exist yet, or Terminology Consistency when no Domain Language exists) are excluded from the verdict calculation.
 
 ## Output Format
 Write your review to `docs/evaluations/[TICKET]-code-review.md` with:

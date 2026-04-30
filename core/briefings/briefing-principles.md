@@ -6,7 +6,7 @@ These principles apply to all owner-facing briefings — spec briefings, sprint 
 
 **Assume the owner hasn't touched this codebase in a week.** Re-establish context every time. Don't assume they remember variable names, data model fields, or decisions from previous sprints.
 
-**Define terms even if they were defined before.** Repetition is cheap; confusion is expensive. A jargon glossary is mandatory in every briefing, not optional.
+**Define terms even if they were defined before.** Repetition is cheap; confusion is expensive. A jargon glossary is mandatory in every briefing, not optional. When a Domain Language document exists for the project (`docs/00-Index/Domain-Language.md`), draw definitions from it rather than inventing them ad hoc — this ensures consistency across briefings, specs, and code. If a briefing introduces a term not yet in the Domain Language, define it in the jargon glossary and flag it for addition to the Domain Language document.
 
 **Lead with product impact, not implementation.** "Users will be able to filter by date range" before "adds a DateRangeFilter component." The owner cares about what changes for the end user — implementation details are supporting evidence, not the headline.
 

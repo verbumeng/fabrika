@@ -16,6 +16,8 @@ During ongoing development, create new documents when these situations arise. Re
 | Schema changes | Update `02-Engineering/Data Model.md` |
 | New transformation logic | Update `02-Engineering/Transformation Logic.md` (if `analytics-engineering` or `data-engineering`) |
 | Dashboard/report design discussed | Create or update spec in `03-Design/` |
+| New domain concept emerges (alignment, implementation, or spec writing) | Add term to Domain Language at `docs/00-Index/Domain-Language.md`. Create from template (`core/templates/Domain-Language-Template.md`) if it doesn't exist. |
+| Code introduces naming that diverges from Domain Language | Flag for terminology alignment — update code or update Domain Language during maintenance |
 | User wants to demo or present the project | Create Stakeholder Presentation or Demo Script in `06-Visibility/` |
 | Deployment or infrastructure changes | Update `07-Operations/` docs |
 | Agent prompt modified | Log change + failure context to `docs/evals/agent-changelog.md` |

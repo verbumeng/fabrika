@@ -13,6 +13,7 @@ Claude Code orchestrates the entire development workflow. The human's role is de
 - **Project docs:** `~/projects/[project-name]/docs`
 - **Document Catalog:** `[FABRIKA_PATH]/core/Document-Catalog.md`
 - **Agent Catalog:** See `.fabrika/AGENT-CATALOG.md` or `[FABRIKA_PATH]/core/agents/AGENT-CATALOG.md` for which agents apply to this project type
+- **Domain Language:** `docs/00-Index/Domain-Language.md` (shared domain vocabulary — if it exists)
 
 ## Current Phase
 
@@ -280,6 +281,7 @@ Before sprint planning, the orchestrator runs Design Alignment when triggered: n
 For sprint-based projects, Design Alignment produces:
 - **Project Charter** (first time only) — problem space, target user, core capabilities, constraints, success criteria. Created once at project inception, lives at `docs/01-Product/Project-Charter.md`.
 - **PRD** (per phase/feature) — problem statement, solution, user stories, module changes, implementation decisions, testing decisions. Lives in `docs/01-Product/PRDs/`.
+- **Domain Language** — shared domain vocabulary, created or updated during alignment, lives at `docs/00-Index/Domain-Language.md`. Terms captured during alignment, code-level names populated during implementation.
 
 After the owner approves the Charter and/or PRD, the orchestrator issues a fresh-chat handoff to sprint planning. The scrum master receives the approved PRD as its primary input for story decomposition.
 
@@ -495,6 +497,7 @@ When creating or editing any doc in `docs/`:
 - Always include YAML frontmatter: `type`, `status`, `created`, `updated`, `tags`
 - Use `[[wikilinks]]` to connect related docs
 - Write in plain language — no jargon without explanation
+- When creating or editing docs, use terms from the Domain Language document (`docs/00-Index/Domain-Language.md`) when it exists. If you introduce a new domain concept, flag it for addition to the Domain Language.
 - Docs should be self-contained: readable without CLAUDE.md context
 
 ---

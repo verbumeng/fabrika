@@ -4,6 +4,44 @@ When a Fabrika update requires consumer projects to do more than a straight file
 
 ---
 
+## 0.15.0 — Domain Language
+
+**Affects:** All consumer projects. All project types now have Domain Language as Tier 1 (sprint-based types) or Onboarding/Core (analytics-workspace, agentic-workflow).
+
+**What changed:** The old Glossary (Tier 4, alphabetical, static, optional) is replaced by Domain Language (Tier 1, organized by domain area, living, mandatory). Each term entry now carries four fields: plain-language definition, mandatory code-level name (populated at implementation), relationships to other terms, and anti-terms (what the term is NOT). Domain Language is created during Design Alignment, consumed by planners and implementers via dispatch contracts, checked during code review (new Terminology Consistency criterion), and audited during maintenance (new Terminology Drift Check). Briefings draw jargon glossary definitions from Domain Language rather than inventing them ad hoc.
+
+**Migration steps:**
+
+1. **Copy new template.** Copy `core/templates/Domain-Language-Template.md` to your Fabrika path.
+
+2. **Update changed core files.** Update the following from the Fabrika source: `core/Document-Catalog.md`, `core/workflows/design-alignment.md`, `core/workflows/dispatch-protocol.md`, `core/rubrics/code-review-rubric.md`, `core/maintenance-checklist.md`, `core/workflows/doc-triggers.md`, `core/briefings/briefing-principles.md`.
+
+3. **Update changed integration and root-level files.** Update your integration template (CLAUDE.md or copilot-instructions.md) and `BOOTSTRAP.md`.
+
+4. **Migrate existing Glossary (if one exists).** If your project has a `docs/00-Index/Glossary.md`:
+   - Rename it to `docs/00-Index/Domain-Language.md`
+   - Restructure from alphabetical organization to domain-area organization using the template as a guide
+   - For each existing term: keep the definition, add the code-level name field (populate it if the concept is already implemented in code, mark "not yet implemented" if not), add relationships to other terms, add anti-terms where disambiguation is needed
+   - Add the YAML frontmatter from the template
+   - Review for completeness — terms that were defined in the Glossary may need richer definitions now that they carry more fields
+
+5. **Create Domain Language from scratch (if no Glossary exists).** Create `docs/00-Index/Domain-Language.md` from the template. Two paths:
+   - During the next Design Alignment session, the terminology capture step will populate it naturally
+   - Or run a dedicated terminology extraction session: scan your Project Charter, PRDs, Architecture Overview, and codebase for domain concepts, and consolidate them into the Domain Language document
+
+6. **Populate code-level names for existing implementations.** For terms that are already implemented in code, fill in the code-level name field with the actual class names, table names, and variable names used in the codebase. This is a one-time catch-up — going forward, implementers populate this field as they build.
+
+7. **Behavioral changes.** After migration:
+   - Briefings draw jargon glossary definitions from Domain Language when it exists
+   - Code review checks terminology consistency (new criterion #12 — scored N/A if no Domain Language exists, so this is not a breaking change)
+   - Maintenance checks terminology drift (new section — skipped if no Domain Language exists)
+   - Implementers populate code-level names during implementation and flag new concepts for addition
+   - Planners reference Domain Language terms in specs when the document exists
+
+**Why this matters:** Domain Language creates a single source of truth for what domain concepts mean, how they are named in code, and how they relate to each other. This eliminates the translation layer between how the owner thinks about the domain and how the codebase represents it. The mandatory code-level name field ensures the vocabulary doesn't drift as the implementation evolves — it's populated at implementation and enforced from that point forward.
+
+---
+
 ## 0.14.0 — Design Alignment + Project Charter + PRD
 
 **Affects:** All sprint-based consumer projects and agentic-workflow projects. Analytics-workspace projects are affected only if they use Design Alignment for complex analyses.

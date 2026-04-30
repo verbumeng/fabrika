@@ -313,11 +313,12 @@ Update `.fabrika/manifest.yml` with entries for all newly copied files, the dete
 ### 2.4 Read the Document Catalog and create Tier 1 docs
 Read the **Document Catalog** at `[FABRIKA_PATH]/core/Document-Catalog.md`. Based on the project type, identify all Tier 1 documents and create them.
 
-Copy the appropriate vault templates from `[FABRIKA_PATH]/core/templates/` into `docs/Templates/`. Always copy: `Project-Charter-Template.md`, `PRD-Template.md`, `Epic-Template.md`, `Story-Template.md`, `Sprint-Template.md`, `ADR-Template.md`, `Session-Log-Template.md`. Add type-specific templates per the catalog.
+Copy the appropriate vault templates from `[FABRIKA_PATH]/core/templates/` into `docs/Templates/`. Always copy: `Project-Charter-Template.md`, `PRD-Template.md`, `Epic-Template.md`, `Story-Template.md`, `Sprint-Template.md`, `ADR-Template.md`, `Session-Log-Template.md`, `Domain-Language-Template.md`. Add type-specific templates per the catalog.
 
 ### 2.5 Fill in documents from the brain dump
 Using the brain dump content, fill in all Tier 1 documents with real content — not stubs. Populate:
 - `docs/00-Index/Home.md` — Project overview, purpose, key links
+- `docs/00-Index/Domain-Language.md` — Create from the Domain Language template. Populate with domain terms from the brain dump. If the brain dump doesn't contain domain-specific terminology, create a minimal document with placeholder domain areas and populate during Design Alignment.
 - `docs/01-Product/Phase Definitions.md` — What each phase delivers, what's excluded
 - `docs/02-Engineering/Architecture Overview.md` — Stack, data flow, key components. When defining the component structure, prefer organizing the repo so that each major concern or domain lives in its own directory subtree. This is an agent-efficiency choice: agents work most effectively when they can complete a task within a scoped subtree without needing full-repo context. Monorepo workspaces, Python packages, or even just well-separated top-level directories all work.
 - `docs/02-Engineering/Canonical-Patterns.md` — Start with 3-5 canonical patterns based on the tech stack: error handling, API/data access, state management, logging, test structure. Each pattern gets a concrete code example and anti-patterns to avoid. This document grows during maintenance sessions.

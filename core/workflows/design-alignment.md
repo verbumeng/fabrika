@@ -39,7 +39,26 @@ user-visible checklist to march through):
 - **Constraints** — budget, timeline, platform, regulatory
 - **Integration** — what it connects to, what it replaces
 - **Success criteria** — how you know it's working
-- **Terminology** — domain terms that need shared definitions
+- **Terminology** — domain terms that need shared definitions (captured to the Domain Language document — see Terminology Capture below)
+
+### Terminology Capture
+
+As domain terms crystallize during the question walk, collect them.
+At document drafting time (Step 4):
+
+- If a Domain Language document exists at `docs/00-Index/Domain-Language.md`,
+  append new terms to it
+- If no Domain Language document exists, create one from the template
+  at `core/templates/Domain-Language-Template.md`
+
+Each term entry captures: term name, plain-language definition,
+code-level name (mark "not yet implemented" at this stage — the
+implementer fills this in during implementation), relationships to
+other terms, and anti-terms (what this term is NOT).
+
+Organize terms by domain area. In multi-type projects, use domain
+area sections to disambiguate when the same word means different
+things in different contexts.
 
 ### 3. Convergence Check
 
@@ -84,8 +103,9 @@ changes, or rejects.
 After the owner approves:
 
 1. Save the Charter and/or PRD to `docs/01-Product/`
-2. Update `STATUS.md` cycle phase to `planning`
-3. Prompt: *"Charter and PRD approved. Start a new chat to invoke the
+2. Create or update Domain Language at `docs/00-Index/Domain-Language.md`
+3. Update `STATUS.md` cycle phase to `planning`
+4. Prompt: *"Charter and PRD approved. Start a new chat to invoke the
    scrum master for sprint planning."*
 
 This is the one fresh-chat boundary in the process: alignment
