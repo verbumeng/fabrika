@@ -212,11 +212,32 @@ Salience is assigned based on the artifact type and its review state
 
 ### Agentic-workflow projects
 
-Cadence is defined by the project's own operational mode or manually
-triggered. For Fabrika-specific wiki maintenance, see PRD-10 (Wiki
-— Canonical Fabrika). For consumer agentic-workflow projects that
-adopt the wiki, reintegration is triggered manually or after a
-defined number of structural changes (e.g., every 5 version bumps).
+Cadence is driven by the structural update lifecycle, not a fixed
+schedule:
+
+- **After each system update (Ship step):** The orchestrator reviews
+  the changes and their rationale, updates relevant wiki topic
+  articles, and flags any conversation-level design rationale worth
+  capturing. This is the primary wiki update trigger.
+- **During alignment sessions:** When design philosophy, cross-cutting
+  decisions, or framework evolution rationale emerges from alignment
+  conversations, the orchestrator captures relevant insights in topic
+  articles during the Ship step.
+- **When harvest findings arrive:** Consumer project harvest data
+  flows into `wiki/topics/harvest-patterns.md` and may trigger
+  updates to other topics (e.g., agent-model improvements driven by
+  consumer feedback).
+- **On demand:** The owner can request wiki synthesis at any time
+  (e.g., "capture what we discussed about X in the wiki").
+- **Reintegration:** Triggered manually or after a defined number of
+  structural changes (e.g., every 5 version bumps) for consumer
+  agentic-workflow projects that adopt the wiki.
+
+The formal 5-phase pipeline (Extract, Index, Synthesize, Link,
+Glossary) does not apply to agentic-workflow projects at the same
+cadence as sprint-based projects. The wiki is maintained through
+direct article updates during the Ship step rather than batch
+processing.
 
 ---
 

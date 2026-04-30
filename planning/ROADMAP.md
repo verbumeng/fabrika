@@ -36,6 +36,7 @@ plan → align → execute → verify → incorporate → present → ship.
 | PRD | Version | Status | Notes |
 |---|---|---|---|
 | [PRD-11: Analytics Pre-Execution Review](PRD-11-analytics-pre-execution-review.md) | TBD | Needs Design Alignment | Add pre-execution review gate to analytics-workspace so reviewers assess SQL before it hits the warehouse. Identified during PRD-07 alignment (2026-04-30). |
+| PRD-12: Plan Persistence Alignment | TBD | Needs Design Alignment | Align plan artifact persistence across all project types. Currently sprint-based persists specs as files (`docs/plans/[TICKET]-spec.md`), analytics-workspace persists briefs and plans as files (`tasks/[date]/brief.md`, `plan.md`), but agentic-workflow keeps the aligned plan in conversation only. Target: persist agentic-workflow plans as files, re-invoke the planner after owner feedback to revise the file, have validators assess against the plan file. Also addresses terminology: Fabrika's current "PRDs" in `planning/` are functionally stories (individual change requests), not product requirement documents in the sprint-based sense — consider renaming. Identified during PRD-10 alignment (2026-04-30). |
 
 ## Themes
 
