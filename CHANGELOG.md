@@ -6,6 +6,137 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.15.0
+
+Domain Language elevates the old Glossary (Tier 4, static, optional) to a first-class living vocabulary document (Tier 1, all project types). Each term carries a plain-language definition, a mandatory code-level name (populated at implementation), relationships to other terms, and anti-terms. Terms are captured during Design Alignment, consumed by planners and implementers via dispatch contracts, checked during code review (Terminology Consistency criterion), and audited during maintenance (Terminology Drift Check). Briefings draw their jargon glossary from Domain Language rather than inventing definitions ad hoc. For multi-type projects, domain area sections disambiguate term collisions. For analytics-workspace, Domain Language covers business vocabulary while the source registry covers data infrastructure vocabulary.
+
+### Core (new — consumer projects should copy)
+
+- `core/templates/Domain-Language-Template.md` — **NEW.** Template for the Domain Language document. YAML frontmatter, per-domain-area term blocks (definition, code-level name, relationships, anti-terms), cross-domain terms section, example entry. Code-level name field is mandatory — marked "not yet implemented" until the implementer builds that concept, then filled in.
+
+### Core (changed — consumer projects should update)
+
+- `core/Document-Catalog.md` — **CHANGED.** Replaced Glossary.md entry (Tier 4, static) with Domain-Language.md entry (Tier 1, living vocabulary with template pointer, structure description, and notes on lifecycle and multi-type usage). Added Domain-Language-Template.md to the "Always included" templates list. Updated Quick Reference for all project types: Domain Language added to Tier 1 for web-app, data-app, analytics-engineering, data-engineering, ml-engineering, ai-engineering, automation, library; added to Onboarding for analytics-workspace; added to Core for agentic-workflow.
+- `core/workflows/design-alignment.md` — **CHANGED.** Expanded Terminology question category to reference Domain Language document. Added Terminology Capture subsection with instructions for collecting terms during alignment and creating/updating the Domain Language document. Updated Step 7 (Handoff) to include Domain Language creation/update step.
+- `core/workflows/dispatch-protocol.md` — **CHANGED.** Added conditional Domain Language pointer field to 10 dispatch contracts: 4 planners (Product Manager, Experiment Planner, API Designer, Analysis Planner), 5 implementers (Software Engineer, Data Engineer, Data Analyst, ML Engineer, AI Engineer), and 1 reviewer (Code Reviewer). Architect contracts already had Domain Language pointer — no change needed.
+- `core/rubrics/code-review-rubric.md` — **CHANGED.** Added criterion #12 "Terminology Consistency" (MEDIUM weight) — checks code names against Domain Language, verifies implementers populated code-level names for implemented concepts. N/A when no Domain Language exists. Updated N/A note in Verdict Scale to include Terminology Consistency.
+- `core/maintenance-checklist.md` — **CHANGED.** Added "Terminology Drift Check" section between Pattern & Lint Rule Curation and Architecture Review (Conditional). Six checks: code-vs-Domain-Language naming scan, unpopulated code-level names, stale terms, missing terms from recent specs, drift resolution, and logging. Conditional — skipped when no Domain Language exists. Added terminology drift line to Maintenance Summary Format.
+- `core/workflows/doc-triggers.md` — **CHANGED.** Added two trigger rows: new domain concept emergence (add to Domain Language, create from template if needed) and code naming divergence from Domain Language (flag for terminology alignment).
+- `core/briefings/briefing-principles.md` — **CHANGED.** Expanded the "Define terms" principle to reference Domain Language as the canonical source for jargon glossary definitions. Briefings draw from Domain Language when it exists; new terms are flagged for addition.
+
+### Integrations (changed — consumer projects should update)
+
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Added Domain Language pointer to Project Basics section. Added Domain Language to Design Alignment section (created/updated during alignment, code-level names populated during implementation). Added Domain Language consistency instruction to Doc Standards section.
+- `integrations/copilot/copilot-instructions.md` — **CHANGED.** Parallel changes to Claude Code template: Domain Language in Project Basics, Design Alignment, and Doc Standards sections.
+
+### Root-level docs (changed — consumer projects should update)
+
+- `BOOTSTRAP.md` — **CHANGED.** Added Domain-Language-Template.md to the "Always copy" template list. Added Domain Language creation to Tier 1 document creation step (populate from brain dump or create minimal placeholder for Design Alignment).
+
+### Operational docs (changed — no consumer action needed)
+
+- `MIGRATIONS.md` — **CHANGED.** Added 0.15.0 entry with Glossary-to-Domain-Language migration guidance.
+
+### Consumer update instructions
+
+Projects on 0.14.x should:
+
+**New files (copy to your Fabrika path):**
+1. Copy `core/templates/Domain-Language-Template.md`
+
+**Changed files (all projects — update from Fabrika source):**
+2. Update `core/Document-Catalog.md`
+3. Update `core/workflows/design-alignment.md`
+4. Update `core/workflows/dispatch-protocol.md`
+5. Update `core/rubrics/code-review-rubric.md`
+6. Update `core/maintenance-checklist.md`
+7. Update `core/workflows/doc-triggers.md`
+8. Update `core/briefings/briefing-principles.md`
+9. Update your integration template (CLAUDE.md or copilot-instructions.md)
+10. Update `BOOTSTRAP.md`
+
+**Domain Language creation (all projects):**
+11. If an existing `docs/00-Index/Glossary.md` exists: migrate to `docs/00-Index/Domain-Language.md` (see MIGRATIONS.md for detailed steps)
+12. If no Glossary exists: create `docs/00-Index/Domain-Language.md` from the template during the next Design Alignment session or a dedicated terminology extraction session
+
+**Behavioral changes:**
+- Briefings draw jargon glossary definitions from Domain Language when it exists
+- Code review checks terminology consistency (criterion #12 — N/A if no Domain Language)
+- Maintenance checks terminology drift (skipped if no Domain Language)
+- Implementers populate code-level names during implementation
+- Planners reference Domain Language terms in specs when the document exists
+
+---
+
+## 0.14.0
+
+Design Alignment protocol, Project Charter, and PRD document types. The orchestrator now has a structured requirements-gathering protocol that captures design intent in durable documents before sprint planning begins. Brain dumps no longer go directly to story creation; they flow through Design Alignment to produce a Project Charter (once per project) and PRDs (per phase/feature), which the scrum master then decomposes into sprint stories. Analytics-workspace gets a lighter version for complex analyses that produces an enhanced Analysis Brief instead of Charter/PRD. Scope drift is caught at retro and maintenance checkpoints via Story-to-PRD traceability.
+
+### Core (new — consumer projects should copy as needed)
+
+- `core/workflows/design-alignment.md` — **NEW.** Orchestrator protocol for structured requirements gathering. Triggers: new project, new phase, ambiguity detected, owner request. Covers question categories, convergence checks, project-type branching (sprint-based produces Charter/PRD, analytics-workspace produces enhanced Analysis Brief), architect review of PRD Module Changes section, and fresh-chat handoff to sprint planning.
+- `core/templates/Project-Charter-Template.md` — **NEW.** Template for the Project Charter: problem space, target user, core capabilities, key constraints, success criteria, exclusions, design principles. Created once at project inception via Design Alignment.
+- `core/templates/PRD-Template.md` — **NEW.** Template for PRD documents: problem statement, solution, user stories, module changes (architect-reviewed), implementation decisions, testing decisions, out of scope, open questions. Created per phase/feature via Design Alignment.
+
+### Core (changed — consumer projects should update)
+
+- `core/Document-Catalog.md` — **CHANGED.** Added Project Charter (Tier 1, all sprint-based + agentic-workflow) and PRD (Tier 1, per phase/feature) entries. Updated Phase Definitions and Vision & Positioning descriptions to clarify relationship triad. Updated Quick Reference for all project types.
+- `core/workflows/doc-triggers.md` — **CHANGED.** Added triggers for Project Charter (new project, major pivot), PRD (new phase, major feature), and Design Alignment initiation.
+- `core/workflows/sprint-lifecycle.md` — **CHANGED.** Added `alignment` cycle phase value. Added pre-sprint phase showing Design Alignment before planning. Added fresh-chat boundary prompt at Charter/PRD approval.
+- `core/workflows/development-workflow.md` — **CHANGED.** Added Design Alignment section before sprint planning. Updated sprint planning to reference PRD as scrum master input. Documented document hierarchy: brain dump → alignment → Charter/PRD → sprint planning → specs → implementation.
+- `core/workflows/analytics-workspace.md` — **CHANGED.** Added Design Alignment trigger for complex analyses (3+ sources, multiple stakeholders, novel domain, >2 day effort, significant decision). Output is enhanced Analysis Brief, not Charter/PRD.
+- `core/agents/scrum-master.md` — **CHANGED.** Sprint planning now reads approved PRD for story decomposition. Sprint retro now checks for PRD drift (compares completed stories against active PRD). Updated dispatch contract reference for conditional PRD pointer.
+- `core/workflows/dispatch-protocol.md` — **CHANGED.** Added conditional PRD pointer field to Scrum Master Sprint Planning contract.
+- `core/maintenance-checklist.md` — **CHANGED.** Added Story-to-PRD Traceability check: verify active stories trace to active PRDs, flag orphans and stale PRD sections.
+
+### Integrations (changed — consumer projects should update)
+
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Added Design Alignment section in development workflow. Added Project Charter and PRD to document hierarchy and project structure. Updated session lifecycle with `alignment` cycle phase and fresh-chat boundary. Updated sprint planning references for PRD input.
+- `integrations/copilot/copilot-instructions.md` — **CHANGED.** Parallel changes to Claude Code template.
+
+### Root-level docs (changed — consumer projects should update)
+
+- `BOOTSTRAP.md` — **CHANGED.** Integrated Design Alignment into bootstrap flow. New projects now begin with Design Alignment (step 2.7) after brain dump to produce Charter + first PRD before epic/story creation. Added `docs/01-Product/PRDs/` to folder structure. Updated analytics-workspace section with Design Alignment note.
+
+### Operational Docs (changed — no consumer action needed)
+
+- `MIGRATIONS.md` — **CHANGED.** Added 0.14.0 entry.
+
+### Consumer update instructions
+
+Projects on 0.13.x should:
+
+**New files (copy to your Fabrika path):**
+1. Copy `core/workflows/design-alignment.md`
+2. Copy `core/templates/Project-Charter-Template.md`
+3. Copy `core/templates/PRD-Template.md`
+
+**Changed files (all sprint-based + agentic-workflow projects):**
+4. Update `core/Document-Catalog.md`
+5. Update `core/workflows/doc-triggers.md`
+6. Update `core/workflows/sprint-lifecycle.md`
+7. Update `core/workflows/development-workflow.md`
+8. Update `core/workflows/dispatch-protocol.md`
+9. Update `core/agents/scrum-master.md`
+10. Update `core/maintenance-checklist.md`
+11. Update your integration template (CLAUDE.md or copilot-instructions.md)
+12. Update `BOOTSTRAP.md`
+
+**Changed files (analytics-workspace projects):**
+13. Update `core/workflows/analytics-workspace.md`
+
+**New directories to create:**
+14. Create `docs/01-Product/PRDs/` directory in your project
+
+**Behavioral change:** The orchestrator no longer creates epics/stories directly from brain dumps. All new work flows through Design Alignment to produce a Charter/PRD, then the scrum master decomposes the approved PRD into sprint stories. Existing projects should run a retroactive Design Alignment session to produce a Charter and PRDs for current/past phases (see MIGRATIONS.md for adoption guidance).
+
+### Known gaps (to be addressed in future versions)
+
+- ADR to PRD update signal chain (when an ADR contradicts a PRD's Module Changes, the PRD should be flagged for update). Planned for 0.15.0+ alongside Domain Language (PRD-06).
+- BOOTSTRAP.md integration with Design Alignment will mature as the protocol is used in practice.
+
+---
+
 ## 0.13.0
 
 Architect archetype with two specialist agents. The architect evaluates and improves structural design — module depth, interface simplicity, component boundaries, dependency structure. Two specialists: software-architect (web-app, automation, library, ai-engineering) covers code architecture; data-architect (data-engineering, analytics-engineering, data-app, ml-engineering) covers schema design, pipeline topology, and data flow boundaries. The archetype stub from 0.10.0 is replaced with a full definition covering the shared behavioral contract: standardized Ousterhout/Pocock vocabulary, dual dispatch tiers (contextual for design, strict for review), owner-gated proposals, and done thresholds. Domain-specific expertise lives in each specialist agent, not the archetype. Architect invocation is integrated at three points in the development workflow: after spec approval (design review), during evaluation (structural assessment supplement to code-reviewer), and ad hoc (owner-initiated assessment of existing code). Spiral mitigation ensures architecture reviews don't create infinite optimization loops: conditional maintenance trigger, owner-gated proposals, done thresholds, assessment tracking, and a cap of 2 refactor stories per review. The code-review rubric gains a Module Depth / Interface Simplicity criterion as a lightweight first-pass structural check.

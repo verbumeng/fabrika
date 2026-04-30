@@ -72,24 +72,37 @@ A project can be **multi-type** (sprint-based types only). A data app with scrap
 - **Structure:** Project name, one-line description, quick links to key docs, current phase, what to read first.
 - **Notes:** This is the first thing anyone opens. Keep it short — links, not content. For `analytics-workspace`, the equivalent is `sources/README.md` (the source registry index).
 
-### Glossary.md
-- **Purpose:** Defines domain-specific terms used across the project. Prevents ambiguity when the agent encounters unfamiliar terminology.
-- **Types:** all | **Tier:** 4 | **Audience:** both
-- **Structure:** Alphabetical term list with definitions. Add terms as they come up.
-- **Notes:** Most useful for domain-heavy projects (healthcare, finance, regulatory). Skip for simple tools.
+### Domain-Language.md
+- **Purpose:** Shared vocabulary of domain concepts — a living reference that evolves with the project. Each term has a plain-language definition, a mandatory code-level name (populated at implementation), relationships to other terms, and anti-terms (what this term is NOT). Organized by domain area, not alphabetically. Created during Design Alignment, updated during implementation and maintenance. Feeds into briefings (jargon glossary source), implementer dispatch (code naming), and code review (terminology consistency criterion).
+- **Types:** all | **Tier:** 1 | **Audience:** both
+- **Template:** `core/templates/Domain-Language-Template.md`
+- **Structure:** One section per domain area. Within each area, one block per term: definition, code-level name, relationships, anti-terms. Cross-domain terms section for terms spanning multiple areas.
+- **Notes:** Created via the Design Alignment protocol (`core/workflows/design-alignment.md`). Updated during implementation (implementers populate code-level names and flag new concepts), PRD creation (new terms added), and maintenance (terminology drift check). For multi-type projects, use domain area sections to disambiguate terms that mean different things in different contexts. For `analytics-workspace`, Domain Language covers business domain vocabulary; the source registry (`sources/README.md`) covers data infrastructure vocabulary — they are complementary, not overlapping.
 
 ---
 
 ## 01-Product/
 
 ### Phase Definitions.md
-- **Purpose:** Defines what each project phase delivers and what's explicitly excluded. Prevents scope creep by making the boundaries of "now" vs. "later" unambiguous.
+- **Purpose:** Defines what each project phase delivers and what's explicitly excluded. Scope breakdown across phases, referenced by PRDs. Prevents scope creep by making the boundaries of "now" vs. "later" unambiguous.
 - **Types:** all | **Tier:** 1 | **Audience:** both
 - **Structure:** Phase 1 (MVP): goal, what ships, what doesn't. Phase 2+: brief description, explicitly marked "do not build yet."
 - **Notes:** The agent references this to refuse out-of-scope work. Critical for discipline.
 
+### Project Charter.md
+- **Purpose:** Internal design document capturing shared understanding between the owner and agents. Defines the problem space, target user, core capabilities, constraints, success criteria, and design principles. Created once at project inception or during a major pivot.
+- **Types:** all sprint-based types, agentic-workflow | **Tier:** 1 | **Audience:** both
+- **Template:** `core/templates/Project-Charter-Template.md`
+- **Notes:** Created via the Design Alignment protocol (`core/workflows/design-alignment.md`). The Charter captures what the product IS; Vision & Positioning captures why it matters externally; Phase Definitions breaks the Charter's capabilities into buildable phases. All three must be tightly aligned.
+
+### PRD.md (Product Requirements Document)
+- **Purpose:** Detailed requirements for a specific phase or major feature. User stories, module changes, implementation decisions, testing approach, and scope boundaries. Created per phase or major feature.
+- **Types:** all sprint-based types, agentic-workflow | **Tier:** 1 | **Audience:** both
+- **Template:** `core/templates/PRD-Template.md`
+- **Notes:** Created via the Design Alignment protocol. The architect reviews the Module Changes section before owner approval. After approval, the scrum master decomposes the PRD into sprint stories.
+
 ### Vision & Positioning.md
-- **Purpose:** Why this product exists, who it's for, what makes it different. Brand promise and competitive angle.
+- **Purpose:** External-facing "why" — why this product exists, who it's for, what makes it different. Brand promise and competitive angle. See Project Charter for the internal design document.
 - **Types:** web-app | **Tier:** 1 (consumer SaaS), 2 (personal SaaS) | **Audience:** human
 - **Structure:** Mission statement, target user, problem being solved, competitive positioning, success metrics.
 - **Notes:** For work projects (data-app, analytics-engineering), this becomes a simpler "Project Justification" — why are we building this instead of using Excel/Alteryx.
@@ -668,6 +681,8 @@ A project can be **multi-type** (sprint-based types only). A data app with scrap
 Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based projects) and are used by the agent when creating new documents.
 
 ### Always included (sprint-based types):
+- Project-Charter-Template.md
+- PRD-Template.md
 - Epic-Template.md
 - Story-Template.md
 - Sprint-Template.md
@@ -675,6 +690,7 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 - Sprint-Contract-Pipeline.md
 - Sprint-Contract-Mesh.md
 - Sprint-Contract-Hierarchical.md
+- Domain-Language-Template.md
 
 ### Included based on project type:
 - Data-Source-Research-Template.md — `data-app`, `analytics-engineering`, `data-engineering`, `automation`
@@ -697,52 +713,52 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 ### Sprint-Based Types
 
 #### web-app (SaaS, personal tools, consumer apps)
-**Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
+**Tier 1:** Home, Domain Language, Project Charter, PRD, Phase Definitions, Architecture Overview, Data Model, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
 **Tier 1 (consumer):** + Vision & Positioning, UX Specification
 **Tier 2:** API Conventions, Security & Privacy, Threat Model, Deployment Guide, User Stories, Wireframes, Seed Data, Structural Constraints
 **Tier 2 (consumer):** + Brand Guidelines, Design Tokens, GTM Strategy, Launch Plan, Business Setup, Legal
 **Tier 3:** Feature Specs, Revenue Model, Content Calendar, Demo Script, Session Logs
 
 #### data-app (Excel replacement, dashboards, reporting tools)
-**Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Data Pipeline Design, Dashboard Spec, Testing Strategy, Canonical Patterns, ADR (at least one), Epics, Stories, Someday-Maybe, Pre-Dev Checklist
+**Tier 1:** Home, Domain Language, Project Charter, PRD, Phase Definitions, Architecture Overview, Data Model, Data Pipeline Design, Dashboard Spec, Testing Strategy, Canonical Patterns, ADR (at least one), Epics, Stories, Someday-Maybe, Pre-Dev Checklist
 **Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, Wireframes, Seed Data, User Stories, Deployment Guide, Structural Constraints
 **Tier 3:** Stakeholder Presentation, Demo Script, ROI/Impact Analysis, Session Logs
 
 #### analytics-engineering (dbt, DuckDB, warehouse modeling, Alteryx migration)
-**Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Data Pipeline Design, Transformation Logic, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Data Source Research, Someday-Maybe, Pre-Dev Checklist
+**Tier 1:** Home, Domain Language, Project Charter, PRD, Phase Definitions, Architecture Overview, Data Model, Data Pipeline Design, Transformation Logic, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Data Source Research, Someday-Maybe, Pre-Dev Checklist
 **Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, Deployment Guide, Environment Config, Cost Model, Structural Constraints
 **Tier 3:** Stakeholder Presentation, ROI/Impact Analysis, Session Logs
 
 #### data-engineering (pipelines, ingestion, orchestration, full Reis lifecycle)
-**Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Data Pipeline Design, Source System Contracts, Ingestion Design, Storage Architecture, Serving Contracts, Orchestration Design, Transformation Logic, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Data Source Research, Someday-Maybe, Pre-Dev Checklist
+**Tier 1:** Home, Domain Language, Project Charter, PRD, Phase Definitions, Architecture Overview, Data Model, Data Pipeline Design, Source System Contracts, Ingestion Design, Storage Architecture, Serving Contracts, Orchestration Design, Transformation Logic, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Data Source Research, Someday-Maybe, Pre-Dev Checklist
 **Tier 2:** Data Dictionary, Data Quality Rules, Migration Plan, Output Specs, DataOps Runbook, Deployment Guide, Environment Config, Cost Model, Structural Constraints
 **Tier 3:** Stakeholder Presentation, ROI/Impact Analysis, Session Logs
 
 #### ml-engineering (model development, training, evaluation)
-**Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Model Design, Training Data Spec, Model Evaluation Criteria, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
+**Tier 1:** Home, Domain Language, Project Charter, PRD, Phase Definitions, Architecture Overview, Data Model, Model Design, Training Data Spec, Model Evaluation Criteria, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
 **Tier 2:** Data Pipeline Design, Data Dictionary, Deployment Guide, Cost Model, Structural Constraints
 **Tier 3:** Session Logs, Feature Specs
 
 #### ai-engineering (LLM apps, RAG, agents, prompt engineering)
-**Tier 1:** Home, Phase Definitions, Architecture Overview, Data Model, Prompt Library, Model Configuration, Evaluation Strategy, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
+**Tier 1:** Home, Domain Language, Project Charter, PRD, Phase Definitions, Architecture Overview, Data Model, Prompt Library, Model Configuration, Evaluation Strategy, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
 **Tier 1 (if RAG):** + RAG Architecture
 **Tier 2:** Guardrails Spec, Cost Model, Threat Model, User Stories, Deployment Guide, Security & Privacy, Structural Constraints
 **Tier 3:** Feature Specs, Session Logs
 
 #### automation (scripts, CLIs, bots, scheduled jobs)
-**Tier 1:** Home, Phase Definitions, Architecture Overview, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
+**Tier 1:** Home, Domain Language, Project Charter, PRD, Phase Definitions, Architecture Overview, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
 **Tier 2:** Data Pipeline Design (if data-moving), Output Specs, Deployment Guide, Structural Constraints
 **Tier 3:** Session Logs
 
 #### library (reusable packages, SDKs, shared modules)
-**Tier 1:** Home, Phase Definitions, Architecture Overview, API Design Guide, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
+**Tier 1:** Home, Domain Language, Project Charter, PRD, Phase Definitions, Architecture Overview, API Design Guide, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
 **Tier 2:** API Conventions, Migration Guide Template, Publishing Checklist, Deployment Guide, Structural Constraints
 **Tier 3:** Session Logs
 
 ### Task-Based Types
 
 #### analytics-workspace (ad hoc analysis, investigations, data requests)
-**Onboarding:** sources/README.md (Source Registry Index), sources/connections/*.md, sources/tools/*.md
+**Onboarding:** sources/README.md (Source Registry Index), sources/connections/*.md, sources/tools/*.md, Domain Language
 **Per-task:** brief.md, plan.md, outcome.md (in each `tasks/[date-name]/` folder)
 **As needed:** sources/files/*.md, reusable queries in `src/queries/`, scripts in `src/scripts/`
 **Note:** No sprint artifacts, no backlog, no Tier system. Work is organized as tasks, not stories.
@@ -750,7 +766,7 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 ### Methodology-Based Types
 
 #### agentic-workflow (agent methodology systems, personal operating systems)
-**Core:** VERSION, CHANGELOG, MIGRATIONS (version history and consumer communication)
+**Core:** Domain Language, Project Charter, PRD, VERSION, CHANGELOG, MIGRATIONS (version history and consumer communication)
 **Per-change:** System Update Plan (in conversation), Change Verification Reports (in `docs/evaluations/`)
 **Structural:** Agent prompts, workflow definitions, archetype templates, catalogs, integration templates, dispatch protocol, rubrics, hooks
 **Operational (if enabled):** Status file, operational logs, ritual definitions (project-specific, not templated)

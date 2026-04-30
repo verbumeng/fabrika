@@ -77,6 +77,7 @@ itself.
 | Research pointers | Conditional | Paths to research notes — required if story involves investigated tech |
 | Owner context | Optional | Relevant preferences or constraints from the conversation |
 | Phase definition | Yes | Path to `docs/01-Product/Phase Definitions.md` — so the planner respects phase boundaries |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists — planner uses its terms in specs |
 
 **Output expected:** Spec document at `docs/plans/[TICKET]-spec.md`
 
@@ -113,6 +114,7 @@ spec.
 | Training Data pointer | Conditional | Required if experiment changes training data |
 | Prior experiment results | Conditional | Paths to prior experiment reports if this is an iteration |
 | Owner context | Optional | Hypothesis preferences, resource constraints from conversation |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists — planner uses its terms in specs |
 
 **Output expected:** Experiment spec at `docs/plans/[TICKET]-spec.md`
 
@@ -139,6 +141,7 @@ hypothesis outcome, and methodological requirements.
 | API Design Guide pointer | Yes | Path to `docs/02-Engineering/API Design Guide.md` |
 | Current public API | Conditional | Current exports and type signatures if modifying existing API |
 | Owner context | Optional | Compatibility constraints, consumer expectations from conversation |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists — planner uses its terms in specs |
 
 **Output expected:** API spec at `docs/plans/[TICKET]-spec.md`
 
@@ -166,6 +169,7 @@ documentation complete.
 | Prior task pointers | Conditional | Paths to similar prior tasks if this might be a repeat |
 | Templates pointer | Conditional | Path to `templates/` if checking for existing templates |
 | Owner context | Optional | Deadline, audience, desired output format from conversation |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists — planner uses its terms in specs |
 
 **Output expected:** Brief at `tasks/[date-name]/brief.md`, then plan
 at `tasks/[date-name]/plan.md` (two-step, owner approves brief before
@@ -184,6 +188,7 @@ plan)
 | Rubric pointer | Yes | Path to `docs/02-Engineering/rubrics/code-review-rubric.md` |
 | File paths to review | Yes | Specific paths of changed/added files |
 | Features.json pointer | Yes | For feature pass/fail context |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists — for Terminology Consistency criterion |
 
 **Do not provide:** Implementation opinions, known concerns, other
 reviewers' findings. The code reviewer runs the test suite, runs
@@ -415,6 +420,7 @@ the spec and the source code.
 | Features.json | Yes | Current pass/fail state |
 | Git log | Yes | Recent commit history (last 10-20 commits) |
 | Maintenance tag | Yes | When the last maintenance session ran |
+| PRD pointer | Conditional | Path to the approved PRD — required for the first sprint of a new project or phase. If no PRD exists (legacy projects, subsequent sprints where all PRD stories are already in the backlog), the scrum master plans from backlog as before |
 | Owner priorities | Optional | Any priorities or constraints from the conversation |
 | Unfinished stories | Conditional | Stories from previous sprint that were not completed |
 
@@ -465,6 +471,7 @@ tailored to methodology work.
 | Owner constraints | Optional | Preferences or constraints from the conversation |
 | API Design Guide pointer | Conditional | Required for library projects — path to API Design Guide |
 | Structural Constraints pointer | Conditional | Path to Structural Constraints doc if it exists |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists — implementer uses its terms for naming and populates code-level names for newly implemented concepts |
 
 **Output expected:** Changed files, implementation summary, spec
 deviations flagged.
@@ -485,6 +492,7 @@ deviations flagged.
 | Pipeline Design pointer | Conditional | Required if touching pipeline code — path to Data Pipeline Design |
 | Source Contracts pointer | Conditional | Required if touching ingestion — path to Source System Contracts |
 | Serving Contracts pointer | Conditional | Required if touching serving layer — path to Serving Contracts |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists — implementer uses its terms for naming and populates code-level names for newly implemented concepts |
 
 **Output expected:** Changed files, implementation summary, spec
 deviations flagged.
@@ -502,6 +510,7 @@ deviations flagged.
 | Work directory | Yes | Path to the task directory (for analytics-workspace) or target directories |
 | Source detail pointers | Conditional | Specific source docs if the work targets known sources |
 | Owner constraints | Optional | Preferences or constraints from the conversation |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists — implementer uses its terms for naming and populates code-level names for newly implemented concepts |
 
 **Output expected:** Changed files, implementation summary, spec
 deviations flagged.
@@ -523,6 +532,7 @@ deviations flagged.
 | Training Data pointer | Conditional | Required if touching training pipeline — path to Training Data Spec |
 | Evaluation Criteria pointer | Conditional | Required if touching evaluation — path to Model Evaluation Criteria |
 | Prior experiments | Conditional | Paths to prior experiment reports if this is an iteration |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists — implementer uses its terms for naming and populates code-level names for newly implemented concepts |
 
 **Output expected:** Changed files, implementation summary, spec
 deviations flagged. Include compute resource estimates if applicable.
@@ -545,6 +555,7 @@ deviations flagged. Include compute resource estimates if applicable.
 | Guardrails pointer | Conditional | Required if touching safety — path to Guardrails Spec |
 | Evaluation Strategy pointer | Conditional | Required if touching eval — path to Evaluation Strategy |
 | RAG Architecture pointer | Conditional | Required if touching retrieval — path to RAG Architecture |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists — implementer uses its terms for naming and populates code-level names for newly implemented concepts |
 
 **Output expected:** Changed files, implementation summary, spec
 deviations flagged. Include token usage impact estimates if applicable.

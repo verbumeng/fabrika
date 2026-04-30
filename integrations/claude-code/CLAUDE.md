@@ -13,6 +13,7 @@ Claude Code orchestrates the entire development workflow. The human's role is de
 - **Project docs:** `~/projects/[project-name]/docs`
 - **Document Catalog:** `[FABRIKA_PATH]/core/Document-Catalog.md`
 - **Agent Catalog:** See `.fabrika/AGENT-CATALOG.md` or `[FABRIKA_PATH]/core/agents/AGENT-CATALOG.md` for which agents apply to this project type
+- **Domain Language:** `docs/00-Index/Domain-Language.md` (shared domain vocabulary — if it exists)
 
 ## Current Phase
 
@@ -91,6 +92,8 @@ The verification approach depends on project type:
 ├── docs/                              # Project docs
 │   ├── 00-Index/
 │   ├── 01-Product/
+│   │   ├── Project-Charter.md         # Created once via Design Alignment
+│   │   ├── PRDs/                      # One PRD per phase/feature
 │   │   └── Feature Specs/
 │   ├── 02-Engineering/
 │   │   ├── ADRs/
@@ -263,11 +266,26 @@ Every conversation follows this lifecycle. No steps are optional.
 ## Sprint Lifecycle
 
 A sprint runs across **multiple chats**, not one long conversation. Each phase boundary is a hard new-chat handoff.
-Phases: Planning → Story chats → Close-Out → Maintenance → Retro → Next Planning.
-Four chats between sprints (close-out, maintenance, retro, planning) — they are not bundled.
-STATUS.md's `Cycle phase` field tells each new chat which phase it is in and what to do next.
+Phases: Alignment → Planning → Story chats → Close-Out → Maintenance → Retro → Next Alignment/Planning.
+Alignment runs before planning when triggered (new project, new phase, ambiguity detected, owner request). It produces a Project Charter (first time) and PRD, then hands off to sprint planning in a fresh chat. Not every sprint cycle requires alignment — it fires on trigger, not on schedule.
+STATUS.md's `Cycle phase` field tells each new chat which phase it is in and what to do next. Valid `Cycle phase` values include `alignment`.
 
 **On phase transitions, read:** `[FABRIKA_PATH]/core/workflows/sprint-lifecycle.md`
+
+---
+
+## Design Alignment
+
+Before sprint planning, the orchestrator runs Design Alignment when triggered: new project, new phase, ambiguity detected, or owner request. Design Alignment is a structured requirements-gathering protocol that captures design intent in durable documents before sprint planning begins. Brain dumps no longer go directly to story creation — they flow through Design Alignment first.
+
+For sprint-based projects, Design Alignment produces:
+- **Project Charter** (first time only) — problem space, target user, core capabilities, constraints, success criteria. Created once at project inception, lives at `docs/01-Product/Project-Charter.md`.
+- **PRD** (per phase/feature) — problem statement, solution, user stories, module changes, implementation decisions, testing decisions. Lives in `docs/01-Product/PRDs/`.
+- **Domain Language** — shared domain vocabulary, created or updated during alignment, lives at `docs/00-Index/Domain-Language.md`. Terms captured during alignment, code-level names populated during implementation.
+
+After the owner approves the Charter and/or PRD, the orchestrator issues a fresh-chat handoff to sprint planning. The scrum master receives the approved PRD as its primary input for story decomposition.
+
+**For the full protocol, read:** `[FABRIKA_PATH]/core/workflows/design-alignment.md`
 
 ---
 
@@ -278,9 +296,10 @@ Claude Code drives the development process proactively. Don't wait for the owner
 **Before starting any story, sprint planning, or bug fix, read:** `[FABRIKA_PATH]/core/workflows/development-workflow.md`
 
 Summary of workflows covered:
+- **Design Alignment** — structured requirements gathering → Project Charter + PRD → fresh-chat handoff to sprint planning (see Design Alignment section above)
 - **Starting a Story** — spec expansion → approval → optional architect design review → branch → dispatch to implementer → evaluate → fix cycle
 - **Completing a Story (Evaluation Cycle)** — tests → lint → commit → reviewer → validator → planner validation → optional architect structural evaluation → rollback protocol (max 2 retries)
-- **Sprint Planning** — scrum-master → topology assessment → 2-3 stories → contract → approval
+- **Sprint Planning** — scrum-master receives approved PRD → topology assessment → 2-3 stories → contract → approval
 - **Ideation & Backlog Grooming** — new stories, re-scoping, someday-maybe
 - **Research & Technical Discussion** — research docs, ADRs
 - **Bug Reporting & Fix Workflow** — see `docs/02-Engineering/bug-workflow.md`
@@ -291,6 +310,8 @@ Summary of workflows covered:
 ## Analytics Workspace Workflow (analytics-workspace type only)
 
 No sprints. Work is organized as individual analysis tasks: Brief → Plan → Execute → Validate → Deliver.
+
+For complex analyses (3+ data sources, multiple stakeholders, novel domain, >2 day effort, or significant decision impact), Design Alignment triggers to produce an enhanced Analysis Brief — not a Charter/PRD. This is optional and driven by complexity, not by default.
 
 **For analytics-workspace projects, read:** `[FABRIKA_PATH]/core/workflows/analytics-workspace.md`
 
@@ -476,6 +497,7 @@ When creating or editing any doc in `docs/`:
 - Always include YAML frontmatter: `type`, `status`, `created`, `updated`, `tags`
 - Use `[[wikilinks]]` to connect related docs
 - Write in plain language — no jargon without explanation
+- When creating or editing docs, use terms from the Domain Language document (`docs/00-Index/Domain-Language.md`) when it exists. If you introduce a new domain concept, flag it for addition to the Domain Language.
 - Docs should be self-contained: readable without CLAUDE.md context
 
 ---

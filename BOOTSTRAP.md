@@ -24,11 +24,12 @@ All paths in this guide use the defaults above. Replace them with the actual pat
 ### Sprint-based types (web-app, data-app, analytics-engineering, data-engineering, ml-engineering, ai-engineering, automation, library)
 - A project repo with scaffold, git, agentic tool configuration, and hooks
 - A docs vault (`docs/`) with type-appropriate documentation fully populated
+- A Project Charter and first PRD produced via Design Alignment
 - Progress files (STATUS.md, features.json) and evaluation scaffolding
 - Grading rubrics, maintenance checklist, and sprint contract templates
 - Type-appropriate agents installed (see Agent Catalog)
 - Baseline eval cases installed
-- A groomed backlog with epics, stories, and estimates
+- A groomed backlog with epics, stories, and estimates (decomposed from the approved PRD)
 - Sprint 1 scoped with a topology-aware sprint contract
 - If an external task management system is configured, one task per Sprint 1 story
 
@@ -91,6 +92,7 @@ Multi-type is possible for sprint-based types (e.g., `data-app` + `automation`).
 ├── docs/
 │   ├── 00-Index/
 │   ├── 01-Product/
+│   │   ├── PRDs/
 │   │   └── Feature Specs/
 │   ├── 02-Engineering/
 │   │   ├── ADRs/
@@ -311,11 +313,12 @@ Update `.fabrika/manifest.yml` with entries for all newly copied files, the dete
 ### 2.4 Read the Document Catalog and create Tier 1 docs
 Read the **Document Catalog** at `[FABRIKA_PATH]/core/Document-Catalog.md`. Based on the project type, identify all Tier 1 documents and create them.
 
-Copy the appropriate vault templates from `[FABRIKA_PATH]/core/templates/` into `docs/Templates/`. Always copy: `Epic-Template.md`, `Story-Template.md`, `Sprint-Template.md`, `ADR-Template.md`, `Session-Log-Template.md`. Add type-specific templates per the catalog.
+Copy the appropriate vault templates from `[FABRIKA_PATH]/core/templates/` into `docs/Templates/`. Always copy: `Project-Charter-Template.md`, `PRD-Template.md`, `Epic-Template.md`, `Story-Template.md`, `Sprint-Template.md`, `ADR-Template.md`, `Session-Log-Template.md`, `Domain-Language-Template.md`. Add type-specific templates per the catalog.
 
 ### 2.5 Fill in documents from the brain dump
 Using the brain dump content, fill in all Tier 1 documents with real content — not stubs. Populate:
 - `docs/00-Index/Home.md` — Project overview, purpose, key links
+- `docs/00-Index/Domain-Language.md` — Create from the Domain Language template. Populate with domain terms from the brain dump. If the brain dump doesn't contain domain-specific terminology, create a minimal document with placeholder domain areas and populate during Design Alignment.
 - `docs/01-Product/Phase Definitions.md` — What each phase delivers, what's excluded
 - `docs/02-Engineering/Architecture Overview.md` — Stack, data flow, key components. When defining the component structure, prefer organizing the repo so that each major concern or domain lives in its own directory subtree. This is an agent-efficiency choice: agents work most effectively when they can complete a task within a scoped subtree without needing full-repo context. Monorepo workspaces, Python packages, or even just well-separated top-level directories all work.
 - `docs/02-Engineering/Canonical-Patterns.md` — Start with 3-5 canonical patterns based on the tech stack: error handling, API/data access, state management, logging, test structure. Each pattern gets a concrete code example and anti-patterns to avoid. This document grows during maintenance sessions.
@@ -341,7 +344,19 @@ After filling in what you can, review each document for gaps. Ask clarifying que
 - Open questions have either been resolved or explicitly deferred with an ADR
 - You have enough understanding to propose epics and stories
 
-### 2.7 Propose Epics
+### 2.7 Run Design Alignment
+
+Once the brain dump is complete and Tier 1 docs are populated, run the Design Alignment protocol to produce a Project Charter and the first PRD. This is the first substantive step after the brain dump — the Charter and PRD capture the design intent in durable documents before sprint planning begins.
+
+**Read:** `[FABRIKA_PATH]/core/workflows/design-alignment.md`
+
+The orchestrator drives structured requirements gathering using the brain dump content as raw material. The first Design Alignment session produces both:
+- **Project Charter** at `docs/01-Product/Project-Charter.md` — problem space, target user, core capabilities, constraints, success criteria, exclusions, design principles. Created once.
+- **First PRD** in `docs/01-Product/PRDs/` — problem statement, solution, user stories, module changes, implementation decisions, testing decisions. Scoped to the first phase.
+
+Present both documents to the owner for approval before proceeding to epics and stories. The approved PRD becomes the primary input for story decomposition in the next steps.
+
+### 2.8 Propose Epics
 The agent proposes an initial set of Epics and lists them for the user's approval before creating any files:
 ```
 Proposed Epics:
@@ -352,8 +367,8 @@ Proposed Epics:
 Does this look right? Should I add, remove, or rename any?
 ```
 
-### 2.8 Create Epics and propose Stories
-Once approved, create Epic files (in markdown and/or Jira depending on backlog mode). Then for each epic, the agent proposes 3-5 Stories:
+### 2.9 Create Epics and propose Stories
+Once approved, create Epic files (in markdown and/or Jira depending on backlog mode). Then for each epic, the agent proposes 3-5 Stories, decomposing from the approved PRD:
 ```
 Stories for E-01 ([epic name]):
   S-001: [name] — [description] (est: 3 pts, priority: High)
@@ -361,20 +376,20 @@ Stories for E-01 ([epic name]):
   S-003: [name] — [description] (est: 2 pts, priority: Medium)
 ```
 
-### 2.9 Create Story files
+### 2.10 Create Story files
 Once approved, create Story files with full YAML frontmatter, description, acceptance criteria, technical notes, and an empty Notes section. If backlog mode is Jira, create stories in Jira and optionally create local markdown references.
 
-### 2.10 Flag and resolve research items
+### 2.11 Flag and resolve research items
 If stories have unresolved technical questions, create research notes in `docs/05-Research/` and work through them with the user. For each:
 1. Share what you know or can infer
 2. Ask the user for additional context
 3. Propose a direction with trade-offs in plain language
 4. If decided, create an ADR
 
-### 2.11 Tell the user to open the vault
+### 2.12 Tell the user to open the vault
 Now that there's real content: **"The vault is populated with [N] documents, [N] epics, and [N] stories. Open `~/projects/[project-name]/docs/` as your project docs vault. If using Obsidian as docs viewer, install recommended plugins: Templater, Dataview, Kanban, Projects. Let me know when that's done."**
 
-### 2.12 Commit
+### 2.13 Commit
 ```bash
 git add -A
 git commit -m "feat: populate vault with project context, epics, and stories"
@@ -464,6 +479,8 @@ git commit -m "feat: initialize analytics workspace with source registry"
 ### 2W.6 Ready
 
 Tell the user: **"Your analytics workspace is set up with [N] data sources cataloged. To start an analysis task, just tell me what you need — a question to answer, data to pull, logic to review, or an investigation to run. I'll create a task folder and walk you through brief → plan → execute → validate → deliver."**
+
+> **Design Alignment for analytics-workspace:** Design Alignment is not part of workspace bootstrap. It triggers later, on demand, for complex analyses (3+ data sources, multiple stakeholders, novel domain, >2 day effort, or significant decision impact). When triggered, it produces an enhanced Analysis Brief — not a Project Charter or PRD.
 
 **Do NOT proceed to Phase 3 or Phase 4.** Analytics workspaces do not have sprints or readiness checks. The workspace is ready for tasks.
 
@@ -645,7 +662,9 @@ docs/
 ├── 00-Index/
 │   └── Home.md
 ├── 01-Product/
+│   ├── Project-Charter.md
 │   ├── Phase Definitions.md
+│   ├── PRDs/
 │   ├── Feature Specs/
 │   └── (type-specific: Vision, User Stories, domain docs)
 ├── 02-Engineering/

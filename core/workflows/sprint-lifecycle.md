@@ -5,6 +5,8 @@ A sprint runs across **multiple chats**, not one long conversation. Each phase b
 ## Phases (in order)
 
 ```
+Design Alignment chat (when triggered — new project, new phase, ambiguity)
+    ↓ (alignment produces Charter + PRD, owner approves → prompts for new chat)
 Sprint Planning chat
     ↓ (planning produces sprint file, contract, progress file → prompts for new chat)
 Story 1 chat ─┐
@@ -18,8 +20,10 @@ Maintenance chat                → prompts for new chat: retro
     ↓
 Sprint Retro chat               → produces Sprint-XX-retro.md → prompts for new chat: next planning
     ↓
-Next Sprint Planning chat
+Next Sprint Planning chat (or Design Alignment if new phase begins)
 ```
+
+**Design Alignment is a pre-planning phase** that runs when triggered — it is not part of every sprint cycle. See `core/workflows/design-alignment.md` for the full protocol. After alignment produces an approved Charter/PRD, the orchestrator prompts for a new chat to begin sprint planning.
 
 **Four chats between sprints**: close-out merge, maintenance, retro, planning. They are not bundled.
 
@@ -27,6 +31,7 @@ Next Sprint Planning chat
 
 `STATUS.md` carries a `Cycle phase` field that any new chat reads during orientation to know where it is and what to do next. Allowed values:
 
+- `alignment` — Design Alignment is in progress (pre-planning phase for new projects, new phases, or when ambiguity is detected)
 - `planning` — sprint planning chat is in progress or just finished
 - `story-in-progress` — a story chat is active or the previous story chat just closed (a non-last story)
 - `sprint-close` — last story is approved; merge chat needs to run
@@ -34,6 +39,8 @@ Next Sprint Planning chat
 - `retro` — maintenance done; retro chat needs to run
 
 ## What Each Phase Chat Does
+
+**Design Alignment chat (when triggered)** — The orchestrator runs the Design Alignment protocol (`core/workflows/design-alignment.md`). This is not a sub-agent dispatch — the orchestrator conducts the alignment conversation directly. Produces Charter (first time) + PRD. After owner approval, set `Cycle phase: planning` in STATUS.md. **Close-out prompt:** *"Charter and PRD approved. Start a new chat to invoke the scrum master for sprint planning."*
 
 **Sprint Planning chat** — Invoke the scrum-master (coordinator) agent. Produces `Sprint-XX.md`, `Sprint-XX-contract.md`, `Sprint-XX-progress.md`, `features.json` entries, and external task system entries (if configured). Sets `Cycle phase: story-in-progress` in STATUS.md. **Close-out prompt:** *"Sprint planning complete. Open a new chat to start [TICKET] — [Story 1 title]."*
 
