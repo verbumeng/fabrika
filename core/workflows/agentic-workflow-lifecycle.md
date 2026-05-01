@@ -173,8 +173,13 @@ changes align with their intent.
    articulated. If so, flag it to the owner: "This session discussed
    [X] that should be incorporated into [topic]. Want me to update
    the wiki before closing out?"
+5. If `README.md` exists, verify it still accurately reflects the
+   current framework state — agent count, project type categories,
+   feature list, and workflow description. Update if any of the
+   changes in this version made the README stale.
 
-**Output:** Changes on main, wiki updated (if applicable)
+**Output:** Changes on main, wiki updated (if applicable), README
+verified
 
 ---
 
