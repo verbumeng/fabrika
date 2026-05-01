@@ -6,6 +6,55 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.20.0
+
+Analytics Pre-Execution Review. Replaces the analytics-workspace's linear task lifecycle with a tiered workflow that reviews all code before execution. Two tiers: Tier 1 (local data — logic review before execution) and Tier 2 (production data — logic review, metadata query execution, performance review, and cost approval before main query execution). Stakes classification (low/medium/high) scales review intensity within tiers independently of the tier itself. Adds analysis planner validation mode (brief check), human-facing validation report, DDL/DML detection in the logic reviewer, source freshness assessment, side-effect checking, Domain Language and data dictionary integration across analytics agents, and an analytics-workspace-specific review-revise loop (implementer reads reviews directly, 3-cycle cap). The review-revise loop for analytics workspace differs from the sprint-based retry protocol: the implementer reads review reports directly rather than receiving orchestrator-synthesized summaries.
+
+### Core (changed — consumer analytics-workspace projects should update)
+
+- `core/workflows/analytics-workspace.md` — **CHANGED.** Replaced 6-step linear task lifecycle with tiered pre-execution review workflow. Added Pre-Workflow Assessment section (tier/stakes/brief-type classification). Added Tier 1 and Tier 2 workflow definitions with full phase-by-phase details. Added Stakes Classification table. Added Platform-Specific EXPLAIN Mechanisms table with default cost models. Added DDL/DML Detection section with severity-by-environment table. Added Domain Language and Data Dictionary Integration section. Added Source Freshness section (date distributions + source registry cadence). Added Human-Facing Validation Report section. Added Task Folder Structure with new artifacts. Added Review-Revise Loop section (implementer reads reviews directly, 3-cycle cap). Added Exploratory Iteration and Handoff section. Updated Knowledge Pipeline Cadence to reference "the Deliver phase" instead of "step 6 in the task lifecycle."
+- `core/workflows/dispatch-protocol.md` — **CHANGED.** Added three new dispatch contracts: Data Analyst Write-Only Mode (contextual tier), Data Analyst Execute-Metadata Mode (contextual tier), and Analysis Planner Validation Mode (strict tier with 7-item review checklist). Updated Logic Reviewer contract with data dictionary and Domain Language conditional fields and pre-execution context note. Updated Performance Reviewer Analytics Workspace contract with execution manifest required field, pre-execution context note, and platform-specific assessment guidance. Updated Data Validator contract with data dictionary and Domain Language conditional fields. Updated Data Validator contract output to include both internal evaluation report and human-facing validation report. Added analytics-workspace variant paragraph to Retry Protocol section (3-cycle cap, implementer reads reviews directly).
+- `core/agents/data-analyst.md` — **CHANGED.** Added Domain Language and data dictionary orientation step. Added Modes section (write-only, execute-metadata, revision). Added DDL/DML awareness to Behavioral Rules. Updated Implementation Process to note write-only mode for analytics-workspace.
+- `core/agents/logic-reviewer.md` — **CHANGED.** Added pre-execution context note to Orientation. Added checklist section 7 (DDL/DML Detection with severity-by-environment table). Added checklist section 8 (Metadata Query Consistency for Tier 2). Added checklist section 9 (Term Usage against Domain Language and data dictionary).
+- `core/agents/performance-reviewer.md` — **CHANGED.** Added Execution Manifest Review section with schema verification, EXPLAIN plan assessment, cost assessment, and platform-specific guidance (cloud vs on-prem). Added pre-execution context note to Analytics Workspace orientation.
+- `core/agents/data-validator.md` — **CHANGED.** Added checklist section 7 (Side-Effect Check). Added checklist section 8 (Source Freshness via date distributions and source registry cadence). Restructured Output section to include both internal evaluation report and human-facing validation report. Added Domain Language and data dictionary orientation step (step 4) for term definitions, expected column distributions, known quality issues, and refresh cadence. Changed "all six checks" to "all checks" in Validation Intensity to avoid stale count.
+- `core/agents/analysis-planner.md` — **CHANGED.** Added Domain Language orientation step (step 4). Added Validation Mode section with full dispatch contract, 7-item review checklist, output spec, and escalation protocol.
+- `core/Document-Catalog.md` — **CHANGED.** Added three new entries to analytics-workspace section: execution-manifest.md (Tier 1, agent audience, Tier 2 only), validation-report.md (Tier 1, both audience), brief-check.md (Tier 1, agent audience). Updated analytics-workspace Quick Reference to include new documents and evaluation reports.
+- `Domain-Language.md` — **CHANGED.** Updated Task lifecycle definition to reflect tiered workflow. Added six new terms: Tier (data environment classification), Stakes (review intensity classification), Execution manifest, Brief check, Validation report, Pre-execution review.
+
+### Integrations (changed — consumer projects should update)
+
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Updated Analytics Workspace Workflow section with tiered workflow summary including promotion check step. Updated analytics-workspace agent table to include performance-reviewer for Tier 2, analysis-planner validation mode, data-analyst modes, and data-validator validation report. Updated analytics-workspace project structure tree to include validation-report.md, execution-manifest.md, and performance-reviewer.md.
+- `integrations/copilot/copilot-instructions.md` — **CHANGED.** Parallel changes for Copilot parity: tiered workflow summary with promotion check step, updated agent table, updated project structure tree.
+
+### Consumer update instructions
+
+Projects on 0.19.x should:
+
+**Changed files (analytics-workspace projects — update from Fabrika source):**
+1. Update `core/workflows/analytics-workspace.md` — new tiered workflow replaces linear lifecycle
+2. Update `core/workflows/dispatch-protocol.md` — three new dispatch contracts, modified existing contracts, retry protocol variant
+3. Update `core/agents/data-analyst.md` — new modes, DDL/DML awareness, Domain Language orientation
+4. Update `core/agents/logic-reviewer.md` — DDL/DML detection, metadata query consistency, term usage
+5. Update `core/agents/performance-reviewer.md` — execution manifest review, platform-specific guidance
+6. Update `core/agents/data-validator.md` — side-effect check, source freshness, validation report output
+7. Update `core/agents/analysis-planner.md` — validation mode, Domain Language orientation
+8. Update `core/Document-Catalog.md` — new analytics-workspace document entries
+9. Update your integration template (CLAUDE.md or copilot-instructions.md) — tiered workflow, updated agent table, updated project structure
+
+**Changed files (all projects — optional update):**
+10. Update `Domain-Language.md` if you reference Fabrika's framework vocabulary — new analytics workflow terms added
+
+**No action required for:**
+- Sprint-based projects (no changes to sprint-related workflow)
+- Projects not using analytics-workspace type
+- BOOTSTRAP.md, ADOPT.md, UPDATE.md (no changes)
+- MIGRATIONS.md (no migration steps needed — all changes are additive)
+- Agent archetypes (no changes)
+- AGENT-CATALOG.md (no changes)
+
+---
+
 ## 0.19.0
 
 Wiki Knowledge Layer for Canonical Fabrika. Applies the wiki knowledge layer (defined in 0.18.0 for consumer projects) to Fabrika itself, creating a persistent, topic-organized knowledge base that captures framework design philosophy, agent model rationale, workflow evolution, cross-consumer patterns, and communication design decisions. Lighter than the consumer version — cadence is driven by system updates and alignment sessions rather than sprint maintenance. The wiki captures the "why" behind the CHANGELOG's "what," giving future sessions organized access to design rationale that previously lived only in git history and evaporating conversation context. Also adds Fabrika's own Domain Language document defining the framework's ubiquitous vocabulary (archetype, dispatch, contract, topology, etc.), distinct from the consumer Domain Language template. The Ship step (Step 7) of the structural update lifecycle now includes a wiki update sub-step: the orchestrator reviews changes and their rationale, updates relevant topic articles, and proactively flags conversation-level design rationale worth capturing.

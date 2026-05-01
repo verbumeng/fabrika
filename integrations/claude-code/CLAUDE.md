@@ -157,7 +157,8 @@ The verification approach depends on project type:
 │   ├── agents/
 │   │   ├── analysis-planner.md
 │   │   ├── logic-reviewer.md
-│   │   └── data-validator.md
+│   │   ├── data-validator.md
+│   │   └── performance-reviewer.md    # Tier 2 only
 │   └── hooks/
 ├── src/
 │   ├── queries/                       # Reusable SQL
@@ -171,7 +172,9 @@ The verification approach depends on project type:
 │       ├── brief.md                   # Business question
 │       ├── plan.md                    # Technical approach
 │       ├── outcome.md                 # Results and methodology
+│       ├── validation-report.md       # Human-facing evidence chain
 │       └── work/                      # SQL, notebooks, scratch
+│           └── execution-manifest.md  # Tier 2 only: metadata results
 ├── sources/
 │   ├── README.md                      # Source registry index
 │   ├── connections/                   # Queryable data sources
@@ -317,7 +320,13 @@ Summary of workflows covered:
 
 ## Analytics Workspace Workflow (analytics-workspace type only)
 
-No sprints. Work is organized as individual analysis tasks: Brief → Plan → Execute → Validate → Deliver.
+No sprints. Work is organized as individual analysis tasks with a tiered review workflow based on data environment.
+
+**Tier 1 (local data only):** plan -> promotion check -> write -> logic review -> [revise -> re-review]* -> execute -> validate + brief check -> deliver. No execution manifest or performance review.
+
+**Tier 2 (production data):** plan -> promotion check -> write (code + metadata queries) -> logic review -> [revise -> re-review]* -> execute metadata -> performance review -> [revise -> re-review]* -> [cost approval - cloud only] -> execute -> validate + brief check -> deliver.
+
+Mixed sources use highest tier. Stakes (low/medium/high) scale review intensity within tiers. The orchestrator classifies tier and stakes after plan approval, before workflow begins.
 
 For complex analyses (3+ data sources, multiple stakeholders, novel domain, >2 day effort, or significant decision impact), Design Alignment triggers to produce an enhanced Analysis Brief — not a Charter/PRD. This is optional and driven by complexity, not by default.
 
@@ -474,10 +483,11 @@ All agents are invoked proactively by Claude Code at the trigger points in the D
 
 | Role | Agent |
 |------|-------|
-| **Planner** | analysis-planner — takes vague asks, produces briefs and technical plans |
-| **Reviewer** | logic-reviewer — validates SQL/Python/DAX logic |
-| **Validator** | data-validator — sanity checks, cross-references, spot-checks on output |
-| **Implementer** | data-analyst — implements analysis scripts, SQL, notebooks, dashboard code |
+| **Planner** | analysis-planner — takes vague asks, produces briefs and technical plans; validation mode checks output against brief |
+| **Reviewer** | logic-reviewer — validates SQL/Python/DAX logic (pre-execution) |
+| **Reviewer (Tier 2)** | performance-reviewer — assesses execution manifest for cost/efficiency (Tier 2 production data only) |
+| **Validator** | data-validator — sanity checks, cross-references, spot-checks on output; produces validation report |
+| **Implementer** | data-analyst — implements analysis scripts, SQL, notebooks; write-only and execute-metadata modes |
 
 No coordinator agent for analytics workspaces (no sprints to coordinate).
 

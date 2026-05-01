@@ -603,6 +603,24 @@ A project can be **multi-type** (sprint-based types only). A data app with scrap
 - **Types:** analytics-workspace | **Tier:** 1 (created per task at delivery) | **Audience:** both
 - **Structure:** See Outcome-Report-Template.md.
 
+### tasks/[date-name]/work/execution-manifest.md (Execution Manifest)
+- **Purpose:** Metadata query results for Tier 2 tasks: INFORMATION_SCHEMA lookups, EXPLAIN plan output, estimated costs per query. Produced by running metadata queries before main query execution. The primary input for the performance reviewer.
+- **Types:** analytics-workspace | **Tier:** 1 (created per Tier 2 task) | **Audience:** agent
+- **Structure:** Tables touched (four-level path), schema info per table, EXPLAIN plan output per query, estimated cost per query and total, data source classification.
+- **Notes:** Only created for Tier 2 tasks (production data). Lives in `work/` because it is a work product (output of running metadata queries).
+
+### tasks/[date-name]/validation-report.md (Validation Report)
+- **Purpose:** Human-facing evidence chain tracing each key claim in the outcome report back to the code and data that supports it. Lets a stakeholder understand WHY they can trust each number without re-reading the SQL.
+- **Types:** analytics-workspace | **Tier:** 1 (created per task at delivery) | **Audience:** both
+- **Structure:** Per claim: which code produced it, what filters/logic were applied, what validation checks confirmed. Always detailed regardless of stakes.
+- **Notes:** Written by the data validator as a second output alongside the internal evaluation report. Lives at the task root (not in `docs/evaluations/`) because it is a stakeholder-facing deliverable.
+
+### docs/evaluations/[task-name]-brief-check.md (Brief Check)
+- **Purpose:** Analysis planner validation mode report. Verifies that the analysis output answers the business question from the brief in the right format for the stakeholder. Requirements validation, not data validation.
+- **Types:** analytics-workspace | **Tier:** 1 (created per task at delivery) | **Audience:** agent
+- **Structure:** Verdict (MEETS BRIEF / PARTIALLY MEETS BRIEF / DOES NOT MEET BRIEF), per-check findings, gaps identified, recommendations.
+- **Notes:** The analysis planner validates independently — it does not receive data validation results or logic review findings.
+
 ---
 
 ## evaluations/
@@ -794,9 +812,11 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 
 #### analytics-workspace (ad hoc analysis, investigations, data requests)
 **Onboarding:** sources/README.md (Source Registry Index), sources/connections/*.md, sources/tools/*.md, Domain Language
-**Per-task:** brief.md, plan.md, outcome.md (in each `tasks/[date-name]/` folder)
+**Per-task:** brief.md, plan.md, outcome.md, validation-report.md (in each `tasks/[date-name]/` folder)
+**Per-task (Tier 2 only):** execution-manifest.md (in `tasks/[date-name]/work/`)
+**Evaluations:** [task-name]-logic-review.md, [task-name]-data-validation.md, [task-name]-brief-check.md, [task-name]-performance-review.md (Tier 2 only) (in `docs/evaluations/`)
 **As needed:** sources/files/*.md, reusable queries in `src/queries/`, scripts in `src/scripts/`, wiki/index.md, wiki/topics/
-**Note:** No sprint artifacts, no backlog, no Tier system. Work is organized as tasks, not stories. Wiki is opt-in during workspace onboarding and populated via backfill and incremental synthesis after task deliveries.
+**Note:** No sprint artifacts, no backlog. Work is organized as tasks with tiered review (Tier 1 for local data, Tier 2 for production data). Wiki is opt-in during workspace onboarding and populated via backfill and incremental synthesis after task deliveries.
 
 ### Methodology-Based Types
 

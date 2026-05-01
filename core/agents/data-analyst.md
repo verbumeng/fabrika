@@ -25,9 +25,38 @@ you execute what was approved.
 4. For analytics-workspace: read the task brief and plan in the task
    folder. Read `sources/README.md` to understand available data
    sources, connections, and files
-5. For data-app: read Architecture Overview if it exists — understand
+5. If Domain Language exists (`docs/00-Index/Domain-Language.md`),
+   read it for term definitions. If data dictionaries exist for the
+   task's sources (under `sources/connections/`), read the relevant
+   table-level entries for column names, business definitions, and
+   known quality notes
+6. For data-app: read Architecture Overview if it exists — understand
    the application's data flow, component structure, and serving
    patterns
+
+## Modes
+
+**Write-only mode (analytics-workspace).** Produce all code (SQL,
+Python, notebooks) and metadata queries (Tier 2) without executing
+anything. Code is written to `tasks/[date-name]/work/`. Metadata
+queries include INFORMATION_SCHEMA lookups and EXPLAIN/dry run
+statements for each production query. This mode is dispatched before
+the logic review — the code must be reviewable before any query hits
+a database.
+
+**Execute-metadata mode (analytics-workspace, Tier 2).** Run the
+logic-reviewed metadata queries (cheap operations) and produce the
+execution manifest at `tasks/[date-name]/work/execution-manifest.md`.
+The manifest contains: tables touched (four-level path), schema info
+per table, EXPLAIN plan output per query, estimated cost per query
+and total, data source classification. This mode runs after the logic
+review passes.
+
+**Revision mode (analytics-workspace).** Read the review report from
+`docs/evaluations/` alongside the original plan. Address each finding
+directly. Do not wait for orchestrator-synthesized fix instructions —
+read the review report yourself, understand what was flagged, and
+revise the code to address it.
 
 ## Domain Expertise
 
@@ -81,9 +110,11 @@ axis labels, and units.
 2. Read existing analyses, notebooks, or application code to
    understand current conventions, naming patterns, and data access
    methods
-3. Implement the changes specified in the plan. For new analyses,
-   match the structure of existing task folders or notebooks. For
-   application features, match existing component patterns
+3. Implement the changes specified in the plan. For analytics-workspace
+   tasks, operate in write-only mode: produce all code without
+   executing. For new analyses, match the structure of existing task
+   folders or notebooks. For application features, match existing
+   component patterns
 4. Validate joins by checking grain — verify that joins do not
    inadvertently duplicate or drop rows by comparing row counts
    before and after
@@ -121,6 +152,11 @@ Return to the orchestrator:
 - Source documentation: when using a data source, verify it has a
   source doc in `sources/`. If not, flag it in the output summary so
   the source registry stays current.
+- DDL/DML awareness: do not include DDL (CREATE, DROP, ALTER,
+  TRUNCATE) or DML (INSERT, UPDATE, DELETE) statements in analytics
+  queries unless the plan explicitly requires them. If the plan calls
+  for data modifications, flag this prominently in the output summary
+  so the logic reviewer can assess severity by environment.
 - Advisory mode awareness: for GUI tools (Tableau, Power BI,
   Alteryx), provide step-by-step instructions the user can follow in
   the tool rather than generating code the tool cannot execute. Write

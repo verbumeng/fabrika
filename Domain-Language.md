@@ -191,10 +191,15 @@ Sprint Retro -> next Sprint Planning. Each phase boundary is a hard
 new-chat handoff to keep context windows clean. Defined in
 `core/workflows/sprint-lifecycle.md`.
 
-**Task lifecycle** — The 6-step workflow governing
-**analytics-workspace** projects: Brief -> Plan -> Promotion check ->
-Execute -> Validate -> Deliver. Each task is independent — no sprint
-structure. Defined in `core/workflows/analytics-workspace.md`.
+**Task lifecycle** — The tiered workflow governing
+**analytics-workspace** projects. Two tiers: Tier 1 (local data:
+plan -> promotion check -> write -> logic review -> [revise ->
+re-review]* -> execute -> validate + brief check -> deliver) and
+Tier 2 (production data: adds metadata queries, execution manifest,
+performance review, and cost approval gate before main execution).
+Each task is independent — no sprint structure. Defined in
+`core/workflows/analytics-workspace.md`. [Tiered workflow introduced
+in 0.20.0.]
 
 **Session lifecycle** — The per-chat workflow within a single story
 or task: orient (read STATUS.md, sprint contract), plan, implement,
@@ -278,6 +283,51 @@ the gap between machine-optimized artifacts and human decision-making.
 Defined formats exist for specs, sprint plans, task plans, task
 outcomes, structural plans, change summaries, and retros. Principles
 in `core/briefings/briefing-principles.md`. [Formalized in 0.17.0.]
+
+**Tier (analytics workspace)** — A data environment classification
+that determines the workflow process for an analytics-workspace task.
+Tier 1 (local data) skips execution manifest and performance review.
+Tier 2 (production data) adds metadata queries, execution manifest,
+performance review, and cost approval (cloud only). Mixed sources use
+the highest tier. Separate from **stakes** — tier determines process,
+stakes determine intensity. [Introduced in 0.20.0.]
+
+**Stakes** — A review intensity classification for analytics-workspace
+tasks. Low (exploratory, throwaway), medium (stakeholder ad hoc, team
+consumption), or high (executive audience, financial reporting,
+compliance). Determines how thoroughly reviewers and validators check
+within a given **tier**. Separate from tier — a low-stakes cloud query
+still needs cost protection (tier), while a high-stakes local analysis
+needs thorough validation (stakes) but not cost approval. [Introduced
+in 0.20.0.]
+
+**Execution manifest** — A metadata query results document at
+`tasks/[date-name]/work/execution-manifest.md` produced during Tier 2
+analytics-workspace tasks. Contains INFORMATION_SCHEMA lookups, EXPLAIN
+plan output, estimated costs per query, and data source classification.
+The primary input for the performance reviewer's pre-execution
+assessment. [Introduced in 0.20.0.]
+
+**Brief check** — Analysis planner validation mode output at
+`docs/evaluations/[task-name]-brief-check.md`. Verifies that the
+analysis output answers the business question from the brief in the
+format the stakeholder needs. Requirements validation (does the output
+answer the right question?), not data validation (are the numbers
+correct?). Verdict: MEETS BRIEF / PARTIALLY MEETS BRIEF / DOES NOT
+MEET BRIEF. [Introduced in 0.20.0.]
+
+**Validation report** — A human-facing evidence chain at
+`tasks/[date-name]/validation-report.md` produced by the data
+validator. Traces each key claim in the outcome report back to the
+code and data that supports it. Always detailed regardless of
+**stakes**. Distinct from the internal evaluation report (which is for
+the review loop). [Introduced in 0.20.0.]
+
+**Pre-execution review** — The review phase between code writing and
+code execution in the analytics-workspace tiered workflow. The logic
+reviewer and (for Tier 2) performance reviewer assess code before any
+query hits a database. Prevents expensive, incorrect, or destructive
+queries from executing. [Introduced in 0.20.0.]
 
 **Context window hygiene** — The practice of managing what an agent
 reads to stay within effective context limits. Read targeted files,

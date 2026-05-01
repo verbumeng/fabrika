@@ -177,6 +177,83 @@ plan)
 
 ---
 
+### Analysis Planner — Validation Mode
+
+**Tier:** Strict
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Task brief | Yes | Path to `tasks/[date-name]/brief.md` — the business question, stakeholder, desired output format |
+| Task plan | Yes | Path to `tasks/[date-name]/plan.md` — the approach that was approved |
+| Task outcome | Yes | Path to `tasks/[date-name]/outcome.md` — the results produced |
+| Work product paths | Yes | Paths to output files in `tasks/[date-name]/work/` — for format and completeness assessment |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists — for terminology consistency check |
+
+**Do not provide:** Data validation results, logic review findings,
+performance review results, opinions on data quality. The analysis
+planner validates independently against the brief's requirements.
+
+**Output expected:** Validation report at
+`docs/evaluations/[task-name]-brief-check.md`
+
+Review checklist:
+1. **Question answered** — does the outcome directly answer the
+   business question stated in the brief?
+2. **Completeness** — does the output cover all sub-questions or
+   dimensions the brief specified?
+3. **Format match** — is the output in the format the stakeholder
+   requested?
+4. **Audience appropriateness** — is the output at the right level
+   of detail for the stated stakeholder?
+5. **Terminology consistency** — do terms in the output match Domain
+   Language definitions?
+6. **Assumptions surfaced** — are the assumptions from the plan
+   visible in the outcome?
+7. **Caveats documented** — are data quality limitations, known gaps,
+   or confidence levels stated?
+
+Verdict: MEETS BRIEF / PARTIALLY MEETS BRIEF / DOES NOT MEET BRIEF.
+If not MEETS BRIEF, the orchestrator routes findings to the data
+analyst for revision. Standard review-revise loop applies.
+
+---
+
+### Data Analyst — Write-Only Mode
+
+**Tier:** Contextual
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Approved plan | Yes | The task plan approved by the owner |
+| Source registry pointer | Yes | Path to `sources/README.md` |
+| Work directory | Yes | Path to the task directory |
+| Data environment classification | Yes | Local or production, with platform list if production |
+| Source detail pointers | Conditional | Specific source docs if the work targets known sources |
+| Data dictionary pointers | Conditional | Paths to data dictionary entries for tables being queried |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists |
+| Owner constraints | Optional | Preferences or constraints from the conversation |
+
+**Output expected:** Code files in `tasks/[date-name]/work/` plus
+metadata queries (Tier 2). Do not execute.
+
+---
+
+### Data Analyst — Execute-Metadata Mode
+
+**Tier:** Contextual
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Approved plan | Yes | The task plan approved by the owner |
+| Work product paths | Yes | Paths to logic-reviewed metadata queries |
+| Source registry pointer | Yes | Path to `sources/README.md` |
+| Work directory | Yes | Path to the task directory |
+
+**Output expected:** Execution manifest at
+`tasks/[date-name]/work/execution-manifest.md`
+
+---
+
 ### Code Reviewer
 
 **Tier:** Strict
@@ -208,10 +285,16 @@ semgrep, reads the diff, and forms its own judgment.
 | Task plan | Yes | Path to `tasks/[date-name]/plan.md` |
 | Source docs | Yes | Paths to relevant source documentation in `sources/` |
 | Work product paths | Yes | Paths to SQL, scripts, notebooks in `tasks/[date-name]/work/` |
+| Data dictionary pointers | Conditional | Paths to data dictionary entries for tables being queried — required when data dictionaries exist for the task's sources |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists — for term usage checking |
 
 **Do not provide:** Opinions on logic correctness, suspected issues,
 data quality concerns. The logic reviewer reads the brief, reads the
 plan, reads the code, and evaluates independently.
+
+**Pre-execution context:** In the analytics-workspace tiered workflow,
+the logic reviewer may be invoked before execution — no output data
+is available. The review is on the code itself, not on results.
 
 **Output expected:** Review report at `docs/evaluations/[task-name]-logic-review.md`
 
@@ -280,6 +363,21 @@ its own assessment.
 | Task plan | Yes | Path to `tasks/[date-name]/plan.md` |
 | Source docs | Yes | Paths to relevant source documentation |
 | Work product paths | Yes | Paths to SQL, scripts in `tasks/[date-name]/work/` |
+| Execution manifest | Yes | Path to `tasks/[date-name]/work/execution-manifest.md` — INFORMATION_SCHEMA results, EXPLAIN plan output, cost estimates |
+
+**Pre-execution context:** In the analytics-workspace Tier 2 workflow,
+the performance reviewer is invoked before main query execution. The
+review is on the execution manifest (metadata query results), not on
+output data.
+
+**Platform-specific assessment guidance:**
+- **Cloud platforms:** Assess estimated bytes scanned, cost per query,
+  recurring cost projections, scan optimization opportunities, DDL/DML
+  risk re-confirmation.
+- **On-prem platforms:** Assess query complexity, server resource
+  consumption, lock risk, unbounded queries, index usage, DDL/DML risk
+  re-confirmation. No dollar cost — assess impact on shared
+  infrastructure.
 
 **Output expected:** Review report at `docs/evaluations/[task-name]-performance-review.md`
 
@@ -425,8 +523,12 @@ the spec and the source code.
 | Task plan | Yes | Path to `tasks/[date-name]/plan.md` (includes the validation approach — do not extract it separately) |
 | Source docs | Yes | Paths to relevant source documentation |
 | Work product paths | Yes | Paths to output files and scripts |
+| Data dictionary pointers | Conditional | Paths to data dictionary entries for tables being validated — required when data dictionaries exist for the task's sources |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists — for term consistency in the validation report |
 
-**Output expected:** Validation report at `docs/evaluations/[task-name]-data-validation.md`
+**Output expected:**
+1. Internal evaluation report at `docs/evaluations/[task-name]-data-validation.md` — verdict, findings, validation queries (for the review loop)
+2. Human-facing validation report at `tasks/[date-name]/validation-report.md` — evidence chain tracing key claims back to code and data (for the stakeholder)
 
 ---
 
@@ -825,3 +927,12 @@ between the evaluator and the implementer:
 7. **Maximum 2 retry cycles.** After 2 failures, the orchestrator
    stops and presents all reports to the owner with a summary of what
    was tried and recommended next steps.
+
+**Analytics-workspace variant.** The analytics-workspace review-revise
+loop differs from the sprint-based retry protocol: the implementer
+reads review reports directly (the orchestrator routes file paths, it
+does not synthesize findings), mandatory re-review runs after every
+revision, and the cap is 3 failed cycles (not 2). After 3 failed
+cycles, the orchestrator diagnoses the failure pattern and presents it
+to the user for intervention. See
+`[FABRIKA_PATH]/core/workflows/analytics-workspace.md` for details.
