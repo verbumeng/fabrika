@@ -6,6 +6,36 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.20.1
+
+README accuracy and Ship step README check. Updates README.md to reflect the current v0.20.0 framework state — agent count (28, up from 13), project type categories (adds methodology-based/agentic-workflow), feature list (adds dispatch protocol, Design Alignment, Domain Language, wiki knowledge layer, briefing system, graduated testing, task promotion), document catalog size (90+, up from 60+), and workflow description. Adds a README verification sub-step to the Ship step of the agentic-workflow lifecycle so the README is checked for staleness on every structural update. Adds a README accuracy check to the CLAUDE.md verification checklist so verification agents flag drift during Step 4.
+
+### Core (changed — consumer agentic-workflow projects should update)
+
+- `core/workflows/agentic-workflow-lifecycle.md` — **CHANGED.** Added sub-step 5 to Step 7 (Ship): verify README.md still reflects current framework state after changes. Existing sub-steps unchanged.
+
+### Repo root (changed — no consumer action needed)
+
+- `README.md` — **CHANGED.** Updated to reflect v0.20.0 state: 28 agents across 7 archetypes (was 13 across 4), 90+ document types (was 60+), added methodology-based project type category with agentic-workflow, updated analytics-workspace description to tiered pre-execution review (was linear lifecycle), added 7 missing feature descriptions (dispatch protocol, Design Alignment, Domain Language, wiki knowledge layer, briefing system, graduated testing, task promotion), updated "How it works" section with Design Alignment step, dispatch protocol, testing approaches, knowledge synthesis, and wiki.
+
+### Operational docs (changed — no consumer action needed)
+
+- `CLAUDE.md` (project-level, gitignored) — **CHANGED.** Added README accuracy check to verification checklist.
+
+### Consumer update instructions
+
+Projects on 0.20.0:
+
+**Optional update (agentic-workflow projects):**
+1. Update `core/workflows/agentic-workflow-lifecycle.md` — adds README verification sub-step to Ship. No-op if your project has no README.md.
+
+**No action required for:**
+- Sprint-based projects (no changes to sprint-related files)
+- Analytics-workspace projects (no changes to analytics-related files)
+- All other files (no changes)
+
+---
+
 ## 0.20.0
 
 Analytics Pre-Execution Review. Replaces the analytics-workspace's linear task lifecycle with a tiered workflow that reviews all code before execution. Two tiers: Tier 1 (local data — logic review before execution) and Tier 2 (production data — logic review, metadata query execution, performance review, and cost approval before main query execution). Stakes classification (low/medium/high) scales review intensity within tiers independently of the tier itself. Adds analysis planner validation mode (brief check), human-facing validation report, DDL/DML detection in the logic reviewer, source freshness assessment, side-effect checking, Domain Language and data dictionary integration across analytics agents, and an analytics-workspace-specific review-revise loop (implementer reads reviews directly, 3-cycle cap). The review-revise loop for analytics workspace differs from the sprint-based retry protocol: the implementer reads review reports directly rather than receiving orchestrator-synthesized summaries.
