@@ -28,9 +28,11 @@ Fabrika's approach is opinionated about process and agnostic about technology. T
 
 - **Two audiences for documentation (v0.18.0).** The wiki knowledge layer (v0.18.0) codified a principle that had been implicit: Fabrika's documentation serves both humans and agents. Humans need readable narrative with plain language; agents need structured sections they can parse. The design response is narrative prose within structured sections, not separate human/agent documents. This applies to wiki topic articles, briefings, and integration templates. Source: PRD-09, Wiki-Topic-Template.md.
 
+- **Implementer-reviewer pairing as a universal principle (v0.20.0).** Identified and articulated during the PRD-11 alignment session: every implementer output gets an independent review before it is considered complete or acted upon downstream. The implementer produces, the reviewer independently assesses, the implementer revises based on findings, and the reviewer re-checks. The orchestrator routes but does not interpret or synthesize findings. This principle was implicit in how the evaluation cycle worked since v0.12.0, but was never stated explicitly as a framework philosophy. The PRD-11 alignment made it explicit and extended it to cover: all code the data analyst writes (main queries, metadata queries, revisions), revisions after review (mandatory re-review, not just re-review-on-failure), and the orchestrator's role (routing, not translating). The corollary — implementer-validator pairing — states that every output producing observable results gets validated, with the nature of validation varying by workspace type (data output for analytics, test passage for sprint-based, structural correctness for agentic). Source: PRD-11, CHANGELOG 0.20.0.
+
 ## Current State
 
-As of v0.19.0, these principles are woven throughout the framework:
+As of v0.20.0, these principles are woven throughout the framework:
 
 - **Canonical/consumer separation** is managed through BOOTSTRAP.md (with project-type-specific setup since v0.6.0), ADOPT.md (three-tier adoption), UPDATE.md (version-forward migration), and HARVEST.md (reverse flow). The manifest (MANIFEST_SPEC.md) tracks installed files and their hashes to detect customization.
 
@@ -40,7 +42,9 @@ As of v0.19.0, these principles are woven throughout the framework:
 
 - **Stack-agnostic agents** cover 10 project types (9 consumer types plus agentic-workflow) with 23 agent files organized under 7 archetypes. Each agent carries domain expertise in its prompt, not in the consumer's project configuration.
 
-- **Versioning discipline** has produced 20 releases from v0.1.0 through v0.18.0, each with a detailed CHANGELOG entry listing every file change and consumer update instructions.
+- **Implementer-reviewer pairing** is explicitly codified as a framework principle (v0.20.0) and implemented in the analytics-workspace pre-execution review workflow. The data analyst writes code, the logic reviewer reviews it, the data analyst revises, the logic reviewer re-reviews. No output skips review. PRD-13 will extend this pattern's explicit adoption to sprint-based and agentic workflows.
+
+- **Versioning discipline** has produced 21 releases from v0.1.0 through v0.20.0, each with a detailed CHANGELOG entry listing every file change and consumer update instructions.
 
 - **The wiki knowledge layer** (v0.18.0) adds a persistent knowledge pipeline with five phases (Extract, Index, Synthesize, Link, Glossary), operating on cadences appropriate to each project type.
 
@@ -70,12 +74,14 @@ As of v0.19.0, these principles are woven throughout the framework:
 - v0.9.0 -- dispatch protocol extraction as a standalone workflow file
 - v0.11.0 -- Fabrika configured as agentic-workflow project (eating its own cooking)
 - v0.18.0 -- wiki knowledge layer, dual-audience documentation principle
+- v0.20.0 -- implementer-reviewer pairing codified as explicit framework principle
 
 ### PRDs
 - PRD-01 -- agentic-workflow project type definition
 - PRD-02 -- applying agentic-workflow to canonical Fabrika
 - PRD-03 -- implementer archetype and pure orchestrator principle
 - PRD-09 -- wiki knowledge layer design rationale
+- PRD-11 -- analytics pre-execution review, implementer-reviewer pairing principle
 
 ### Core files
 - CLAUDE.md (project-level) -- smell tests, versioning discipline, context decomposition principle

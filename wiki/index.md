@@ -28,16 +28,19 @@ How agents are organized, dispatched, and constrained. Covers the
 archetype system (Planner, Reviewer, Implementer, Coordinator,
 Architect, Designer, Validator), dispatch tiers (strict vs.
 contextual), the pure orchestrator principle, specialist implementers,
-and agent maturity progression. The model grew from 4 agents to 23
-across 18 versions.
+agent maturity progression, and the implementer-reviewer pairing
+philosophy (v0.20.0). The model grew from 4 agents to 23 across 20
+versions.
 
 ### [Workflow Design](topics/workflow-design.md)
 
 The three workflow families (sprint-based, analytics-workspace,
 agentic-workflow) and the patterns that govern them: lifecycle
 definitions, dispatch protocol, design alignment, graduated testing,
-the briefing system, and the knowledge pipeline. Each workflow
-addition addressed a specific process gap.
+the briefing system, and the knowledge pipeline. As of v0.20.0,
+analytics-workspace uses a tiered pre-execution review system with
+execution manifests, DDL/DML detection, and a human-facing validation
+report. Each workflow addition addressed a specific process gap.
 
 ### [Harvest Patterns](topics/harvest-patterns.md)
 
@@ -85,16 +88,19 @@ specific, or tool-specific assumptions.
 
 ## Current State
 
-As of v0.19.0, this wiki was initialized with five topic articles
-synthesized from CHANGELOG entries v0.10.0–v0.18.0 and planning
-PRDs. Articles will deepen over subsequent system updates as new
-design rationale is captured.
+This wiki was initialized in v0.19.0 with five topic articles
+synthesized from CHANGELOG entries v0.10.0-v0.18.0 and planning PRDs.
+In v0.20.0, three articles (Workflow Design, Agent Model, Framework
+Philosophy) were substantially updated with design rationale from the
+PRD-11 alignment session, which produced the implementer-reviewer
+pairing philosophy, the tiered pre-execution review design, and
+several forward-looking PRDs (13-15).
 
 ### Sources Summary
 
-Initial articles draw from:
-- CHANGELOG entries for versions 0.1.0 through 0.18.0
-- Planning PRDs 01–10 (in `planning/`)
+Articles draw from:
+- CHANGELOG entries for versions 0.1.0 through 0.20.0
+- Planning PRDs 01-11, plus 13-15 (planned, in `planning/`)
 - Core workflow files, agent prompts, and integration templates
-- Alignment session outputs from the v0.10.0–v0.19.0 roadmap
+- Alignment session outputs from the v0.10.0-v0.20.0 roadmap
   execution

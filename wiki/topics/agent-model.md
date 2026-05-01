@@ -30,11 +30,17 @@ The design philosophy is that agents carry *methodology expertise*, not tool exp
 
 - **Supplemental reviewers and designers (v0.8.0).** The primary reviewer (code-reviewer or logic-reviewer) provides broad quality evaluation. Supplemental reviewers provide depth in specific areas: security-reviewer (web-app, data-engineering, ai-engineering), performance-reviewer (all types), and prompt-reviewer (ai-engineering). The visualization-designer (analytics-workspace, data-app, analytics-engineering) handles chart type selection, layout design, and accessibility. These roles are optional invocations, not required for every story. Source: CHANGELOG 0.8.0.
 
-- **Domain Language integration into dispatch (v0.15.0).** When a Domain Language document exists, it is included as a conditional field in dispatch contracts for 10 agent types: 4 planners, 5 implementers, and the code-reviewer. Planners use Domain Language terms in specs; implementers name things using Domain Language terms; the code-reviewer checks terminology consistency. This wiring ensures vocabulary consistency without requiring agents to search for the document themselves. Source: PRD-06, CHANGELOG 0.15.0.
+- **Domain Language integration into dispatch (v0.15.0, extended v0.20.0).** When a Domain Language document exists, it is included as a conditional field in dispatch contracts for 10 agent types: 4 planners, 5 implementers, and the code-reviewer. Planners use Domain Language terms in specs; implementers name things using Domain Language terms; the code-reviewer checks terminology consistency. This wiring ensures vocabulary consistency without requiring agents to search for the document themselves. In v0.20.0, Domain Language and data dictionary pointer fields were added to analytics-workspace agents: logic-reviewer (for term usage checking against business definitions), data-analyst (for correct column names and business meanings), analysis-planner (for term ambiguity flagging), and data-validator (for expected distributions and refresh cadence). Source: PRD-06, CHANGELOG 0.15.0, 0.20.0.
+
+- **Implementer-reviewer pairing as a design philosophy (v0.20.0).** Identified during the PRD-11 alignment session. Every implementer output gets an independent review before it is considered complete or acted upon downstream. The implementer produces, the reviewer independently assesses, the implementer revises based on findings, and the reviewer re-checks. The orchestrator routes but does not interpret or synthesize. This applies to all code the data analyst writes (main queries, metadata queries, revisions) and was recognized as a framework-wide principle, not just an analytics-workspace rule. The corollary — implementer-validator pairing — states that every output producing observable results gets validated. The nature of validation differs: analytics-workspace validates execution output, sprint-based validates test passage, agentic-workflow validates structural correctness. Source: PRD-11, CHANGELOG 0.20.0.
+
+- **Analysis planner gains validation mode (v0.20.0).** The analysis planner was the only planner agent without a validation mode. Sprint-based projects have the product-manager validation mode (verify implementation meets acceptance criteria). Analytics-workspace lacked the equivalent "does the output answer the question?" check. A validation mode was added with a 7-item checklist (question answered, completeness, format match, audience appropriateness, terminology consistency, assumptions surfaced, caveats documented) and strict dispatch. This closes a gap where data accuracy was checked (data-validator) but requirements fulfillment was not. Source: PRD-11, CHANGELOG 0.20.0.
+
+- **Data analyst gains three explicit modes (v0.20.0).** The data analyst previously had a single implicit mode: receive plan, implement, return results. Three explicit modes were added: write-only (produce code without executing), execute-metadata (run metadata queries and produce execution manifest), and revision (read review reports directly, address findings). Mode decomposition was driven by the pre-execution review workflow, which requires the data analyst to produce code, have it reviewed, then execute in separate phases. Source: PRD-11, CHANGELOG 0.20.0.
 
 ## Current State
 
-As of v0.19.0, the agent model consists of:
+As of v0.20.0, the agent model consists of:
 
 **7 archetypes** defining base behavioral contracts:
 - Planner (contextual dispatch for planning, strict for validation)
@@ -58,13 +64,13 @@ As of v0.19.0, the agent model consists of:
 
 **Role mapping across project categories:**
 - Sprint-based types (8 types): full agent roster with planner, reviewer, supplemental reviewers, validator, optional designer, scrum-master coordinator, implementer, and architect
-- Task-based types (analytics-workspace): analysis-planner, logic-reviewer, performance-reviewer, data-validator, visualization-designer, data-analyst implementer, no coordinator or architect
+- Task-based types (analytics-workspace): analysis-planner (planning + validation modes), logic-reviewer (pre-execution, all tiers), performance-reviewer (pre-execution, Tier 2 only), data-validator (post-execution + validation report), visualization-designer, data-analyst (write-only, execute-metadata, revision modes), no coordinator or architect
 - Methodology-based types (agentic-workflow): workflow-planner, methodology-reviewer, structural-validator, context-engineer, context-architect, scrum-master (for change backlog sequencing)
 
 **Dispatch infrastructure:**
 - Dispatch protocol (core/workflows/dispatch-protocol.md) defines per-agent contracts with required and conditional fields
 - Lightweight dispatch path for trivial changes (single file, fully specified, not a new feature)
-- Retry protocol with orchestrator-as-translator pattern (orchestrator translates evaluator findings into implementer fix instructions, maximum 2 retry cycles)
+- Retry protocol: sprint-based and agentic-workflow use orchestrator-as-translator (max 2 cycles); analytics-workspace uses direct implementer-reads-reviews (max 3 cycles, with orchestrator diagnosis after cap). PRD-13 proposes converging all project types on the direct-read pattern.
 
 **Testing modes for the test-writer (v0.16.0):**
 - Spec-first mode (TDD stories): input is spec only, output is behavioral tests
@@ -78,7 +84,7 @@ As of v0.19.0, the agent model consists of:
 
 - **No dedicated wiki/knowledge agent.** The v0.18.0 knowledge pipeline is managed by the orchestrator during maintenance. PRD-09 noted that if synthesis quality suffers from context overload, a dedicated knowledge agent is a future iteration. Whether this will be needed depends on how large consumer project wikis become in practice.
 
-- **Orchestrator-as-translator friction.** The evaluation feedback loop routes evaluator findings through the orchestrator, which translates them into implementer fix instructions. This adds a round trip and potential information loss. Whether direct evaluator-to-implementer dispatch would improve quality is an open question, balanced against the risk of losing orchestrator context about the broader story.
+- **Orchestrator-as-translator friction (partially resolved in v0.20.0).** The evaluation feedback loop routes evaluator findings through the orchestrator, which translates them into implementer fix instructions. This adds a round trip and potential information loss. The analytics-workspace workflow (v0.20.0) resolved this by having the implementer read review reports directly. This pattern proved more natural: the implementer is the domain expert who wrote the code and is better positioned to interpret findings in context. PRD-13 proposes adopting this direct-read pattern across all project types. The remaining question is whether the orchestrator-as-translator pattern has value in sprint-based contexts where the evaluator and implementer operate in different domain vocabularies, or whether direct reading is universally better.
 
 ## Related Topics
 
@@ -99,6 +105,7 @@ As of v0.19.0, the agent model consists of:
 - v0.13.0 -- full architect archetype, software-architect and data-architect specialists, spiral mitigation
 - v0.15.0 -- Domain Language integration into dispatch contracts
 - v0.16.0 -- spec-first and coverage modes for test-writer
+- v0.20.0 -- data analyst modes (write-only, execute-metadata, revision), analysis planner validation mode, Domain Language/data dictionary integration for analytics agents, implementer-reviewer pairing philosophy, direct implementer-reads-reviews retry protocol
 
 ### PRDs
 - PRD-01 -- agentic-workflow project type and initial archetype stubs
@@ -107,6 +114,8 @@ As of v0.19.0, the agent model consists of:
 - PRD-04 -- architect archetype, structural design evaluation, spiral mitigation
 - PRD-06 -- Domain Language integration into agent dispatch
 - PRD-07 -- TDD integration, spec-first mode for test-writer
+- PRD-11 -- analytics pre-execution review, implementer-reviewer pairing, data analyst modes
+- PRD-13 -- review-revise loop redesign across all project types (planned)
 
 ### Core files
 - core/agents/AGENT-CATALOG.md -- complete agent-to-project-type mapping
