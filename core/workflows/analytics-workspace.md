@@ -88,7 +88,9 @@ plan -> promotion check -> write -> logic review ->
 
 **Plan.** Analysis planner writes plan. Flags all data as local.
 References Domain Language for term definitions. Points to relevant
-data dictionaries in the source registry.
+data dictionaries in the source registry. Platform configuration
+(connection type, local tools) comes from onboarding-scaffolded
+files at `sources/connections/[platform]/README.md` when available.
 
 **Promotion check.** Analysis planner checks `templates/` and
 `recurring/` for prior similar tasks. If this is a repeat, flags it
@@ -160,10 +162,13 @@ validate + brief check -> deliver
 **Plan.** Analysis planner writes plan. Flags production data sources
 by type (BigQuery, Snowflake, Databricks, SQL Server, etc.).
 References Domain Language and data dictionary chain for term
-definitions. Includes preliminary cost estimate based on available
-cost model (from `sources/connections/[platform]/README.md` or
-published defaults if cost model unknown — see Platform-Specific
-EXPLAIN Mechanisms below).
+definitions. Platform configuration and cost model come from
+onboarding-scaffolded files at
+`sources/connections/[platform]/README.md` — these are populated
+during workspace bootstrap (see BOOTSTRAP.md Phase 2W.1a) or
+created manually. Includes preliminary cost estimate based on the
+cost model documented there (or published defaults if cost model
+unknown — see Platform-Specific EXPLAIN Mechanisms below).
 
 **Promotion check.** Same as Tier 1.
 
@@ -283,8 +288,11 @@ validation report to `tasks/[date-name]/validation-report.md`
 When using default cost estimates, the execution manifest and cost
 approval gate include a note: "Cost estimated using default [platform]
 pricing. Actual costs may differ based on your pricing tier. To
-improve estimates, document your cost model in
-`sources/connections/[platform]/README.md`."
+improve estimates, update the Cost Model section in
+`sources/connections/[platform]/README.md`." The platform README is
+initially populated during workspace onboarding (BOOTSTRAP.md Phase
+2W.1a) — if the user did not know their cost model at that time, the
+file uses published defaults and flags this.
 
 ---
 

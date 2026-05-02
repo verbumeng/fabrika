@@ -148,6 +148,26 @@ For any file not listed above, when a Fabrika file would overwrite an existing f
 3. Ask: **"This file already exists. Options: (1) Keep yours, (2) Replace with Fabrika version, (3) Merge — I'll combine both."**
 4. Record the decision in the manifest. If the user kept theirs, set `customized: true`.
 
+## Analytics Workspace Onboarding (Existing Workspaces)
+
+For analytics-workspace projects adopting Fabrika — or existing
+workspaces upgrading to 0.23.0+ — the platform onboarding protocol
+can be run retroactively to scaffold platform configuration and cost
+model documentation.
+
+Run: `[FABRIKA_PATH]/core/workflows/analytics-onboarding.md`
+
+This asks about database platforms, cost models, source connections,
+and data governance tooling. All questions are skippable. Answers
+produce `sources/connections/[platform]/README.md` files that the
+analytics-workspace workflow uses for cost estimation and performance
+review.
+
+Existing source registry files created manually are not affected —
+onboarding adds platform-level READMEs alongside them.
+
+---
+
 ## After Adoption
 
 - The project now has `.fabrika/manifest.yml` and can use UPDATE.md for future Fabrika updates

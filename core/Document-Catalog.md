@@ -574,9 +574,17 @@ A project can be **multi-type** (sprint-based types only). A data app with scrap
 - **Types:** analytics-workspace | **Tier:** 1 (populated during onboarding) | **Audience:** agent
 - **Structure:** Three sections: Connections (queryable data sources), Tools (BI/ETL tools), Files (recurring flat file sources). Each entry: name, one-line description, link to detail file.
 
-### sources/connections/*.md
-- **Purpose:** Per-connection documentation for data sources the agent can query programmatically: warehouses, databases, ODBC connections, APIs, SharePoint lists.
+### sources/connections/[platform]/README.md (Platform Connection)
+- **Purpose:** Platform-level overview documenting the database platform type, environment (cloud/on-prem/local), connection method, cost model, and EXPLAIN mechanism. One per platform. Level 1 project/instance connections live in subdirectories beneath this.
+- **Types:** analytics-workspace | **Tier:** 1 (populated during onboarding) | **Audience:** agent
+- **Template:** `core/templates/Platform-Connection-Template.md`
+- **Structure:** Platform type, environment, connection method, cost model (actual or default), default pricing reference table, EXPLAIN mechanism, list of Level 1 connections beneath this platform.
+- **Notes:** Created during workspace onboarding (BOOTSTRAP.md Phase 2W.1a). If the user does not know their cost model, the file uses published default pricing and flags this. The analytics-workspace workflow reads the cost model from this file during plan and performance review phases.
+
+### sources/connections/[platform]/[instance]/*.md
+- **Purpose:** Per-connection documentation for Level 1 project/instance data sources beneath a platform: specific databases, projects, or servers the agent can query programmatically.
 - **Types:** analytics-workspace | **Tier:** 1 (one per known connection) | **Audience:** agent
+- **Template:** `core/templates/Source-Connection-Template.md`
 - **Structure:** Connection type, connection string/path, authentication method, key schemas/tables, known gotchas, SLA/reliability notes, who owns it.
 
 ### sources/tools/*.md
@@ -752,6 +760,7 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 - Session-Log-Template.md — all sprint-based types
 - Dashboard-Spec-Template.md — `data-app`
 - Model-Design-Template.md — `ml-engineering`
+- Platform-Connection-Template.md — `analytics-workspace`
 - Source-Connection-Template.md — `analytics-workspace`, `data-engineering`
 - Source-Tool-Template.md — `analytics-workspace`
 - Source-File-Template.md — `analytics-workspace`
@@ -813,7 +822,7 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 ### Task-Based Types
 
 #### analytics-workspace (ad hoc analysis, investigations, data requests)
-**Onboarding:** sources/README.md (Source Registry Index), sources/connections/*.md, sources/tools/*.md, Domain Language
+**Onboarding:** sources/README.md (Source Registry Index), sources/connections/[platform]/README.md (Platform Connection), sources/connections/[platform]/[instance]/*.md, sources/tools/*.md, Domain Language
 **Per-task:** brief.md, plan.md, outcome.md, validation-report.md (in each `tasks/[date-name]/` folder)
 **Per-task (Tier 2 only):** execution-manifest.md (in `tasks/[date-name]/work/`)
 **Evaluations:** [task-name]-logic-review.md, [task-name]-data-validation.md, [task-name]-brief-check.md, [task-name]-performance-review.md (Tier 2 only) (in `docs/evaluations/`)
