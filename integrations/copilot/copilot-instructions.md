@@ -237,7 +237,7 @@ No sprints. Work is organized as individual analysis tasks with a tiered review 
 
 **Tier 2 (production data):** plan -> promotion check -> write (code + metadata queries) -> logic review -> [revise -> re-review]* -> execute metadata -> performance review -> [revise -> re-review]* -> [cost approval - cloud only] -> execute -> validate + brief check -> deliver.
 
-Mixed sources use highest tier. Stakes (low/medium/high) scale review intensity within tiers. The orchestrator classifies tier and stakes after plan approval, before workflow begins.
+Mixed sources use highest tier. Stakes (low/medium/high) scale review intensity within tiers. The orchestrator classifies tier and stakes after plan approval, before workflow begins. Platform configuration and cost model info are pre-populated during workspace onboarding (BOOTSTRAP.md Phase 2W.1a) at `sources/connections/[platform]/README.md`.
 
 For complex analyses (3+ data sources, multiple stakeholders, novel domain, >2 day effort, or significant decision impact), Design Alignment triggers to produce an enhanced Analysis Brief — not a Charter/PRD. This is optional and driven by complexity, not by default.
 

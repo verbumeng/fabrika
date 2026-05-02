@@ -441,6 +441,7 @@ Copy templates from `[FABRIKA_PATH]/core/templates/`:
 - `Analysis-Plan-Template.md` → `docs/Templates/Analysis-Plan-Template.md`
 - `Outcome-Report-Template.md` → `docs/Templates/Outcome-Report-Template.md`
 - `Task-Contract-Template.md` → `docs/Templates/Task-Contract-Template.md`
+- `Platform-Connection-Template.md` → `docs/Templates/Platform-Connection-Template.md`
 - `Source-Connection-Template.md` → `docs/Templates/Source-Connection-Template.md`
 - `Source-Tool-Template.md` → `docs/Templates/Source-Tool-Template.md`
 - `Source-File-Template.md` → `docs/Templates/Source-File-Template.md`
@@ -451,13 +452,29 @@ Copy eval scaffold from `[FABRIKA_PATH]/core/evals/README.md` and `agent-changel
 
 Set up the CLAUDE.md or copilot-instructions as applicable.
 
+### 2W.1a Platform onboarding (optional)
+
+Run the analytics onboarding protocol at
+`[FABRIKA_PATH]/core/workflows/analytics-onboarding.md`. This asks
+the user about platforms, cost models, source connections, and data
+governance tooling. All questions are skippable. Answers produce
+pre-populated platform connection stubs in the source registry.
+
 ### 2W.2 Source inventory conversation
 
-Run through these questions to catalog the workspace's data sources. Create source files as the user describes each one.
+If onboarding (2W.1a) was completed, start from the scaffolded
+platform and connection stubs. Read `sources/connections/` to see
+what already exists before asking. Ask only about sources not yet
+documented.
+
+If onboarding was skipped, run the full inventory below.
+
+Run through these questions to catalog the workspace's data sources.
+Create source files as the user describes each one.
 
 **Step 1 — Connections:** "What databases, warehouses, or data systems do you connect to? For each one, tell me: the type (Snowflake, SQL Server, PostgreSQL, etc.), how you connect (ODBC, direct, VPN), and which schemas or tables you use most."
 
-For each source described, create a file in `sources/connections/` using the Source-Connection-Template.
+For each source described, create a file in `sources/connections/` using the Source-Connection-Template. If a platform README already exists from onboarding, place the connection beneath it: `sources/connections/[platform]/[instance]/README.md`. If no platform README exists, create both the platform-level README (using Platform-Connection-Template) and the connection stub.
 
 **Step 2 — BI/ETL Tools:** "What BI or ETL tools does your team use? Things like Tableau Server, Power BI, Alteryx, Looker, etc. For each one: where it lives (URL, network path), what key workbooks or workflows are there, and how often they refresh."
 
@@ -784,6 +801,7 @@ Use this during the Phase 4 readiness check.
 ### Type-specific (analytics-workspace)
 - [ ] `sources/README.md` populated with source registry index
 - [ ] At least one source documented in `sources/connections/`, `sources/tools/`, or `sources/files/`
+- [ ] Platform connection stubs created for identified platforms (`sources/connections/[platform]/README.md`) — if onboarding (2W.1a) was completed
 - [ ] Analysis agents installed (analysis-planner, logic-reviewer, data-validator)
 - [ ] Task templates in `docs/Templates/`
 - [ ] Baseline evals copied (planner, reviewer, validator — not coordinator)

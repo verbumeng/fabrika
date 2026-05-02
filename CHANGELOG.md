@@ -6,6 +6,91 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.23.0
+
+Analytics Workspace Onboarding Protocol. Adds a structured onboarding
+questionnaire to the analytics-workspace bootstrap process
+(BOOTSTRAP.md Phase 2W). After directory scaffolding and agent
+installation, the orchestrator asks the user about
+platforms/technology, cost models, source connections, and data
+governance tooling. All questions are skippable. Answers produce
+pre-populated platform connection stubs in the source registry with
+cost model info — either from the user's actual pricing or published
+defaults. The analytics-workspace workflow now references these
+onboarding-scaffolded files as the source of platform configuration
+and cost model data.
+
+### New files
+
+- `core/workflows/analytics-onboarding.md` — **NEW.** Self-contained
+  onboarding protocol for analytics-workspace projects. Four question
+  groups: platforms/technology, cost model, source registry
+  scaffolding, data governance. Referenced by BOOTSTRAP.md Phase
+  2W.1a and ADOPT.md for retroactive onboarding of existing
+  workspaces.
+- `core/templates/Platform-Connection-Template.md` — **NEW.** Template
+  for `sources/connections/[platform]/README.md` — platform-level
+  overview with platform type, environment, connection method, cost
+  model section (actual or default pricing), EXPLAIN mechanism, and
+  default pricing reference table. Used during onboarding to scaffold
+  platform-level stubs. Distinct from `Source-Connection-Template.md`,
+  which is for Level 1 project/instance connections beneath a platform.
+
+### Core (changed — consumer projects should update)
+
+- `core/workflows/analytics-workspace.md` — **CHANGED.** Plan phase
+  for both Tier 1 and Tier 2 workflows now references onboarding-
+  scaffolded files at `sources/connections/[platform]/README.md` as
+  the source of platform configuration and cost model data. Default
+  cost estimate note updated to reference onboarding as the initial
+  capture point.
+- `core/Document-Catalog.md` — **CHANGED.** New entry for Platform
+  Connection (`sources/connections/[platform]/README.md`) under
+  analytics-workspace documents. Existing `sources/connections/*.md`
+  entry clarified to describe Level 1 project/instance stubs beneath
+  the platform README. Quick Reference analytics-workspace section
+  updated. Templates section gains `Platform-Connection-Template.md`.
+
+### Root (changed — consumer projects should update)
+
+- `BOOTSTRAP.md` — **CHANGED.** Phase 2W gains new step 2W.1a
+  (Platform onboarding) that points to the new
+  `core/workflows/analytics-onboarding.md`. Existing step 2W.2
+  updated to build on what onboarding already scaffolded rather than
+  re-asking. Template copy list gains Platform-Connection-Template.
+  Readiness checklist gains platform connection stub item.
+- `ADOPT.md` — **CHANGED.** New section for analytics-workspace
+  onboarding of existing workspaces, pointing to
+  `core/workflows/analytics-onboarding.md`.
+
+### Integrations (changed — consumer projects should update)
+
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Analytics
+  Workspace Workflow summary section gains one sentence noting that
+  platform configuration and cost model info are pre-populated during
+  workspace onboarding.
+- `integrations/copilot/copilot-instructions.md` — **CHANGED.** Same
+  one-sentence addition as the CLAUDE.md template.
+
+### Consumer update instructions
+
+1. Copy new files:
+   - `core/workflows/analytics-onboarding.md`
+   - `core/templates/Platform-Connection-Template.md`
+2. Replace `BOOTSTRAP.md` (Phase 2W section has changed)
+3. Update `ADOPT.md` (new analytics-workspace onboarding section)
+4. Update `core/workflows/analytics-workspace.md`
+5. Update `core/Document-Catalog.md`
+6. Update your integration template (CLAUDE.md or
+   copilot-instructions.md)
+7. Existing analytics-workspace projects with already-bootstrapped
+   workspaces: run `core/workflows/analytics-onboarding.md`
+   retroactively to add platform configuration, or create
+   `sources/connections/[platform]/README.md` manually using the new
+   Platform-Connection-Template.
+
+---
+
 ## 0.22.0
 
 Review-Revise Loop Redesign. Converges all three project types

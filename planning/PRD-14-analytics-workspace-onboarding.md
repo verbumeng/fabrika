@@ -1,9 +1,10 @@
 # PRD-14: Analytics Workspace Onboarding Protocol
 
-**Version target:** TBD
+**Version target:** 0.23.0
 **Dependencies:** PRD-11 (analytics pre-execution review — defines
 the workflow that onboarding configures for), PRD-06 (domain
 language — onboarding may initiate terminology capture)
+**Status:** Aligned (2026-05-02)
 **Execution method:** Agentic-workflow structural update protocol
 
 ## Problem Statement
@@ -79,12 +80,10 @@ question and fill in the details later.
 **Data governance:**
 - Do you use a data catalog or data governance tool? (Alation,
   Collibra, DataHub, Atlan, etc.)
-- If yes: "Data catalogs can serve as the source of truth for data
-  dictionaries and schema documentation, which agents use during
-  review. Integrating your catalog with the agent workflow requires
-  custom API configuration — this is not built in. For now, we
-  recommend capturing essential schema knowledge in Markdown within
-  the source registry. You can migrate to catalog integration later.
+- If yes: "You can integrate a catalog tool with the agent workflow
+  if you want, but Fabrika doesn't have built-in integration — that
+  would require custom API configuration on your side. For now,
+  Markdown data dictionaries in the source registry are the default.
   Would you like to set up the Markdown data dictionaries now?"
 - If no: proceed with Markdown-based data dictionaries as the default
 
@@ -119,11 +118,14 @@ sources/connections/
           [level-4: table].md    <- Data dictionary (stubbed)
 ```
 
-During onboarding, only Level 1 and possibly Level 2 stubs are
-created. Levels 3-4 (dataset/schema → table data dictionaries) are
-populated incrementally as the user works with specific tables during
-analysis tasks. The data analyst can add data dictionary entries as
-it encounters new tables.
+During onboarding, only the platform-level connection stubs are
+created (Level 1 at most). After scaffolding, the orchestrator
+informs the user that they can discover schemas via
+INFORMATION_SCHEMA calls whenever they want, but this is not part of
+onboarding — it would happen later, during a task or on their own
+initiative. Levels 2-4 (database → dataset/schema → table data
+dictionaries) are populated incrementally as the user works with
+specific tables during analysis tasks.
 
 ## Scope (Preliminary)
 
@@ -146,13 +148,17 @@ it encounters new tables.
   workspace-specific)
 - Domain Language setup (handled by PRD-06 and Design Alignment)
 
-## Open Questions
+## Resolved Questions (Aligned 2026-05-02)
 
-- Should onboarding also ask about common analysis patterns (e.g.,
-  "I mostly do financial reporting" vs. "I mostly do ad hoc
-  exploration") to pre-configure validation intensity defaults?
-- Should the data governance tool integration path be documented as a
-  future PRD, or just a note in the onboarding flow?
-- How deep should onboarding go on source registry population? Just
-  Level 1 stubs, or should it try to auto-discover schemas via
-  INFORMATION_SCHEMA for connected platforms?
+- **Analysis patterns / validation intensity:** No. Stakes
+  classification already handles validation intensity per-task.
+  Onboarding does not ask about analysis patterns or pre-set
+  defaults.
+- **Data governance integration path:** Not a future PRD. Onboarding
+  mentions catalog integration as an option the user can pursue on
+  their own, but Fabrika has no built-in integration. Markdown data
+  dictionaries are the default.
+- **Source registry depth:** Onboarding scaffolds platform-level
+  connection stubs (Level 1 at most). After scaffolding, the user is
+  informed they can discover schemas via INFORMATION_SCHEMA whenever
+  they want. Schema discovery is not part of onboarding.
