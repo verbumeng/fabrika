@@ -173,7 +173,7 @@ analysis — they do not modify files.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Approved plan | Yes | The system update plan (what was intended) |
+| Approved plan | Yes | Path to the plan file at `docs/plans/[identifier]-plan.md` |
 | File paths | Yes | Every file created or changed |
 | CHANGELOG entry | Yes | The version entry describing the changes |
 | Verification checklist | Yes | The project's verification checklist from its instruction file |

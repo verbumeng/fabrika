@@ -217,7 +217,7 @@ Same as Architect archetype. Read-only analysis plus report creation.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Approved plan | Yes | The system update plan (what was intended) |
+| Approved plan | Yes | Path to the plan file at `docs/plans/[identifier]-plan.md` |
 | File paths | Yes | Every file created or changed |
 | Structural reference pointers | Yes | Paths to catalogs, workflow files, integration templates — the system's structural reference docs |
 

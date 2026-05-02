@@ -336,7 +336,7 @@ For complex analyses (3+ data sources, multiple stakeholders, novel domain, >2 d
 
 ## Agentic-Workflow Lifecycle (agentic-workflow type only)
 
-No sprints. Work is organized as structural changes following a 7-step protocol: Plan → Align → Execute → Verify → Incorporate Feedback → Present → Ship. Each change gets a version bump and CHANGELOG entry. Verification uses three independent agents (methodology-reviewer, structural-validator, architect) with strict dispatch.
+No sprints. Work is organized as structural changes following a 7-step protocol: Plan → Align → Execute → Verify → Incorporate Feedback → Present → Ship. Each change gets a version bump and CHANGELOG entry. The planner writes a persistent plan file to `docs/plans/[identifier]-plan.md` — owner pushback re-invokes the planner to revise (the orchestrator never edits plans directly). Verification agents receive the plan file path in their strict dispatch for independent assessment.
 
 Operational mode (if enabled) is human-initiated and interactive — no agent orchestration for operational sessions.
 
@@ -495,7 +495,7 @@ No coordinator agent for analytics workspaces (no sprints to coordinate).
 
 | Role | Agent |
 |------|-------|
-| **Planner** | workflow-planner — expands PRDs/change requests into structured implementation plans with file inventories, integration analysis, and risk identification |
+| **Planner** | workflow-planner — expands change requests into plan files (`docs/plans/[identifier]-plan.md`) with file inventories, integration analysis, and risk identification |
 | **Reviewer** | methodology-reviewer — evaluates cross-reference consistency, prompt patterns, instruction decomposition, smell tests |
 | **Validator** | structural-validator — mechanically verifies file existence, version consistency, catalog accuracy, reference resolution |
 | **Implementer** | context-engineer — writes methodology artifacts (agent prompts, workflows, instruction files, catalogs, integration templates) against approved plan |

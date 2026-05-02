@@ -6,6 +6,67 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.21.0
+
+Plan Persistence Alignment. Aligns the agentic-workflow planning artifact lifecycle with the pattern already established by sprint-based and analytics-workspace projects. The workflow-planner now writes its plan to a file at `docs/plans/[identifier]-plan.md` instead of producing it in conversation only. The plan file uses YAML frontmatter (status: draft/approved/executed, created date, change-request pointer) and includes an Alignment History section that captures what changed from the initial plan and why — persisting design rationale that previously evaporated in conversation. Owner pushback re-invokes the planner to revise the file (same as spec revision in sprint-based projects). Verification agents receive the plan file path in their dispatch, giving them the same independent assessment capability that sprint-based reviewers get from spec files. Introduces "change request (CR)" as the forward-going naming convention for new change requests in agentic-workflow projects (existing PRD files unchanged). After this change, all three project types follow the same lifecycle pattern: change request -> planner writes plan file -> owner reviews -> revise via planner -> approve -> implementer receives file path -> validators assess against file.
+
+### New files
+
+- `core/templates/System-Update-Plan-Template.md` — **NEW.** Template for the system update plan file with YAML frontmatter (status, created, change-request) and sections for file change inventory, integration point analysis, risk identification, mitigations, version bump determination, CHANGELOG draft, owner decision points, and Alignment History. Used by the workflow-planner when creating plans for agentic-workflow projects.
+- `docs/plans/.gitkeep` — **NEW.** Creates the plan file directory for Fabrika itself (eating its own cooking). Consumer agentic-workflow projects should also create this directory if it does not already exist (sprint-based projects already have `docs/plans/`).
+
+### Core (changed — consumer agentic-workflow projects should update)
+
+- `core/agents/workflow-planner.md` — **CHANGED.** Output contract changed from conversation-only to file at `docs/plans/[identifier]-plan.md`. Planning Procedure step 9 updated to write file using the System-Update-Plan template. Added re-invocation procedure for alignment feedback: planner reads existing plan file, revises in place, appends to Alignment History section. Dispatch contract updated: change request field description broadened, new conditional `Existing plan path` field for re-invocation.
+- `core/workflows/agentic-workflow-lifecycle.md` — **CHANGED.** Step 1 (Plan) output changed from "Structured plan in conversation" to plan file at `docs/plans/`. Step 2 (Align) added revision procedure: orchestrator re-invokes planner with feedback, planner revises file and updates Alignment History, orchestrator updates status to approved. Step 4 (Verify) clarified that agents receive plan file path. Step 7 (Ship) added sub-step 1: update plan status to executed. Agent Roster note updated from "PRDs" to "change requests."
+- `core/workflows/dispatch-protocol.md` — **CHANGED.** Workflow Planner output expected changed from conversation to file path. Added conditional `Existing plan path` field for re-invocation. Context Engineer `Approved plan` field changed from "The plan approved by the owner" to file path reference. Methodology Reviewer, Structural Validator, and Context Architect `Approved plan` fields changed from "The system update plan" to file path references.
+- `core/agents/context-engineer.md` — **CHANGED.** Dispatch contract `Approved plan` description updated to reference plan file path.
+- `core/agents/methodology-reviewer.md` — **CHANGED.** Dispatch contract `Approved plan` description updated to reference plan file path.
+- `core/agents/structural-validator.md` — **CHANGED.** Dispatch contract `Approved plan` description updated to reference plan file path.
+- `core/agents/context-architect.md` — **CHANGED.** Dispatch contract `Approved plan` description updated to reference plan file path.
+- `core/Document-Catalog.md` — **CHANGED.** System Update Plan entry updated from conversation-based to file-based with template reference, YAML frontmatter details, status lifecycle, and Alignment History description. Quick Reference agentic-workflow section updated from "(in conversation)" to file path. Templates section added `System-Update-Plan-Template.md` for agentic-workflow.
+- `core/briefings/structural-plan-briefing.md` — **CHANGED.** Updated opening description from "it is not a separate file" to describe the plan as a file at `docs/plans/[identifier]-plan.md`.
+
+### Integrations (changed — consumer projects should update)
+
+- `integrations/claude-code/CLAUDE.md` — **CHANGED.** Agentic-Workflow Lifecycle summary updated to describe persistent plan files, planner re-invocation on pushback, and plan file path in verifier dispatch. Methodology-based agent table updated: workflow-planner description changed from "expands PRDs/change requests" to "expands change requests into plan files."
+- `integrations/copilot/copilot-instructions.md` — **CHANGED.** Parallel changes: Agentic-Workflow Lifecycle summary and methodology-based agent table updated identically to CLAUDE.md.
+
+### Domain Language (changed — optional update)
+
+- `Domain-Language.md` — **CHANGED.** Updated Structural update lifecycle definition to describe plan file output and status lifecycle. Added three new terms: Change request (CR), System update plan (persistent file), and Alignment history.
+
+### Wiki (changed — no consumer action needed)
+
+- `wiki/topics/workflow-design.md` — **CHANGED.** Plan persistence open question marked as resolved (v0.21.0). Added key decision entry for plan persistence alignment. Updated Current State agentic-workflow section with plan file details. Added v0.21.0 to CHANGELOG versions and PRD-12 to PRDs in Sources.
+
+### Consumer update instructions
+
+Projects on 0.20.x should:
+
+**Changed files (agentic-workflow projects — update from Fabrika source):**
+1. Copy `core/templates/System-Update-Plan-Template.md` (new file)
+2. Update `core/agents/workflow-planner.md`
+3. Update `core/workflows/agentic-workflow-lifecycle.md`
+4. Update `core/workflows/dispatch-protocol.md`
+5. Update `core/agents/context-engineer.md`
+6. Update `core/agents/methodology-reviewer.md`
+7. Update `core/agents/structural-validator.md`
+8. Update `core/agents/context-architect.md`
+9. Update `core/Document-Catalog.md`
+10. Update `core/briefings/structural-plan-briefing.md`
+11. Update your integration template (CLAUDE.md or copilot-instructions.md)
+12. Create `docs/plans/` directory if it does not exist (sprint-based projects already have this)
+
+**Optional updates (all projects):**
+13. Update `Domain-Language.md` if you reference Fabrika's framework vocabulary
+
+**No action required for:**
+- Sprint-based projects (no changes to sprint-related workflow)
+- Analytics-workspace projects (no changes to analytics-related workflow)
+
+---
+
 ## 0.20.1
 
 README accuracy and Ship step README check. Updates README.md to reflect the current v0.20.0 framework state — agent count (28, up from 13), project type categories (adds methodology-based/agentic-workflow), feature list (adds dispatch protocol, Design Alignment, Domain Language, wiki knowledge layer, briefing system, graduated testing, task promotion), document catalog size (90+, up from 60+), and workflow description. Adds a README verification sub-step to the Ship step of the agentic-workflow lifecycle so the README is checked for staleness on every structural update. Adds a README accuracy check to the CLAUDE.md verification checklist so verification agents flag drift during Step 4.

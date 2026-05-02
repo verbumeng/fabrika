@@ -107,11 +107,19 @@ evaluate against.
    capability belongs in core or integrations. Separate these from
    mechanical changes that need no input.
 
-9. **Present the plan.** Write the plan in the conversation as a
-   structured document. The plan is the contract the context-engineer
-   implements against and the verification agents evaluate against.
-   It must be complete enough that someone could execute it without
-   asking follow-up questions about what files to touch.
+9. **Write the plan file.** Write the plan to
+   `docs/plans/[identifier]-plan.md` using the System-Update-Plan
+   template (`core/templates/System-Update-Plan-Template.md`). Set
+   the frontmatter `status` to `draft` and `change-request` to the
+   path of the originating CR or PRD. The plan is the contract the
+   context-engineer implements against and the verification agents
+   evaluate against. It must be complete enough that someone could
+   execute it without asking follow-up questions about what files to
+   touch.
+
+   When re-invoked after owner feedback, read the existing plan file,
+   revise it in place, and append an entry to the Alignment History
+   section describing what changed and why.
 
 ## Plan Quality Criteria
 
@@ -181,23 +189,30 @@ edit/editFiles (restricted to docs/ and plans/)
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Change request | Yes | The PRD, issue, or conversation context describing what needs to change |
+| Change request | Yes | The change request (CR, PRD, issue, or conversation context) describing what needs to change |
 | Current file state | Yes | Paths to files that will be affected, so the planner can read their current state |
 | Integration point map | Yes | The project's known cross-reference chains (from the project instruction file) |
 | Version state | Yes | Current VERSION and latest CHANGELOG entry — needed for bump determination |
 | Owner context | Optional | Constraints, preferences, or prior decisions from the conversation |
+| Existing plan path | Conditional | Path to existing plan file — required when re-invoked for revision after owner feedback |
 
-**Output expected:** Structured implementation plan in the
-conversation covering file inventory, integration analysis, risks,
-mitigations, and version bump determination.
+**Output expected:** Plan file at
+`docs/plans/[identifier]-plan.md` covering file inventory,
+integration analysis, risks, mitigations, and version bump
+determination.
 
 ## Output Contract
 
-- Structured plan in the conversation (not a separate file)
+- Plan file at `docs/plans/[identifier]-plan.md` using the
+  System-Update-Plan template
+- Frontmatter: `status: draft`, `change-request` pointing to the
+  originating CR or PRD
 - Must be explicit — not "I'll update related files" but specific
   file paths, specific changes, specific integration points
 - Must include version bump determination with reasoning
 - Must identify which changes require MIGRATIONS.md entries
+- When re-invoked for revision: update the existing plan file in
+  place, append to the Alignment History section
 
 ## Context Window Hygiene
 
