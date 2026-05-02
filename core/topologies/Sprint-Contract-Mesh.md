@@ -69,7 +69,7 @@ If during implementation a story needs to modify files outside its declared isol
 3. Options: extract the shared dependency into a prerequisite ticket, switch the conflicting stories to hierarchical topology, or re-scope one of the stories.
 
 ## Rollback Protocol
-Each story is evaluated independently. If one story's evaluation fails, it does not affect the others. Standard retry protocol applies per-story (max 2 retries, then escalate).
+Each story is evaluated independently. If one story's evaluation fails, it does not affect the others. Standard retry protocol applies per-story: implementer reads review reports directly, revises, all evaluators re-review (max 3 cycles). After 3 failed cycles, orchestrator diagnoses failure pattern and presents diagnosis to owner.
 
 ## Notes
 [Any context, constraints, or open questions for this sprint]

@@ -220,7 +220,7 @@ The agent drives the development process proactively. Don't wait for the owner t
 Summary of workflows covered:
 - **Design Alignment** — structured requirements gathering → Project Charter + PRD → fresh-chat handoff to sprint planning (see Design Alignment section above)
 - **Starting a Story** — spec expansion → approval → optional architect design review → branch → testing approach branching (TDD: test-writer spec-first → implementer vertical slices → refactor; test-informed: implementer → test-writer coverage; test-after: implementer → evaluation cycle) → evaluate → fix cycle
-- **Completing a Story (Evaluation Cycle)** — tests → lint → commit → reviewer → validator → planner validation → optional architect structural evaluation → rollback protocol (max 2 retries)
+- **Completing a Story (Evaluation Cycle)** — tests → lint → commit → reviewer → validator → planner validation → optional architect structural evaluation → review-revise loop (max 3 cycles, implementer reads reviews directly — see `core/design-principles.md`)
 - **Sprint Planning** — scrum-master receives approved PRD → topology assessment → 2-3 stories → contract → approval
 - **Ideation & Backlog Grooming** — new stories, re-scoping, someday-maybe
 - **Research & Technical Discussion** — research docs, ADRs
@@ -503,6 +503,7 @@ This project uses **Fabrika**, an agentic workflow framework. Local agent change
 - **Context window hygiene.** Load docs on demand, not up front. Return concise summaries.
 - **Stack-agnostic agent prompts.** Tech details live in this file's Project Stack section.
 - **Pure orchestrator.** The orchestrator dispatches to implementer agents for all production code changes — it does not implement directly, even for trivial tasks. Lightweight dispatch reduces ceremony, not the dispatch itself.
+- **Implementer-reviewer pairing.** Every implementer output gets an independent review. During revision, the implementer reads review reports directly — the orchestrator routes file paths, it does not synthesize findings. See `[FABRIKA_PATH]/core/design-principles.md`.
 
 ---
 

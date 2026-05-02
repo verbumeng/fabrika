@@ -28,7 +28,7 @@ The design philosophy is that workflows define the *sequence and contracts* for 
 
 - **The wiki knowledge pipeline (v0.18.0).** A 5-phase pipeline transforms scattered project artifacts (ADRs, retro findings, evaluation reports, research docs) into organized, continuously updated topic articles. Phase 1 (Extract) pulls content from artifacts. Phase 2 (Index) scores salience and produces batch JSON intermediates. Phase 3 (Synthesize) clusters by topic and writes/updates articles. Phase 4 (Link) cross-references related topics. Phase 5 (Glossary) feeds new terms back to Domain Language. Sprint-based projects run Extract+Index during maintenance, Synthesize+Link every 2-3 sprints, and full reintegration quarterly. Topic articles are created via notice-and-proceed -- the agent creates and notifies, proceeding unless the owner objects. Source: PRD-09, CHANGELOG 0.18.0.
 
-- **Evaluation cycle with orchestrator-as-translator (v0.12.0, revised for analytics-workspace in v0.20.0).** After implementation, the evaluation cycle dispatches to reviewer and validator agents independently. If they find issues, the orchestrator translates their findings into implementer fix instructions rather than having the implementer read raw evaluation reports directly. This translation step adds a round trip but ensures the implementer receives instructions in its own domain vocabulary rather than evaluator jargon. Maximum 2 retry cycles before escalating to the owner. **Analytics-workspace exception (v0.20.0):** the analytics-workspace workflow uses a different retry protocol where the data analyst reads review reports directly (no orchestrator synthesis), re-review is mandatory after every revision, and the cap is 3 cycles before the orchestrator diagnoses the failure pattern and brings the user in. This revised pattern was identified as a design improvement and is slated for cross-cutting adoption via PRD-13 (review-revise loop redesign for sprint-based and agentic-workflow projects). Source: CHANGELOG 0.12.0, 0.20.0, core/workflows/development-workflow.md, core/workflows/analytics-workspace.md.
+- **Review-revise loop convergence (v0.12.0, revised v0.20.0, converged v0.22.0).** After implementation, the evaluation cycle dispatches to reviewer and validator agents independently. If they find issues, the implementer reads the review reports directly — the orchestrator routes file paths, it does not synthesize or interpret findings. All evaluators re-review after every revision (not just failing ones). Maximum 3 retry cycles. After 3 failed cycles, the orchestrator diagnoses the failure pattern (same issue recurring? different issues each time? narrowing but not resolving?) and presents the diagnosis to the user. This pattern originated in the analytics-workspace workflow (v0.20.0) where it replaced the orchestrator-as-translator approach (v0.12.0). PRD-13 (v0.22.0) converged all project types on this single pattern, eliminating the split between sprint-based/agentic (orchestrator-as-translator, max 2 cycles) and analytics-workspace (direct-read, max 3 cycles). The rationale: the implementer is the domain expert who wrote the output and is better positioned to interpret review findings in context. See `core/design-principles.md`. Source: CHANGELOG 0.12.0, 0.20.0, 0.22.0, core/workflows/dispatch-protocol.md.
 
 - **Fresh-chat boundaries as hygiene gates (v0.7.0, formalized v0.14.0).** Context windows degrade over long conversations. Fabrika mandates fresh chats at defined boundaries: after Design Alignment is complete, after Charter/PRD approval, and between sprint phases. The sprint lifecycle uses a cycle phase indicator (alignment, planning, dev, review, maintenance, retro) to signal which phase a chat belongs to. This is not optional -- it is a structural constraint to prevent context pollution between phases. Source: CHANGELOG 0.7.0, PRD-05.
 
@@ -38,14 +38,14 @@ The design philosophy is that workflows define the *sequence and contracts* for 
 
 ## Current State
 
-As of v0.19.0, the workflow system includes:
+As of v0.22.0, the workflow system includes:
 
 **Sprint-based workflow** (8 project types):
 - Design Alignment protocol for requirements gathering (brain dump -> Charter/PRD)
 - Sprint lifecycle with phase indicator (alignment, planning, dev, review, maintenance, retro)
 - Development workflow with testing approach branching (TDD/test-informed/test-after)
 - Dispatch protocol with per-agent contracts and lightweight dispatch path
-- Evaluation cycle with orchestrator-as-translator feedback loop
+- Review-revise loop: implementer reads reviews directly, all evaluators re-review, max 3 cycles with orchestrator diagnosis
 - 9 briefing formats across sprint, session, retro, spec, task, and structural contexts
 - Maintenance checklist with 7+ sections including knowledge synthesis
 - Hook system with 7 git hooks and 4 tool-specific hooks
@@ -88,7 +88,7 @@ As of v0.19.0, the workflow system includes:
 
 - **Domain Language as high-level vocabulary pointing to data dictionaries (v0.20.0).** For analytics-workspace projects, the Domain Language document stays high-level ("revenue" means X) and points to data dictionaries in the source registry for schema-level detail. Data dictionaries follow a four-level platform hierarchy: project/server -> database -> dataset/schema -> table/view. This prevents Domain Language from becoming bloated with column-level schema information while still giving agents a navigable path from business terms to specific table definitions. The logic reviewer, data analyst, analysis planner, and data validator all reference this chain during their orientation. Source: PRD-11, CHANGELOG 0.20.0.
 
-- **Analytics-workspace review-revise loop redesign (v0.20.0).** The analytics-workspace workflow introduced a revised retry protocol that differs from the sprint-based pattern: the implementer (data analyst) reads review reports directly rather than receiving orchestrator-synthesized fix instructions, re-review is mandatory after every revision (not just on failure), and the cap is 3 cycles (not 2). After 3 failed cycles, the orchestrator diagnoses the failure pattern — same issue recurring? different issues each time? narrowing but not resolving? — and presents the diagnosis to the user in plain language. The user decides the path forward; the orchestrator dispatches accordingly; the review cycle still runs after intervention. This pattern was identified as a design improvement over the sprint-based orchestrator-as-translator approach and is slated for cross-cutting adoption via PRD-13. Source: PRD-11, PRD-13, CHANGELOG 0.20.0.
+- **Analytics-workspace review-revise loop redesign (v0.20.0, converged v0.22.0).** The analytics-workspace workflow introduced a revised retry protocol in v0.20.0: the implementer reads review reports directly, re-review is mandatory after every revision, and the cap is 3 cycles with orchestrator diagnosis after cap. In v0.22.0 (PRD-13), this pattern was adopted as the universal review-revise loop across all project types, replacing the sprint-based and agentic-workflow orchestrator-as-translator approach (max 2 cycles). Implementer-reviewer pairing and implementer-validator pairing are now codified as cross-cutting framework principles in `core/design-principles.md`. Source: PRD-11, PRD-13, CHANGELOG 0.20.0, 0.22.0.
 
 - **Plan persistence alignment across all project types (v0.21.0).** The agentic-workflow lifecycle kept plans in conversation only, while sprint-based projects persisted specs as files and analytics-workspace persisted briefs and plans as files. This meant the implementation contract was ephemeral, validators could not independently assess against it, and alignment feedback evaporated. The fix: the workflow-planner now writes plans to `docs/plans/[identifier]-plan.md` using a structured template with YAML frontmatter and an Alignment History section. Owner pushback re-invokes the planner (not the orchestrator) to revise. The plan file is the single artifact that the implementer receives, the validators assess against, and the wiki synthesizes from. Also introduces "change request (CR)" as forward-going terminology for agentic-workflow change requests (existing PRDs not renamed). After this change, all three project types follow the identical lifecycle pattern: change request -> planner writes plan file -> owner reviews -> implementer receives file path -> validators assess against file. Source: PRD-12, CHANGELOG 0.21.0.
 
@@ -98,7 +98,7 @@ As of v0.19.0, the workflow system includes:
 
 - **TDD for analytics-workspace.** The graduated testing approach (v0.16.0) was designed primarily for sprint-based projects. Test boundaries for SQL and analysis work are less clear than for application code. Whether analytics-workspace tasks benefit from TDD-style spec-first testing, and what that looks like in practice, is unresolved. However, the pre-execution review workflow (v0.20.0) introduces a form of "test before run" discipline: code is reviewed for correctness before execution, which serves a similar function to TDD in the analytics context.
 
-- **Review-revise loop convergence across project types.** The analytics-workspace review-revise loop (v0.20.0) uses a different protocol than sprint-based projects: implementer reads reviews directly (no orchestrator synthesis), 3-cycle cap (not 2), mandatory re-review after revision. PRD-13 proposes adopting this pattern across all project types. Whether the sprint-based orchestrator-as-translator pattern should be fully replaced or kept as an option is an open design decision.
+- **~~Review-revise loop convergence across project types.~~** Resolved in v0.22.0 (PRD-13). All project types now use the same review-revise loop: implementer reads review reports directly, all evaluators re-review after every revision, 3-cycle cap with orchestrator diagnosis after cap. The orchestrator-as-translator pattern was fully replaced — the implementer is the domain expert better positioned to interpret review findings. Implementer-reviewer pairing and implementer-validator pairing codified in `core/design-principles.md`.
 
 - **Analytics workspace onboarding.** The pre-execution review workflow depends on platform configuration (cost models, source registry structure, data dictionary hierarchy) that is currently discovered ad hoc during the first analysis task. PRD-14 proposes a structured onboarding protocol that gathers this information upfront. Whether onboarding should also cover data governance tool integration (Alation, Collibra, DataHub) is an open question — the tooling exists but requires custom API configuration.
 
@@ -137,6 +137,7 @@ As of v0.19.0, the workflow system includes:
 - v0.18.0 -- wiki knowledge pipeline (5 phases), cadence integration, backfill mechanism
 - v0.20.0 -- analytics pre-execution review: tiered workflows, execution manifest, validation report, analysis planner validation mode, DDL/DML detection, Domain Language/data dictionary integration, review-revise loop redesign
 - v0.21.0 -- plan persistence alignment: persistent plan files for agentic-workflow, alignment history, change request terminology, consistent lifecycle across all project types
+- v0.22.0 -- review-revise loop convergence: all project types use direct implementer-reads-reviews, mandatory full re-review, 3-cycle cap with orchestrator diagnosis. Implementer-reviewer pairing and implementer-validator pairing codified in core/design-principles.md
 
 ### PRDs
 - PRD-01 -- agentic-workflow lifecycle design
@@ -149,7 +150,7 @@ As of v0.19.0, the workflow system includes:
 - PRD-09 -- wiki knowledge pipeline, cadence integration, notice-and-proceed model
 - PRD-11 -- analytics pre-execution review, tiered workflows, implementer-reviewer pairing
 - PRD-12 -- plan persistence alignment, consistent plan lifecycle across project types
-- PRD-13 -- review-revise loop redesign (cross-cutting, planned)
+- PRD-13 -- review-revise loop redesign (cross-cutting, implemented v0.22.0)
 - PRD-14 -- analytics workspace onboarding protocol (planned)
 - PRD-15 -- token cost estimation across workspaces (planned)
 

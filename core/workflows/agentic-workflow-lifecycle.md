@@ -134,8 +134,14 @@ Each agent writes its findings directly — no filtering or softening.
 
 **Owner:** Orchestrator + Implementer agent
 
-Read all three evaluation reports. For each finding:
-- Fix it if it is a real problem (implementer executes fixes)
+Dispatch the context engineer for revision with the original plan and
+a `Review report paths` field containing the paths to all three
+verification reports. The context engineer reads the reports directly
+alongside the plan — the orchestrator does not synthesize or interpret
+findings. See `core/design-principles.md` for the rationale.
+
+For each finding:
+- Fix it if it is a real problem (context engineer executes fixes)
 - If you disagree with a finding, explain why to the owner and let
   them decide
 
@@ -143,9 +149,18 @@ If findings change the scope of the plan (not localized fixes but
 fundamental rethinking), loop back to Step 2 and re-align with the
 owner.
 
-**Retry limit:** Maximum 2 retry cycles through Steps 4-5. After 2
-failed verification rounds, stop and present all reports to the
-owner with a summary of what was tried.
+After revision, re-invoke ALL three verifiers with fresh dispatch —
+same payload as the original invocation, updated file paths, no prior
+reports included. All verifiers re-check, not just the ones that
+failed — a fix can introduce new issues in areas that previously
+passed.
+
+**Retry limit:** Maximum 3 retry cycles through Steps 4-5. After 3
+failed verification rounds, the orchestrator reads all reports across
+all cycles, diagnoses the failure pattern (same issue recurring?
+different issues each time? narrowing but not resolving?), and
+presents the diagnosis to the user in plain language. The user decides
+the path forward.
 
 **Output:** Fixed files (or escalation to owner)
 

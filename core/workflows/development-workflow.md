@@ -125,22 +125,29 @@ Before marking a story complete, run the full evaluation cycle:
 
 **If any evaluator fails the implementation (Feedback Loop):**
 
-10. Read all evaluation reports. Synthesize findings into
-    implementer-actionable fix instructions — specific issues, specific
-    file paths, specific expected behavior. Do NOT forward raw reports
-    to the implementer.
-11. Dispatch fix instructions to the implementer. The implementer
-    addresses each finding and returns an updated output summary.
+10. Dispatch the implementer for revision with: the original spec,
+    relevant file paths, and a `Review report paths` field containing
+    the paths to all evaluation reports from the current cycle. The
+    implementer reads the review reports directly alongside the
+    original plan — the orchestrator does not synthesize or interpret
+    findings. See `core/design-principles.md` for the rationale.
+11. The implementer addresses each finding and returns an updated
+    output summary.
 12. Sanity-check the fixes: does the implementer's summary address
     each evaluator finding? If a finding was clearly missed, dispatch
     clarification back to the implementer before burning a retry cycle.
-13. Re-invoke the failing evaluator(s) with fresh dispatch — same
-    spec, same rubric, updated file paths. No prior evaluation report
-    included.
-14. **Maximum 2 retry cycles** through steps 10-13. After 2 failed
-    attempts, stop and present: all evaluation reports, summary of
-    what was tried, recommended next steps (rescope, break into
-    smaller stories, research the blocker).
+13. Re-invoke ALL evaluators with fresh dispatch — same spec, same
+    rubric, updated file paths. No prior evaluation report included.
+    All evaluators re-check, not just the ones that failed — a fix
+    can introduce new issues in areas that previously passed.
+14. **Maximum 3 retry cycles** through steps 10-13. After 3 failed
+    cycles, the orchestrator reads all reports across all cycles,
+    diagnoses the failure pattern (same issue recurring? different
+    issues each time? narrowing but not resolving?), and presents the
+    diagnosis to the user in plain language. The user decides the path
+    forward: rescope, break into smaller stories, research the
+    blocker, or override. The review cycle still runs after
+    intervention.
 
 **If all evaluators pass:**
 

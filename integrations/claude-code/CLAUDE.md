@@ -309,7 +309,7 @@ Claude Code drives the development process proactively. Don't wait for the owner
 Summary of workflows covered:
 - **Design Alignment** — structured requirements gathering → Project Charter + PRD → fresh-chat handoff to sprint planning (see Design Alignment section above)
 - **Starting a Story** — spec expansion → approval → optional architect design review → branch → testing approach branching (TDD: test-writer spec-first → implementer vertical slices → refactor; test-informed: implementer → test-writer coverage; test-after: implementer → evaluation cycle) → evaluate → fix cycle
-- **Completing a Story (Evaluation Cycle)** — tests → lint → commit → reviewer → validator → planner validation → optional architect structural evaluation → rollback protocol (max 2 retries)
+- **Completing a Story (Evaluation Cycle)** — tests → lint → commit → reviewer → validator → planner validation → optional architect structural evaluation → review-revise loop (max 3 cycles, implementer reads reviews directly — see `core/design-principles.md`)
 - **Sprint Planning** — scrum-master receives approved PRD → topology assessment → 2-3 stories → contract → approval
 - **Ideation & Backlog Grooming** — new stories, re-scoping, someday-maybe
 - **Research & Technical Discussion** — research docs, ADRs
@@ -600,6 +600,7 @@ If a stale lock file exists (from a session that didn't clean up), the session o
 - **Stack-agnostic agent prompts.** Never put technology-specific references in global agent prompts. All tech details live in this CLAUDE.md's Project Stack section.
 - **Prefer improving existing agents over adding new ones.** If a new capability is needed, first check if it belongs in an existing agent's scope. Only create a new agent if the capability requires a fundamentally different evaluation lens.
 - **Pure orchestrator.** The orchestrator dispatches to implementer agents for all production code changes — it does not implement directly, even for trivial tasks. Lightweight dispatch reduces ceremony, not the dispatch itself.
+- **Implementer-reviewer pairing.** Every implementer output gets an independent review. During revision, the implementer reads review reports directly — the orchestrator routes file paths, it does not synthesize findings. See `[FABRIKA_PATH]/core/design-principles.md`.
 
 ---
 

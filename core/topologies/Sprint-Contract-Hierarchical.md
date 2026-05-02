@@ -87,7 +87,7 @@ Because tickets are coupled, a failure in a downstream ticket may indicate an is
 1. Evaluate each ticket individually after completion
 2. After all tickets are complete, run end-to-end acceptance criteria
 3. If end-to-end fails, identify which ticket's output is incorrect
-4. Standard retry protocol applies (max 2 retries on the failing ticket, then escalate)
+4. Standard retry protocol applies (max 3 cycles on the failing ticket: implementer reads review reports directly, revises, all evaluators re-review. After 3 failed cycles, orchestrator diagnoses failure pattern and presents diagnosis to owner)
 
 ## Notes
 [Any context, constraints, or open questions for this sprint]

@@ -4,6 +4,32 @@ When a Fabrika update requires consumer projects to do more than a straight file
 
 ---
 
+## 0.22.0 — Review-Revise Loop Redesign
+
+**Affects:** All consumer projects (sprint-based, analytics-workspace, and agentic-workflow).
+
+**What changed:** All three project types now use the same review-revise loop pattern. The implementer reads review reports directly during revision (the orchestrator routes file paths, it does not synthesize or interpret findings). All evaluators re-review after every revision, not just the ones that failed. The cycle cap is 3 failed cycles with orchestrator diagnosis after cap. This replaces the previous split where sprint-based and agentic-workflow used orchestrator-as-translator (max 2 cycles) while analytics-workspace used direct-read (max 3 cycles). Implementer-reviewer pairing and implementer-validator pairing are codified as explicit framework design principles in a new file.
+
+**Migration steps:**
+
+1. **Copy new file.** Copy `core/design-principles.md` to your Fabrika path.
+
+2. **Update changed core files.** Update the following from the Fabrika source: `core/workflows/dispatch-protocol.md`, `core/workflows/development-workflow.md`, `core/workflows/agentic-workflow-lifecycle.md`, `core/workflows/analytics-workspace.md`, `core/agents/archetypes/implementer.md`, `core/agents/context-engineer.md`, `core/topologies/Sprint-Contract-Pipeline.md`, `core/topologies/Sprint-Contract-Mesh.md`, `core/topologies/Sprint-Contract-Hierarchical.md`.
+
+3. **Update changed integration file.** Update your integration template (CLAUDE.md or copilot-instructions.md).
+
+4. **Update Domain Language (optional).** Update `Domain-Language.md` with revised "Evaluation cycle" and "Retry protocol" definitions and three new terms.
+
+5. **Behavioral changes.** After migration:
+   - When evaluators FAIL an implementation, the orchestrator dispatches the implementer for revision with a `Review report paths` field containing the paths to all evaluation reports. The implementer reads these directly alongside the original plan.
+   - After revision, ALL evaluators re-check — not just the ones that failed. A fix can introduce new issues in areas that previously passed.
+   - The cycle cap is 3 (previously 2 for sprint-based and agentic-workflow). After 3 failed cycles, the orchestrator diagnoses the failure pattern and presents it to the user. The user decides the path forward.
+   - Existing sprint contracts in active sprints are unaffected. New sprint contracts will pick up the updated topology templates.
+
+**Why this matters:** The orchestrator-as-translator pattern added a translation layer between evaluator findings and the implementer. This round trip lost nuance — the implementer is the domain expert who wrote the output and is better positioned to interpret review findings in context. The analytics-workspace workflow proved this in v0.20.0: direct reading produced better revision quality with less orchestrator overhead. Converging all project types on one pattern eliminates the cognitive overhead of maintaining two different retry protocols and ensures consistent behavior across the framework.
+
+---
+
 ## 0.21.0 — Plan Persistence Alignment
 
 **Affects:** Consumer projects using the `agentic-workflow` project type.

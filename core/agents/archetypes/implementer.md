@@ -85,10 +85,17 @@ produce correct implementations.
 - File paths of existing files that will be modified
 - Any constraints or preferences from the owner conversation
 
-**What NOT to include in dispatch:**
-- Reviewer or validator feedback from prior iterations (if retrying
-  after a failed review, the orchestrator summarizes what to fix —
-  the implementer does not read raw evaluation reports)
+**What NOT to include in dispatch (initial invocation):**
+- Reviewer or validator reports from prior stories or unrelated work
+
+**Revision dispatch (after a failed review):**
+When invoked for revision, the orchestrator includes a `Review report
+paths` field containing the paths to evaluation reports from the
+current cycle. The implementer reads these directly alongside the
+original plan. The orchestrator does not synthesize or interpret
+findings — the implementer is the domain expert who wrote the output
+and is better positioned to interpret review findings in context.
+See `core/design-principles.md`.
 
 ### Full Dispatch vs. Lightweight Dispatch
 
@@ -156,17 +163,23 @@ plan specifies, verify existing tests pass, and stop.
 After implementation, evaluators (reviewer, validator, planner)
 review the work. If they find issues:
 
-1. The orchestrator reads all evaluation reports and synthesizes
-   findings into implementer-actionable fix instructions
-2. The orchestrator dispatches the fix instructions to the
-   implementer (not the raw evaluation reports)
-3. The implementer addresses each finding and produces an updated
-   output summary
+1. The orchestrator dispatches the implementer for revision with the
+   original plan and a `Review report paths` field containing the
+   paths to all evaluation reports from the current cycle. The
+   implementer reads the review reports directly alongside the
+   original plan — the orchestrator does not synthesize or interpret
+   findings (see `core/design-principles.md`).
+2. When invoked for revision, read the review report(s) at the
+   provided paths. Understand what was flagged. Revise to address
+   each finding.
+3. The implementer produces an updated output summary.
 4. The orchestrator sanity-checks the fixes: does the implementer's
    summary address each evaluator finding?
-5. If aligned, the orchestrator re-invokes the failing evaluator(s)
-   with fresh dispatch (no prior reports)
-6. Maximum 2 retry cycles
+5. If aligned, the orchestrator re-invokes ALL evaluators with fresh
+   dispatch (no prior reports). All evaluators re-check, not just the
+   ones that failed — a fix can introduce new issues.
+6. Maximum 3 retry cycles. After 3 failed cycles, the orchestrator
+   diagnoses the failure pattern and presents it to the user.
 
 ## Base Behavioral Rules
 

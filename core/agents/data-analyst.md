@@ -54,9 +54,9 @@ review passes.
 
 **Revision mode (analytics-workspace).** Read the review report from
 `docs/evaluations/` alongside the original plan. Address each finding
-directly. Do not wait for orchestrator-synthesized fix instructions —
-read the review report yourself, understand what was flagged, and
-revise the code to address it.
+directly. The orchestrator routes the review report path(s) — it does not
+synthesize or interpret findings. Read the report, understand what
+was flagged, and revise the code to address it.
 
 ## Domain Expertise
 

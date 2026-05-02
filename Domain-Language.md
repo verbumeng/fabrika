@@ -183,7 +183,7 @@ changes to agentic-workflow systems: (1) Plan (planner writes plan
 file to `docs/plans/`), (2) Align (owner reviews, planner revises
 on pushback), (3) Execute, (4) Verify (agents receive plan file
 path), (5) Incorporate Feedback, (6) Present, (7) Ship (plan status
-set to executed). Steps 4-5 can loop (maximum 2 retry cycles).
+set to executed). Steps 4-5 can loop (maximum 3 retry cycles).
 Defined in `core/workflows/agentic-workflow-lifecycle.md`.
 
 **Change request (CR)** — The input to the planning process for
@@ -264,16 +264,45 @@ interfaces). The coordinator assesses topology during sprint planning.
 
 **Evaluation cycle** — The review-validate-fix loop after
 implementation. The orchestrator dispatches reviewer(s), validator(s),
-and planner (in validation mode), reads all reports, and synthesizes
-findings into fix instructions for the implementer. Maximum 2 retry
-cycles.
+and planner (in validation mode). If evaluators find issues, the
+implementer reads the review reports directly (the orchestrator routes
+file paths, it does not synthesize findings) and revises. All
+evaluators re-check after every revision. Maximum 3 retry cycles.
 
 **Retry protocol** — The procedure for handling a FAIL verdict from
-an evaluator. The orchestrator reads evaluation reports, synthesizes
-findings into implementer-actionable fix instructions (not raw
-reports), dispatches fixes, sanity-checks the response, then
-re-invokes the failing evaluator with fresh dispatch. Maximum 2 retry
-cycles. Defined in `core/workflows/dispatch-protocol.md`.
+an evaluator. The orchestrator dispatches the implementer for revision
+with the original plan and the review report paths. The implementer
+reads the reports directly, revises, and the orchestrator re-invokes
+all evaluators (not just failing ones) with fresh dispatch. Maximum 3
+retry cycles. After 3 failed cycles, the orchestrator diagnoses the
+failure pattern and presents it to the user for intervention. Defined
+in `core/workflows/dispatch-protocol.md`.
+
+**Implementer-reviewer pairing** — The principle that every
+implementer output gets an independent review before it is considered
+complete or acted upon downstream. The implementer produces, the
+reviewer independently assesses, the implementer revises based on
+findings, and the reviewer re-checks. The orchestrator routes but
+does not interpret or synthesize. Applies across all project types.
+Defined in `core/design-principles.md`. [Identified in 0.20.0,
+codified in 0.22.0.]
+
+**Implementer-validator pairing** — The corollary to
+**implementer-reviewer pairing**: every implementer output that
+produces observable results gets validated against expected outcomes.
+The nature of validation differs by project type: data output for
+analytics-workspace, test passage for sprint-based, structural
+correctness for agentic-workflow. Defined in
+`core/design-principles.md`. [Identified in 0.20.0, codified in
+0.22.0.]
+
+**Orchestrator diagnosis** — The protocol after 3 failed **retry
+protocol** cycles. The orchestrator reads all evaluation reports
+across all cycles, identifies the failure pattern (same issue
+recurring, different issues each time, narrowing but not resolving),
+and presents the diagnosis to the user in plain language. The user
+decides the path forward; the review cycle still runs after
+intervention. [Introduced in 0.22.0.]
 
 **Verification gate** — A step in the **structural update lifecycle**
 (Step 4) where three independent agents — methodology-reviewer,
