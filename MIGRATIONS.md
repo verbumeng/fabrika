@@ -4,6 +4,33 @@ When a Fabrika update requires consumer projects to do more than a straight file
 
 ---
 
+## 0.21.0 — Plan Persistence Alignment
+
+**Affects:** Consumer projects using the `agentic-workflow` project type.
+
+**What changed:** The agentic-workflow lifecycle now persists plans as files instead of keeping them in conversation. The workflow-planner writes plans to `docs/plans/[identifier]-plan.md` using a new template. Owner pushback re-invokes the planner to revise the file (the orchestrator never edits plans directly). Verification agents receive the plan file path in their strict dispatch. Plan files include an Alignment History section that captures what changed and why during alignment.
+
+**Migration steps:**
+
+1. **Copy new template.** Copy `core/templates/System-Update-Plan-Template.md` to your Fabrika path.
+
+2. **Create plan directory.** Create `docs/plans/` in your project if it does not already exist. Sprint-based projects already have this directory for spec files. Agentic-workflow projects that did not previously have `docs/` will need to create both `docs/` and `docs/plans/`.
+
+3. **Update changed core files.** Update the following from the Fabrika source: `core/agents/workflow-planner.md`, `core/workflows/agentic-workflow-lifecycle.md`, `core/workflows/dispatch-protocol.md`, `core/agents/context-engineer.md`, `core/agents/methodology-reviewer.md`, `core/agents/structural-validator.md`, `core/agents/context-architect.md`, `core/Document-Catalog.md`, `core/briefings/structural-plan-briefing.md`.
+
+4. **Update changed integration file.** Update your integration template (CLAUDE.md or copilot-instructions.md).
+
+5. **Behavioral changes.** After migration:
+   - The workflow-planner writes plans to `docs/plans/[identifier]-plan.md` instead of the conversation. The plan file is a persistent artifact with YAML frontmatter tracking status (draft/approved/executed).
+   - When the owner pushes back on a plan, the orchestrator re-invokes the planner with feedback. The planner revises the plan file and appends to the Alignment History section. The orchestrator updates the status from draft to approved after owner approval.
+   - The context-engineer, methodology-reviewer, structural-validator, and context-architect all receive the plan file path in their dispatch contracts instead of a conversation reference.
+   - During Step 7 (Ship), the orchestrator updates the plan status to executed before committing.
+   - Plan files persist after execution as validation artifacts and historical records.
+
+**Why this matters:** The plan is the implementation contract — the thing the implementer builds against and the validators assess against. Keeping it in conversation meant it degraded as context compressed, validators could not independently read the complete plan, and alignment feedback (the most valuable design rationale) evaporated. Persisting it as a file makes the contract durable, the verification independent, and the rationale permanent.
+
+---
+
 ## 0.18.0 — Wiki Knowledge Layer
 
 **Affects:** All consumer projects. Sprint-based and analytics-workspace projects have additional workflow file changes.

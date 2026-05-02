@@ -541,10 +541,11 @@ A project can be **multi-type** (sprint-based types only). A data app with scrap
 > These documents support the agentic-workflow structural update lifecycle. The structural mode uses a 7-step protocol; documents track plans, verification, and version history. Operational mode documents (if enabled) are project-specific and human-maintained.
 
 ### System Update Plan
-- **Purpose:** The structured plan produced in Step 1 of the structural update lifecycle. Documents what is changing, how it integrates, what could go wrong, and mitigations.
+- **Purpose:** The structured plan produced in Step 1 of the structural update lifecycle. Documents what is changing, how it integrates, what could go wrong, and mitigations. Persists alignment decisions and design rationale.
 - **Types:** agentic-workflow | **Audience:** both
-- **Structure:** File change list, integration points per file, risk analysis, mitigation strategy.
-- **Notes:** Written in conversation during Step 1, not as a separate file. Preserved in the conversation record. For projects that want persistent plan records, save to `docs/plans/`.
+- **Template:** `core/templates/System-Update-Plan-Template.md`
+- **Structure:** YAML frontmatter (status: draft/approved/executed, created date, change-request pointer), file change inventory, integration point analysis, risk identification, mitigations, version bump determination, CHANGELOG draft, owner decision points, alignment history.
+- **Notes:** Written by the workflow-planner to `docs/plans/[identifier]-plan.md` during Step 1. Revised in place when the owner pushes back (planner re-invoked, not orchestrator). The Alignment History section captures what changed from the initial plan and why. Status transitions: draft (planner creates) -> approved (owner approves in Step 2) -> executed (shipped in Step 7).
 
 ### Change Verification Report
 - **Purpose:** Independent evaluation reports produced in Step 4 (Verify). Each verifying agent (methodology-reviewer, structural-validator, architect) writes its own report.
@@ -758,6 +759,7 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 - Analysis-Plan-Template.md — `analytics-workspace`
 - Outcome-Report-Template.md — `analytics-workspace`
 - Task-Contract-Template.md — `analytics-workspace`
+- System-Update-Plan-Template.md — `agentic-workflow`
 
 ---
 
@@ -822,7 +824,7 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 
 #### agentic-workflow (agent methodology systems, personal operating systems)
 **Core:** Domain Language, Project Charter, PRD, VERSION, CHANGELOG, MIGRATIONS (version history and consumer communication)
-**Per-change:** System Update Plan (in conversation), Change Verification Reports (in `docs/evaluations/`)
+**Per-change:** System Update Plan (at `docs/plans/[identifier]-plan.md`), Change Verification Reports (in `docs/evaluations/`)
 **Structural:** Agent prompts, workflow definitions, archetype templates, catalogs, integration templates, dispatch protocol, rubrics, hooks
 **Knowledge layer:** wiki/index.md, wiki/topics/, wiki/meta/ (opt-in, cadence driven by the structural update lifecycle — wiki is updated during the Ship step of each system update, during alignment sessions, when harvest findings arrive, and on demand)
 **Operational (if enabled):** Status file, operational logs, ritual definitions (project-specific, not templated)

@@ -182,7 +182,7 @@ need to read, search, create, edit, and verify their changes.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Approved plan | Yes | The plan approved by the owner — the context engineer's implementation contract |
+| Approved plan | Yes | Path to the approved plan file at `docs/plans/[identifier]-plan.md` |
 | Architecture pointers | Yes | Paths to catalogs, workflow files, integration templates, and other structural reference docs |
 | Version state | Yes | Current VERSION and CHANGELOG — needed for version bumps and changelog entries |
 | File paths to modify | Yes | Existing files the plan says to change |

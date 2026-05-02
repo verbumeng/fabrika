@@ -48,12 +48,14 @@ context) and produces a structured plan covering:
    if the change is inconsistent
 4. **Mitigation** — for each risk, how to prevent it
 
-The plan is written in the conversation (not a separate file) as a
-structured summary. It must be explicit — not "I'll update related
-files" but "AGENT-CATALOG.md needs a new row in the archetype table
-for X; dispatch-protocol.md needs entries for Y and Z."
+The planner writes the plan to `docs/plans/[identifier]-plan.md`
+using the System-Update-Plan template. It must be explicit — not
+"I'll update related files" but "AGENT-CATALOG.md needs a new row in
+the archetype table for X; dispatch-protocol.md needs entries for Y
+and Z."
 
-**Output:** Structured plan in conversation
+**Output:** Plan file at `docs/plans/[identifier]-plan.md`
+(status: draft)
 
 ### Step 2: Align
 
@@ -73,7 +75,15 @@ principles (`core/briefings/briefing-principles.md`):
 unreviewed plan encodes potentially wrong assumptions that compound
 through every subsequent step.
 
-**Output:** Owner approval (or revision and re-plan)
+**Revision:** When the owner pushes back, the orchestrator
+re-invokes the planner with the feedback. The planner revises the
+plan file in place and appends to the Alignment History section. The
+orchestrator does not edit the plan file directly — the planner
+plans, the orchestrator orchestrates. After revision, the
+orchestrator updates the plan's frontmatter status from `draft` to
+`approved`.
+
+**Output:** Owner approval, plan file status updated to `approved`
 
 ### Step 3: Execute
 
@@ -96,9 +106,10 @@ through every subsequent step.
 **Owner:** Three independent agents, invoked in parallel with strict
 dispatch
 
-The orchestrator invokes three agents. Each receives the plan, file
-paths, and verification criteria — nothing else. No opinions, no
-hints, no pre-digested summaries. Each must form its own judgment.
+The orchestrator invokes three agents. Each receives the plan file
+path, changed file paths, and verification criteria — nothing else.
+No opinions, no hints, no pre-digested summaries. Each must form its
+own judgment by reading the plan file independently.
 
 **Methodology Reviewer** — evaluates the changes against methodology
 quality criteria: cross-reference consistency, prompt pattern
@@ -160,11 +171,12 @@ changes align with their intent.
 
 **Owner:** Orchestrator
 
-1. Commit with conventional format (all changes in one commit,
-   including VERSION and CHANGELOG)
-2. Create a pull request against main
-3. After owner approval, merge
-4. If `wiki/` exists, update the wiki: review the changes and their
+1. Update the plan file's frontmatter status to `executed`
+2. Commit with conventional format (all changes in one commit,
+   including VERSION, CHANGELOG, and plan file)
+3. Create a pull request against main
+4. After owner approval, merge
+5. If `wiki/` exists, update the wiki: review the changes and their
    rationale, update relevant topic articles in `wiki/topics/`, and
    update `wiki/index.md` if the change introduces a new knowledge
    domain. Also assess whether the conversation contained design
@@ -173,7 +185,7 @@ changes align with their intent.
    articulated. If so, flag it to the owner: "This session discussed
    [X] that should be incorporated into [topic]. Want me to update
    the wiki before closing out?"
-5. If `README.md` exists, verify it still accurately reflects the
+6. If `README.md` exists, verify it still accurately reflects the
    current framework state — agent count, project type categories,
    feature list, and workflow description. Update if any of the
    changes in this version made the README stale.
@@ -194,11 +206,11 @@ verified
 | Validator | structural-validator | Step 4 |
 | Implementer | context-engineer | Steps 3, 5 |
 | Architect | context-architect | Step 4 |
-| Coordinator | scrum-master | When multiple PRDs/changes need sequencing |
+| Coordinator | scrum-master | When multiple change requests need sequencing |
 
 The coordinator is not part of the 7-step protocol itself. It is
-invoked when the project has a backlog of planned changes (PRDs,
-issues) that need dependency analysis and execution sequencing —
+invoked when the project has a backlog of planned changes (change
+requests, issues) that need dependency analysis and execution sequencing —
 similar to sprint planning in sprint-based projects.
 
 ### Note on agent maturity

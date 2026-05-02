@@ -179,10 +179,37 @@ are human-initiated and interactive — no agent orchestration. Does
 not change the structural update protocol or add agents.
 
 **Structural update lifecycle** — The 7-step protocol governing
-changes to agentic-workflow systems: (1) Plan, (2) Align, (3)
-Execute, (4) Verify, (5) Incorporate Feedback, (6) Present, (7)
-Ship. Steps 4-5 can loop (maximum 2 retry cycles). Defined in
-`core/workflows/agentic-workflow-lifecycle.md`.
+changes to agentic-workflow systems: (1) Plan (planner writes plan
+file to `docs/plans/`), (2) Align (owner reviews, planner revises
+on pushback), (3) Execute, (4) Verify (agents receive plan file
+path), (5) Incorporate Feedback, (6) Present, (7) Ship (plan status
+set to executed). Steps 4-5 can loop (maximum 2 retry cycles).
+Defined in `core/workflows/agentic-workflow-lifecycle.md`.
+
+**Change request (CR)** — The input to the planning process for
+agentic-workflow projects. A document describing what needs to change
+and why. Lives in the project's change request directory (e.g.,
+`planning/` for Fabrika itself). The planner expands a change request
+into a **system update plan**. Previously called "PRD" in Fabrika's
+own repo — new change requests use "CR" naming; existing PRD files
+are not renamed. [Introduced in 0.21.0.]
+
+**System update plan** — A persistent file at
+`docs/plans/[identifier]-plan.md` produced by the **workflow-planner**
+in Step 1 of the **structural update lifecycle**. Contains file
+change inventory, integration point analysis, risk identification,
+mitigations, version bump determination, and an **alignment history**
+section. Status lifecycle: draft -> approved -> executed. The
+implementation contract that the **context-engineer** implements
+against and the verification agents evaluate against. [Persisted as
+file in 0.21.0; previously conversation-only.]
+
+**Alignment history** — A section in a **system update plan** file
+that captures what changed from the initial plan and why during Step
+2 (Align). Short entries, not transcripts. When the owner pushes
+back, the planner is re-invoked and appends to this section.
+Persists the design rationale that would otherwise evaporate in
+conversation. [Introduced in 0.21.0.]
 
 **Sprint lifecycle** — The multi-chat cycle governing sprint-based
 projects: Design Alignment (when triggered) -> Sprint Planning ->

@@ -697,16 +697,17 @@ deviations flagged. Include token usage impact estimates if applicable.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Change request | Yes | The PRD, issue, or conversation context describing what needs to change |
+| Change request | Yes | The change request (CR, PRD, issue, or conversation context) describing what needs to change |
 | Current file state | Yes | Paths to files that will be affected, so the planner can read their current state |
 | Integration point map | Yes | The project's known cross-reference chains (from the project instruction file) |
 | Version state | Yes | Current VERSION and latest CHANGELOG entry — needed for bump determination |
 | Owner context | Optional | Constraints, preferences, or prior decisions from the conversation |
+| Existing plan path | Conditional | Path to existing plan file — required when re-invoked for revision after owner feedback |
 
-**Output expected:** Structured implementation plan in the
-conversation covering: file change inventory, integration point
-analysis, risk identification, mitigations, and version bump
-determination.
+**Output expected:** Plan file at
+`docs/plans/[identifier]-plan.md` covering: file change inventory,
+integration point analysis, risk identification, mitigations, and
+version bump determination.
 
 ---
 
@@ -716,7 +717,7 @@ determination.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Approved plan | Yes | The plan approved by the owner — the implementation contract |
+| Approved plan | Yes | Path to the approved plan file at `docs/plans/[identifier]-plan.md` |
 | Architecture pointers | Yes | Paths to catalogs, workflow files, integration templates, and other structural reference docs |
 | Version state | Yes | Current VERSION and CHANGELOG — needed for version bumps and changelog entries |
 | File paths to modify | Yes | Existing files the plan says to change |
@@ -741,7 +742,7 @@ the plan.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Approved plan | Yes | The system update plan (what was intended) |
+| Approved plan | Yes | Path to the plan file at `docs/plans/[identifier]-plan.md` |
 | File paths | Yes | Every file created or changed |
 | CHANGELOG entry | Yes | The version entry describing the changes |
 | Verification checklist | Yes | The project's verification checklist from its instruction file |
@@ -763,7 +764,7 @@ completeness, dispatch/output contract consistency.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Approved plan | Yes | The system update plan |
+| Approved plan | Yes | Path to the plan file at `docs/plans/[identifier]-plan.md` |
 | File paths | Yes | Every file created or changed |
 | CHANGELOG entry | Yes | The version entry |
 | Verification checklist | Yes | The structural verification checklist |
@@ -783,7 +784,7 @@ each checklist item.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Approved plan | Yes | The system update plan |
+| Approved plan | Yes | Path to the plan file at `docs/plans/[identifier]-plan.md` |
 | File paths | Yes | Every file created or changed |
 | Structural reference pointers | Yes | Paths to catalogs, workflow files, integration templates — the system's structural reference docs |
 

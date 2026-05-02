@@ -3,10 +3,10 @@
 Use this format when presenting a structural update plan to the owner
 for approval at Step 2 (Align) of the agentic-workflow lifecycle.
 
-The plan is produced by the workflow-planner in the conversation — it
-is not a separate file. This briefing translates the plan into a
-human-facing summary so the owner can evaluate whether the right
-changes are being made and push back before execution begins.
+The plan is produced by the workflow-planner as a file at
+`docs/plans/[identifier]-plan.md`. This briefing translates the plan
+into a human-facing summary so the owner can evaluate whether the
+right changes are being made and push back before execution begins.
 
 ## Structure
 

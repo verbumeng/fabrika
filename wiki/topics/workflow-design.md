@@ -65,7 +65,9 @@ As of v0.19.0, the workflow system includes:
 
 **Agentic-workflow** (methodology-based):
 - 7-step structural update lifecycle (Plan, Align, Execute, Verify, Incorporate, Present, Ship)
-- Three independent verification agents at Step 4
+- Persistent plan files at `docs/plans/[identifier]-plan.md` with status lifecycle (draft -> approved -> executed) and Alignment History
+- Owner pushback re-invokes the planner to revise the plan file (orchestrator never edits directly)
+- Three independent verification agents at Step 4, each receiving the plan file path
 - Structural plan briefing (Step 2) and change summary briefing (Step 6)
 - Owner-gated plan approval at Step 2
 
@@ -88,9 +90,11 @@ As of v0.19.0, the workflow system includes:
 
 - **Analytics-workspace review-revise loop redesign (v0.20.0).** The analytics-workspace workflow introduced a revised retry protocol that differs from the sprint-based pattern: the implementer (data analyst) reads review reports directly rather than receiving orchestrator-synthesized fix instructions, re-review is mandatory after every revision (not just on failure), and the cap is 3 cycles (not 2). After 3 failed cycles, the orchestrator diagnoses the failure pattern — same issue recurring? different issues each time? narrowing but not resolving? — and presents the diagnosis to the user in plain language. The user decides the path forward; the orchestrator dispatches accordingly; the review cycle still runs after intervention. This pattern was identified as a design improvement over the sprint-based orchestrator-as-translator approach and is slated for cross-cutting adoption via PRD-13. Source: PRD-11, PRD-13, CHANGELOG 0.20.0.
 
+- **Plan persistence alignment across all project types (v0.21.0).** The agentic-workflow lifecycle kept plans in conversation only, while sprint-based projects persisted specs as files and analytics-workspace persisted briefs and plans as files. This meant the implementation contract was ephemeral, validators could not independently assess against it, and alignment feedback evaporated. The fix: the workflow-planner now writes plans to `docs/plans/[identifier]-plan.md` using a structured template with YAML frontmatter and an Alignment History section. Owner pushback re-invokes the planner (not the orchestrator) to revise. The plan file is the single artifact that the implementer receives, the validators assess against, and the wiki synthesizes from. Also introduces "change request (CR)" as forward-going terminology for agentic-workflow change requests (existing PRDs not renamed). After this change, all three project types follow the identical lifecycle pattern: change request -> planner writes plan file -> owner reviews -> implementer receives file path -> validators assess against file. Source: PRD-12, CHANGELOG 0.21.0.
+
 ## Open Questions
 
-- **Agentic-workflow plan persistence gap.** The agentic-workflow lifecycle currently keeps the aligned plan in conversation only (not persisted as a file), unlike sprint-based projects (which persist specs at `docs/plans/[TICKET]-spec.md`) and analytics-workspace projects (which persist briefs and plans as files). This means the implementation contract for agentic-workflow changes is ephemeral. This gap has been identified and is slated for resolution in a future update (PRD-12). The target design: persist agentic-workflow plans as files, re-invoke the planner after owner feedback to revise the file, and have validators assess against the plan file -- consistent with how sprint-based and analytics-workspace projects work.
+- **~~Agentic-workflow plan persistence gap.~~** Resolved in v0.21.0 (PRD-12). The workflow-planner now writes plans to `docs/plans/[identifier]-plan.md` instead of keeping them in conversation. Owner pushback re-invokes the planner to revise the file (orchestrator never edits directly). Verification agents receive the plan file path in strict dispatch. An Alignment History section in the plan file captures what changed and why. All three project types now follow the same lifecycle pattern: change request -> planner writes plan file -> owner reviews -> approve -> implementer receives file path -> validators assess against file.
 
 - **TDD for analytics-workspace.** The graduated testing approach (v0.16.0) was designed primarily for sprint-based projects. Test boundaries for SQL and analysis work are less clear than for application code. Whether analytics-workspace tasks benefit from TDD-style spec-first testing, and what that looks like in practice, is unresolved. However, the pre-execution review workflow (v0.20.0) introduces a form of "test before run" discipline: code is reviewed for correctness before execution, which serves a similar function to TDD in the analytics context.
 
@@ -132,6 +136,7 @@ As of v0.19.0, the workflow system includes:
 - v0.17.0 -- briefing system expansion (analytics-workspace, agentic-workflow), token cost visibility
 - v0.18.0 -- wiki knowledge pipeline (5 phases), cadence integration, backfill mechanism
 - v0.20.0 -- analytics pre-execution review: tiered workflows, execution manifest, validation report, analysis planner validation mode, DDL/DML detection, Domain Language/data dictionary integration, review-revise loop redesign
+- v0.21.0 -- plan persistence alignment: persistent plan files for agentic-workflow, alignment history, change request terminology, consistent lifecycle across all project types
 
 ### PRDs
 - PRD-01 -- agentic-workflow lifecycle design
@@ -143,6 +148,7 @@ As of v0.19.0, the workflow system includes:
 - PRD-08 -- briefing system improvements, token cost visibility
 - PRD-09 -- wiki knowledge pipeline, cadence integration, notice-and-proceed model
 - PRD-11 -- analytics pre-execution review, tiered workflows, implementer-reviewer pairing
+- PRD-12 -- plan persistence alignment, consistent plan lifecycle across project types
 - PRD-13 -- review-revise loop redesign (cross-cutting, planned)
 - PRD-14 -- analytics workspace onboarding protocol (planned)
 - PRD-15 -- token cost estimation across workspaces (planned)
