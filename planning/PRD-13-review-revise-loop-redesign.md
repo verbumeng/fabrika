@@ -127,6 +127,7 @@ This is a cross-cutting change that affects all three project types.
 
 | File | Change |
 |---|---|
+| `core/design-principles.md` | **New file.** Codifies implementer-reviewer pairing and implementer-validator pairing as cross-cutting framework principles |
 | `core/workflows/dispatch-protocol.md` | Rewrite Retry Protocol section: implementer reads reviews directly, mandatory re-review after revision, 3-cycle cap, orchestrator diagnosis protocol |
 | `core/workflows/development-workflow.md` | Update Completing a Story (Evaluation Cycle) feedback loop (steps 10-14) to reflect new retry protocol |
 | `core/workflows/agentic-workflow-lifecycle.md` | Update verification retry flow in Step 5 to reflect new retry protocol |
@@ -147,25 +148,22 @@ This is a cross-cutting change that affects all three project types.
   not changed)
 - The content or structure of evaluation reports
 
-## Key Decisions (To Be Aligned)
+## Key Decisions (Aligned)
 
-- **Should the implementer-reviewer pairing philosophy be codified in
-  its own framework document** (e.g., `core/design-principles.md`) or
-  added to existing docs (dispatch protocol, archetype definitions)?
-  A standalone document makes it discoverable; inline additions keep
-  it close to where it is applied.
+- **Pairing philosophy location:** Standalone
+  `core/design-principles.md`. Cross-cutting principle that affects
+  every agent interaction — keeping it in its own file makes it
+  discoverable and avoids bloating the dispatch protocol.
 
-- **Should the 3-cycle cap be configurable per project type?** Some
-  project types may benefit from a different cap. Alternatively, keep
-  it fixed at 3 for simplicity — the user can always override after
-  the orchestrator diagnosis.
+- **3-cycle cap:** Fixed at 3 for all project types. No
+  configurability. The user can always override after the orchestrator
+  diagnosis, which already adapts to what went wrong regardless of
+  project type.
 
-- **How does this interact with the Copilot agent state limitation?**
-  Copilot subagents spin up and terminate with no persistent state.
-  The current protocol already handles this by writing everything to
-  files. The change reinforces this — review reports are the state
-  transfer mechanism, and the implementer reads them from disk on
-  each invocation.
+- **Copilot state limitation:** No special handling needed. Copilot
+  subagents already read all context from files at each step — the
+  file-based state transfer pattern (review reports on disk) is
+  reinforced by this change, not challenged by it.
 
 ## Verification Criteria
 

@@ -188,11 +188,13 @@ need to read, search, create, edit, and verify their changes.
 | File paths to modify | Yes | Existing files the plan says to change |
 | Project constraints | Yes | Versioning discipline, smell tests, context decomposition rules from the project instruction file |
 | Owner constraints | Optional | Preferences or constraints from the conversation |
+| Review report paths | Conditional | Paths to verification reports from the current review cycle — required when dispatching for revision after a failed verification. The context engineer reads these directly alongside the original plan. |
 
-**Do not provide:** Raw evaluation reports from prior verification
-rounds. If retrying after a failed review, the orchestrator summarizes
-what needs to be fixed — the context engineer does not read verifier
-reports directly.
+**Revision dispatch:** When invoked for revision after a failed
+verification, the orchestrator includes the `Review report paths`
+field. The context engineer reads the verification reports directly
+alongside the original plan — the orchestrator does not synthesize
+or interpret findings. See `core/design-principles.md`.
 
 ## Output Contract
 

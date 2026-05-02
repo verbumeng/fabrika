@@ -44,9 +44,9 @@ created: YYYY-MM-DD
   - [ ] All features.json entries for this ticket have `passes: true`
 
 ## Rollback Protocol
-- If evaluation fails and fix is straightforward → fix and re-evaluate (max 2 retries)
+- If evaluation fails and fix is straightforward → implementer reads review reports directly, revises, all evaluators re-review (max 3 cycles)
 - If evaluation fails and approach is fundamentally wrong → `git revert` to last passing commit, re-read this contract, try different approach
-- After 2 failed retry cycles → escalate to owner with all evaluation reports and summary of attempts
+- After 3 failed cycles → orchestrator diagnoses failure pattern across all cycles and presents diagnosis to owner. Owner decides path forward.
 
 ## Acceptance Criteria
 - [ ] [Specific testable behavior 1]

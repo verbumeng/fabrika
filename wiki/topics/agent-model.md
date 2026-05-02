@@ -40,7 +40,7 @@ The design philosophy is that agents carry *methodology expertise*, not tool exp
 
 ## Current State
 
-As of v0.20.0, the agent model consists of:
+As of v0.22.0, the agent model consists of:
 
 **7 archetypes** defining base behavioral contracts:
 - Planner (contextual dispatch for planning, strict for validation)
@@ -70,7 +70,7 @@ As of v0.20.0, the agent model consists of:
 **Dispatch infrastructure:**
 - Dispatch protocol (core/workflows/dispatch-protocol.md) defines per-agent contracts with required and conditional fields
 - Lightweight dispatch path for trivial changes (single file, fully specified, not a new feature)
-- Retry protocol: sprint-based and agentic-workflow use orchestrator-as-translator (max 2 cycles); analytics-workspace uses direct implementer-reads-reviews (max 3 cycles, with orchestrator diagnosis after cap). PRD-13 proposes converging all project types on the direct-read pattern.
+- Retry protocol: all project types use the same pattern — implementer reads review reports directly (orchestrator routes file paths, does not synthesize), all evaluators re-review after every revision, max 3 cycles with orchestrator diagnosis after cap. Converged in 0.22.0 (PRD-13).
 
 **Testing modes for the test-writer (v0.16.0):**
 - Spec-first mode (TDD stories): input is spec only, output is behavioral tests
@@ -84,7 +84,7 @@ As of v0.20.0, the agent model consists of:
 
 - **No dedicated wiki/knowledge agent.** The v0.18.0 knowledge pipeline is managed by the orchestrator during maintenance. PRD-09 noted that if synthesis quality suffers from context overload, a dedicated knowledge agent is a future iteration. Whether this will be needed depends on how large consumer project wikis become in practice.
 
-- **Orchestrator-as-translator friction (partially resolved in v0.20.0).** The evaluation feedback loop routes evaluator findings through the orchestrator, which translates them into implementer fix instructions. This adds a round trip and potential information loss. The analytics-workspace workflow (v0.20.0) resolved this by having the implementer read review reports directly. This pattern proved more natural: the implementer is the domain expert who wrote the code and is better positioned to interpret findings in context. PRD-13 proposes adopting this direct-read pattern across all project types. The remaining question is whether the orchestrator-as-translator pattern has value in sprint-based contexts where the evaluator and implementer operate in different domain vocabularies, or whether direct reading is universally better.
+- **~~Orchestrator-as-translator friction.~~** Resolved in v0.22.0 (PRD-13). All project types now use the same pattern: the implementer reads review reports directly, the orchestrator routes file paths without synthesizing or interpreting findings. The analytics-workspace pattern (introduced in v0.20.0) proved universally better — the implementer is the domain expert who wrote the output and is better positioned to interpret review findings in context. The cycle cap was set to 3 for all project types, with orchestrator diagnosis after 3 failed cycles. See `core/design-principles.md`.
 
 ## Related Topics
 
@@ -106,6 +106,7 @@ As of v0.20.0, the agent model consists of:
 - v0.15.0 -- Domain Language integration into dispatch contracts
 - v0.16.0 -- spec-first and coverage modes for test-writer
 - v0.20.0 -- data analyst modes (write-only, execute-metadata, revision), analysis planner validation mode, Domain Language/data dictionary integration for analytics agents, implementer-reviewer pairing philosophy, direct implementer-reads-reviews retry protocol
+- v0.22.0 -- review-revise loop convergence: all project types use direct implementer-reads-reviews, mandatory full re-review, 3-cycle cap with orchestrator diagnosis. Implementer-reviewer pairing and implementer-validator pairing codified in core/design-principles.md
 
 ### PRDs
 - PRD-01 -- agentic-workflow project type and initial archetype stubs
@@ -115,7 +116,7 @@ As of v0.20.0, the agent model consists of:
 - PRD-06 -- Domain Language integration into agent dispatch
 - PRD-07 -- TDD integration, spec-first mode for test-writer
 - PRD-11 -- analytics pre-execution review, implementer-reviewer pairing, data analyst modes
-- PRD-13 -- review-revise loop redesign across all project types (planned)
+- PRD-13 -- review-revise loop redesign across all project types (implemented v0.22.0)
 
 ### Core files
 - core/agents/AGENT-CATALOG.md -- complete agent-to-project-type mapping

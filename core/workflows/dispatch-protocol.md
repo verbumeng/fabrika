@@ -597,6 +597,7 @@ tailored to methodology work.
 | Structural Constraints pointer | Conditional | Path to Structural Constraints doc if it exists |
 | Domain Language pointer | Conditional | Path to Domain Language doc if it exists — implementer uses its terms for naming and populates code-level names for newly implemented concepts |
 | Tests to pass | Conditional | Paths to failing tests the implementer must make pass — required for TDD stories, omitted for test-informed and test-after. The implementer writes the minimum code necessary to make these specific tests pass, not the full spec implementation. This enforces vertical slice discipline in TDD. |
+| Review report paths | Conditional | Paths to evaluation reports from the current review cycle — required when dispatching for revision after a failed review. The implementer reads these directly alongside the original plan. |
 
 **Output expected:** Changed files, implementation summary, spec
 deviations flagged.
@@ -619,6 +620,7 @@ deviations flagged.
 | Serving Contracts pointer | Conditional | Required if touching serving layer — path to Serving Contracts |
 | Domain Language pointer | Conditional | Path to Domain Language doc if it exists — implementer uses its terms for naming and populates code-level names for newly implemented concepts |
 | Tests to pass | Conditional | Paths to failing tests the implementer must make pass — required for TDD stories. The implementer writes the minimum code necessary to make these specific tests pass. |
+| Review report paths | Conditional | Paths to evaluation reports from the current review cycle — required when dispatching for revision after a failed review. The implementer reads these directly alongside the original plan. |
 
 **Output expected:** Changed files, implementation summary, spec
 deviations flagged.
@@ -638,6 +640,7 @@ deviations flagged.
 | Owner constraints | Optional | Preferences or constraints from the conversation |
 | Domain Language pointer | Conditional | Path to Domain Language doc if it exists — implementer uses its terms for naming and populates code-level names for newly implemented concepts |
 | Tests to pass | Conditional | Paths to failing tests the implementer must make pass — required for TDD stories in data-app projects. Not applicable to analytics-workspace tasks (no sprint lifecycle). The implementer writes the minimum code necessary to make these specific tests pass. |
+| Review report paths | Conditional | Paths to evaluation reports from the current review cycle — required when dispatching for revision after a failed review. The implementer reads these directly alongside the original plan. |
 
 **Output expected:** Changed files, implementation summary, spec
 deviations flagged.
@@ -661,6 +664,7 @@ deviations flagged.
 | Prior experiments | Conditional | Paths to prior experiment reports if this is an iteration |
 | Domain Language pointer | Conditional | Path to Domain Language doc if it exists — implementer uses its terms for naming and populates code-level names for newly implemented concepts |
 | Tests to pass | Conditional | Paths to failing tests the implementer must make pass — required for TDD stories. The implementer writes the minimum code necessary to make these specific tests pass. |
+| Review report paths | Conditional | Paths to evaluation reports from the current review cycle — required when dispatching for revision after a failed review. The implementer reads these directly alongside the original plan. |
 
 **Output expected:** Changed files, implementation summary, spec
 deviations flagged. Include compute resource estimates if applicable.
@@ -685,6 +689,7 @@ deviations flagged. Include compute resource estimates if applicable.
 | RAG Architecture pointer | Conditional | Required if touching retrieval — path to RAG Architecture |
 | Domain Language pointer | Conditional | Path to Domain Language doc if it exists — implementer uses its terms for naming and populates code-level names for newly implemented concepts |
 | Tests to pass | Conditional | Paths to failing tests the implementer must make pass — required for TDD stories. The implementer writes the minimum code necessary to make these specific tests pass. |
+| Review report paths | Conditional | Paths to evaluation reports from the current review cycle — required when dispatching for revision after a failed review. The implementer reads these directly alongside the original plan. |
 
 **Output expected:** Changed files, implementation summary, spec
 deviations flagged. Include token usage impact estimates if applicable.
@@ -723,11 +728,7 @@ version bump determination.
 | File paths to modify | Yes | Existing files the plan says to change |
 | Project constraints | Yes | Versioning discipline, smell tests, context decomposition rules from the project instruction file |
 | Owner constraints | Optional | Preferences or constraints from the conversation |
-
-**Do not provide:** Raw evaluation reports from prior verification
-rounds. If retrying after a failed review, the orchestrator summarizes
-what needs to be fixed — the context engineer does not read verifier
-reports directly.
+| Review report paths | Conditional | Paths to verification reports from the current review cycle — required when dispatching for revision after a failed verification. The context engineer reads these directly alongside the original plan. |
 
 **Output expected:** Changed files on the feature branch, VERSION
 bump, CHANGELOG entry, MIGRATIONS entry if applicable, plus a summary
@@ -905,35 +906,35 @@ independently.
 
 ## Retry Protocol
 
-When an evaluator FAILs an implementation, the orchestrator mediates
-between the evaluator and the implementer:
+When an evaluator FAILs an implementation, the implementer reads the
+review reports directly and revises. The orchestrator routes file
+paths — it does not synthesize, interpret, or translate findings. See
+`core/design-principles.md` for the rationale (implementer-reviewer
+pairing).
 
-1. The orchestrator reads all evaluation reports and synthesizes
-   findings into implementer-actionable fix instructions. It does NOT
-   forward raw evaluation reports to the implementer.
-2. The orchestrator dispatches the fix instructions to the
-   implementer, along with the original spec and relevant file paths.
-3. The implementer addresses each finding and returns an updated
+1. The orchestrator dispatches the implementer for revision with: the
+   original plan (spec or plan file), relevant file paths, and a
+   `Review report paths` field containing the paths to all evaluation
+   reports from the current cycle. The implementer reads the review
+   reports directly alongside the original plan.
+2. The implementer addresses each finding and returns an updated
    output summary.
-4. The orchestrator sanity-checks the fixes: does the implementer's
-   summary address each evaluator finding? If a finding was missed,
-   dispatch clarification back to the implementer before re-invoking
-   evaluators.
-5. Once the orchestrator is satisfied the fixes are addressed, it
-   re-invokes the failing evaluator(s) with fresh dispatch — same
-   payload as the original invocation, updated file paths, no prior
-   evaluation report included.
-6. The evaluator writes its new report with a versioned filename:
+3. The orchestrator sanity-checks the fixes: does the implementer's
+   summary address each evaluator finding? If a finding was clearly
+   missed, dispatch clarification back to the implementer before
+   burning a retry cycle.
+4. The orchestrator re-invokes ALL evaluators with fresh dispatch —
+   same payload as the original invocation, updated file paths, no
+   prior evaluation report included. All evaluators re-check, not
+   just the ones that failed. A fix can introduce new issues in areas
+   that previously passed.
+5. Each evaluator writes its new report with a versioned filename:
    `[TICKET]-code-review-v2.md` (not overwriting the original).
-7. **Maximum 2 retry cycles.** After 2 failures, the orchestrator
-   stops and presents all reports to the owner with a summary of what
-   was tried and recommended next steps.
-
-**Analytics-workspace variant.** The analytics-workspace review-revise
-loop differs from the sprint-based retry protocol: the implementer
-reads review reports directly (the orchestrator routes file paths, it
-does not synthesize findings), mandatory re-review runs after every
-revision, and the cap is 3 failed cycles (not 2). After 3 failed
-cycles, the orchestrator diagnoses the failure pattern and presents it
-to the user for intervention. See
-`[FABRIKA_PATH]/core/workflows/analytics-workspace.md` for details.
+6. **Maximum 3 retry cycles.** After 3 failed cycles, the
+   orchestrator reads all reports across all cycles, diagnoses the
+   failure pattern (same issue recurring? different issues each time?
+   narrowing but not resolving?), and presents the diagnosis to the
+   user in plain language. The user decides the path forward: rescope,
+   break into smaller stories, research the blocker, or override.
+   The orchestrator dispatches accordingly; the review cycle still
+   runs after intervention.

@@ -449,8 +449,9 @@ convention across all project types.
 
 ## Review-Revise Loop
 
-The analytics-workspace review-revise loop has the following
-properties:
+The analytics-workspace review-revise loop follows the universal
+pattern defined in `core/design-principles.md`
+(implementer-reviewer pairing):
 
 - **Implementer reads reviews directly.** The data analyst reads
   review reports from `docs/evaluations/` alongside the original
