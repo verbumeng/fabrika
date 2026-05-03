@@ -27,7 +27,7 @@ How it applies:
   revision, including performance-triggered revisions.
 - **Agentic-workflow projects.** The methodology reviewer, structural
   validator, and context architect independently verify changes. The
-  context engineer reads verification reports directly during
+  agentic engineer reads verification reports directly during
   revision. All three verifiers re-check after every revision.
 
 The orchestrator routes review report paths to the implementer — it

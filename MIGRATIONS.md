@@ -4,6 +4,51 @@ When a Fabrika update requires consumer projects to do more than a straight file
 
 ---
 
+## 0.25.0 — Rename context engineer to agentic engineer
+
+**Affects:** Consumer projects with `agentic-workflow` project type.
+
+**What changed:** The agentic-workflow implementer agent was renamed
+from "context engineer" / `context-engineer.md` to "agentic engineer"
+/ `agentic-engineer.md`. All cross-references across core files,
+integration templates, and bootstrap instructions were updated.
+
+**Migration steps:**
+
+1. **Rename the agent file.** Rename (or delete and re-copy)
+   `context-engineer.md` to `agentic-engineer.md` in your agent
+   directory (`.claude/agents/` or `.github/agents/`). For Copilot,
+   rename `context-engineer.agent.md` to `agentic-engineer.agent.md`.
+
+2. **Update canonical files from Fabrika source.** Copy the updated
+   versions of these files:
+   - `core/agents/AGENT-CATALOG.md`
+   - `core/agents/workflow-planner.md`
+   - `core/agents/methodology-reviewer.md`
+   - `core/agents/context-architect.md`
+   - `core/workflows/dispatch-protocol.md`
+   - `core/workflows/agentic-workflow-lifecycle.md`
+   - `core/design-principles.md`
+   - `core/workflows/token-estimation.md`
+   - `Domain-Language.md`
+   - `BOOTSTRAP.md`
+   - `wiki/topics/agent-model.md`
+
+3. **Update your project instruction file.** Copy the updated
+   integration template (`integrations/claude-code/CLAUDE.md` or
+   `integrations/copilot/copilot-instructions.md`) and re-apply your
+   project-specific customizations.
+
+4. **Search for remaining references in your project.**
+   ```
+   rg "context.engineer" -i --type md
+   ```
+   Update any matches in your own project files — custom workflows,
+   documentation, dispatch overrides, etc. Ignore matches that refer
+   to "context architect" (different agent, not renamed).
+
+---
+
 ## 0.24.0 — Token Cost Estimation
 
 **Affects:** All consumer projects.

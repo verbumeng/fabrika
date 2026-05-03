@@ -319,7 +319,7 @@ All agents are invoked proactively at trigger points in the Development Workflow
 | **Planner** | workflow-planner — expands change requests into plan files (`docs/plans/[identifier]-plan.md`) with file inventories, integration analysis, and risk identification |
 | **Reviewer** | methodology-reviewer — evaluates cross-reference consistency, prompt patterns, instruction decomposition, smell tests |
 | **Validator** | structural-validator — mechanically verifies file existence, version consistency, catalog accuracy, reference resolution |
-| **Implementer** | context-engineer — writes methodology artifacts (agent prompts, workflows, instruction files, catalogs, integration templates) against approved plan |
+| **Implementer** | agentic-engineer — writes methodology artifacts (agent prompts, workflows, instruction files, catalogs, integration templates) against approved plan |
 | **Architect** | context-architect — evaluates instruction architecture: decomposition, pointer patterns, context budgets, integration surface completeness |
 | **Coordinator** | scrum-master — for change backlog sequencing (structural mode only) |
 

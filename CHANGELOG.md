@@ -6,6 +6,71 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.25.0 — Rename context engineer to agentic engineer
+
+Renames the agentic-workflow implementer agent from "context engineer"
+to "agentic engineer." The old name collided with the industry-generic
+"context engineering" concept and shared a confusing prefix with the
+context architect (a different archetype). No behavioral changes —
+same orientation, output contracts, and archetype.
+
+### New files
+- `core/agents/agentic-engineer.md` — renamed from `context-engineer.md`
+
+### Deleted files
+- `core/agents/context-engineer.md` — replaced by `agentic-engineer.md`
+
+### Changed files
+- `core/agents/AGENT-CATALOG.md` — agent name, filename, description
+  updated from context-engineer to agentic-engineer
+- `core/agents/workflow-planner.md` — dispatch target references updated
+- `core/agents/methodology-reviewer.md` — cross-reference updated
+- `core/agents/context-architect.md` — cross-reference to agent file
+  path updated
+- `core/workflows/agentic-workflow-lifecycle.md` — agent name in step
+  descriptions, agent roster table, and maturity note updated
+- `core/workflows/dispatch-protocol.md` — section heading, contract
+  description paragraph, and dispatch table field description updated
+- `core/design-principles.md` — agentic-workflow review protocol
+  description updated
+- `core/workflows/token-estimation.md` — example scenario agent name
+  updated
+- `Domain-Language.md` — term renamed with backward-compatibility note
+- `integrations/claude-code/CLAUDE.md` — subagents table updated
+- `integrations/copilot/copilot-instructions.md` — subagents table
+  updated
+- `BOOTSTRAP.md` — agent file lists and readiness checklist updated
+- `wiki/topics/agent-model.md` — agent name, implementer list, and
+  version history updated
+- `planning/EXECUTION-PROMPT.md` — dispatch instruction updated
+- `MIGRATIONS.md` — consumer migration entry added
+- `VERSION` — 0.24.0 -> 0.25.0
+
+### Consumer update instructions
+1. Rename your agent file: `core/agents/context-engineer.md` ->
+   `core/agents/agentic-engineer.md` (or copy the new version from
+   Fabrika source)
+2. Update these files from the Fabrika source:
+   `core/agents/AGENT-CATALOG.md`,
+   `core/agents/workflow-planner.md`,
+   `core/agents/methodology-reviewer.md`,
+   `core/agents/context-architect.md`,
+   `core/workflows/dispatch-protocol.md`,
+   `core/workflows/agentic-workflow-lifecycle.md`,
+   `core/design-principles.md`,
+   `core/workflows/token-estimation.md`,
+   `Domain-Language.md`,
+   `wiki/topics/agent-model.md`
+3. Update your project instruction file (CLAUDE.md or
+   copilot-instructions.md) from the Fabrika integration template
+4. Update `BOOTSTRAP.md` from the Fabrika source
+5. Search your project for remaining references:
+   `rg "context.engineer" -i --type md`
+   Update any matches in your own project files (custom workflows,
+   documentation, etc.)
+
+---
+
 ## 0.24.0
 
 Token Cost Estimation. Adds cost-informed planning via a deterministic

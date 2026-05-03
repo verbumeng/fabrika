@@ -24,9 +24,9 @@ The design philosophy is that agents carry *methodology expertise*, not tool exp
 
 - **Two architect specialists (v0.13.0).** The architect archetype evaluates and improves structural design -- it proposes, it does not implement. Two specialists: software-architect (web-app, automation, library, ai-engineering) for module depth, interface design, and dependency structure; data-architect (data-engineering, analytics-engineering, data-app, ml-engineering) for schema design, pipeline topology, and data flow boundaries. The design draws from John Ousterhout's "A Philosophy of Software Design" (deep modules vs. shallow modules) and includes spiral mitigation (owner-gated proposals, done thresholds, conditional maintenance trigger, assessment tracking, cap of 2 refactor stories per review) to prevent infinite optimization loops. Source: PRD-04, CHANGELOG 0.13.0.
 
-- **Agent maturity progression (v0.10.0 through v0.12.0).** New agents start as stubs (minimal prompts with base archetype behavior) and are fleshed out with detailed evaluation procedures, calibration examples (PASS/FAIL/edge cases), and context window hygiene guidance. The five agentic-workflow agents (workflow-planner, methodology-reviewer, structural-validator, context-engineer, context-architect) were stubs in v0.10.0-v0.11.0 and reached full maturity in v0.12.0. The implementer and architect archetype stubs from v0.10.0 were replaced with full definitions in v0.12.0 and v0.13.0 respectively. This pattern -- stub first, flesh out later -- allows new agent types to be referenced in catalogs and dispatch contracts before their full behavior is defined. Source: CHANGELOG 0.10.0, 0.11.0, 0.12.0, 0.13.0.
+- **Agent maturity progression (v0.10.0 through v0.12.0).** New agents start as stubs (minimal prompts with base archetype behavior) and are fleshed out with detailed evaluation procedures, calibration examples (PASS/FAIL/edge cases), and context window hygiene guidance. The five agentic-workflow agents (workflow-planner, methodology-reviewer, structural-validator, agentic-engineer, context-architect) were stubs in v0.10.0-v0.11.0 and reached full maturity in v0.12.0. The implementer and architect archetype stubs from v0.10.0 were replaced with full definitions in v0.12.0 and v0.13.0 respectively. This pattern -- stub first, flesh out later -- allows new agent types to be referenced in catalogs and dispatch contracts before their full behavior is defined. Source: CHANGELOG 0.10.0, 0.11.0, 0.12.0, 0.13.0.
 
-- **Agentic-workflow agents as a distinct category (v0.10.0, v0.11.0).** Methodology-based project types use a different agent roster than sprint-based or task-based types. The agentic-workflow roster (workflow-planner, methodology-reviewer, structural-validator, context-engineer, context-architect) handles changes to systems where the methodology itself is the product. These agents write and review agent prompts, workflow definitions, and instruction files rather than application code. Context-engineer is the implementer; context-architect evaluates instruction decomposition, pointer patterns, and context budgets. Source: PRD-01, PRD-02, CHANGELOG 0.10.0, 0.11.0.
+- **Agentic-workflow agents as a distinct category (v0.10.0, v0.11.0).** Methodology-based project types use a different agent roster than sprint-based or task-based types. The agentic-workflow roster (workflow-planner, methodology-reviewer, structural-validator, agentic-engineer, context-architect) handles changes to systems where the methodology itself is the product. These agents write and review agent prompts, workflow definitions, and instruction files rather than application code. Agentic-engineer is the implementer; context-architect evaluates instruction decomposition, pointer patterns, and context budgets. Source: PRD-01, PRD-02, CHANGELOG 0.10.0, 0.11.0.
 
 - **Supplemental reviewers and designers (v0.8.0).** The primary reviewer (code-reviewer or logic-reviewer) provides broad quality evaluation. Supplemental reviewers provide depth in specific areas: security-reviewer (web-app, data-engineering, ai-engineering), performance-reviewer (all types), and prompt-reviewer (ai-engineering). The visualization-designer (analytics-workspace, data-app, analytics-engineering) handles chart type selection, layout design, and accessibility. These roles are optional invocations, not required for every story. Source: CHANGELOG 0.8.0.
 
@@ -59,13 +59,13 @@ As of v0.22.0, the agent model consists of:
 - 1 structural validator: structural-validator
 - 1 designer: visualization-designer
 - 1 coordinator: scrum-master
-- 5 implementers: software-engineer, data-engineer, data-analyst, ml-engineer, ai-engineer (plus context-engineer for agentic-workflow)
+- 5 implementers: software-engineer, data-engineer, data-analyst, ml-engineer, ai-engineer (plus agentic-engineer for agentic-workflow)
 - 2 architects: software-architect, data-architect (plus context-architect for agentic-workflow)
 
 **Role mapping across project categories:**
 - Sprint-based types (8 types): full agent roster with planner, reviewer, supplemental reviewers, validator, optional designer, scrum-master coordinator, implementer, and architect
 - Task-based types (analytics-workspace): analysis-planner (planning + validation modes), logic-reviewer (pre-execution, all tiers), performance-reviewer (pre-execution, Tier 2 only), data-validator (post-execution + validation report), visualization-designer, data-analyst (write-only, execute-metadata, revision modes), no coordinator or architect
-- Methodology-based types (agentic-workflow): workflow-planner, methodology-reviewer, structural-validator, context-engineer, context-architect, scrum-master (for change backlog sequencing)
+- Methodology-based types (agentic-workflow): workflow-planner, methodology-reviewer, structural-validator, agentic-engineer, context-architect, scrum-master (for change backlog sequencing)
 
 **Dispatch infrastructure:**
 - Dispatch protocol (core/workflows/dispatch-protocol.md) defines per-agent contracts with required and conditional fields
@@ -100,7 +100,7 @@ As of v0.22.0, the agent model consists of:
 - v0.8.0 -- 3 new agents (performance-reviewer, security-reviewer, visualization-designer), supplemental reviewer role
 - v0.9.0 -- 5 archetype templates, dispatch protocol, strict vs. contextual dispatch tiers
 - v0.10.0 -- agentic-workflow type, implementer and architect archetype stubs, methodology-reviewer and structural-validator stubs
-- v0.11.0 -- workflow-planner, context-engineer, context-architect stubs for agentic-workflow
+- v0.11.0 -- workflow-planner, agentic-engineer, context-architect stubs for agentic-workflow
 - v0.12.0 -- full implementer archetype, 5 specialist implementers, pure orchestrator, full maturity for all agentic-workflow agents
 - v0.13.0 -- full architect archetype, software-architect and data-architect specialists, spiral mitigation
 - v0.15.0 -- Domain Language integration into dispatch contracts

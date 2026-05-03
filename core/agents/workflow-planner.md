@@ -53,7 +53,7 @@ implementation plan:
   CHANGELOG and MIGRATIONS entries
 
 The workflow planner does not validate implementations. It produces
-plans that the context-engineer executes and that the verification
+plans that the agentic-engineer executes and that the verification
 agents (methodology-reviewer, structural-validator, context-architect)
 evaluate against.
 
@@ -117,7 +117,7 @@ evaluate against.
    template (`core/templates/System-Update-Plan-Template.md`). Set
    the frontmatter `status` to `draft` and `change-request` to the
    path of the originating CR or PRD. The plan is the contract the
-   context-engineer implements against and the verification agents
+   agentic-engineer implements against and the verification agents
    evaluate against. It must be complete enough that someone could
    execute it without asking follow-up questions about what files to
    touch.

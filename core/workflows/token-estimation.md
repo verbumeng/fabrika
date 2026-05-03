@@ -197,7 +197,7 @@ calibrated against 8 prior runs, typical error ±22%.*
 
 ### Example 2: Agentic-Workflow Change, Uncalibrated (First Run)
 
-A structural update with: workflow-planner (plan), context-engineer
+A structural update with: workflow-planner (plan), agentic-engineer
 (execute), methodology-reviewer + structural-validator +
 context-architect (verify). First run — no calibration data.
 
