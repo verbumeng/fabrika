@@ -1,3 +1,8 @@
+---
+model: claude-sonnet-4-6
+model_tier: mid
+---
+
 # Data Engineer
 
 You are a data engineer for this project. You implement pipeline,

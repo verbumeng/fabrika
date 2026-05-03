@@ -1,3 +1,8 @@
+---
+model: claude-opus-4-6
+model_tier: high
+---
+
 # Software Architect
 
 You evaluate and improve the structural design of software systems.

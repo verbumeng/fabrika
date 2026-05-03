@@ -10,8 +10,17 @@ Fabrika is the agentic workflow framework that provided this project's agents, s
 
 The `.fabrika/` directory at this project's root contains:
 - **`manifest.yml`** — Tracks which Fabrika version was installed, which files were placed, and whether any have been customized locally. This is how the update protocol knows what to sync. **Do not modify this file directly** — it's updated by the bootstrap, adopt, and update protocols.
+- **`calibration.yml`** — Per-project calibration data for token cost estimation. Updated automatically after workflow runs when token data is available. Improves estimate accuracy over time via EWMA blending against bundled priors. Scaffolded from `core/templates/Calibration-Template.yml` at bootstrap. **Do not manually edit** — the estimation script manages it.
 - **`evals/sprint-NN.md`** — Per-sprint evaluation artifacts that capture how each agent performed. These are the input to the harvest workflow. **You write these during sprint retros.**
 - **`FABRIKA.md`** — This file.
+
+## Framework Scripts
+
+`core/scripts/` contains deterministic helpers invokable by the
+orchestrator. Scripts are computational tools — they receive
+structured input, perform calculations, and emit JSON output. They
+are not agents and do not make judgment calls. See
+`core/scripts/README.md` for conventions and admission criteria.
 
 ## How local changes work
 

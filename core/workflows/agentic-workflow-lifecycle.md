@@ -62,8 +62,10 @@ and Z."
 **Owner:** Orchestrator (presents to the project owner)
 
 Present the plan using the **Structural Plan Briefing** format
-(`core/briefings/structural-plan-briefing.md`). Follow the briefing
-principles (`core/briefings/briefing-principles.md`):
+(`core/briefings/structural-plan-briefing.md`). Include the token
+cost estimate per `core/workflows/token-estimation.md` in the plan
+presentation. Follow the briefing principles
+(`core/briefings/briefing-principles.md`):
 - Lead with what the change does for the system, not implementation
   details
 - Define any jargon

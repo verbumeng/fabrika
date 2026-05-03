@@ -41,6 +41,11 @@ user-visible checklist to march through):
 - **Success criteria** — how you know it's working
 - **Terminology** — domain terms that need shared definitions (captured to the Domain Language document — see Terminology Capture below)
 
+The orchestrator may informally mention expected token cost when a
+scope decision would significantly change it — this is conversational
+awareness, not a structured estimate (see `core/workflows/token-estimation.md`
+for when structured estimates surface).
+
 ### Terminology Capture
 
 As domain terms crystallize during the question walk, collect them.

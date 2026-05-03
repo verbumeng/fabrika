@@ -6,6 +6,14 @@ logic-reviewer, prompt-reviewer, security-reviewer,
 performance-reviewer) build on this foundation with domain-specific
 checklists and severity criteria.
 
+## Required Frontmatter
+
+Concrete agents using this archetype must declare model metadata in
+YAML frontmatter at the top of their prompt file. See
+`core/agents/agent-frontmatter-spec.md` for the full schema.
+
+Required fields: `model` or `model_tier` (at least one).
+
 ## Role
 
 Reviewers receive the approved plan and the work product, then form

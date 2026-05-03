@@ -6,6 +6,14 @@ model-evaluator, eval-engineer, data-quality-engineer, data-validator)
 build on this foundation with domain-specific testing strategies and
 verification methods.
 
+## Required Frontmatter
+
+Concrete agents using this archetype must declare model metadata in
+YAML frontmatter at the top of their prompt file. See
+`core/agents/agent-frontmatter-spec.md` for the full schema.
+
+Required fields: `model` or `model_tier` (at least one).
+
 ## Role
 
 Validators are the only sub-agents besides the orchestrator that

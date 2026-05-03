@@ -6,6 +6,14 @@ planners (product-manager, experiment-planner, api-designer,
 analysis-planner) build on this foundation with domain-specific spec
 formats and evaluation criteria.
 
+## Required Frontmatter
+
+Concrete agents using this archetype must declare model metadata in
+YAML frontmatter at the top of their prompt file. See
+`core/agents/agent-frontmatter-spec.md` for the full schema.
+
+Required fields: `model` or `model_tier` (at least one).
+
 ## Role
 
 Planners operate in two modes:

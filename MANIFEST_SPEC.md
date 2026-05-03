@@ -51,11 +51,24 @@ installed_files:                        # every file Fabrika placed in this proj
 
 All hashes use SHA-256. The hash is computed over the raw file contents (bytes), not a normalized form. The format is `sha256:` followed by the lowercase hex digest.
 
+## Project Config Fields
+
+Optional configuration fields that modify framework behavior when set.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `token_budget_warn` | integer (tokens) | not set | When set, the orchestrator displays a soft warning if a token cost estimate exceeds this threshold. Advisory only — never blocks execution. The warning surfaces during plan alignment alongside the estimate readout. |
+
+Project config fields are set in `.fabrika/manifest.yml` at the top level (alongside `fabrika_version`, `project_type`, etc.).
+
 ## Location
 
-The manifest lives at `.fabrika/` in the consumer project root. The `.fabrika/` directory is committed to the consumer project's git repository. It may also contain:
+The manifest lives at `.fabrika/` in the consumer project root. The `.fabrika/` directory is committed to the consumer project's git repository. It contains:
 
+- `.fabrika/manifest.yml` — The manifest itself (this spec)
+- `.fabrika/calibration.yml` — Per-project calibration data for token cost estimation (scaffolded from `core/templates/Calibration-Template.yml` at bootstrap, updated automatically after workflow runs)
 - `.fabrika/evals/sprint-NN.md` — Per-sprint evaluation artifacts (see HARVEST.md)
+- `.fabrika/FABRIKA.md` — Framework relationship guide (read on demand by agents)
 
 ## When the Manifest is Written
 

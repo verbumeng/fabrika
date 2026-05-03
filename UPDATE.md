@@ -87,6 +87,35 @@ Tell the user:
 - Any migration steps that need attention
 - The new Fabrika version installed
 
+## Version-Specific Guidance
+
+### 0.24.0 — Token Cost Estimation
+
+If updating from a version prior to 0.24.0, the following additional
+steps apply beyond the standard update flow:
+
+1. **Scaffold calibration file.** Copy
+   `[FABRIKA_PATH]/core/templates/Calibration-Template.yml` to
+   `.fabrika/calibration.yml` in the consumer project.
+
+2. **Copy new directories.** These are entirely new in 0.24.0:
+   - `core/scripts/estimate-tokens.py`
+   - `core/scripts/README.md`
+   - `core/calibration/priors.yml`
+   - `core/calibration/pricing.yml`
+   - `core/agents/agent-frontmatter-spec.md`
+
+3. **Agent frontmatter (non-breaking).** Updated agent prompt files
+   now include YAML frontmatter with `model:` and `model_tier:`
+   declarations. Agents function identically without frontmatter —
+   the default tier is `mid`. Adding frontmatter improves estimation
+   accuracy but is not required for agents to work.
+
+4. **Workflow file pointers.** The four workflow files gained one-line
+   pointers to `core/workflows/token-estimation.md`. These are
+   informational — they tell the orchestrator when to surface
+   estimates.
+
 ## Important Notes
 
 - **Never auto-update customized files.** Always ask the user.

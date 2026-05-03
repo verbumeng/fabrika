@@ -553,6 +553,21 @@ A project can be **multi-type** (sprint-based types only). A data app with scrap
 - **Structure:** Verdict (PASS/FAIL or SOUND/CONCERNS/UNSOUND), per-criterion findings, specific issues with file paths and fix instructions.
 - **Notes:** Written to `docs/evaluations/` (or equivalent). The orchestrator reads these in Step 5 to decide what to fix.
 
+### core/calibration/priors.yml
+- **Purpose:** Bundled tier-level priors and model-to-tier lookup table for token cost estimation. Framework-level reference data used by `core/scripts/estimate-tokens.py`. Contains per-tier token ranges (low/mid/high), the model-to-tier mapping for current Claude, GPT, and Gemini models, and the EWMA smoothing constant.
+- **Types:** all | **Audience:** agent
+- **Notes:** Framework-level artifact — copied to consumer projects during bootstrap. Updated when new models release or estimation priors are recalibrated. Patch-level bump when changed.
+
+### core/calibration/pricing.yml
+- **Purpose:** Per-model pricing data ($/1M tokens, input and output rates) used by `core/scripts/estimate-tokens.py` for dollar cost estimates. Separated from priors.yml for easier patch-level updates when providers change pricing.
+- **Types:** all | **Audience:** agent
+- **Notes:** Framework-level artifact — copied to consumer projects during bootstrap. Updated when model pricing changes. Patch-level bump when changed.
+
+### .fabrika/calibration.yml
+- **Purpose:** Per-project calibration data for token cost estimation. Records actual token usage after workflow runs and improves estimate accuracy over time via EWMA blending against bundled priors. Scaffolded from `core/templates/Calibration-Template.yml` at bootstrap time.
+- **Types:** all | **Audience:** agent
+- **Notes:** Consumer-project artifact. Updated automatically during session close-out (sprint-based and analytics-workspace) or Step 7 Ship (agentic-workflow) when token data is available. Not manually edited — the estimation script manages it via `--record-actuals`.
+
 ### VERSION
 - **Purpose:** Single-line file containing the current semantic version. The version authority for the system.
 - **Types:** agentic-workflow | **Audience:** agent
@@ -755,6 +770,7 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 - Batch-Index-Schema.md
 
 ### Included based on project type:
+- Calibration-Template.yml — all project types (scaffolded to `.fabrika/calibration.yml` at bootstrap)
 - Data-Source-Research-Template.md — `data-app`, `analytics-engineering`, `data-engineering`, `automation`
 - Feature-Spec-Template.md — `web-app`, `data-app`, `ai-engineering`
 - Session-Log-Template.md — all sprint-based types

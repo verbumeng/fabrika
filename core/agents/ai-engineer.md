@@ -1,3 +1,8 @@
+---
+model: claude-sonnet-4-6
+model_tier: mid
+---
+
 # AI Engineer
 
 You are an AI engineer for this project. You implement AI/LLM

@@ -217,9 +217,11 @@ The agent drives the development process proactively. Don't wait for the owner t
 
 **Before starting any story, sprint planning, or bug fix, read:** `[FABRIKA_PATH]/core/workflows/development-workflow.md`
 
+Token cost estimates are presented alongside plan/spec briefings — see `[FABRIKA_PATH]/core/workflows/token-estimation.md`.
+
 Summary of workflows covered:
 - **Design Alignment** — structured requirements gathering → Project Charter + PRD → fresh-chat handoff to sprint planning (see Design Alignment section above)
-- **Starting a Story** — spec expansion → approval → optional architect design review → branch → testing approach branching (TDD: test-writer spec-first → implementer vertical slices → refactor; test-informed: implementer → test-writer coverage; test-after: implementer → evaluation cycle) → evaluate → fix cycle
+- **Starting a Story** — spec expansion → token cost estimate → approval → optional architect design review → branch → testing approach branching (TDD: test-writer spec-first → implementer vertical slices → refactor; test-informed: implementer → test-writer coverage; test-after: implementer → evaluation cycle) → evaluate → fix cycle
 - **Completing a Story (Evaluation Cycle)** — tests → lint → commit → reviewer → validator → planner validation → optional architect structural evaluation → review-revise loop (max 3 cycles, implementer reads reviews directly — see `core/design-principles.md`)
 - **Sprint Planning** — scrum-master receives approved PRD → topology assessment → 2-3 stories → contract → approval
 - **Ideation & Backlog Grooming** — new stories, re-scoping, someday-maybe
@@ -322,6 +324,23 @@ All agents are invoked proactively at trigger points in the Development Workflow
 | **Coordinator** | scrum-master — for change backlog sequencing (structural mode only) |
 
 No agent orchestration for operational mode sessions (human-driven).
+
+### Model Routing and Token Estimation
+
+Agent model preferences are declared in frontmatter on each agent
+prompt file (`model:` field). Copilot custom agents
+(`.github/agents/*.agent.md`) support `model:` in frontmatter using
+display names (e.g., `model: 'Claude Opus 4.5'`). VS Code Copilot
+Chat respects this field for model routing.
+
+**Copilot CLI limitation:** The Copilot CLI does not yet respect
+`model:` frontmatter — the model is selected by the user's picker.
+Token estimation still functions in CLI contexts (reads frontmatter
+for cost calculation). GitHub is shipping CLI parity.
+
+The `model:` field drives token cost estimation; consumers can
+override per-project via `.fabrika/calibration.yml` or
+conversationally at plan time.
 
 ### Copilot Agent Configuration
 

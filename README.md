@@ -10,6 +10,7 @@ An agentic workflow methodology for software development and data work. Fabrika 
 - **A Design Alignment protocol** that turns brain dumps into durable Project Charters and PRDs before sprint planning begins
 - **A Domain Language system** — living vocabulary documents that flow into briefings, dispatch contracts, code review, and maintenance checks
 - **A wiki knowledge layer** that consolidates scattered project artifacts into organized, continuously updated topic articles
+- **Token cost estimation** — cost-informed planning with deterministic token estimation, per-project calibration, and advisory budget warnings
 - **A briefing system** with 9 formats for translating technical output into plain-language owner communication
 - **Graduated testing** — TDD, test-informed, or test-after assigned per story based on complexity
 - **A project documentation structure** with a catalog of 90+ document types organized by project type and priority tier

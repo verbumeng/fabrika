@@ -91,6 +91,8 @@ References Domain Language for term definitions. Points to relevant
 data dictionaries in the source registry. Platform configuration
 (connection type, local tools) comes from onboarding-scaffolded
 files at `sources/connections/[platform]/README.md` when available.
+After the plan is written, present the token cost estimate per
+`core/workflows/token-estimation.md`.
 
 **Promotion check.** Analysis planner checks `templates/` and
 `recurring/` for prior similar tasks. If this is a repeat, flags it
@@ -169,6 +171,8 @@ during workspace bootstrap (see BOOTSTRAP.md Phase 2W.1a) or
 created manually. Includes preliminary cost estimate based on the
 cost model documented there (or published defaults if cost model
 unknown — see Platform-Specific EXPLAIN Mechanisms below).
+After the plan is written, present the token cost estimate per
+`core/workflows/token-estimation.md`.
 
 **Promotion check.** Same as Tier 1.
 

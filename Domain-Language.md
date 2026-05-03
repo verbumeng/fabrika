@@ -776,3 +776,48 @@ reading files scattered across the codebase.
 proposal defining when a module is deep enough that it should not be
 re-evaluated until significant new functionality lands. Prevents
 **spiral mitigation** failures.
+
+---
+
+## Token Estimation
+
+**Calibration** — Per-project data that records actual token usage
+and improves estimation accuracy over time via **EWMA blend**ing
+against bundled **tier-level priors**. Stored in
+`.fabrika/calibration.yml`. Updated automatically during session
+close-out or Step 7 (Ship). A project with no calibration data falls
+back entirely to priors; as runs accumulate, local data increasingly
+dominates.
+
+**Tier-level prior** — A bundled baseline estimate per **model tier**
+(low/mid/high) used when no local **calibration** data exists for a
+given **calibration key**. Priors represent expected token ranges for
+a single agent invocation at each tier. Defined in
+`core/calibration/priors.yml`.
+
+**EWMA blend** — Exponentially weighted moving average formula that
+combines bundled **tier-level priors** with local **calibration**
+data. The smoothing constant k controls how quickly local data
+displaces priors: after k runs, the weight is 50/50; after 2k runs,
+local data dominates at ~67%. Formula:
+`blended = (k / (k + run_count)) * prior + (run_count / (k + run_count)) * local_mean`.
+
+**Iteration multiplier** — A scaling factor (1x or 2x) applied to
+agents that participate in review-revise cycles. Represents the range
+from single-pass execution (low estimate, 1x) to a full revision
+cycle (high estimate, 2x). The orchestrator sets this per-agent based
+on whether the agent is expected to go through the **retry protocol**.
+
+**Soft invalidation** — When a model identifier changes (e.g., the
+project switches from `claude-opus-4-5` to `claude-opus-4-6`),
+**calibration** data keyed to the old model becomes stale. The new
+**calibration key** has no local data and falls back to **tier-level
+priors** rather than migrating old data. Old keys are not deleted —
+they become dormant.
+
+**Calibration key** — The unique identifier for a calibration entry,
+structured as `<workflow>.<agent>.<model>`. Example:
+`agentic-workflow-lifecycle.methodology-reviewer.claude-opus-4-6`.
+The key granularity ensures that changing models, agents, or
+workflows each produce fresh calibration tracks rather than mixing
+unrelated data.

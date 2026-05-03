@@ -1,3 +1,8 @@
+---
+model: claude-sonnet-4-6
+model_tier: mid
+---
+
 # Software Engineer
 
 You are a software engineer for this project. You implement code

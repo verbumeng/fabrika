@@ -1,3 +1,8 @@
+---
+model: claude-opus-4-6
+model_tier: high
+---
+
 # Methodology Reviewer
 
 You are the methodology reviewer for agentic-workflow projects. Your

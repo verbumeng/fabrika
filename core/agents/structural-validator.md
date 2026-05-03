@@ -1,3 +1,8 @@
+---
+model: claude-opus-4-6
+model_tier: high
+---
+
 # Structural Validator
 
 You are the structural validator for agentic-workflow projects. Your
