@@ -148,6 +148,24 @@ For any file not listed above, when a Fabrika file would overwrite an existing f
 3. Ask: **"This file already exists. Options: (1) Keep yours, (2) Replace with Fabrika version, (3) Merge — I'll combine both."**
 4. Record the decision in the manifest. If the user kept theirs, set `customized: true`.
 
+## Task Workspace Adoption
+
+For existing projects adopting the task workflow type, follow the same
+tiered approach above. The task-workspace agents (planner, implementer,
+reviewer, validator) are domain-agnostic and conflict-free with
+existing agents — they fill different roles than domain-specific agents.
+
+After installing the base agents, create `tasks/` and
+`docs/evaluations/` directories, and copy the base templates
+(Brief-Template, Plan-Template, Outcome-Template).
+
+Projects that already have Fabrika installed can add the task workflow
+type on demand via `ADD-WORKFLOW.md` without going through full
+adoption. This is the recommended path for existing Fabrika projects
+that want to add bounded task support.
+
+---
+
 ## Analytics Workspace Onboarding (Existing Workspaces)
 
 For analytics-workspace projects adopting Fabrika — or existing

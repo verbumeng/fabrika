@@ -696,6 +696,107 @@ deviations flagged. Include token usage impact estimates if applicable.
 
 ---
 
+### Planner (Base) — Planning Mode
+
+**Tier:** Contextual
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Brief | Yes | Path to the task brief at `tasks/[date-name]/brief.md`, or brief content if not yet written to a file |
+| Prior task pointers | Conditional | Paths to similar prior tasks if this might build on previous work |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists — planner uses its terms in the plan |
+| Owner context | Optional | Constraints, preferences, or prior decisions from the conversation |
+| Existing plan path | Conditional | Path to existing plan file — required when re-invoked for revision after owner feedback |
+
+**Output expected:** Plan at `tasks/[date-name]/plan.md` covering
+deliverables, acceptance criteria, sequencing, constraints, and
+validation approach.
+
+---
+
+### Planner (Base) — Validation Mode
+
+**Tier:** Strict
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Brief | Yes | Path to `tasks/[date-name]/brief.md` — the original ask |
+| Approved plan | Yes | Path to `tasks/[date-name]/plan.md` — the approach that was approved |
+| Outcome | Yes | Path to `tasks/[date-name]/outcome.md` — the results produced |
+| Work product paths | Yes | Paths to deliverable files in `tasks/[date-name]/work/` |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists — for terminology consistency check |
+
+**Do not provide:** Reviewer findings, validator findings, opinions on
+deliverable quality. The planner validates independently against the
+brief's requirements.
+
+**Output expected:** Validation report at
+`docs/evaluations/[task-name]-brief-check.md`
+
+---
+
+### Implementer (Base)
+
+**Tier:** Contextual
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Approved plan | Yes | Path to the approved plan at `tasks/[date-name]/plan.md` |
+| Brief | Yes | Path to the task brief at `tasks/[date-name]/brief.md` |
+| Work directory | Yes | Path to the task directory where deliverables are written |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists — implementer uses its terms in deliverables |
+| Owner constraints | Optional | Preferences or constraints from the conversation |
+| Review report paths | Conditional | Paths to evaluation reports from the current review cycle — required when dispatching for revision after a failed review. The implementer reads these directly alongside the original plan. |
+
+**Output expected:** Deliverable files in `tasks/[date-name]/work/`,
+implementation summary with acceptance criteria coverage and any
+deviations.
+
+---
+
+### Reviewer (Base)
+
+**Tier:** Strict
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Approved plan | Yes | Path to the approved plan at `tasks/[date-name]/plan.md` |
+| Brief | Yes | Path to the task brief at `tasks/[date-name]/brief.md` |
+| Work product paths | Yes | Paths to deliverable files in `tasks/[date-name]/work/` |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists — for terminology consistency check |
+
+**Do not provide:** Opinions about the deliverables, suspected issues,
+the implementer's notes on what went well or poorly. The reviewer must
+read the deliverables, build its checklist from the plan, and form its
+own judgment.
+
+**Output expected:** Review report at
+`docs/evaluations/[task-name]-review.md`
+
+---
+
+### Validator (Base)
+
+**Tier:** Strict
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Brief | Yes | Path to `tasks/[date-name]/brief.md` |
+| Approved plan | Yes | Path to `tasks/[date-name]/plan.md` |
+| Work product paths | Yes | Paths to deliverable files in `tasks/[date-name]/work/` |
+| Domain Language pointer | Conditional | Path to Domain Language doc if it exists — for term consistency check |
+
+**Do not provide:** Reviewer findings, opinions about deliverable
+quality, suspected issues. The validator evaluates independently
+against the brief and plan.
+
+**Output expected:**
+1. Internal evaluation at `docs/evaluations/[task-name]-validation.md`
+2. Human-facing validation report at
+   `tasks/[date-name]/validation-report.md`
+
+---
+
 ### Workflow Planner — Planning Mode
 
 **Tier:** Contextual

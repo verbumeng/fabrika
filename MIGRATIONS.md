@@ -4,6 +4,60 @@ When a Fabrika update requires consumer projects to do more than a straight file
 
 ---
 
+## 0.26.0 — Base workflow type, base agents, and workflow composition
+
+**Affects:** All consumer projects.
+
+**What changed:** Fabrika introduces the task workflow type — the
+domain-agnostic base workflow — and four base agents (planner,
+implementer, reviewer, validator). This is the first step in Fabrika's
+shift from taxonomic project types to composable workflow types.
+Projects are no longer locked to their declared project type — they
+can add workflow types on demand.
+
+**Key concept:** "Workflow type" is now the primary term for what was
+previously called "project type." A project can compose multiple
+workflow types as needed. The task workflow is the base; analytics,
+sprint-based, and agentic workflows are specialized versions.
+
+**Migration steps:**
+
+1. **Copy new agent files** to your agent directory
+   (`.claude/agents/` or `.github/agents/`):
+   - `planner.md`, `implementer.md`, `reviewer.md`, `validator.md`
+
+2. **Copy new templates** to your templates location:
+   - `Brief-Template.md`, `Plan-Template.md`, `Outcome-Template.md`
+
+3. **Copy ADD-WORKFLOW.md** to your project root — this documents how
+   to add workflow types on demand.
+
+3b. **Copy `core/workflows/task-workflow.md`** to
+    `.fabrika/workflows/task-workflow.md` as a reference copy of the
+    workflow definition.
+
+4. **Update canonical files from Fabrika source:**
+   - `core/agents/AGENT-CATALOG.md`
+   - `core/Document-Catalog.md`
+   - `core/workflows/dispatch-protocol.md`
+   - `core/workflows/doc-triggers.md`
+   - `Domain-Language.md`
+   - `BOOTSTRAP.md`
+   - `ADOPT.md`
+   - `MANIFEST_SPEC.md`
+
+5. **Update your project instruction file** from the integration
+   template (`integrations/claude-code/CLAUDE.md` or
+   `integrations/copilot/copilot-instructions.md`). The key addition:
+   projects can compose workflow types on demand — the orchestrator
+   should know this.
+
+6. **No structural changes required.** Existing workflows,
+   agents, and project structures are unaffected. The new workflow
+   type is additive.
+
+---
+
 ## 0.25.0 — Rename context engineer to agentic engineer
 
 **Affects:** Consumer projects with `agentic-workflow` project type.

@@ -536,6 +536,57 @@ A project can be **multi-type** (sprint-based types only). A data app with scrap
 
 ---
 
+## Base Documents (All Workflow Types)
+
+> These documents are available to any workflow type. They are the
+> domain-agnostic lifecycle documents that the task workflow uses
+> directly and that specialized workflows extend with domain-specific
+> versions. The analytics-workspace has domain-specific versions
+> (Analysis-Brief, Analysis-Plan, Outcome-Report) that add data source
+> sections, SQL logic, and cost estimation. Sprint-based workflows use
+> stories and specs instead. But the base brief, plan, outcome, and
+> validation report pattern applies universally.
+
+### tasks/[date-name]/brief.md (Brief)
+- **Purpose:** Documents what needs to be done — the goal, audience, deadline, desired output, and constraints. The base alignment artifact between orchestrator and owner.
+- **Types:** task-workspace, analytics-workspace (as Analysis Brief) | **Tier:** 1 (created per task) | **Audience:** both
+- **Template:** `core/templates/Brief-Template.md` (base), `core/templates/Analysis-Brief-Template.md` (analytics-specific)
+- **Notes:** Analytics-workspace extends the base brief with data source sections, SQL-specific constraints, and stakeholder context. The base brief is domain-agnostic — it works for any task type.
+
+### tasks/[date-name]/plan.md (Plan)
+- **Purpose:** How the work will be done — deliverables, acceptance criteria, sequencing, constraints, validation approach. The contract the implementer executes against and the reviewer evaluates against.
+- **Types:** task-workspace, analytics-workspace (as Analysis Plan) | **Tier:** 1 (created per task) | **Audience:** both
+- **Template:** `core/templates/Plan-Template.md` (base), `core/templates/Analysis-Plan-Template.md` (analytics-specific)
+- **Notes:** Analytics-workspace extends the base plan with data source tables, SQL logic sections, and cost estimates. The base plan derives its structure from the brief, not from a domain model.
+
+### tasks/[date-name]/outcome.md (Outcome)
+- **Purpose:** Results, methodology, deliverable summary, and follow-up recommendations. The "what we found/produced" of a task.
+- **Types:** task-workspace, analytics-workspace (as Outcome Report) | **Tier:** 1 (created per task at delivery) | **Audience:** both
+- **Template:** `core/templates/Outcome-Template.md` (base), `core/templates/Outcome-Report-Template.md` (analytics-specific)
+- **Notes:** Analytics-workspace extends the base outcome with data quality notes, output locations (SQL files, CSVs), and source-specific methodology. The base outcome works for any deliverable type.
+
+### tasks/[date-name]/validation-report.md (Validation Report)
+- **Purpose:** Human-facing evidence chain tracing key claims in the outcome back to the plan and brief. Lets the audience understand why they can trust the output.
+- **Types:** task-workspace, analytics-workspace | **Tier:** 1 (created per task at delivery) | **Audience:** both
+- **Notes:** Written by the validator as a second output alongside its internal evaluation report. Lives at the task root (not in `docs/evaluations/`) because it is a stakeholder-facing deliverable. The analytics-workspace version traces claims back through SQL and data; the base version traces claims back through whatever the deliverables are.
+
+### docs/evaluations/[task-name]-review.md (Review Report)
+- **Purpose:** Reviewer findings for a task — verdict, per-criterion assessment against the plan's acceptance criteria, quality signal assessment, fix instructions.
+- **Types:** task-workspace | **Tier:** 1 (created per task during review) | **Audience:** agent
+- **Notes:** The base reviewer derives its checklist from the plan's acceptance criteria and four general quality signals (completeness, consistency, clarity, correctness). Domain-specific reviewers (logic-reviewer, code-reviewer) use domain rubrics instead.
+
+### docs/evaluations/[task-name]-validation.md (Validation Report — Internal)
+- **Purpose:** Validator internal evaluation — verdict, brief satisfaction assessment, deliverable completeness, acceptance criteria coverage, internal consistency findings.
+- **Types:** task-workspace | **Tier:** 1 (created per task during validation) | **Audience:** agent
+- **Notes:** Internal report for the review loop. Distinct from the human-facing validation report at `tasks/[date-name]/validation-report.md`.
+
+### docs/evaluations/[task-name]-brief-check.md (Brief Check)
+- **Purpose:** Planner validation mode report. Verifies that the output answers the brief's goal in the right format for the audience.
+- **Types:** task-workspace, analytics-workspace | **Tier:** 1 (created per task at delivery) | **Audience:** agent
+- **Notes:** The planner validates independently — it does not receive reviewer or validator findings.
+
+---
+
 ## agentic-workflow Documents
 
 > These documents support the agentic-workflow structural update lifecycle. The structural mode uses a 7-step protocol; documents track plans, verification, and version history. Operational mode documents (if enabled) are project-specific and human-maintained.
@@ -769,6 +820,11 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 - Wiki-Topic-Template.md
 - Batch-Index-Schema.md
 
+### Base templates (all task-based workflow types):
+- Brief-Template.md — `task-workspace` (base brief, extended by Analysis-Brief-Template for analytics)
+- Plan-Template.md — `task-workspace` (base plan, extended by Analysis-Plan-Template for analytics)
+- Outcome-Template.md — `task-workspace` (base outcome, extended by Outcome-Report-Template for analytics)
+
 ### Included based on project type:
 - Calibration-Template.yml — all project types (scaffolded to `.fabrika/calibration.yml` at bootstrap)
 - Data-Source-Research-Template.md — `data-app`, `analytics-engineering`, `data-engineering`, `automation`
@@ -844,6 +900,12 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 **Evaluations:** [task-name]-logic-review.md, [task-name]-data-validation.md, [task-name]-brief-check.md, [task-name]-performance-review.md (Tier 2 only) (in `docs/evaluations/`)
 **As needed:** sources/files/*.md, reusable queries in `src/queries/`, scripts in `src/scripts/`, wiki/index.md, wiki/topics/
 **Note:** No sprint artifacts, no backlog. Work is organized as tasks with tiered review (Tier 1 for local data, Tier 2 for production data). Wiki is opt-in during workspace onboarding and populated via backfill and incremental synthesis after task deliveries.
+
+#### task-workspace (bounded tasks, domain-agnostic work)
+**Per-task:** brief.md, plan.md, outcome.md, validation-report.md (in each `tasks/[date-name]/` folder)
+**Evaluations:** [task-name]-review.md, [task-name]-validation.md, [task-name]-brief-check.md (in `docs/evaluations/`)
+**As needed:** Domain Language, wiki/index.md, wiki/topics/
+**Note:** No sprint artifacts, no data tiers, no domain-specific review. Work is organized as tasks with domain-agnostic agents. The reviewer derives its checklist from the plan's acceptance criteria. Wiki is opt-in and populated via incremental synthesis after task deliveries.
 
 ### Methodology-Based Types
 

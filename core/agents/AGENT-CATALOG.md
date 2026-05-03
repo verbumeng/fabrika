@@ -37,6 +37,7 @@ Every project has a subset of these agent roles:
 | Type | Planner | Reviewer | Supplemental Reviewers | Validator | Designer | Coordinator | Implementer | Architect |
 |------|---------|----------|----------------------|-----------|----------|-------------|-------------|-----------|
 | `analytics-workspace` | analysis-planner | logic-reviewer | performance-reviewer | data-validator | visualization-designer | *(none)* | data-analyst | *(none)* |
+| `task-workspace` | planner | reviewer | *(none)* | validator | *(none)* | *(none)* | implementer | *(none)* |
 
 ### Methodology-Based Types
 
@@ -49,6 +50,22 @@ Methodology-based types use the agentic-workflow lifecycle (`core/workflows/agen
 **Note on agent maturity (0.12.0):** The five agentic-workflow-specific agents (workflow-planner, methodology-reviewer, structural-validator, agentic-engineer, context-architect) reached full maturity in 0.12.0. Five specialist implementer agents (software-engineer, data-engineer, data-analyst, ml-engineer, ai-engineer) were also introduced in 0.12.0, covering all project types. Two specialist architect agents (software-architect, data-architect) were introduced in 0.13.0, covering all sprint-based project types.
 
 **Operational mode:** Agentic-workflow projects may optionally have an operational mode for day-to-day system operation. Operational sessions are human-initiated and interactive — no additional agents are added. See the workflow file for details.
+
+### Base Agents and Workflow Types
+
+The task-workspace type uses base agents (planner, implementer,
+reviewer, validator) — domain-agnostic versions that all specialized
+agents are parameterized extensions of. The analytics-workspace agents
+(analysis-planner, data-analyst, logic-reviewer, data-validator) are
+the analytics-specific parameterization. Sprint-based agents
+(product-manager, code-reviewer, software-engineer, etc.) are the
+software-specific parameterization.
+
+In Fabrika's evolving model, "project types" are becoming "workflow
+types" — reusable multi-agent patterns that projects can compose. A
+project is not locked to a single type. It can add workflow types on
+demand via `ADD-WORKFLOW.md`. The task workflow is the base pattern
+that all specialized workflows build upon.
 
 ## Multi-Type Projects
 
@@ -112,3 +129,7 @@ For dispatch contracts (what the orchestrator provides each agent at each invoca
 | `data-analyst.md` | Implementer | Implementer | analytics-workspace, data-app |
 | `ml-engineer.md` | Implementer | Implementer | ml-engineering |
 | `ai-engineer.md` | Implementer | Implementer | ai-engineering |
+| `planner.md` | Planner | Planner | task-workspace (base agent) |
+| `implementer.md` | Implementer | Implementer | task-workspace (base agent) |
+| `reviewer.md` | Reviewer | Reviewer | task-workspace (base agent) |
+| `validator.md` | Validator | Validator | task-workspace (base agent) |
