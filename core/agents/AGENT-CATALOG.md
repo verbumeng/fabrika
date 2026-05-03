@@ -44,9 +44,9 @@ Methodology-based types use the agentic-workflow lifecycle (`core/workflows/agen
 
 | Type | Planner | Reviewer | Validator | Implementer | Architect | Coordinator |
 |------|---------|----------|-----------|-------------|-----------|-------------|
-| `agentic-workflow` (structural) | workflow-planner | methodology-reviewer | structural-validator | context-engineer | context-architect | scrum-master *(for change backlog sequencing)* |
+| `agentic-workflow` (structural) | workflow-planner | methodology-reviewer | structural-validator | agentic-engineer | context-architect | scrum-master *(for change backlog sequencing)* |
 
-**Note on agent maturity (0.12.0):** The five agentic-workflow-specific agents (workflow-planner, methodology-reviewer, structural-validator, context-engineer, context-architect) reached full maturity in 0.12.0. Five specialist implementer agents (software-engineer, data-engineer, data-analyst, ml-engineer, ai-engineer) were also introduced in 0.12.0, covering all project types. Two specialist architect agents (software-architect, data-architect) were introduced in 0.13.0, covering all sprint-based project types.
+**Note on agent maturity (0.12.0):** The five agentic-workflow-specific agents (workflow-planner, methodology-reviewer, structural-validator, agentic-engineer, context-architect) reached full maturity in 0.12.0. Five specialist implementer agents (software-engineer, data-engineer, data-analyst, ml-engineer, ai-engineer) were also introduced in 0.12.0, covering all project types. Two specialist architect agents (software-architect, data-architect) were introduced in 0.13.0, covering all sprint-based project types.
 
 **Operational mode:** Agentic-workflow projects may optionally have an operational mode for day-to-day system operation. Operational sessions are human-initiated and interactive — no additional agents are added. See the workflow file for details.
 
@@ -103,7 +103,7 @@ For dispatch contracts (what the orchestrator provides each agent at each invoca
 | `methodology-reviewer.md` | Reviewer | Reviewer | agentic-workflow |
 | `structural-validator.md` | Validator | Validator | agentic-workflow |
 | `workflow-planner.md` | Planner | Planner | agentic-workflow |
-| `context-engineer.md` | Implementer | Implementer | agentic-workflow |
+| `agentic-engineer.md` | Implementer | Implementer | agentic-workflow |
 | `context-architect.md` | Architect | Architect | agentic-workflow |
 | `software-architect.md` | Architect | Architect | web-app, automation, library, ai-engineering |
 | `data-architect.md` | Architect | Architect | data-engineering, analytics-engineering, data-app, ml-engineering |

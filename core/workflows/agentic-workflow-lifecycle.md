@@ -136,14 +136,14 @@ Each agent writes its findings directly — no filtering or softening.
 
 **Owner:** Orchestrator + Implementer agent
 
-Dispatch the context engineer for revision with the original plan and
+Dispatch the agentic engineer for revision with the original plan and
 a `Review report paths` field containing the paths to all three
-verification reports. The context engineer reads the reports directly
+verification reports. The agentic engineer reads the reports directly
 alongside the plan — the orchestrator does not synthesize or interpret
 findings. See `core/design-principles.md` for the rationale.
 
 For each finding:
-- Fix it if it is a real problem (context engineer executes fixes)
+- Fix it if it is a real problem (agentic engineer executes fixes)
 - If you disagree with a finding, explain why to the owner and let
   them decide
 
@@ -221,7 +221,7 @@ verified
 | Planner | workflow-planner | Step 1 (planning mode) |
 | Reviewer | methodology-reviewer | Step 4 |
 | Validator | structural-validator | Step 4 |
-| Implementer | context-engineer | Steps 3, 5 |
+| Implementer | agentic-engineer | Steps 3, 5 |
 | Architect | context-architect | Step 4 |
 | Coordinator | scrum-master | When multiple change requests need sequencing |
 
@@ -233,7 +233,7 @@ similar to sprint planning in sprint-based projects.
 ### Note on agent maturity
 
 The five agentic-workflow-specific agents (workflow-planner,
-methodology-reviewer, structural-validator, context-engineer,
+methodology-reviewer, structural-validator, agentic-engineer,
 context-architect) reached full maturity in 0.12.0 — detailed
 evaluation criteria, calibration examples, and step-by-step
 procedures were added to each. Five specialist implementer agents

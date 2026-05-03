@@ -55,7 +55,7 @@ during execution — those are fair game for discussion.
 
 Execute this PRD following the agentic-workflow structural update
 lifecycle step by step. Dispatch to agents as the lifecycle specifies:
-workflow-planner for planning, context-engineer for execution,
+workflow-planner for planning, agentic-engineer for execution,
 methodology-reviewer + structural-validator + context-architect for
 verification. Start with Step 1 (Plan) — dispatch the workflow-planner
 to produce the implementation plan, then present it for my approval

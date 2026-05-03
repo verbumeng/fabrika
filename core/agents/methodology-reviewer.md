@@ -54,7 +54,7 @@ evaluates:
 1. Read the CHANGELOG entry for the version being reviewed — this
    tells you what was intended and what files were touched
 2. Read the approved plan — this is the implementation contract the
-   context-engineer was working against
+   agentic-engineer was working against
 3. Read the verification checklist from the project's instruction
    file (the CLAUDE.md or equivalent)
 4. List all file paths provided in the dispatch — these are your

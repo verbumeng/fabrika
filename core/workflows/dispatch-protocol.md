@@ -576,8 +576,8 @@ project types. Each inherits the base dispatch contract from the
 Implementer archetype and adds domain-specific conditional fields.
 The output contract is shared across all specialists.
 
-For the agentic-workflow implementer (context-engineer), see the
-Context Engineer contract below — it has its own dispatch contract
+For the agentic-workflow implementer (agentic-engineer), see the
+Agentic Engineer contract below — it has its own dispatch contract
 tailored to methodology work.
 
 ---
@@ -716,7 +716,7 @@ version bump determination.
 
 ---
 
-### Context Engineer
+### Agentic Engineer
 
 **Tier:** Contextual
 
@@ -728,7 +728,7 @@ version bump determination.
 | File paths to modify | Yes | Existing files the plan says to change |
 | Project constraints | Yes | Versioning discipline, smell tests, context decomposition rules from the project instruction file |
 | Owner constraints | Optional | Preferences or constraints from the conversation |
-| Review report paths | Conditional | Paths to verification reports from the current review cycle — required when dispatching for revision after a failed verification. The context engineer reads these directly alongside the original plan. |
+| Review report paths | Conditional | Paths to verification reports from the current review cycle — required when dispatching for revision after a failed verification. The agentic engineer reads these directly alongside the original plan. |
 
 **Output expected:** Changed files on the feature branch, VERSION
 bump, CHANGELOG entry, MIGRATIONS entry if applicable, plus a summary

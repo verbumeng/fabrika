@@ -144,7 +144,7 @@ recommendations. The orchestrator decides what to act on.
 ## Assessment Quality Criteria
 
 - Every finding has a specific file path — not "some files are getting
-  long" but "`core/agents/context-engineer.md` is 140 lines with 4
+  long" but "`core/agents/agentic-engineer.md` is 140 lines with 4
   distinct concerns (role, procedure, calibration, context hygiene)"
 - Every finding explains WHY it matters structurally — not just "this
   file is long" but "this file is always-loaded via the integration

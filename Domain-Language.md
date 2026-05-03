@@ -200,9 +200,10 @@ in Step 1 of the **structural update lifecycle**. Contains file
 change inventory, integration point analysis, risk identification,
 mitigations, version bump determination, and an **alignment history**
 section. Status lifecycle: draft -> approved -> executed. The
-implementation contract that the **context-engineer** implements
-against and the verification agents evaluate against. [Persisted as
-file in 0.21.0; previously conversation-only.]
+implementation contract that the **agentic-engineer** (formerly
+context-engineer, renamed in 0.25.0) implements against and the
+verification agents evaluate against. [Persisted as file in 0.21.0;
+previously conversation-only.]
 
 **Alignment history** — A section in a **system update plan** file
 that captures what changed from the initial plan and why during Step
@@ -471,7 +472,7 @@ changes require a minor bump. `examples/**`, `README.md`, and meta
 changes require no bump.
 
 **Integration point map** — A reference of common cross-reference
-chains in Fabrika. Used by the workflow-planner and context-engineer
+chains in Fabrika. Used by the workflow-planner and agentic-engineer
 to trace ripple effects of changes. Examples: agent prompts <->
 Agent Catalog <-> workflow files <-> integration templates; Document
 Catalog <-> doc-triggers <-> agent prompts.
