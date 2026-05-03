@@ -44,11 +44,13 @@ The design philosophy is that workflows define the *sequence and contracts* for 
 
 - **Context compaction as a named design principle (v0.28.0).** Fabrika implicitly practiced compaction at every phase boundary — research compresses into specs, reviews compress into verdicts — but nothing named it or specified what "compressed" means. CR-20 codified compaction as the third design principle alongside implementer-reviewer pairing and implementer-validator pairing. The principle governs what agents PRODUCE during workflow runs: compressed artifacts that preserve signal and discard noise, so the receiving agent starts in the productive zone of its context window. The enforcement mechanism is separated from the principle: the WHY (definition, phase boundary table, four named anti-patterns) lives in `core/design-principles.md`, the HOW (per-role-category output format constraints for research outputs, plan outputs, evaluation reports, and sub-agent returns) lives in `core/workflows/protocols/dispatch-protocol.md`. Key design decision: no hard token limits — "fits comfortably alongside agent instructions" is more useful than a number that varies by model and context window size. The owner initially pushed back on adding "Cross-Cutting Principles" pointer sections to all four workflow files, identifying them as unnecessary context bloat since the workflow files already reference design-principles.md through existing cross-references. The trimmed scope — principle in one file, enforcement in another, existing references sufficient to connect them — is cleaner than the original plan. Source: CR-20, CHANGELOG 0.28.0.
 
+- **Universal complexity tiers as a ceremony dial (v0.29.0).** Sprint stories now carry a complexity tier — Patch (1-2 pts), Story (3-5 pts), or Deep Story (8-13 pts) — that determines which workflow gates apply. Patch skips spec creation entirely (the story file IS the spec) and uses reduced evaluation (code-reviewer only, max 2 retry cycles; auto-promotes to Story if exceeded). Story is the existing full workflow, unchanged. Deep Story adds a mandatory research phase before spec creation (producing `docs/plans/[TICKET]-research.md` with compressed subsystem findings), mandatory architect review of the spec before implementation, and mandatory architect structural review after. The scrum-master assigns tiers during sprint planning based on story points, scope indicators, and owner override. The orchestrator reads the `tier` frontmatter field and routes to the appropriate execution path. Agents remain tier-unaware — the orchestrator handles all routing via the development workflow and dispatch protocol. Tier promotion is one-way up (Patch → Story, Story → Deep Story); demotion is owner-initiated only. These tiers are the sprint-based portion of a universal complexity spectrum spanning ad-hoc (CR-19) through task (CR-17/v0.26.0) through patch/story/deep story through epic (CR-24) — the ceremony dial that connects all workflow types into a graduated scale. The research phase is distinct from Design Alignment: Design Alignment answers "what are we building this phase?" at the project/PRD level, while Deep Story research answers "what do I need to understand about these subsystems?" at the per-story level within a sprint. Source: CR-18, CHANGELOG 0.29.0.
+
 - **CLAUDE.md as a structural artifact requiring path validation (v0.27.0).** CR-28 exposed a systemic issue: the project-level CLAUDE.md contains workflow path references that break when workflow files move, but the structural-validator was not checking those paths because CLAUDE.md was excluded from the structural update scope (to preserve smell test exclusion — CLAUDE.md is gitignored and contains project-specific content). The fix was surgical: the structural-validator now checks CLAUDE.md path references during structural updates while preserving the smell test exclusion. The CLAUDE.md template was also restructured to lead with the mandatory workflow pointer, making the workflow reference the first thing an orchestrator encounters. This is a design lesson: gitignored files that contain pointers to canonical files need their own validation path, separate from the canonical file validation. Source: CR-28, CHANGELOG 0.27.0.
 
 ## Current State
 
-As of v0.28.0, the workflow system includes:
+As of v0.29.0, the workflow system includes:
 
 **Directory structure:**
 - `core/workflows/types/` — workflow type definitions (agentic-workflow, development-workflow, task-workflow, analytics-workspace)
@@ -66,9 +68,10 @@ As of v0.28.0, the workflow system includes:
 **Sprint-based workflow** (8 project types):
 - Design Alignment protocol for requirements gathering (brain dump -> Charter/PRD)
 - Sprint lifecycle with phase indicator (alignment, planning, dev, review, maintenance, retro)
-- Development workflow with testing approach branching (TDD/test-informed/test-after)
-- Dispatch protocol with per-agent contracts and lightweight dispatch path
-- Review-revise loop: implementer reads reviews directly, all evaluators re-review, max 3 cycles with orchestrator diagnosis
+- Complexity tiers: Patch (reduced ceremony), Story (full ceremony), Deep Story (enhanced ceremony with research and mandatory architect review) — assigned by scrum-master during sprint planning (v0.29.0)
+- Development workflow with tier-conditional branching and testing approach branching (TDD/test-informed/test-after)
+- Dispatch protocol with per-agent contracts, lightweight dispatch path, and tier-conditional dispatch tables (v0.29.0)
+- Review-revise loop: implementer reads reviews directly, all evaluators re-review, max 3 cycles (2 for Patch) with orchestrator diagnosis
 - 9 briefing formats across sprint, session, retro, spec, task, and structural contexts
 - Maintenance checklist with 7+ sections including knowledge synthesis
 - Hook system with 7 git hooks and 4 tool-specific hooks
@@ -165,6 +168,8 @@ As of v0.28.0, the workflow system includes:
 - v0.22.0 -- review-revise loop convergence: all project types use direct implementer-reads-reviews, mandatory full re-review, 3-cycle cap with orchestrator diagnosis. Implementer-reviewer pairing and implementer-validator pairing codified in core/design-principles.md
 - v0.26.0 -- base task workflow (domain-agnostic), four base agents, on-demand workflow addition (ADD-WORKFLOW.md), workflow composition model ("project types" becoming "workflow types"), base templates (Brief, Plan, Outcome). Cross-cutting concern pattern identified: procedures should not be workflow-bound.
 - v0.27.0 -- workflow folder reorganization: types/ for workflow type definitions, protocols/ for supporting processes. Renames: agentic-workflow-lifecycle.md -> agentic-workflow.md, sprint-lifecycle.md -> sprint-coordination.md. CLAUDE.md restructured with mandatory workflow pointer. Structural-validator gains CLAUDE.md path reference checking.
+- v0.28.0 -- context compaction as named design principle governing workflow phase transitions. Output format constraints in dispatch protocol.
+- v0.29.0 -- universal complexity tiers (Patch/Story/Deep Story) as ceremony dial for sprint-based work. Tier-conditional workflow branching in development-workflow, tier-conditional dispatch tables, story template tier field, sprint contract tier fields, Document Catalog research document entry. Part of the universal complexity spectrum connecting all workflow types.
 
 ### PRDs and CRs
 - PRD-01 -- agentic-workflow lifecycle design
@@ -182,6 +187,8 @@ As of v0.28.0, the workflow system includes:
 - PRD-15 -- token cost estimation across workspaces (implemented v0.24.0)
 - CR-17 -- base workflow type, base agents, workflow composition (implemented v0.26.0)
 - CR-28 -- workflow folder reorganization, types/protocols split (implemented v0.27.0)
+- CR-20 -- context compaction as design principle (implemented v0.28.0)
+- CR-18 -- universal complexity tiers, ceremony dial for sprint work (implemented v0.29.0)
 
 ### Core files
 - core/workflows/README.md -- types vs. protocols directory structure guide
