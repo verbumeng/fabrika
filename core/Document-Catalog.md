@@ -700,6 +700,13 @@ A project can be **multi-type** (sprint-based types only). A data app with scrap
 
 ## evaluations/
 
+> **Tier note:** Patch-tier stories produce only a code review report
+> (`[TICKET]-code-review.md`). Test review, product review, and
+> architect review are produced for Story and Deep Story tiers only.
+> Deep Story tier additionally produces an architect review report
+> (`[TICKET]-architecture-review.md`) as a mandatory (not optional)
+> evaluation artifact.
+
 ### [TICKET]-code-review.md
 - **Purpose:** Code reviewer agent's evaluation report for a completed story. Verdict, per-criterion grades, specific findings, fix instructions.
 - **Types:** all | **Tier:** 1 (created automatically during story completion) | **Audience:** agent
@@ -720,7 +727,12 @@ A project can be **multi-type** (sprint-based types only). A data app with scrap
 ### [TICKET]-spec.md
 - **Purpose:** Expanded implementation spec produced by the product-manager agent in planning mode. User stories, data model impact, design direction, acceptance criteria.
 - **Types:** all | **Tier:** 1 (created automatically when starting a story) | **Audience:** both
-- **Notes:** The main session presents this to the owner for approval before implementation begins.
+- **Notes:** The main session presents this to the owner for approval before implementation begins. **Tier note:** Patch-tier stories do not produce spec documents — the story file IS the spec. Spec creation applies to Story and Deep Story tiers only.
+
+### [TICKET]-research.md
+- **Purpose:** Compressed subsystem research findings produced during the Deep Story research phase, before spec creation. Documents affected subsystems, current state, constraints discovered, risks identified, and open questions. Passed to the planner as context for spec expansion (compaction applies).
+- **Types:** all sprint-based | **Tier:** 1 (created automatically for Deep Story tier stories only) | **Audience:** both
+- **Notes:** Produced by the orchestrator (not a sub-agent) during the Deep Story research phase. Lives alongside specs in `docs/plans/`. Only created for Deep Story tier — Patch and Story tiers do not produce this artifact.
 
 ---
 

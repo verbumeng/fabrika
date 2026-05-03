@@ -327,6 +327,40 @@ landscape and trying to locate where terminology distinctions belong:
     to `types/` without renaming) to avoid premature restructuring
     before the skills model is designed.
 
+## Notes from CR-18 Execution (2026-05-03)
+
+Three items surfaced during CR-18 that belong in CR-22's scope:
+
+1. **Dispatch protocol decomposition.** At 1,097 lines,
+   `core/workflows/protocols/dispatch-protocol.md` exceeds the context
+   decomposition threshold (~30-50 lines per section). CR-22's agent
+   model restructuring is the natural moment to decompose per-agent
+   contracts into per-archetype base contracts with domain-specific
+   extensions — the same skill-parameterization pattern CR-22 applies
+   to agent prompts.
+
+2. **"Analytics Workspace" → "Analytics Workflow" rename.** CR-22
+   dissolves the three project type categories (sprint-based,
+   task-based, methodology-based). The rename from
+   "analytics-workspace" to "analytics workflow" (as a composable
+   workflow type, not a fixed project type) belongs in that
+   restructuring. Affects: Document-Catalog, AGENT-CATALOG, BOOTSTRAP,
+   integration templates, Domain-Language, and all workflow/protocol
+   files that reference the term.
+
+3. **Development-workflow tier section decomposition.** The
+   Tier-Conditional Workflow Branching section added in CR-18
+   (`core/workflows/types/development-workflow.md`, ~116 lines)
+   exceeds the 30-50 line context decomposition guideline. It is
+   functional as-is — the three paths are clearly delineated with
+   subsection headers and the section is the first thing an
+   orchestrator reads when entering a story. But if context pressure
+   emerges, the natural extraction point is
+   `core/workflows/protocols/tier-paths.md`. CR-22's workflow
+   restructuring (splitting development-workflow into domain-specific
+   workflows) may resolve this organically. Flagged by the
+   context-architect during CR-18 verification.
+
 ## Verification Criteria (Pre-Alignment Placeholder)
 
 To be defined during design alignment.

@@ -44,6 +44,21 @@ Next Sprint Planning chat (or Design Alignment if new phase begins)
 
 **Sprint Planning chat** — Invoke the scrum-master (coordinator) agent. Produces `Sprint-XX.md`, `Sprint-XX-contract.md`, `Sprint-XX-progress.md`, `features.json` entries, and external task system entries (if configured). Sets `Cycle phase: story-in-progress` in STATUS.md. **Close-out prompt:** *"Sprint planning complete. Open a new chat to start [TICKET] — [Story 1 title]."*
 
+The scrum-master assigns a **complexity tier** to each story during
+sprint planning based on:
+- Story points (primary signal: 1-2 points = Patch, 3-5 = Story,
+  8-13 = Deep Story)
+- Scope indicators in the story description (file count, module
+  boundaries, "refactor" or "introduce" language)
+- Owner override (the user can always promote or demote)
+
+The tier is recorded in each story file's frontmatter (`tier: patch |
+story | deep-story`) and in the sprint contract per story. The
+orchestrator reads the tier before entering the story chat to
+determine which workflow path to follow (see
+`core/workflows/types/development-workflow.md`, Tier-Conditional
+Workflow Branching).
+
 **Story chat (each)** — Standard Session Lifecycle. One story per chat. **Close-out prompt branches on whether more stories remain in the sprint:**
 - More stories remain → set `Cycle phase: story-in-progress`. Prompt: *"Story [TICKET] complete and reviewed. Open a new chat to start [NEXT-TICKET] — [Next title]."*
 - This was the last story → set `Cycle phase: sprint-close`. Prompt: *"Last sprint story is complete and reviewed. Open a new chat for sprint close-out (merge all sprint branches)."*

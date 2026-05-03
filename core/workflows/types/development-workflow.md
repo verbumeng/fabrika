@@ -28,6 +28,123 @@ structured requirements that the scrum master then decomposes.
 
 Before invoking any sub-agent, read `core/workflows/protocols/dispatch-protocol.md` for what to provide and what to withhold. The dispatch protocol defines per-agent input contracts (what the orchestrator must hand over) and output contracts (what the sub-agent must produce). Two tiers: strict dispatch for reviewers, validators, and designers (plan + file paths + rubric only — no editorial); contextual dispatch for planners and coordinators (richer project state).
 
+## Tier-Conditional Workflow Branching
+
+Every story has a complexity tier assigned during sprint planning (see
+`core/workflows/protocols/sprint-coordination.md`). The tier
+determines which workflow gates apply. The orchestrator reads the
+story's `tier` frontmatter field and routes to the appropriate path
+below. If no tier is set, default to Story.
+
+### Patch Path (tier: patch)
+
+Patches are small, single-concern changes where the story file IS the
+spec. The orchestrator skips spec creation and runs a reduced
+evaluation cycle.
+
+```
+story file → implementer → code-reviewer → commit
+```
+
+1. Read the story file and sprint contract
+2. Read relevant project docs on demand (architecture, data model)
+3. Skip spec creation — the story's acceptance criteria are the spec
+4. Create feature branch: `feature/[PROJECT_KEY]-S-042-description`
+5. Update story: `status: In Progress`
+6. Dispatch the **implementer** — contextual dispatch per the dispatch
+   protocol. Testing approach defaults to test-after for Patches.
+7. Confirm the implementer's output: review implementation summary,
+   verify files were created/modified as expected
+8. Run tests — all pass (no regressions)
+9. Run linter — no errors
+10. Commit with conventional format
+11. Invoke the **code-reviewer** — strict dispatch with story file
+    (as the spec), file paths, and rubric pointer. Single reviewer
+    only.
+12. **If the code-reviewer fails the implementation:**
+    - Dispatch the implementer for revision with the story file and
+      the review report path
+    - Re-invoke the code-reviewer with fresh dispatch
+    - **Maximum 2 retry cycles.** If a Patch needs 3 rounds of
+      review, the orchestrator promotes it to Story tier and presents
+      the promotion to the owner before continuing
+13. **If the code-reviewer passes:**
+    - Update story: `status: In Review`, add `## Completion Summary`
+    - Present session summary to the owner
+
+No planner validation. No test-writer verification (unless the sprint
+contract's testing strategy mandates it for the affected area). No
+architect review.
+
+### Story Path (tier: story)
+
+The current full development workflow. Follow "Starting a Story" and
+"Completing a Story (Evaluation Cycle)" below with no modifications.
+All existing gates apply.
+
+### Deep Story Path (tier: deep-story)
+
+Deep Stories add a mandatory research phase and architect review. The
+orchestrator must complete all Deep Story gates — none are optional.
+
+```
+research → planner (spec) → architect review → implementer →
+full evaluation cycle + architect structural review → commit
+```
+
+1. **Research phase.** Before invoking the planner, the orchestrator
+   conducts on-demand context research of the affected subsystems.
+   Read architecture docs, relevant ADRs, data model, existing code
+   in the affected area. Produce a research document at
+   `docs/plans/[TICKET]-research.md` summarizing: subsystems affected,
+   current state, constraints discovered, risks identified, and open
+   questions. Compress the research findings before passing to the
+   planner (compaction principle applies).
+2. Invoke the **planner** in **planning mode** with the story content
+   plus the research document path as an additional contextual field.
+   The planner expands the story into a full spec at
+   `docs/plans/[TICKET]-spec.md`.
+3. After the spec is drafted, invoke the token cost estimation
+   protocol.
+4. Present the spec to the owner for approval.
+5. **Mandatory architect review.** Invoke the appropriate architect
+   (software-architect or data-architect) in **design mode** with the
+   spec's module section. This is NOT optional for Deep Stories — the
+   architect must review before implementation begins. Present the
+   architect's findings alongside the spec for owner approval.
+6. Proceed with "Starting a Story" steps 8-10 (branch creation,
+   status update, testing approach branching).
+7. After implementation, run the full evaluation cycle (steps 1-9 of
+   "Completing a Story").
+8. **Mandatory architect structural review.** After the evaluation
+   cycle passes (or as part of it), invoke the architect in **review
+   mode**. This is NOT optional for Deep Stories.
+9. Proceed with story completion (steps 15-19 of "Completing a
+   Story").
+
+### Tier Promotion (Mid-Execution)
+
+A Patch can be promoted to Story if:
+- The code-reviewer flags scope creep
+- The implementer discovers the change is more complex than expected
+- The orchestrator detects the implementer touching >3 files
+- The Patch fails 2 review cycles (automatic promotion)
+
+A Story can be promoted to Deep Story if:
+- The planner flags that the spec requires research into unfamiliar
+  subsystems
+- The architect (if optionally invoked) rates the structural risk as
+  high
+- The owner requests promotion
+
+Promotion is one-way (up only) and triggers the orchestrator to
+present the situation to the owner before continuing. Demotion
+(Deep Story to Story) is owner-initiated only — if research reveals
+the change is simpler than anticipated, the owner can demote, but
+the architect review of the spec is already done at that point so
+the practical difference is skipping the post-implementation architect
+review.
+
 ## Starting a Story
 1. Read the story file (or issue tracker ticket) and the sprint contract for this sprint
 2. Read relevant project docs on demand: Architecture Overview, Data Model, relevant ADRs, research notes
@@ -36,6 +153,8 @@ Before invoking any sub-agent, read `core/workflows/protocols/dispatch-protocol.
 5. After the spec is drafted, invoke the token cost estimation protocol (`core/workflows/protocols/token-estimation.md`) to present the cost estimate alongside the spec briefing.
 6. Present the spec to the owner for approval using the **Spec Briefing** format (see briefing docs)
 7. **(Optional) Invoke the architect agent for design review.** If the spec proposes new modules, significant restructuring, or changes to component boundaries, dispatch the appropriate architect (software-architect or data-architect based on project type) in **design mode** with the spec's module section. The architect reviews proposed module depth, interface design, and component boundaries. Present the architect's findings alongside the spec for owner approval. Skip if the story is a small feature change within existing module boundaries.
+   For Deep Story tier, architect review is mandatory — see
+   "Tier-Conditional Workflow Branching" above.
 8. Create feature branch: `feature/[PROJECT_KEY]-S-042-description`
 9. Update story: `status: In Progress`
 10. **Branch on testing approach.** Read the sprint contract's testing
@@ -121,6 +240,8 @@ Before marking a story complete, run the full evaluation cycle:
    dispatch. It verifies acceptance criteria from the sprint contract
    are met
 8. **(Optional) Invoke the architect agent for structural evaluation.** If the implementation creates new modules, changes component boundaries, or the code-reviewer flagged structural concerns (Module Depth / Interface Simplicity criterion scored Partial or Fail), dispatch the appropriate architect in **review mode** with strict dispatch. The architect evaluates whether the implementation maintains or degrades module depth. This supplements the code-reviewer — the code-reviewer evaluates code quality, the architect evaluates structural design. Skip for implementations that work entirely within existing module boundaries.
+   For Deep Story tier, architect structural evaluation is mandatory —
+   see "Tier-Conditional Workflow Branching" above.
 9. Each evaluator writes a report to
    `docs/evaluations/[TICKET]-[agent]-review.md`
 
@@ -149,6 +270,8 @@ Before marking a story complete, run the full evaluation cycle:
     forward: rescope, break into smaller stories, research the
     blocker, or override. The review cycle still runs after
     intervention.
+    For Patch tier, the maximum is 2 retry cycles — see the Patch Path
+    above. If a Patch exceeds 2 cycles, promote to Story.
 
 **If all evaluators pass:**
 
