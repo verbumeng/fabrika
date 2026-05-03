@@ -39,12 +39,12 @@ Four workflow types — the base task workflow (v0.26.0), sprint-based,
 analytics-workspace, and agentic-workflow — and the patterns that
 govern them: lifecycle definitions, dispatch protocol, design
 alignment, graduated testing, the briefing system, and the knowledge
-pipeline. As of v0.28.0, workflows are organized into types
-(lifecycle definitions) and protocols (supporting processes),
-"project types" are becoming "workflow types" — reusable multi-agent
-patterns that projects compose on demand via ADD-WORKFLOW.md — and
-context compaction is codified as a named design principle governing
-phase transitions.
+pipeline. As of v0.29.0, sprint-based workflows include complexity
+tiers (Patch, Story, Deep Story) that match ceremony to risk — the
+sprint-based portion of a universal complexity spectrum connecting
+all workflow types. Workflows are organized into types and protocols,
+"project types" are becoming "workflow types," and context compaction
+governs phase transitions.
 
 ### [Harvest Patterns](topics/harvest-patterns.md)
 
@@ -102,12 +102,15 @@ composition paradigm, and cross-cutting concern insights from the
 CR-17 execution session. In v0.27.0, Workflow Design and Framework
 Philosophy were updated with the types/protocols directory split
 rationale, the deferred development-workflow rename decision, and the
-CLAUDE.md path validation design lesson from CR-28.
+CLAUDE.md path validation design lesson from CR-28. In v0.29.0,
+Workflow Design was updated with the universal complexity tiers
+design rationale, the research-vs-Design-Alignment distinction, and
+the ceremony spectrum concept from CR-18.
 
 ### Sources Summary
 
 Articles draw from:
-- CHANGELOG entries for versions 0.1.0 through 0.27.0
+- CHANGELOG entries for versions 0.1.0 through 0.29.0
 - Planning PRDs 01-15 and CRs 17-29 (in `planning/`)
 - Core workflow files, agent prompts, and integration templates
 - Alignment session outputs from the v0.10.0-v0.25.0 roadmap
