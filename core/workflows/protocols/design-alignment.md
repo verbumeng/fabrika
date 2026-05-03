@@ -43,7 +43,7 @@ user-visible checklist to march through):
 
 The orchestrator may informally mention expected token cost when a
 scope decision would significantly change it — this is conversational
-awareness, not a structured estimate (see `core/workflows/token-estimation.md`
+awareness, not a structured estimate (see `core/workflows/protocols/token-estimation.md`
 for when structured estimates surface).
 
 ### Terminology Capture

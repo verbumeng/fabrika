@@ -4,7 +4,7 @@ The practical step-by-step procedure for maintaining a project's wiki
 knowledge layer. This workflow is called from the maintenance
 checklist (for sprint-based projects) or after task delivery (for
 analytics-workspace projects). For the pipeline reference
-specification, see `core/workflows/knowledge-pipeline.md`.
+specification, see `core/workflows/protocols/knowledge-pipeline.md`.
 
 ---
 
@@ -46,7 +46,7 @@ For each new or changed artifact:
 2. Extract: title, summary, key concepts, decisions, open questions,
    related domains
 3. Assign salience (S1/S2/S3) using the salience model in
-   `core/workflows/knowledge-pipeline.md`
+   `core/workflows/protocols/knowledge-pipeline.md`
 4. Assign topic candidates
 5. Generate a dedup key
 

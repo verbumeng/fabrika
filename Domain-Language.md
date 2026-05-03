@@ -84,7 +84,7 @@ payload ceremony, not the dispatch itself. [Introduced in 0.12.0.]
 
 **Dispatch contract** — The specification of what the orchestrator
 must provide to an agent at each invocation point. Defined per agent
-in `core/workflows/dispatch-protocol.md`. Includes required fields,
+in `core/workflows/protocols/dispatch-protocol.md`. Includes required fields,
 conditional fields, and fields that must NOT be included (to preserve
 independence).
 
@@ -184,7 +184,7 @@ file to `docs/plans/`), (2) Align (owner reviews, planner revises
 on pushback), (3) Execute, (4) Verify (agents receive plan file
 path), (5) Incorporate Feedback, (6) Present, (7) Ship (plan status
 set to executed). Steps 4-5 can loop (maximum 3 retry cycles).
-Defined in `core/workflows/agentic-workflow-lifecycle.md`.
+Defined in `core/workflows/types/agentic-workflow.md`.
 
 **Change request (CR)** — The input to the planning process for
 agentic-workflow projects. A document describing what needs to change
@@ -217,7 +217,7 @@ projects: Design Alignment (when triggered) -> Sprint Planning ->
 Story chats (one per story) -> Sprint Close-Out -> Maintenance ->
 Sprint Retro -> next Sprint Planning. Each phase boundary is a hard
 new-chat handoff to keep context windows clean. Defined in
-`core/workflows/sprint-lifecycle.md`.
+`core/workflows/protocols/sprint-coordination.md`.
 
 **Task lifecycle** — The tiered workflow governing
 **analytics-workspace** projects. Two tiers: Tier 1 (local data:
@@ -226,7 +226,7 @@ re-review]* -> execute -> validate + brief check -> deliver) and
 Tier 2 (production data: adds metadata queries, execution manifest,
 performance review, and cost approval gate before main execution).
 Each task is independent — no sprint structure. Defined in
-`core/workflows/analytics-workspace.md`. [Tiered workflow introduced
+`core/workflows/types/analytics-workspace.md`. [Tiered workflow introduced
 in 0.20.0.]
 
 **Session lifecycle** — The per-chat workflow within a single story
@@ -277,7 +277,7 @@ reads the reports directly, revises, and the orchestrator re-invokes
 all evaluators (not just failing ones) with fresh dispatch. Maximum 3
 retry cycles. After 3 failed cycles, the orchestrator diagnoses the
 failure pattern and presents it to the user for intervention. Defined
-in `core/workflows/dispatch-protocol.md`.
+in `core/workflows/protocols/dispatch-protocol.md`.
 
 **Implementer-reviewer pairing** — The principle that every
 implementer output gets an independent review before it is considered
@@ -504,7 +504,7 @@ Sources. Requires the **single-source synthesis threshold**.
 project artifacts into structured wiki knowledge: (1) Extract, (2)
 Index, (3) Synthesize, (4) Link, (5) Glossary. Phases 1-2 run
 frequently; Phases 3-5 run less frequently; all run during quarterly
-**reintegration**. Defined in `core/workflows/knowledge-pipeline.md`.
+**reintegration**. Defined in `core/workflows/protocols/knowledge-pipeline.md`.
 
 **Extract** — Phase 1 of the **knowledge pipeline**. Reads source
 artifacts created or modified since the last pipeline run and pulls
@@ -676,7 +676,7 @@ tier, and audience marker.
 
 **Doc-trigger** — A rule that causes a specific document to be
 created or updated when certain conditions are met. Defined in
-`core/workflows/doc-triggers.md`. Links document types to the
+`core/workflows/protocols/doc-triggers.md`. Links document types to the
 project events that should produce them.
 
 **Audience marker** — A tag on each document in the **Document
@@ -717,7 +717,7 @@ are domain-specific parameterizations. "Project type" remains as a
 legacy/transition term in existing content.
 
 **Base workflow** — The task workflow
-(`core/workflows/task-workflow.md`): the domain-agnostic foundation
+(`core/workflows/types/task-workflow.md`): the domain-agnostic foundation
 that all specialized workflows are parameterized versions of. Carries
 no domain knowledge — its criteria come from the plan, not from a
 domain model.
@@ -855,7 +855,7 @@ they become dormant.
 
 **Calibration key** — The unique identifier for a calibration entry,
 structured as `<workflow>.<agent>.<model>`. Example:
-`agentic-workflow-lifecycle.methodology-reviewer.claude-opus-4-6`.
+`agentic-workflow.methodology-reviewer.claude-opus-4-6`.
 The key granularity ensures that changing models, agents, or
 workflows each produce fresh calibration tracks rather than mixing
 unrelated data.

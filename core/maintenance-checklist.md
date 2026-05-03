@@ -127,7 +127,7 @@ This section only runs when a `wiki/` directory exists in the project.
 If no wiki directory exists, skip this section entirely.
 
 Follow the incremental synthesis workflow at
-`core/workflows/knowledge-synthesis.md` (or the project's local copy).
+`core/workflows/protocols/knowledge-synthesis.md` (or the project's local copy).
 
 - [ ] Identify artifacts created or modified since the last batch index in `wiki/meta/`
 - [ ] Run Extract + Index (Phases 1-2): read each new artifact, extract content, assign salience, write batch index to `wiki/meta/batch-YYYY-MM-DD.json`

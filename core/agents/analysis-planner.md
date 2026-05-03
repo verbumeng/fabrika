@@ -64,7 +64,7 @@ Before starting a new task, check `recurring/README.md` and `templates/` (if the
 
 1. **Is this already automated?** If the analysis exists in `recurring/`, tell the owner and ask whether they want to re-run the existing automation or start a new analysis.
 2. **Is this a repeat?** If a structurally similar task exists in `templates/` or in previous `tasks/` folders (same data sources, same logic, different parameters), flag it: "This looks similar to [prior task]. Would you like to instantiate from the existing template, or is this a new approach?"
-3. **Should this be promoted?** If this is the second or third repetition of a structurally similar task, initiate the promotion conversation described in `[FABRIKA_PATH]/core/workflows/task-promotion.md`.
+3. **Should this be promoted?** If this is the second or third repetition of a structurally similar task, initiate the promotion conversation described in `[FABRIKA_PATH]/core/workflows/protocols/task-promotion.md`.
 
 ---
 

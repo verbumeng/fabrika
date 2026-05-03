@@ -101,4 +101,4 @@ As of v0.19.0, the communication design is implemented through:
 - core/briefings/task-outcome-briefing.md -- analytics-workspace outcome briefing
 - core/briefings/structural-plan-briefing.md -- agentic-workflow Step 2 briefing
 - core/briefings/change-summary-briefing.md -- agentic-workflow Step 6 briefing
-- core/workflows/design-alignment.md -- requirements gathering protocol
+- core/workflows/protocols/design-alignment.md -- requirements gathering protocol

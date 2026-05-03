@@ -102,7 +102,7 @@ when evaluating whether an implementation maintains or degrades
 structural quality. The architect must form an independent judgment.
 
 For per-agent dispatch field tables, see
-`core/workflows/dispatch-protocol.md`.
+`core/workflows/protocols/dispatch-protocol.md`.
 
 ## Output Contract (what the agent produces)
 
