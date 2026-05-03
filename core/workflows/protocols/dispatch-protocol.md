@@ -61,6 +61,67 @@ itself.
 
 ---
 
+## Tier-Conditional Dispatch
+
+Complexity tiers determine which agents the orchestrator invokes for a
+given story. Tier-conditional dispatch is orthogonal to dispatch tiers
+(strict vs. contextual) — it controls WHICH agents are dispatched, not
+HOW they are dispatched. Each dispatched agent still receives its
+standard payload per the per-agent contracts below.
+
+### Patch Tier
+
+| Agent | Invoked? | Notes |
+|-------|----------|-------|
+| Planner (planning mode) | No | Story file IS the spec |
+| Implementer | Yes | Standard contextual dispatch |
+| Code-reviewer | Yes | Strict dispatch; story file serves as the spec |
+| Test-writer | No | Unless sprint contract testing strategy mandates it for the affected area |
+| Planner (validation mode) | No | Acceptance criteria are trivially verifiable from the story |
+| Architect (design mode) | No | |
+| Architect (review mode) | No | |
+
+Retry cap: 2 cycles. Promotion to Story if exceeded.
+
+### Story Tier
+
+| Agent | Invoked? | Notes |
+|-------|----------|-------|
+| Planner (planning mode) | Yes | Standard contextual dispatch |
+| Implementer | Yes | Standard contextual dispatch |
+| Code-reviewer | Yes | Standard strict dispatch |
+| Test-writer | Yes | Mode depends on testing approach |
+| Planner (validation mode) | Yes | Standard strict dispatch |
+| Architect (design mode) | Optional | Per existing rules (new modules, restructuring) |
+| Architect (review mode) | Optional | Per existing rules (structural concerns flagged) |
+
+Retry cap: 3 cycles.
+
+### Deep Story Tier
+
+| Agent | Invoked? | Notes |
+|-------|----------|-------|
+| Planner (planning mode) | Yes | Contextual dispatch with research document path as additional field |
+| Implementer | Yes | Standard contextual dispatch |
+| Code-reviewer | Yes | Standard strict dispatch |
+| Test-writer | Yes | Mode depends on testing approach |
+| Planner (validation mode) | Yes | Standard strict dispatch |
+| Architect (design mode) | **Mandatory** | Not optional — must review before implementation |
+| Architect (review mode) | **Mandatory** | Not optional — must review after implementation |
+
+Retry cap: 3 cycles.
+
+### Planner Dispatch — Research Document Field
+
+For Deep Story tier, the planner planning mode dispatch contract gains
+one additional conditional field:
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Research document | Conditional | Path to `docs/plans/[TICKET]-research.md` — required for Deep Story tier. Contains compressed findings from the research phase. |
+
+---
+
 ## Per-Agent Dispatch Contracts
 
 ### Product Manager — Planning Mode

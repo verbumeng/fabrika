@@ -39,6 +39,7 @@ Define all interfaces shared between tickets. All agents reference these definit
 
 ### Testing Approach
 - **Testing approach:** [TDD | Test-informed | Test-after]
+- **Complexity tier:** [patch | story | deep-story]
 
 ### Produces
 - [What this ticket creates that downstream tickets depend on]
@@ -56,6 +57,7 @@ Define all interfaces shared between tickets. All agents reference these definit
 
 ### Testing Approach
 - **Testing approach:** [TDD | Test-informed | Test-after]
+- **Complexity tier:** [patch | story | deep-story]
 
 ### Dependency Context
 [Explain what this ticket needs from the upstream ticket. Be specific about the interface, function, data shape, or component it consumes.]
@@ -88,6 +90,15 @@ Because tickets are coupled, a failure in a downstream ticket may indicate an is
 2. After all tickets are complete, run end-to-end acceptance criteria
 3. If end-to-end fails, identify which ticket's output is incorrect
 4. Standard retry protocol applies (max 3 cycles on the failing ticket: implementer reads review reports directly, revises, all evaluators re-review. After 3 failed cycles, orchestrator diagnoses failure pattern and presents diagnosis to owner)
+
+## Tier-Conditional Gates
+
+The complexity tier determines which workflow stages apply per story.
+See `core/workflows/types/development-workflow.md` (Tier-Conditional
+Workflow Branching) for the full specification. In a Hierarchical
+sprint, upstream stories may be Patches while downstream stories that
+depend on them are Stories or Deep Stories. Tier is orthogonal to
+dependency ordering.
 
 ## Notes
 [Any context, constraints, or open questions for this sprint]

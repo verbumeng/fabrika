@@ -13,6 +13,7 @@ created: YYYY-MM-DD
 - **Feature:** [TICKET] — [Feature Name]
 - **Story points:** [X]
 - **Testing approach:** [TDD | Test-informed | Test-after]
+- **Complexity tier:** [patch | story | deep-story]
 - **Sprint dates:** YYYY-MM-DD to YYYY-MM-DD
 
 ## Stage 1: Plan
@@ -47,6 +48,19 @@ created: YYYY-MM-DD
 - If evaluation fails and fix is straightforward → implementer reads review reports directly, revises, all evaluators re-review (max 3 cycles)
 - If evaluation fails and approach is fundamentally wrong → `git revert` to last passing commit, re-read this contract, try different approach
 - After 3 failed cycles → orchestrator diagnoses failure pattern across all cycles and presents diagnosis to owner. Owner decides path forward.
+
+## Tier-Conditional Gates
+
+The complexity tier determines which workflow stages apply. See
+`core/workflows/types/development-workflow.md` (Tier-Conditional
+Workflow Branching) for the full specification.
+
+- **Patch:** Stage 1 (Plan) is skipped — the story file IS the spec.
+  Stage 3 (Evaluate) is reduced to code-reviewer only. Max 2 retry
+  cycles.
+- **Story:** All stages apply as documented above.
+- **Deep Story:** Stage 1 (Plan) is preceded by a research phase.
+  Architect review is mandatory at both plan and evaluate stages.
 
 ## Acceptance Criteria
 - [ ] [Specific testable behavior 1]

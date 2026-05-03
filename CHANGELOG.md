@@ -6,6 +6,75 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.29.0 — Universal complexity tiers
+
+Introduces three complexity tiers (Patch, Story, Deep Story) that
+determine which workflow gates apply to each sprint story. Patches
+skip spec creation and use reduced evaluation. Stories follow the
+existing full workflow. Deep Stories add mandatory research and
+architect review. The orchestrator reads the tier from each story's
+frontmatter and routes to the appropriate execution path. Part of the
+Phase 2 workflow composition model — the tiers are points on a
+universal complexity spectrum spanning ad-hoc through epic.
+
+### Changed files
+- `core/workflows/types/development-workflow.md` — added
+  Tier-Conditional Workflow Branching section defining Patch, Story,
+  and Deep Story execution paths with branching logic and tier
+  promotion rules; added tier cross-references to existing Starting a
+  Story and Completing a Story sections
+- `core/workflows/protocols/sprint-coordination.md` — added tier
+  assignment to sprint planning phase description
+- `core/templates/Story-Template.md` — added `tier` field to YAML
+  frontmatter (patch / story / deep-story, default story)
+- `core/topologies/Sprint-Contract-Pipeline.md` — added complexity
+  tier field to Overview; added Tier-Conditional Gates section
+- `core/topologies/Sprint-Contract-Mesh.md` — added complexity tier
+  field per story section; added Tier-Conditional Gates section
+- `core/topologies/Sprint-Contract-Hierarchical.md` — added
+  complexity tier field per story section; added Tier-Conditional
+  Gates section
+- `core/Document-Catalog.md` — added tier notes to plans/ and
+  evaluations/ sections specifying which tiers produce which artifacts;
+  added standalone `[TICKET]-research.md` entry under plans/ for Deep
+  Story research documents
+- `core/workflows/protocols/dispatch-protocol.md` — added
+  Tier-Conditional Dispatch section specifying per-tier agent
+  invocation tables and research document dispatch field for Deep
+  Story
+- `integrations/claude-code/CLAUDE.md` — added complexity tier
+  summary to Development Workflow section; fixed stale
+  "Agentic-Workflow Lifecycle" section header to "Agentic Workflow"
+- `integrations/copilot/copilot-instructions.md` — added complexity
+  tier summary to Development Workflow section; fixed stale
+  "Agentic-Workflow Lifecycle" section header to "Agentic Workflow"
+- `Domain-Language.md` — added definitions: Complexity tier, Patch,
+  Story, Deep Story, Universal complexity spectrum, Tier promotion
+
+### Consumer update instructions
+1. Copy updated `core/workflows/types/development-workflow.md` (new
+   Tier-Conditional Workflow Branching section plus cross-reference
+   additions in existing sections)
+2. Copy updated `core/workflows/protocols/sprint-coordination.md`
+   (tier assignment in sprint planning)
+3. Copy updated `core/templates/Story-Template.md` (new `tier`
+   frontmatter field)
+4. Copy updated sprint contract templates from `core/topologies/`
+   (tier field and Tier-Conditional Gates section in all three)
+5. Copy updated `core/Document-Catalog.md` (tier notes in plans/ and
+   evaluations/)
+6. Copy updated `core/workflows/protocols/dispatch-protocol.md` (new
+   Tier-Conditional Dispatch section)
+7. Update your project instruction file (CLAUDE.md or
+   copilot-instructions.md) from the integration template — add the
+   complexity tier summary to the Development Workflow section
+8. Update your project's Domain Language with the new tier
+   definitions if applicable
+9. Add the `tier` field to any existing story files (default to
+   `story` for existing stories)
+
+---
+
 ## 0.28.0 — Context compaction as design principle
 
 Codifies context compaction as a named design principle governing how

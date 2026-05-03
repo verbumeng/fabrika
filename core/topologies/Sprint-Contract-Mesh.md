@@ -21,6 +21,7 @@ The scrum-master has verified that the following stories have no overlapping fil
 
 ### Testing Approach
 - **Testing approach:** [TDD | Test-informed | Test-after]
+- **Complexity tier:** [patch | story | deep-story]
 
 ### Isolation Scope
 This story works exclusively within:
@@ -41,6 +42,7 @@ This story works exclusively within:
 
 ### Testing Approach
 - **Testing approach:** [TDD | Test-informed | Test-after]
+- **Complexity tier:** [patch | story | deep-story]
 
 ### Isolation Scope
 This story works exclusively within:
@@ -70,6 +72,14 @@ If during implementation a story needs to modify files outside its declared isol
 
 ## Rollback Protocol
 Each story is evaluated independently. If one story's evaluation fails, it does not affect the others. Standard retry protocol applies per-story: implementer reads review reports directly, revises, all evaluators re-review (max 3 cycles). After 3 failed cycles, orchestrator diagnoses failure pattern and presents diagnosis to owner.
+
+## Tier-Conditional Gates
+
+The complexity tier determines which workflow stages apply per story.
+See `core/workflows/types/development-workflow.md` (Tier-Conditional
+Workflow Branching) for the full specification. Each story in a Mesh
+sprint can have a different tier — a Mesh sprint might contain two
+Patches and one Deep Story.
 
 ## Notes
 [Any context, constraints, or open questions for this sprint]

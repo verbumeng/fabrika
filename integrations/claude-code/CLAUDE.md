@@ -325,6 +325,15 @@ Token cost estimates are presented alongside plan/spec briefings — see `[FABRI
 
 Summary of workflows covered:
 - **Design Alignment** — structured requirements gathering → Project Charter + PRD → fresh-chat handoff to sprint planning (see Design Alignment section above)
+- **Complexity Tiers** — each story has a tier (Patch / Story / Deep
+  Story) assigned during sprint planning. Patch skips spec creation
+  and uses reduced evaluation (code-reviewer only, max 2 retries).
+  Story is the current full workflow. Deep Story adds mandatory
+  research phase and architect review at both plan and evaluate
+  stages. The orchestrator reads `tier` from the story frontmatter
+  and routes to the appropriate path. See
+  `[FABRIKA_PATH]/core/workflows/types/development-workflow.md`
+  (Tier-Conditional Workflow Branching).
 - **Starting a Story** — spec expansion → token cost estimate → approval → optional architect design review → branch → testing approach branching (TDD: test-writer spec-first → implementer vertical slices → refactor; test-informed: implementer → test-writer coverage; test-after: implementer → evaluation cycle) → evaluate → fix cycle
 - **Completing a Story (Evaluation Cycle)** — tests → lint → commit → reviewer → validator → planner validation → optional architect structural evaluation → review-revise loop (max 3 cycles, implementer reads reviews directly — see `core/design-principles.md`)
 - **Sprint Planning** — scrum-master receives approved PRD → topology assessment → 2-3 stories → contract → approval
@@ -351,7 +360,7 @@ For complex analyses (3+ data sources, multiple stakeholders, novel domain, >2 d
 
 ---
 
-## Agentic-Workflow Lifecycle (agentic-workflow type only)
+## Agentic Workflow (agentic-workflow type only)
 
 No sprints. Work is organized as structural changes following a 7-step protocol: Plan → Align → Execute → Verify → Incorporate Feedback → Present → Ship. Each change gets a version bump and CHANGELOG entry. The planner writes a persistent plan file to `docs/plans/[identifier]-plan.md` — owner pushback re-invokes the planner to revise (the orchestrator never edits plans directly). Verification agents receive the plan file path in their strict dispatch for independent assessment.
 

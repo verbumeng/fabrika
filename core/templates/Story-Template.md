@@ -7,6 +7,7 @@ sprint: <% tp.system.prompt("Sprint (e.g. Sprint-01, or leave blank)", "") %>
 status: To Do
 points: <% tp.system.prompt("Story points (1/2/3/5/8/13)", "3") %>
 priority: <% tp.system.prompt("Priority (High / Medium / Low)", "Medium") %>
+tier: <% tp.system.prompt("Complexity tier (patch / story / deep-story)", "story") %>
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 tags: [story]

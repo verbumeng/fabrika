@@ -328,6 +328,62 @@ story complexity. Three levels: **spec-first** (TDD), **test-informed**,
 and **test-after**. The coordinator assigns the approach per story
 during sprint planning. [Introduced in 0.16.0.]
 
+**Complexity tier** — A classification of work item complexity that
+determines which workflow gates apply. Three tiers for sprint-based
+work: **Patch** (reduced ceremony), **Story** (full ceremony), and
+**Deep Story** (enhanced ceremony). Part of the **universal complexity
+spectrum**. Assigned by the **coordinator** during sprint planning
+based on story points, scope indicators, and owner override. Recorded
+in the story file frontmatter (`tier: patch | story | deep-story`)
+and in the **sprint contract**. The **orchestrator** reads the tier
+and routes to the appropriate execution path. [Introduced in 0.29.0.]
+
+**Patch** — The lightest complexity tier for sprint-based work.
+Single-concern changes (1-2 points) where the story file IS the spec.
+Skips spec creation and planner validation. Evaluation is reduced to
+code-reviewer only (max 2 retry cycles). If a Patch exceeds 2 review
+cycles or the code-reviewer flags scope creep, the orchestrator
+promotes it to **Story**. Conventional commit format is the primary
+documentation artifact. [Introduced in 0.29.0.]
+
+**Story** — The standard complexity tier for sprint-based work.
+Multi-file changes (3-5 points) with bounded scope. The current full
+**development workflow** applies with no modifications: spec creation,
+all evaluation gates, 3 retry cycles. This is the default tier when
+none is specified. [Named in 0.29.0; behavior predates Fabrika.]
+
+**Deep Story** — The highest complexity tier for sprint-based work.
+Cross-cutting, novel, or high-risk changes (8-13 points). Adds a
+mandatory research phase (producing
+`docs/plans/[TICKET]-research.md`) before spec creation, mandatory
+**architect** review of the spec before implementation, and mandatory
+architect structural review after implementation. Research findings
+are compressed before being passed to the planner (**compaction**
+applies). [Introduced in 0.29.0.]
+
+**Universal complexity spectrum** — The graduated scale of ceremony
+levels that applies across all workflow types, not just sprint-based
+work. The full spectrum: ad-hoc (near-zero ceremony) -> task (base
+workflow) -> patch (reduced sprint ceremony) -> story (full sprint
+ceremony) -> deep story (enhanced sprint ceremony) -> epic (multi-story
+coordination). The **orchestrator** dynamically assesses where a piece
+of work falls on this spectrum based on scope, risk, and coordination
+needs — not by checking the project type. The three old project type
+categories (sprint-based, task-based, methodology-based) are dissolving
+into composable **workflow types** with the spectrum as the connecting
+thread. [Conceptualized in 0.29.0; CR-18 implements the sprint-based
+portion (patch, story, deep story). CR-19 covers ad-hoc. CR-17
+covers task. CR-24 addresses epic-level orchestration.]
+
+**Tier promotion** — The one-way escalation of a story's
+**complexity tier** during execution. Patch can promote to Story;
+Story can promote to Deep Story. Triggers: code-reviewer flags scope
+creep, implementer discovers unexpected complexity, orchestrator
+detects >3 files touched (Patch), or automatic promotion after
+exceeding the tier's retry cap. The orchestrator presents the
+promotion to the owner before continuing. Demotion (Deep Story to
+Story) is owner-initiated only. [Introduced in 0.29.0.]
+
 **Spec-first** — The TDD testing approach. The validator writes tests
 from the approved spec before any code exists. The implementer then
 writes the minimum code to make those tests pass. Used for new
