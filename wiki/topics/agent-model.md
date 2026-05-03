@@ -115,6 +115,7 @@ The four base agents (planner, implementer, reviewer, validator) are the domain-
 - v0.20.0 -- data analyst modes (write-only, execute-metadata, revision), analysis planner validation mode, Domain Language/data dictionary integration for analytics agents, implementer-reviewer pairing philosophy, direct implementer-reads-reviews retry protocol
 - v0.22.0 -- review-revise loop convergence: all project types use direct implementer-reads-reviews, mandatory full re-review, 3-cycle cap with orchestrator diagnosis. Implementer-reviewer pairing and implementer-validator pairing codified in core/design-principles.md
 - v0.26.0 -- base agents (planner, implementer, reviewer, validator) as domain-agnostic foundation. Base reviewer derives criteria from plan, not rubric. Agent count: 28 -> 32. Base agent model establishes skill-parameterization pattern for CR-22.
+- v0.27.0 -- structural-validator gains CLAUDE.md path reference checking (smell test exclusion preserved). Workflow path references updated across all agent files.
 
 ### PRDs and CRs
 - PRD-01 -- agentic-workflow project type and initial archetype stubs

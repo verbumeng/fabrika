@@ -40,9 +40,18 @@ The design philosophy is that workflows define the *sequence and contracts* for 
 
 - **Cross-cutting concerns identified as a design gap (v0.26.0 session).** Token estimation, compaction, freshness, design alignment triggers — these are procedures that apply to all workflows but are currently documented per-workflow-file (copy-pasted references). The task workflow initially omitted the token estimation reference entirely, revealing the fragility of this pattern. CR-20 and CR-22 should formalize how cross-cutting concerns attach to workflows without duplication. The insight: procedures/SOPs exist alongside workflows as independent governance concerns, not inside them. Source: CR-17 execution session, 2026-05-03.
 
+- **Workflow directory reorganization: types vs. protocols (v0.27.0).** The flat `core/workflows/` directory grew to 15 files by v0.26.0, mixing two fundamentally different kinds of content: workflow type definitions (complete lifecycles an orchestrator can run) and supporting protocols (reusable processes that workflow types reference but do not own). CR-28 split the directory into `core/workflows/types/` and `core/workflows/protocols/`, making the distinction visible at the filesystem level. Workflow types define lifecycle phases, agent rosters, and verification criteria for a category of work. Protocols are invoked by or consulted from workflow types — dispatch contracts, sprint coordination, design alignment, token estimation, knowledge pipeline, and similar cross-cutting concerns. A `core/workflows/README.md` documents the distinction and provides guidance for placing new files. Two files were also renamed for consistency: `agentic-workflow-lifecycle.md` became `agentic-workflow.md` (matching the pattern of other type files), and `sprint-lifecycle.md` became `sprint-coordination.md` (reflecting that it is a coordination protocol, not a workflow type definition). The owner explicitly deferred renaming `development-workflow.md` to `sprint-workflow.md` — the reasoning being that each domain (software engineering, data engineering, ML, AI) will eventually need its own workflow definition (CR-22), and "development-workflow" is a better name for the current general-purpose sprint-based workflow than "sprint-workflow" would be. The owner's framing: "workflows are tools in a toolbox." Source: CR-28, CHANGELOG 0.27.0.
+
+- **CLAUDE.md as a structural artifact requiring path validation (v0.27.0).** CR-28 exposed a systemic issue: the project-level CLAUDE.md contains workflow path references that break when workflow files move, but the structural-validator was not checking those paths because CLAUDE.md was excluded from the structural update scope (to preserve smell test exclusion — CLAUDE.md is gitignored and contains project-specific content). The fix was surgical: the structural-validator now checks CLAUDE.md path references during structural updates while preserving the smell test exclusion. The CLAUDE.md template was also restructured to lead with the mandatory workflow pointer, making the workflow reference the first thing an orchestrator encounters. This is a design lesson: gitignored files that contain pointers to canonical files need their own validation path, separate from the canonical file validation. Source: CR-28, CHANGELOG 0.27.0.
+
 ## Current State
 
-As of v0.26.0, the workflow system includes:
+As of v0.27.0, the workflow system includes:
+
+**Directory structure:**
+- `core/workflows/types/` — workflow type definitions (agentic-workflow, development-workflow, task-workflow, analytics-workspace)
+- `core/workflows/protocols/` — supporting processes (dispatch-protocol, design-alignment, sprint-coordination, doc-triggers, hooks-reference, knowledge-pipeline, knowledge-synthesis, progress-files, task-promotion, token-estimation, analytics-onboarding)
+- `core/workflows/README.md` — documents the types vs. protocols distinction
 
 **Base task workflow** (task-workspace):
 - Domain-agnostic lifecycle: brief -> plan -> implement -> review -> [revise -> re-review]* -> validate -> deliver
@@ -151,6 +160,7 @@ As of v0.26.0, the workflow system includes:
 - v0.21.0 -- plan persistence alignment: persistent plan files for agentic-workflow, alignment history, change request terminology, consistent lifecycle across all project types
 - v0.22.0 -- review-revise loop convergence: all project types use direct implementer-reads-reviews, mandatory full re-review, 3-cycle cap with orchestrator diagnosis. Implementer-reviewer pairing and implementer-validator pairing codified in core/design-principles.md
 - v0.26.0 -- base task workflow (domain-agnostic), four base agents, on-demand workflow addition (ADD-WORKFLOW.md), workflow composition model ("project types" becoming "workflow types"), base templates (Brief, Plan, Outcome). Cross-cutting concern pattern identified: procedures should not be workflow-bound.
+- v0.27.0 -- workflow folder reorganization: types/ for workflow type definitions, protocols/ for supporting processes. Renames: agentic-workflow-lifecycle.md -> agentic-workflow.md, sprint-lifecycle.md -> sprint-coordination.md. CLAUDE.md restructured with mandatory workflow pointer. Structural-validator gains CLAUDE.md path reference checking.
 
 ### PRDs and CRs
 - PRD-01 -- agentic-workflow lifecycle design
@@ -167,14 +177,16 @@ As of v0.26.0, the workflow system includes:
 - PRD-14 -- analytics workspace onboarding protocol (planned)
 - PRD-15 -- token cost estimation across workspaces (implemented v0.24.0)
 - CR-17 -- base workflow type, base agents, workflow composition (implemented v0.26.0)
+- CR-28 -- workflow folder reorganization, types/protocols split (implemented v0.27.0)
 
 ### Core files
+- core/workflows/README.md -- types vs. protocols directory structure guide
 - core/workflows/types/agentic-workflow.md -- 7-step structural update lifecycle
 - core/workflows/types/development-workflow.md -- sprint-based development workflow
-- core/workflows/protocols/sprint-coordination.md -- sprint phase management
 - core/workflows/types/task-workflow.md -- base (domain-agnostic) task lifecycle
 - core/workflows/types/analytics-workspace.md -- analytics-specific task lifecycle
 - core/workflows/protocols/dispatch-protocol.md -- per-agent dispatch contracts
+- core/workflows/protocols/sprint-coordination.md -- sprint phase management
 - core/workflows/protocols/knowledge-pipeline.md -- wiki 5-phase pipeline
 - core/workflows/protocols/knowledge-synthesis.md -- maintenance-integrated synthesis workflow
 - core/workflows/protocols/design-alignment.md -- requirements gathering protocol

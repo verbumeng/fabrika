@@ -39,9 +39,10 @@ Four workflow types — the base task workflow (v0.26.0), sprint-based,
 analytics-workspace, and agentic-workflow — and the patterns that
 govern them: lifecycle definitions, dispatch protocol, design
 alignment, graduated testing, the briefing system, and the knowledge
-pipeline. As of v0.26.0, "project types" are becoming "workflow
-types" — reusable multi-agent patterns that projects compose on
-demand via ADD-WORKFLOW.md.
+pipeline. As of v0.27.0, workflows are organized into types
+(lifecycle definitions) and protocols (supporting processes), and
+"project types" are becoming "workflow types" — reusable multi-agent
+patterns that projects compose on demand via ADD-WORKFLOW.md.
 
 ### [Harvest Patterns](topics/harvest-patterns.md)
 
@@ -96,12 +97,15 @@ Philosophy) were substantially updated with design rationale from the
 PRD-11 alignment session. In v0.26.0, Workflow Design and Agent Model
 were updated with the base workflow type, base agent model, workflow
 composition paradigm, and cross-cutting concern insights from the
-CR-17 execution session.
+CR-17 execution session. In v0.27.0, Workflow Design and Framework
+Philosophy were updated with the types/protocols directory split
+rationale, the deferred development-workflow rename decision, and the
+CLAUDE.md path validation design lesson from CR-28.
 
 ### Sources Summary
 
 Articles draw from:
-- CHANGELOG entries for versions 0.1.0 through 0.26.0
+- CHANGELOG entries for versions 0.1.0 through 0.27.0
 - Planning PRDs 01-15 and CRs 17-29 (in `planning/`)
 - Core workflow files, agent prompts, and integration templates
 - Alignment session outputs from the v0.10.0-v0.25.0 roadmap
