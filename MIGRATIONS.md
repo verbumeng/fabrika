@@ -4,6 +4,77 @@ When a Fabrika update requires consumer projects to do more than a straight file
 
 ---
 
+## 0.24.0 — Token Cost Estimation
+
+**Affects:** All consumer projects.
+
+**What changed:** Token cost estimation surfaces during plan alignment
+across all workflow types. Agent prompt files gain YAML frontmatter
+declaring model preferences. A deterministic Python script estimates
+token costs from plan + agent metadata + per-project calibration. Per-
+project calibration data accumulates in `.fabrika/calibration.yml` and
+improves estimates over time via EWMA blending.
+
+**Migration steps:**
+
+1. **Copy new files.** Copy the following from Fabrika source:
+   - `core/workflows/token-estimation.md`
+   - `core/scripts/estimate-tokens.py`
+   - `core/scripts/README.md`
+   - `core/calibration/priors.yml`
+   - `core/calibration/pricing.yml`
+   - `core/templates/Calibration-Template.yml`
+   - `core/agents/agent-frontmatter-spec.md`
+
+2. **Scaffold calibration file.** Copy
+   `core/templates/Calibration-Template.yml` to
+   `.fabrika/calibration.yml`. One-liner:
+   `cp [FABRIKA_PATH]/core/templates/Calibration-Template.yml .fabrika/calibration.yml`
+
+3. **Update agent prompts (non-breaking).** Either copy the updated
+   agent files from Fabrika source (which now include frontmatter), or
+   manually prepend frontmatter to your existing copies per the schema
+   in `core/agents/agent-frontmatter-spec.md`. Agents that omit
+   frontmatter default to `model_tier: mid` — estimation still works
+   but at reduced accuracy. Agents that benefit most from `model:`
+   declarations: reviewers and planners (they dominate cost).
+
+4. **Update workflow files.** Copy updated versions of:
+   - `core/workflows/development-workflow.md`
+   - `core/workflows/analytics-workspace.md`
+   - `core/workflows/agentic-workflow-lifecycle.md`
+   - `core/workflows/design-alignment.md`
+
+5. **Update remaining core files.** Copy updated versions of:
+   - `core/agents/AGENT-CATALOG.md`
+   - `core/agents/archetypes/*.md` (all 7)
+   - `core/Document-Catalog.md`
+   - `core/FABRIKA.md`
+
+6. **Update root-level files.** Copy updated versions of:
+   - `Domain-Language.md`
+   - `MANIFEST_SPEC.md`
+   - `BOOTSTRAP.md`
+
+7. **Update integration template.** Copy the updated CLAUDE.md or
+   copilot-instructions.md from the integrations/ directory.
+
+8. **(Optional) Set budget warning.** Add `token_budget_warn: 50000`
+   (or your preferred threshold) to project config if you want soft
+   warnings when estimates exceed a token budget.
+
+**Behavioral changes after migration:**
+- Plan presentations (spec briefings, analysis plan briefings,
+  structural plan briefings) now include a token cost readout.
+- Session close-out now records actual token usage to
+  `.fabrika/calibration.yml` when token data is available.
+- Budget warnings (if configured) trigger during plan alignment when
+  estimates exceed the threshold. Advisory only — never blocks.
+- Agent prompts are behaviorally identical — frontmatter is metadata
+  for the estimator, not instructions for the agent.
+
+---
+
 ## 0.22.0 — Review-Revise Loop Redesign
 
 **Affects:** All consumer projects (sprint-based, analytics-workspace, and agentic-workflow).

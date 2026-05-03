@@ -1,0 +1,51 @@
+# Bundled tier-level priors for token cost estimation.
+# These represent baselines for one typical agent invocation.
+# Calibration data in .fabrika/calibration.yml overrides these
+# as per-project run data accumulates.
+
+smoothing_constant_k: 5
+
+tier_priors:
+  low:
+    typical_input_tokens: 10000
+    typical_output_tokens: 2000
+    model_example: "Haiku 4.5"
+  mid:
+    typical_input_tokens: 12000
+    typical_output_tokens: 5000
+    model_example: "Sonnet 4.6"
+  high:
+    typical_input_tokens: 15000
+    typical_output_tokens: 8000
+    model_example: "Opus 4.6"
+
+# Model-to-tier lookup table.
+# Used to derive tier when only `model` is declared (no explicit model_tier).
+# Unknown models default to `mid`.
+# Consumers can extend this in their project calibration file.
+model_tier_lookup:
+  # Claude models
+  claude-opus-4-6: high
+  claude-opus-4-5: high
+  claude-sonnet-4-6: mid
+  claude-sonnet-4-5: mid
+  claude-haiku-4-5: low
+  claude-haiku-3-5: low
+  # GPT models
+  gpt-4o: high
+  gpt-4o-mini: low
+  gpt-4-turbo: high
+  gpt-4: high
+  gpt-3.5-turbo: low
+  o1: high
+  o1-mini: mid
+  o3: high
+  o3-mini: mid
+  o4-mini: mid
+  # Gemini models
+  gemini-2.5-pro: high
+  gemini-2.5-flash: mid
+  gemini-2.0-flash: low
+
+# Default tier when neither model nor model_tier is declared
+default_tier: mid

@@ -331,6 +331,15 @@ If the user wants Playwright MCP, guide them through setup: install the Playwrig
 - `docs/Templates/Sprint-Contract-Hierarchical.md` — from `[FABRIKA_PATH]/core/topologies/`
 - `docs/Templates/Sprint-Retro-Template.md` — from `[FABRIKA_PATH]/core/templates/`
 
+**Copy token estimation files:**
+- `core/scripts/estimate-tokens.py` — from `[FABRIKA_PATH]/core/scripts/estimate-tokens.py`
+- `core/scripts/README.md` — from `[FABRIKA_PATH]/core/scripts/README.md`
+- `core/calibration/priors.yml` — from `[FABRIKA_PATH]/core/calibration/priors.yml`
+- `core/calibration/pricing.yml` — from `[FABRIKA_PATH]/core/calibration/pricing.yml`
+
+**Scaffold calibration file:**
+Copy `[FABRIKA_PATH]/core/templates/Calibration-Template.yml` to `.fabrika/calibration.yml`.
+
 Update `.fabrika/manifest.yml` with entries for all newly copied files, the determined `project_type`, and the chosen integration in the `integrations` list.
 
 ### 2.4 Read the Document Catalog and create Tier 1 docs
@@ -447,6 +456,15 @@ Copy templates from `[FABRIKA_PATH]/core/templates/`:
 - `Source-File-Template.md` → `docs/Templates/Source-File-Template.md`
 
 Copy baseline evals from `[FABRIKA_PATH]/core/evals/baseline/` → `docs/evals/baseline/` (skip coordinator evals — no scrum master in workspaces).
+
+**Copy token estimation files:**
+- `core/scripts/estimate-tokens.py` — from `[FABRIKA_PATH]/core/scripts/estimate-tokens.py`
+- `core/scripts/README.md` — from `[FABRIKA_PATH]/core/scripts/README.md`
+- `core/calibration/priors.yml` — from `[FABRIKA_PATH]/core/calibration/priors.yml`
+- `core/calibration/pricing.yml` — from `[FABRIKA_PATH]/core/calibration/pricing.yml`
+
+**Scaffold calibration file:**
+Copy `[FABRIKA_PATH]/core/templates/Calibration-Template.yml` to `.fabrika/calibration.yml`.
 
 Copy eval scaffold from `[FABRIKA_PATH]/core/evals/README.md` and `agent-changelog-template.md`.
 

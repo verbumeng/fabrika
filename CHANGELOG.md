@@ -6,6 +6,111 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.24.0
+
+Token Cost Estimation. Adds cost-informed planning via a deterministic
+Python estimator that surfaces token and dollar cost estimates at plan
+time across all workflow types. Introduces two structural precedents:
+YAML frontmatter on agent prompts (model metadata), and executable
+scripts in core/scripts/.
+
+### New files
+
+- `core/workflows/token-estimation.md` -- **NEW.** Centralized
+  estimation protocol: script CLI contract, readout format, calibration
+  update protocol, cadence rules, worked examples. Referenced by all
+  three workflow files with one-line pointers.
+- `core/scripts/estimate-tokens.py` -- **NEW.** Deterministic Python
+  estimator. Receives agent list from orchestrator + calibration +
+  priors + pricing, emits JSON. Requires `uv run`.
+- `core/scripts/README.md` -- **NEW.** Convention document for
+  core/scripts/ (admission criteria, runtime expectations).
+- `core/calibration/priors.yml` -- **NEW.** Bundled tier-level priors
+  and model-to-tier lookup table.
+- `core/calibration/pricing.yml` -- **NEW.** Per-model $/1M-token
+  pricing (input and output rates). Separate file for easy patch
+  updates when providers change pricing.
+- `core/templates/Calibration-Template.yml` -- **NEW.** Template for
+  consumer `.fabrika/calibration.yml`.
+- `core/agents/agent-frontmatter-spec.md` -- **NEW.** YAML frontmatter
+  schema for agent prompts (model, model_tier, extensibility).
+
+### Core (changed -- consumer projects should update)
+
+- `core/workflows/development-workflow.md` -- **CHANGED.** One-line
+  pointer to token-estimation.md at plan-presentation step.
+- `core/workflows/analytics-workspace.md` -- **CHANGED.** One-line
+  pointer at Tier 1 and Tier 2 plan phases.
+- `core/workflows/agentic-workflow-lifecycle.md` -- **CHANGED.**
+  One-line pointer in Step 2 (Align) at plan presentation.
+- `core/workflows/design-alignment.md` -- **CHANGED.** Soft note
+  about informal cost-awareness during Q&A walk.
+- `core/agents/*.md` (28 concrete agents) -- **CHANGED.** YAML
+  frontmatter added with model/model_tier declarations. Non-breaking
+  -- agents function identically without frontmatter.
+- `core/agents/archetypes/*.md` (7 archetypes) -- **CHANGED.**
+  "Required Frontmatter" section added to each archetype.
+- `core/agents/AGENT-CATALOG.md` -- **CHANGED.** New "Agent
+  Frontmatter" section cross-referencing agent-frontmatter-spec.md.
+- `core/Document-Catalog.md` -- **CHANGED.** New entries for
+  calibration.yml (consumer artifact), priors.yml (framework artifact),
+  pricing.yml (framework artifact), Calibration-Template.yml (template).
+- `core/FABRIKA.md` -- **CHANGED.** Documents calibration.yml in
+  .fabrika/ contents and surfaces core/scripts/ convention.
+
+### Root (changed -- consumer projects should update)
+
+- `Domain-Language.md` -- **CHANGED.** New "Token Estimation" domain
+  area with 6 terms.
+- `MANIFEST_SPEC.md` -- **CHANGED.** token_budget_warn config field,
+  expanded .fabrika/ directory contents.
+- `BOOTSTRAP.md` -- **CHANGED.** Scaffolds calibration.yml, copies
+  estimator script and priors.
+- `UPDATE.md` -- **CHANGED.** 0.24.0 update guidance.
+- `MIGRATIONS.md` -- **CHANGED.** 0.24.0 migration entry.
+- `README.md` -- **CHANGED.** Token estimation in feature list.
+
+### Integrations (changed -- consumer projects should update)
+
+- `integrations/claude-code/CLAUDE.md` -- **CHANGED.** Token
+  estimation availability note, frontmatter footnote on Model Routing.
+- `integrations/copilot/copilot-instructions.md` -- **CHANGED.**
+  Token estimation availability note, Copilot CLI limitation
+  documentation.
+
+### Consumer update instructions
+
+1. Copy new files:
+   - `core/workflows/token-estimation.md`
+   - `core/scripts/estimate-tokens.py`
+   - `core/scripts/README.md`
+   - `core/calibration/priors.yml`
+   - `core/calibration/pricing.yml`
+   - `core/templates/Calibration-Template.yml`
+   - `core/agents/agent-frontmatter-spec.md`
+2. Scaffold `.fabrika/calibration.yml` from
+   `core/templates/Calibration-Template.yml`
+3. Update workflow files (one-line pointer additions):
+   - `core/workflows/development-workflow.md`
+   - `core/workflows/analytics-workspace.md`
+   - `core/workflows/agentic-workflow-lifecycle.md`
+   - `core/workflows/design-alignment.md`
+4. Update agent prompts with frontmatter (non-breaking -- agents work
+   without it, but estimation accuracy improves with it). Copy updated
+   versions from Fabrika source, or manually add frontmatter per
+   `core/agents/agent-frontmatter-spec.md`.
+5. Update archetype files (add Required Frontmatter sections)
+6. Update AGENT-CATALOG.md (new section)
+7. Update Document-Catalog.md (new entries)
+8. Update FABRIKA.md (calibration.yml and scripts convention)
+9. Update Domain-Language.md (new terms)
+10. Update MANIFEST_SPEC.md (token_budget_warn, .fabrika/ contents)
+11. Update BOOTSTRAP.md (calibration scaffolding step)
+12. Update integration template (CLAUDE.md or copilot-instructions.md)
+13. Optionally configure `token_budget_warn` in project config
+
+---
+
 ## 0.23.0
 
 Analytics Workspace Onboarding Protocol. Adds a structured onboarding

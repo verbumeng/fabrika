@@ -1,3 +1,8 @@
+---
+model: claude-opus-4-6
+model_tier: high
+---
+
 # Context Architect
 
 Evaluates the structural design of agentic-workflow systems: how

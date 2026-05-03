@@ -6,6 +6,14 @@ domain-specific expertise. The implementer is the only agent that
 creates and modifies source and production files (besides the
 validator, which writes tests).
 
+## Required Frontmatter
+
+Concrete agents using this archetype must declare model metadata in
+YAML frontmatter at the top of their prompt file. See
+`core/agents/agent-frontmatter-spec.md` for the full schema.
+
+Required fields: `model` or `model_tier` (at least one).
+
 ## Role
 
 Implementers receive an approved plan and execute it. They do not

@@ -33,11 +33,12 @@ Before invoking any sub-agent, read `core/workflows/dispatch-protocol.md` for wh
 2. Read relevant project docs on demand: Architecture Overview, Data Model, relevant ADRs, research notes
 3. Read the grading rubrics at `docs/02-Engineering/rubrics/` to understand evaluation criteria
 4. Invoke the **planner** agent in **planning mode** to expand the story into a full implementation spec (saved to `docs/plans/[TICKET]-spec.md`)
-5. Present the spec to the owner for approval using the **Spec Briefing** format (see briefing docs)
-6. **(Optional) Invoke the architect agent for design review.** If the spec proposes new modules, significant restructuring, or changes to component boundaries, dispatch the appropriate architect (software-architect or data-architect based on project type) in **design mode** with the spec's module section. The architect reviews proposed module depth, interface design, and component boundaries. Present the architect's findings alongside the spec for owner approval. Skip if the story is a small feature change within existing module boundaries.
-7. Create feature branch: `feature/[PROJECT_KEY]-S-042-description`
-8. Update story: `status: In Progress`
-9. **Branch on testing approach.** Read the sprint contract's testing
+5. After the spec is drafted, invoke the token cost estimation protocol (`core/workflows/token-estimation.md`) to present the cost estimate alongside the spec briefing.
+6. Present the spec to the owner for approval using the **Spec Briefing** format (see briefing docs)
+7. **(Optional) Invoke the architect agent for design review.** If the spec proposes new modules, significant restructuring, or changes to component boundaries, dispatch the appropriate architect (software-architect or data-architect based on project type) in **design mode** with the spec's module section. The architect reviews proposed module depth, interface design, and component boundaries. Present the architect's findings alongside the spec for owner approval. Skip if the story is a small feature change within existing module boundaries.
+8. Create feature branch: `feature/[PROJECT_KEY]-S-042-description`
+9. Update story: `status: In Progress`
+10. **Branch on testing approach.** Read the sprint contract's testing
    approach for this story (assigned by the scrum master during sprint
    planning). The testing approach determines implementation flow:
 

@@ -1,0 +1,72 @@
+# Per-model pricing ($/1M tokens) for dollar cost estimates.
+# Separated from priors.yml for easier patch-level updates when
+# providers change pricing.
+#
+# Update this file when model pricing changes — this is a patch-level
+# version bump per Fabrika's bump rules (core/** = minor, but pricing
+# data updates alone = patch because they don't change methodology).
+#
+# Only models with `model:` declared in agent frontmatter can produce
+# dollar estimates. Tier-only agents get token estimates without dollars.
+
+pricing:
+  # Claude models (as of 2025-05)
+  claude-opus-4-6:
+    input_per_1m: 15.00
+    output_per_1m: 75.00
+  claude-opus-4-5:
+    input_per_1m: 15.00
+    output_per_1m: 75.00
+  claude-sonnet-4-6:
+    input_per_1m: 3.00
+    output_per_1m: 15.00
+  claude-sonnet-4-5:
+    input_per_1m: 3.00
+    output_per_1m: 15.00
+  claude-haiku-4-5:
+    input_per_1m: 0.80
+    output_per_1m: 4.00
+  claude-haiku-3-5:
+    input_per_1m: 0.25
+    output_per_1m: 1.25
+  # GPT models (as of 2025-05)
+  gpt-4o:
+    input_per_1m: 2.50
+    output_per_1m: 10.00
+  gpt-4o-mini:
+    input_per_1m: 0.15
+    output_per_1m: 0.60
+  gpt-4-turbo:
+    input_per_1m: 10.00
+    output_per_1m: 30.00
+  gpt-4:
+    input_per_1m: 30.00
+    output_per_1m: 60.00
+  gpt-3.5-turbo:
+    input_per_1m: 0.50
+    output_per_1m: 1.50
+  o1:
+    input_per_1m: 15.00
+    output_per_1m: 60.00
+  o1-mini:
+    input_per_1m: 3.00
+    output_per_1m: 12.00
+  o3:
+    input_per_1m: 10.00
+    output_per_1m: 40.00
+  o3-mini:
+    input_per_1m: 1.10
+    output_per_1m: 4.40
+  o4-mini:
+    input_per_1m: 1.10
+    output_per_1m: 4.40
+  # Gemini models (as of 2025-05)
+  gemini-2.5-pro:
+    input_per_1m: 1.25
+    output_per_1m: 10.00
+  gemini-2.5-flash:
+    input_per_1m: 0.15
+    output_per_1m: 0.60
+  gemini-2.0-flash:
+    input_per_1m: 0.10
+    output_per_1m: 0.40

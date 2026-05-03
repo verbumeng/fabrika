@@ -1,0 +1,30 @@
+# .fabrika/calibration.yml
+# Per-project calibration data for token cost estimation.
+# This file is updated automatically after workflow runs.
+# Scaffolded from core/templates/Calibration-Template.yml at bootstrap.
+#
+# Structure:
+#   entries:
+#     <calibration-key>:
+#       count: <number of recorded runs>
+#       mean_input: <EWMA-blended mean input tokens>
+#       mean_output: <EWMA-blended mean output tokens>
+#       last_updated: <ISO date>
+#
+# Calibration key format: <workflow>.<agent>.<model>
+# Example: development-workflow.code-reviewer.claude-opus-4-6
+#
+# Override section (optional):
+#   model_tier_overrides:
+#     <agent-name>: <tier>    # Override tier for specific agents
+#   model_overrides:
+#     <agent-name>: <model>   # Override model for specific agents
+
+entries: {}
+
+# Per-project overrides (uncomment and configure as needed):
+# model_tier_overrides:
+#   software-engineer: low
+#   product-manager: mid
+# model_overrides:
+#   code-reviewer: claude-sonnet-4-6

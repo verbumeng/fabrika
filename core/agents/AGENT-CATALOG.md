@@ -54,6 +54,16 @@ Methodology-based types use the agentic-workflow lifecycle (`core/workflows/agen
 
 When a project has multiple types (e.g., `web-app` + `ai-engineering`), install the union of all agents. If two types specify different agents for the same role, install both — they serve complementary purposes. For example, `ai-engineering` installs both `code-reviewer` and `prompt-reviewer` as reviewers.
 
+## Agent Frontmatter
+
+Agent prompt files carry YAML frontmatter declaring model metadata
+used for token cost estimation. Frontmatter is metadata for the
+estimation system — it does not change agent behavior. An agent
+functions identically with or without frontmatter.
+
+For the full frontmatter schema, override cascade, and format
+requirements, see `core/agents/agent-frontmatter-spec.md`.
+
 ## Agent Archetypes
 
 Each agent implements one of seven archetypes that define base tool profiles, dispatch contracts, and output contracts. Archetype templates live in `core/agents/archetypes/` and serve as starting points for new agents — existing agents may diverge where their specialization demands it.

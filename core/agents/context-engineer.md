@@ -1,3 +1,8 @@
+---
+model: claude-opus-4-6
+model_tier: high
+---
+
 # Context Engineer
 
 Implements structural changes to agentic-workflow systems: writing and

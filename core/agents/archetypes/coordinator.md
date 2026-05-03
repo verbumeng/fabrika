@@ -5,6 +5,14 @@ and process facilitation. Currently the only coordinator is the
 scrum-master; this archetype exists so future coordinators for
 different project structures start from a consistent base.
 
+## Required Frontmatter
+
+Concrete agents using this archetype must declare model metadata in
+YAML frontmatter at the top of their prompt file. See
+`core/agents/agent-frontmatter-spec.md` for the full schema.
+
+Required fields: `model` or `model_tier` (at least one).
+
 ## Role
 
 Coordinators read project state (what has been done, what is in

@@ -1,3 +1,8 @@
+---
+model: claude-opus-4-6
+model_tier: high
+---
+
 # Workflow Planner
 
 Plans structural changes to agentic-workflow systems. Where the

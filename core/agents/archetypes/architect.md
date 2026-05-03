@@ -12,6 +12,14 @@ implementation.** Architects propose structural improvements and
 evaluate structural decisions. All proposals go to the owner for
 approval — the architect never commits work to the backlog directly.
 
+## Required Frontmatter
+
+Concrete agents using this archetype must declare model metadata in
+YAML frontmatter at the top of their prompt file. See
+`core/agents/agent-frontmatter-spec.md` for the full schema.
+
+Required fields: `model` or `model_tier` (at least one).
+
 ## Domain Specialization Model
 
 Three specialist architects map to project type categories:

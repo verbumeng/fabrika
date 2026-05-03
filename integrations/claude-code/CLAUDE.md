@@ -72,6 +72,8 @@ The verification approach depends on project type:
 | Coordinator | scrum-master | Opus | Topology assessment, sprint planning |
 | Maintenance session | (orchestrating session) | Sonnet | Checklist-driven, documentation updates |
 
+Agent model preferences are declared in frontmatter on each agent prompt file (`model:` field). The model field drives token cost estimation; consumers can override per-project via `.fabrika/calibration.yml` or conversationally at plan time.
+
 ## Project Structure
 ```
 [project-name]/
@@ -306,9 +308,11 @@ Claude Code drives the development process proactively. Don't wait for the owner
 
 **Before starting any story, sprint planning, or bug fix, read:** `[FABRIKA_PATH]/core/workflows/development-workflow.md`
 
+Token cost estimates are presented alongside plan/spec briefings — see `[FABRIKA_PATH]/core/workflows/token-estimation.md`.
+
 Summary of workflows covered:
 - **Design Alignment** — structured requirements gathering → Project Charter + PRD → fresh-chat handoff to sprint planning (see Design Alignment section above)
-- **Starting a Story** — spec expansion → approval → optional architect design review → branch → testing approach branching (TDD: test-writer spec-first → implementer vertical slices → refactor; test-informed: implementer → test-writer coverage; test-after: implementer → evaluation cycle) → evaluate → fix cycle
+- **Starting a Story** — spec expansion → token cost estimate → approval → optional architect design review → branch → testing approach branching (TDD: test-writer spec-first → implementer vertical slices → refactor; test-informed: implementer → test-writer coverage; test-after: implementer → evaluation cycle) → evaluate → fix cycle
 - **Completing a Story (Evaluation Cycle)** — tests → lint → commit → reviewer → validator → planner validation → optional architect structural evaluation → review-revise loop (max 3 cycles, implementer reads reviews directly — see `core/design-principles.md`)
 - **Sprint Planning** — scrum-master receives approved PRD → topology assessment → 2-3 stories → contract → approval
 - **Ideation & Backlog Grooming** — new stories, re-scoping, someday-maybe
