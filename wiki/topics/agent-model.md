@@ -38,9 +38,11 @@ The design philosophy is that agents carry *methodology expertise*, not tool exp
 
 - **Data analyst gains three explicit modes (v0.20.0).** The data analyst previously had a single implicit mode: receive plan, implement, return results. Three explicit modes were added: write-only (produce code without executing), execute-metadata (run metadata queries and produce execution manifest), and revision (read review reports directly, address findings). Mode decomposition was driven by the pre-execution review workflow, which requires the data analyst to produce code, have it reviewed, then execute in separate phases. Source: PRD-11, CHANGELOG 0.20.0.
 
+- **Base agents as the unparameterized foundation (v0.26.0).** Four base agents (planner, implementer, reviewer, validator) were created as the domain-agnostic versions that all specialized agents extend. The base reviewer derives its checklist from the plan's acceptance criteria and four general quality signals (completeness, consistency, clarity, correctness) rather than a predefined domain rubric. The base planner produces plans structured by the brief rather than a domain model. This inverts the original design where each new project type required new agent definitions — the base agents work across any workflow context. The naming convention reinforces this: `planner.md` not `task-planner.md`, because these are the base, not a domain specialization. Source: CR-17, CHANGELOG 0.26.0.
+
 ## Current State
 
-As of v0.22.0, the agent model consists of:
+As of v0.26.0, the agent model consists of:
 
 **7 archetypes** defining base behavioral contracts:
 - Planner (contextual dispatch for planning, strict for validation)
@@ -51,21 +53,26 @@ As of v0.22.0, the agent model consists of:
 - Implementer (contextual dispatch, production changes against approved plans)
 - Architect (contextual for design mode, strict for review mode)
 
-**23 agent files** covering all 10 project types:
-- 4 planners: product-manager, experiment-planner, api-designer, analysis-planner
+**32 agent files** covering all 11 project types:
+- 4 base agents: planner, implementer, reviewer, validator (domain-agnostic, task-workspace)
+- 4 specialized planners: product-manager, experiment-planner, api-designer, analysis-planner
 - 3 primary reviewers: code-reviewer, logic-reviewer, methodology-reviewer
 - 3 supplemental reviewers: security-reviewer, performance-reviewer, prompt-reviewer
 - 5 validators: test-writer, data-quality-engineer, model-evaluator, eval-engineer, data-validator
 - 1 structural validator: structural-validator
 - 1 designer: visualization-designer
 - 1 coordinator: scrum-master
-- 5 implementers: software-engineer, data-engineer, data-analyst, ml-engineer, ai-engineer (plus agentic-engineer for agentic-workflow)
+- 5 specialist implementers: software-engineer, data-engineer, data-analyst, ml-engineer, ai-engineer (plus agentic-engineer for agentic-workflow)
 - 2 architects: software-architect, data-architect (plus context-architect for agentic-workflow)
 
 **Role mapping across project categories:**
 - Sprint-based types (8 types): full agent roster with planner, reviewer, supplemental reviewers, validator, optional designer, scrum-master coordinator, implementer, and architect
+- Task-based types (task-workspace): planner, implementer, reviewer, validator — base agents with no domain assumptions, no coordinator or architect
 - Task-based types (analytics-workspace): analysis-planner (planning + validation modes), logic-reviewer (pre-execution, all tiers), performance-reviewer (pre-execution, Tier 2 only), data-validator (post-execution + validation report), visualization-designer, data-analyst (write-only, execute-metadata, revision modes), no coordinator or architect
 - Methodology-based types (agentic-workflow): workflow-planner, methodology-reviewer, structural-validator, agentic-engineer, context-architect, scrum-master (for change backlog sequencing)
+
+**Base agent model (v0.26.0):**
+The four base agents (planner, implementer, reviewer, validator) are the domain-agnostic versions that all specialized agents are parameterized extensions of. The analytics-workspace agents are the analytics-specific parameterization (analysis-planner adds data source sections, logic-reviewer adds SQL checking). Sprint-based agents are the software-specific parameterization (product-manager adds acceptance criteria and sprint context, code-reviewer adds rubric-based code quality checking). This relationship — base agent as unparameterized skill, specialized agent as domain extension — is the foundation for the composable skills model being formalized in CR-22.
 
 **Dispatch infrastructure:**
 - Dispatch protocol (core/workflows/dispatch-protocol.md) defines per-agent contracts with required and conditional fields
@@ -107,8 +114,9 @@ As of v0.22.0, the agent model consists of:
 - v0.16.0 -- spec-first and coverage modes for test-writer
 - v0.20.0 -- data analyst modes (write-only, execute-metadata, revision), analysis planner validation mode, Domain Language/data dictionary integration for analytics agents, implementer-reviewer pairing philosophy, direct implementer-reads-reviews retry protocol
 - v0.22.0 -- review-revise loop convergence: all project types use direct implementer-reads-reviews, mandatory full re-review, 3-cycle cap with orchestrator diagnosis. Implementer-reviewer pairing and implementer-validator pairing codified in core/design-principles.md
+- v0.26.0 -- base agents (planner, implementer, reviewer, validator) as domain-agnostic foundation. Base reviewer derives criteria from plan, not rubric. Agent count: 28 -> 32. Base agent model establishes skill-parameterization pattern for CR-22.
 
-### PRDs
+### PRDs and CRs
 - PRD-01 -- agentic-workflow project type and initial archetype stubs
 - PRD-02 -- applying agentic-workflow to Fabrika, agent dispatch for system updates
 - PRD-03 -- implementer archetype, pure orchestrator, specialist implementers
@@ -117,6 +125,7 @@ As of v0.22.0, the agent model consists of:
 - PRD-07 -- TDD integration, spec-first mode for test-writer
 - PRD-11 -- analytics pre-execution review, implementer-reviewer pairing, data analyst modes
 - PRD-13 -- review-revise loop redesign across all project types (implemented v0.22.0)
+- CR-17 -- base workflow type and base agents (implemented v0.26.0)
 
 ### Core files
 - core/agents/AGENT-CATALOG.md -- complete agent-to-project-type mapping

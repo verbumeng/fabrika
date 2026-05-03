@@ -28,19 +28,20 @@ How agents are organized, dispatched, and constrained. Covers the
 archetype system (Planner, Reviewer, Implementer, Coordinator,
 Architect, Designer, Validator), dispatch tiers (strict vs.
 contextual), the pure orchestrator principle, specialist implementers,
-agent maturity progression, and the implementer-reviewer pairing
-philosophy (v0.20.0). The model grew from 4 agents to 23 across 20
+agent maturity progression, the implementer-reviewer pairing
+philosophy (v0.20.0), and base agents as the unparameterized
+foundation (v0.26.0). The model grew from 4 agents to 32 across 26
 versions.
 
 ### [Workflow Design](topics/workflow-design.md)
 
-The three workflow families (sprint-based, analytics-workspace,
-agentic-workflow) and the patterns that govern them: lifecycle
-definitions, dispatch protocol, design alignment, graduated testing,
-the briefing system, and the knowledge pipeline. As of v0.20.0,
-analytics-workspace uses a tiered pre-execution review system with
-execution manifests, DDL/DML detection, and a human-facing validation
-report. Each workflow addition addressed a specific process gap.
+Four workflow types — the base task workflow (v0.26.0), sprint-based,
+analytics-workspace, and agentic-workflow — and the patterns that
+govern them: lifecycle definitions, dispatch protocol, design
+alignment, graduated testing, the briefing system, and the knowledge
+pipeline. As of v0.26.0, "project types" are becoming "workflow
+types" — reusable multi-agent patterns that projects compose on
+demand via ADD-WORKFLOW.md.
 
 ### [Harvest Patterns](topics/harvest-patterns.md)
 
@@ -92,15 +93,16 @@ This wiki was initialized in v0.19.0 with five topic articles
 synthesized from CHANGELOG entries v0.10.0-v0.18.0 and planning PRDs.
 In v0.20.0, three articles (Workflow Design, Agent Model, Framework
 Philosophy) were substantially updated with design rationale from the
-PRD-11 alignment session, which produced the implementer-reviewer
-pairing philosophy, the tiered pre-execution review design, and
-several forward-looking PRDs (13-15).
+PRD-11 alignment session. In v0.26.0, Workflow Design and Agent Model
+were updated with the base workflow type, base agent model, workflow
+composition paradigm, and cross-cutting concern insights from the
+CR-17 execution session.
 
 ### Sources Summary
 
 Articles draw from:
-- CHANGELOG entries for versions 0.1.0 through 0.20.0
-- Planning PRDs 01-11, plus 13-15 (planned, in `planning/`)
+- CHANGELOG entries for versions 0.1.0 through 0.26.0
+- Planning PRDs 01-15 and CRs 17-29 (in `planning/`)
 - Core workflow files, agent prompts, and integration templates
-- Alignment session outputs from the v0.10.0-v0.20.0 roadmap
-  execution
+- Alignment session outputs from the v0.10.0-v0.25.0 roadmap
+  execution and the Phase 2 design philosophy session

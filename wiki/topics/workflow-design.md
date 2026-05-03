@@ -2,7 +2,7 @@
 
 ## Summary
 
-Fabrika defines three workflow families, each tailored to a different category of project. Sprint-based projects follow a sprint lifecycle with planning, implementation, evaluation, and retro phases. Analytics-workspace projects follow a task lifecycle (brief, plan, execute, validate, deliver) without sprint structure. Agentic-workflow projects follow a 7-step structural update lifecycle (Plan, Align, Execute, Verify, Incorporate, Present, Ship) for changes to methodology artifacts. Each family uses the same agent archetypes but dispatches them differently and at different cadences.
+Fabrika defines workflow types — reusable multi-agent patterns that projects can compose. As of v0.26.0, there are four workflow families, with the task workflow serving as the domain-agnostic base that all specialized workflows parameterize. Previously, Fabrika defined three workflow families, each tailored to a different category of project. Sprint-based projects follow a sprint lifecycle with planning, implementation, evaluation, and retro phases. Analytics-workspace projects follow a task lifecycle (brief, plan, execute, validate, deliver) without sprint structure. Agentic-workflow projects follow a 7-step structural update lifecycle (Plan, Align, Execute, Verify, Incorporate, Present, Ship) for changes to methodology artifacts. Each family uses the same agent archetypes but dispatches them differently and at different cadences.
 
 The workflow system evolved from a monolithic set of instructions baked into integration templates (v0.1.0) into a decomposed set of shared, tool-agnostic workflow files (v0.7.0) that both Claude Code and Copilot integrations reference. Major workflow additions include the dispatch protocol (v0.9.0), the agentic-workflow lifecycle (v0.10.0), the pure orchestrator rewrite (v0.12.0), design alignment (v0.14.0), graduated testing (v0.16.0), the briefing system (v0.5.1 through v0.17.0), and the wiki knowledge pipeline (v0.18.0). Each addition addressed a specific process gap -- requirements capture, testing discipline, structured communication, or knowledge consolidation.
 
@@ -36,9 +36,21 @@ The design philosophy is that workflows define the *sequence and contracts* for 
 
 - **Maintenance checklist as an evolving workflow (v0.1.0 through v0.18.0).** The maintenance checklist has been the most frequently modified file in Fabrika's history, gaining sections for evaluation findings sweep (v0.3.0), pattern and lint rule curation (v0.4.0), token usage review (v0.4.0), architecture review with spiral mitigation (v0.13.0), terminology drift check (v0.15.0), and knowledge synthesis (v0.18.0). It runs between sprints and includes conditional gates (architecture review only triggers under specific conditions, knowledge synthesis only runs when wiki/ exists). Source: CHANGELOG 0.3.0, 0.4.0, 0.13.0, 0.15.0, 0.18.0.
 
+- **The base workflow and workflow composition (v0.26.0).** The task workflow type introduces the domain-agnostic base lifecycle: brief -> plan -> implement -> review -> validate -> deliver. This is significant not just as a new workflow but as a conceptual reframe: "project types" are becoming "workflow types" — reusable multi-agent patterns that projects compose. A project is no longer locked to its declared type. ADD-WORKFLOW.md documents on-demand workflow addition: the orchestrator proposes adding a workflow type when it detects the user's work doesn't fit installed workflows. The base templates (Brief-Template.md, Plan-Template.md, Outcome-Template.md) are domain-agnostic versions that analytics-specific templates specialize. The base reviewer derives its checklist from the plan's acceptance criteria rather than a predefined rubric — meaning it works with any deliverable type. Source: CR-17, CHANGELOG 0.26.0.
+
+- **Cross-cutting concerns identified as a design gap (v0.26.0 session).** Token estimation, compaction, freshness, design alignment triggers — these are procedures that apply to all workflows but are currently documented per-workflow-file (copy-pasted references). The task workflow initially omitted the token estimation reference entirely, revealing the fragility of this pattern. CR-20 and CR-22 should formalize how cross-cutting concerns attach to workflows without duplication. The insight: procedures/SOPs exist alongside workflows as independent governance concerns, not inside them. Source: CR-17 execution session, 2026-05-03.
+
 ## Current State
 
-As of v0.22.0, the workflow system includes:
+As of v0.26.0, the workflow system includes:
+
+**Base task workflow** (task-workspace):
+- Domain-agnostic lifecycle: brief -> plan -> implement -> review -> [revise -> re-review]* -> validate -> deliver
+- Four base agents (planner, implementer, reviewer, validator) with no domain assumptions
+- Reviewer derives checklist from plan's acceptance criteria + four general quality signals
+- Design Alignment for complex tasks (same triggers as analytics-workspace)
+- Wiki knowledge pipeline: Extract+Index after delivery, Synthesize+Link monthly
+- On-demand workflow addition via ADD-WORKFLOW.md
 
 **Sprint-based workflow** (8 project types):
 - Design Alignment protocol for requirements gathering (brain dump -> Charter/PRD)
@@ -102,7 +114,7 @@ As of v0.22.0, the workflow system includes:
 
 - **Analytics workspace onboarding.** The pre-execution review workflow depends on platform configuration (cost models, source registry structure, data dictionary hierarchy) that is currently discovered ad hoc during the first analysis task. PRD-14 proposes a structured onboarding protocol that gathers this information upfront. Whether onboarding should also cover data governance tool integration (Alation, Collibra, DataHub) is an open question — the tooling exists but requires custom API configuration.
 
-- **Token cost estimation at plan time.** Currently, token costs are reported after execution. PRD-15 proposes presenting estimated token costs during plan alignment (minimum and likely-upper estimates) so users can make cost-informed decisions before committing. Whether heuristic estimation can be accurate enough to be useful requires calibration data from real workflow executions.
+- **~~Token cost estimation at plan time.~~** Resolved in v0.24.0 (PRD-15). Token cost estimation now surfaces during plan alignment using deterministic estimation from agent frontmatter and per-project calibration data. The estimation system uses bundled tier-level priors with EWMA blending against actual token usage over time. Cross-cutting concern identified in v0.26.0: token estimation references are copy-pasted per-workflow-file rather than attached as a universal procedure. CR-20 and CR-22 should formalize how cross-cutting concerns attach to workflows without duplication.
 
 - **Workflow complexity for new contributors.** The workflow system has grown significantly. A new maintainer or contributor needs to understand the sprint lifecycle, development workflow, dispatch protocol, briefing system, maintenance checklist, and knowledge pipeline. Whether the current documentation adequately supports this onboarding, or whether a "workflow quick start" document is needed, is an open question.
 
@@ -138,8 +150,9 @@ As of v0.22.0, the workflow system includes:
 - v0.20.0 -- analytics pre-execution review: tiered workflows, execution manifest, validation report, analysis planner validation mode, DDL/DML detection, Domain Language/data dictionary integration, review-revise loop redesign
 - v0.21.0 -- plan persistence alignment: persistent plan files for agentic-workflow, alignment history, change request terminology, consistent lifecycle across all project types
 - v0.22.0 -- review-revise loop convergence: all project types use direct implementer-reads-reviews, mandatory full re-review, 3-cycle cap with orchestrator diagnosis. Implementer-reviewer pairing and implementer-validator pairing codified in core/design-principles.md
+- v0.26.0 -- base task workflow (domain-agnostic), four base agents, on-demand workflow addition (ADD-WORKFLOW.md), workflow composition model ("project types" becoming "workflow types"), base templates (Brief, Plan, Outcome). Cross-cutting concern pattern identified: procedures should not be workflow-bound.
 
-### PRDs
+### PRDs and CRs
 - PRD-01 -- agentic-workflow lifecycle design
 - PRD-03 -- pure orchestrator, implementer dispatch, orchestrator-as-translator
 - PRD-04 -- architect invocation points, spiral mitigation
@@ -152,13 +165,15 @@ As of v0.22.0, the workflow system includes:
 - PRD-12 -- plan persistence alignment, consistent plan lifecycle across project types
 - PRD-13 -- review-revise loop redesign (cross-cutting, implemented v0.22.0)
 - PRD-14 -- analytics workspace onboarding protocol (planned)
-- PRD-15 -- token cost estimation across workspaces (planned)
+- PRD-15 -- token cost estimation across workspaces (implemented v0.24.0)
+- CR-17 -- base workflow type, base agents, workflow composition (implemented v0.26.0)
 
 ### Core files
 - core/workflows/agentic-workflow-lifecycle.md -- 7-step structural update lifecycle
 - core/workflows/development-workflow.md -- sprint-based development workflow
 - core/workflows/sprint-lifecycle.md -- sprint phase management
-- core/workflows/analytics-workspace.md -- task-based lifecycle
+- core/workflows/task-workflow.md -- base (domain-agnostic) task lifecycle
+- core/workflows/analytics-workspace.md -- analytics-specific task lifecycle
 - core/workflows/dispatch-protocol.md -- per-agent dispatch contracts
 - core/workflows/knowledge-pipeline.md -- wiki 5-phase pipeline
 - core/workflows/knowledge-synthesis.md -- maintenance-integrated synthesis workflow
