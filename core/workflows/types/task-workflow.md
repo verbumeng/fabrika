@@ -33,7 +33,7 @@ agents extend.
 Before the standard lifecycle, the orchestrator assesses whether the
 task warrants structured alignment. If any complexity trigger is met,
 the orchestrator runs the Design Alignment protocol
-(`core/workflows/design-alignment.md`) before creating the brief:
+(`core/workflows/protocols/design-alignment.md`) before creating the brief:
 
 - Multiple stakeholders with different needs
 - Estimated effort exceeds 2 days
@@ -97,7 +97,7 @@ changes). The plan's structure comes from the brief, not from a
 predefined domain model.
 
 After the plan is written, present the token cost estimate per
-`core/workflows/token-estimation.md`. Present the plan to the owner
+`core/workflows/protocols/token-estimation.md`. Present the plan to the owner
 for approval before execution begins.
 
 ### Implement
@@ -220,8 +220,8 @@ prior outcome as part of its orientation.
 When a project has a `wiki/` directory, the knowledge pipeline runs at
 cadences tied to task delivery rather than sprints. For the full
 pipeline specification, see
-`core/workflows/knowledge-pipeline.md`. For the step-by-step
-procedure, see `core/workflows/knowledge-synthesis.md`.
+`core/workflows/protocols/knowledge-pipeline.md`. For the step-by-step
+procedure, see `core/workflows/protocols/knowledge-synthesis.md`.
 
 | Cadence | Pipeline Phases | What Happens |
 |---------|----------------|--------------|

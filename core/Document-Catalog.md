@@ -77,7 +77,7 @@ A project can be **multi-type** (sprint-based types only). A data app with scrap
 - **Types:** all | **Tier:** 1 | **Audience:** both
 - **Template:** `core/templates/Domain-Language-Template.md`
 - **Structure:** One section per domain area. Within each area, one block per term: definition, code-level name, relationships, anti-terms. Cross-domain terms section for terms spanning multiple areas.
-- **Notes:** Created via the Design Alignment protocol (`core/workflows/design-alignment.md`). Updated during implementation (implementers populate code-level names and flag new concepts), PRD creation (new terms added), and maintenance (terminology drift check). For multi-type projects, use domain area sections to disambiguate terms that mean different things in different contexts. For `analytics-workspace`, Domain Language covers business domain vocabulary; the source registry (`sources/README.md`) covers data infrastructure vocabulary — they are complementary, not overlapping.
+- **Notes:** Created via the Design Alignment protocol (`core/workflows/protocols/design-alignment.md`). Updated during implementation (implementers populate code-level names and flag new concepts), PRD creation (new terms added), and maintenance (terminology drift check). For multi-type projects, use domain area sections to disambiguate terms that mean different things in different contexts. For `analytics-workspace`, Domain Language covers business domain vocabulary; the source registry (`sources/README.md`) covers data infrastructure vocabulary — they are complementary, not overlapping.
 
 ---
 
@@ -93,7 +93,7 @@ A project can be **multi-type** (sprint-based types only). A data app with scrap
 - **Purpose:** Internal design document capturing shared understanding between the owner and agents. Defines the problem space, target user, core capabilities, constraints, success criteria, and design principles. Created once at project inception or during a major pivot.
 - **Types:** all sprint-based types, agentic-workflow | **Tier:** 1 | **Audience:** both
 - **Template:** `core/templates/Project-Charter-Template.md`
-- **Notes:** Created via the Design Alignment protocol (`core/workflows/design-alignment.md`). The Charter captures what the product IS; Vision & Positioning captures why it matters externally; Phase Definitions breaks the Charter's capabilities into buildable phases. All three must be tightly aligned.
+- **Notes:** Created via the Design Alignment protocol (`core/workflows/protocols/design-alignment.md`). The Charter captures what the product IS; Vision & Positioning captures why it matters externally; Phase Definitions breaks the Charter's capabilities into buildable phases. All three must be tightly aligned.
 
 ### PRD.md (Product Requirements Document)
 - **Purpose:** Detailed requirements for a specific phase or major feature. User stories, module changes, implementation decisions, testing approach, and scope boundaries. Created per phase or major feature.

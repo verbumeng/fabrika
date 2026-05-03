@@ -1,4 +1,4 @@
-# Agentic-Workflow Lifecycle
+# Agentic Workflow
 
 The structural update lifecycle for agentic-workflow projects. This
 workflow governs how changes are made to systems where the methodology
@@ -6,7 +6,7 @@ itself is the product — agent prompts, workflow definitions,
 instruction files, integration templates, catalogs, and hooks.
 
 For the dispatch contracts that govern each agent invocation below,
-see `core/workflows/dispatch-protocol.md`.
+see `core/workflows/protocols/dispatch-protocol.md`.
 
 ---
 
@@ -63,7 +63,7 @@ and Z."
 
 Present the plan using the **Structural Plan Briefing** format
 (`core/briefings/structural-plan-briefing.md`). Include the token
-cost estimate per `core/workflows/token-estimation.md` in the plan
+cost estimate per `core/workflows/protocols/token-estimation.md` in the plan
 presentation. Follow the briefing principles
 (`core/briefings/briefing-principles.md`):
 - Lead with what the change does for the system, not implementation

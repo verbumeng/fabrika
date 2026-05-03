@@ -37,7 +37,7 @@ these from the Fabrika source into the consumer project.
 | Implementer agent | `[FABRIKA_PATH]/core/agents/implementer.md` | `.claude/agents/implementer.md` or `.github/agents/implementer.agent.md` |
 | Reviewer agent | `[FABRIKA_PATH]/core/agents/reviewer.md` | `.claude/agents/reviewer.md` or `.github/agents/reviewer.agent.md` |
 | Validator agent | `[FABRIKA_PATH]/core/agents/validator.md` | `.claude/agents/validator.md` or `.github/agents/validator.agent.md` |
-| Workflow definition | `[FABRIKA_PATH]/core/workflows/task-workflow.md` | `.fabrika/workflows/task-workflow.md` (reference copy) |
+| Workflow definition | `[FABRIKA_PATH]/core/workflows/types/task-workflow.md` | `.fabrika/workflows/task-workflow.md` (reference copy) |
 | Brief template | `[FABRIKA_PATH]/core/templates/Brief-Template.md` | Project template location |
 | Plan template | `[FABRIKA_PATH]/core/templates/Plan-Template.md` | Project template location |
 | Outcome template | `[FABRIKA_PATH]/core/templates/Outcome-Template.md` | Project template location |

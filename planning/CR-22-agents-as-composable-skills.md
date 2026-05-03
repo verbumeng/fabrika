@@ -293,6 +293,40 @@ landscape and trying to locate where terminology distinctions belong:
     (Step 6), and shipping mechanics (Step 7). The prompt has been
     revised to make subagent dispatch explicit.
 
+## Additional Alignment Notes (CR-28 Execution Session, 2026-05-03)
+
+15. **development-workflow.md must split into domain-specific
+    workflows.** The current `development-workflow.md` is a single
+    process file that serves all 8 sprint-based project types through
+    implicit routing — it says "dispatch the implementer" and the
+    orchestrator picks the right specialist (software-engineer,
+    data-engineer, ML-engineer, etc.) based on project type context.
+    This works in the taxonomic model but breaks in the compositional
+    model where project types dissolve.
+
+    The owner's direction: each domain needs its own workflow
+    definition, because real usage will drive them in different
+    directions. Data engineering workflows will need environment
+    progression gates, ML workflows will need experiment loops,
+    software engineering workflows may stay closer to the base
+    pattern. Workflows are tools in a toolbox — each domain gets its
+    own tool.
+
+    CR-22 should:
+    - Analyze what `development-workflow.md` currently bundles
+      (sprint ceremony + implicit domain routing + testing approach
+      branching + evaluation cycle)
+    - Determine what is universal process (sprint ceremony, evaluation
+      cycle) vs. domain-specific (which agents, what gates, what
+      review criteria)
+    - Split into domain-specific workflow types that compose the
+      universal ceremony pieces with domain-specific agent rosters
+      and process steps
+
+    This was deferred from CR-28 (which moved development-workflow.md
+    to `types/` without renaming) to avoid premature restructuring
+    before the skills model is designed.
+
 ## Verification Criteria (Pre-Alignment Placeholder)
 
 To be defined during design alignment.

@@ -25,7 +25,7 @@ created: YYYY-MM-DD
 
 ## Stage 2: Build
 - **Entry condition:** Approved spec document
-- **Agent:** Implementer + test-writer (flow depends on testing approach — see `core/workflows/development-workflow.md`)
+- **Agent:** Implementer + test-writer (flow depends on testing approach — see `core/workflows/types/development-workflow.md`)
 - **Exit condition:** Feature implemented, all tests passing, committed to feature branch
 - **Exit artifacts:**
   - [ ] Implementation complete per spec

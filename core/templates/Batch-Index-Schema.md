@@ -60,7 +60,7 @@ deleted without breaking previously indexed content.
 | `source_path` | string | Path to the source artifact at index time. For reference only — the content is captured in `extracted_content`, so the batch survives source file moves. |
 | `source_type` | string | Artifact type. Values: `adr`, `evaluation`, `retro`, `session-log`, `sprint-progress`, `maintenance-report`, `research`, `prd`, `charter`, `story`, `epic`, `bug`, `domain-language`, `meeting-notes`, `someday-maybe`, `other`. |
 | `source_hash` | string | SHA-256 of file contents at index time. Used for deduplication — if the same hash appears in a later batch, the artifact hasn't changed and can be skipped. |
-| `salience` | string | Salience score: `S1`, `S2`, or `S3`. See the salience model in `core/workflows/knowledge-pipeline.md`. |
+| `salience` | string | Salience score: `S1`, `S2`, or `S3`. See the salience model in `core/workflows/protocols/knowledge-pipeline.md`. |
 | `salience_reason` | string | One-line explanation of why this salience was assigned. Aids transparency and owner override. |
 | `extracted_content` | object | Normalized content extracted from the artifact. |
 | `topic_candidates` | array | Suggested topic article names this artifact might contribute to. These are proposals — the synthesis step decides which topics actually get created or updated. |

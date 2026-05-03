@@ -187,7 +187,7 @@ If the user says no:
 - Remove the `wiki/` directory (or skip creating it)
 - The knowledge synthesis step in maintenance will be skipped automatically (conditional gate checks for wiki/ existence)
 
-**If the project type is `analytics-workspace` or the bootstrap includes a brain dump with substantial content,** note that a wiki backfill can be run after bootstrap completes to populate the wiki from existing artifacts. The backfill is described in `[FABRIKA_PATH]/core/workflows/knowledge-synthesis.md`. If the artifact count is under ~30, the backfill can run in this chat; if 30+, recommend a dedicated chat.
+**If the project type is `analytics-workspace` or the bootstrap includes a brain dump with substantial content,** note that a wiki backfill can be run after bootstrap completes to populate the wiki from existing artifacts. The backfill is described in `[FABRIKA_PATH]/core/workflows/protocols/knowledge-synthesis.md`. If the artifact count is under ~30, the backfill can run in this chat; if 30+, recommend a dedicated chat.
 
 ### 1.4 Initialize git
 ```bash
@@ -383,7 +383,7 @@ After filling in what you can, review each document for gaps. Ask clarifying que
 
 Once the brain dump is complete and Tier 1 docs are populated, run the Design Alignment protocol to produce a Project Charter and the first PRD. This is the first substantive step after the brain dump — the Charter and PRD capture the design intent in durable documents before sprint planning begins.
 
-**Read:** `[FABRIKA_PATH]/core/workflows/design-alignment.md`
+**Read:** `[FABRIKA_PATH]/core/workflows/protocols/design-alignment.md`
 
 The orchestrator drives structured requirements gathering using the brain dump content as raw material. The first Design Alignment session produces both:
 - **Project Charter** at `docs/01-Product/Project-Charter.md` — problem space, target user, core capabilities, constraints, success criteria, exclusions, design principles. Created once.
@@ -532,7 +532,7 @@ Set up the CLAUDE.md or copilot-instructions as applicable.
 ### 2W.1a Platform onboarding (optional)
 
 Run the analytics onboarding protocol at
-`[FABRIKA_PATH]/core/workflows/analytics-onboarding.md`. This asks
+`[FABRIKA_PATH]/core/workflows/protocols/analytics-onboarding.md`. This asks
 the user about platforms, cost models, source connections, and data
 governance tooling. All questions are skippable. Answers produce
 pre-populated platform connection stubs in the source registry.
@@ -632,7 +632,7 @@ Create the core versioning files:
 
 Ask: **"Does your system already have a change protocol (like SYSTEM-UPDATE.md), or should we create one based on the Fabrika agentic-workflow lifecycle?"**
 
-If creating fresh: adapt the 7-step protocol from `[FABRIKA_PATH]/core/workflows/agentic-workflow-lifecycle.md` into a project-specific `SYSTEM-UPDATE.md` or equivalent.
+If creating fresh: adapt the 7-step protocol from `[FABRIKA_PATH]/core/workflows/types/agentic-workflow.md` into a project-specific `SYSTEM-UPDATE.md` or equivalent.
 
 If the project already has one: review it for compatibility with the agentic-workflow lifecycle and suggest adjustments if needed.
 

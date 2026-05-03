@@ -220,7 +220,7 @@ Same as Architect archetype. Read-only analysis plus report creation.
 
 ## Dispatch Contract
 
-See `core/workflows/dispatch-protocol.md` for per-mode dispatch
+See `core/workflows/protocols/dispatch-protocol.md` for per-mode dispatch
 field tables.
 
 Three modes:

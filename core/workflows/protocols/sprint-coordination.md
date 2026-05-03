@@ -1,6 +1,6 @@
-# Sprint Lifecycle
+# Sprint Coordination
 
-A sprint runs across **multiple chats**, not one long conversation. Each phase boundary is a hard new-chat handoff. This is deliberate — see Sprint Lifecycle Hygiene below.
+A sprint runs across **multiple chats**, not one long conversation. Each phase boundary is a hard new-chat handoff. This is deliberate — see Sprint Coordination Hygiene below.
 
 ## Phases (in order)
 
@@ -23,7 +23,7 @@ Sprint Retro chat               → produces Sprint-XX-retro.md → prompts for 
 Next Sprint Planning chat (or Design Alignment if new phase begins)
 ```
 
-**Design Alignment is a pre-planning phase** that runs when triggered — it is not part of every sprint cycle. See `core/workflows/design-alignment.md` for the full protocol. After alignment produces an approved Charter/PRD, the orchestrator prompts for a new chat to begin sprint planning.
+**Design Alignment is a pre-planning phase** that runs when triggered — it is not part of every sprint cycle. See `core/workflows/protocols/design-alignment.md` for the full protocol. After alignment produces an approved Charter/PRD, the orchestrator prompts for a new chat to begin sprint planning.
 
 **Four chats between sprints**: close-out merge, maintenance, retro, planning. They are not bundled.
 
@@ -40,7 +40,7 @@ Next Sprint Planning chat (or Design Alignment if new phase begins)
 
 ## What Each Phase Chat Does
 
-**Design Alignment chat (when triggered)** — The orchestrator runs the Design Alignment protocol (`core/workflows/design-alignment.md`). This is not a sub-agent dispatch — the orchestrator conducts the alignment conversation directly. Produces Charter (first time) + PRD. After owner approval, set `Cycle phase: planning` in STATUS.md. **Close-out prompt:** *"Charter and PRD approved. Start a new chat to invoke the scrum master for sprint planning."*
+**Design Alignment chat (when triggered)** — The orchestrator runs the Design Alignment protocol (`core/workflows/protocols/design-alignment.md`). This is not a sub-agent dispatch — the orchestrator conducts the alignment conversation directly. Produces Charter (first time) + PRD. After owner approval, set `Cycle phase: planning` in STATUS.md. **Close-out prompt:** *"Charter and PRD approved. Start a new chat to invoke the scrum master for sprint planning."*
 
 **Sprint Planning chat** — Invoke the scrum-master (coordinator) agent. Produces `Sprint-XX.md`, `Sprint-XX-contract.md`, `Sprint-XX-progress.md`, `features.json` entries, and external task system entries (if configured). Sets `Cycle phase: story-in-progress` in STATUS.md. **Close-out prompt:** *"Sprint planning complete. Open a new chat to start [TICKET] — [Story 1 title]."*
 
@@ -62,7 +62,7 @@ Set `Cycle phase: maintenance` in STATUS.md. **Close-out prompt:** *"Sprint bran
 
 **Next Sprint Planning chat** — Scrum-master orientation must read the previous sprint's retro file before proposing scope. The retro's "process changes for next sprint" items are inputs to planning, not optional reading.
 
-## Sprint Lifecycle Hygiene (Why Fresh Chats Matter)
+## Sprint Coordination Hygiene (Why Fresh Chats Matter)
 
 The phase boundaries are hard new-chat handoffs for three reasons:
 
@@ -77,11 +77,11 @@ Do not "optimize" away the new-chat boundaries by combining phases. The friction
 ## Knowledge Pipeline Cadence
 
 When a project has a `wiki/` directory, the knowledge pipeline runs
-at defined cadences tied to the sprint lifecycle. The pipeline
+at defined cadences tied to the sprint coordination phases. The pipeline
 transforms scattered project artifacts into synthesized wiki
 knowledge. For the full pipeline specification, see
-`core/workflows/knowledge-pipeline.md`. For the step-by-step
-maintenance procedure, see `core/workflows/knowledge-synthesis.md`.
+`core/workflows/protocols/knowledge-pipeline.md`. For the step-by-step
+maintenance procedure, see `core/workflows/protocols/knowledge-synthesis.md`.
 
 | Cadence | Pipeline Phases | What Happens |
 |---------|----------------|--------------|

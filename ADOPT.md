@@ -54,7 +54,7 @@ Ask: **"Would you like a project wiki? The wiki automatically consolidates knowl
 1. Create `wiki/` directory with `index.md` (stub), `topics/`, and `meta/`
 2. Add `.gitkeep` to `wiki/topics/` and `wiki/meta/`
 3. **Backfill assessment:** Count existing project artifacts (ADRs, evaluation reports, retros, session logs, stories, PRDs, etc.)
-   - Under ~30 artifacts: run the backfill in the current chat (see `[FABRIKA_PATH]/core/workflows/knowledge-synthesis.md` — Phase 0: Backfill)
+   - Under ~30 artifacts: run the backfill in the current chat (see `[FABRIKA_PATH]/core/workflows/protocols/knowledge-synthesis.md` — Phase 0: Backfill)
    - 30+ artifacts: tell the user: "This project has N existing artifacts. I recommend running the wiki backfill in a dedicated chat to keep context clean. After we finish this adoption, start a new chat and ask me to run the wiki backfill."
 4. Update the manifest with wiki files
 
@@ -173,7 +173,7 @@ workspaces upgrading to 0.23.0+ — the platform onboarding protocol
 can be run retroactively to scaffold platform configuration and cost
 model documentation.
 
-Run: `[FABRIKA_PATH]/core/workflows/analytics-onboarding.md`
+Run: `[FABRIKA_PATH]/core/workflows/protocols/analytics-onboarding.md`
 
 This asks about database platforms, cost models, source connections,
 and data governance tooling. All questions are skippable. Answers

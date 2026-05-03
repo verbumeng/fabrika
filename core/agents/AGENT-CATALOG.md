@@ -41,7 +41,7 @@ Every project has a subset of these agent roles:
 
 ### Methodology-Based Types
 
-Methodology-based types use the agentic-workflow lifecycle (`core/workflows/agentic-workflow-lifecycle.md`) instead of the sprint lifecycle or task lifecycle. The agent roster includes implementer and architect roles not present in other types.
+Methodology-based types use the agentic-workflow lifecycle (`core/workflows/types/agentic-workflow.md`) instead of the sprint lifecycle or task lifecycle. The agent roster includes implementer and architect roles not present in other types.
 
 | Type | Planner | Reviewer | Validator | Implementer | Architect | Coordinator |
 |------|---------|----------|-----------|-------------|-----------|-------------|
@@ -95,7 +95,7 @@ Each agent implements one of seven archetypes that define base tool profiles, di
 | [Implementer](archetypes/implementer.md) | Write production changes against an approved plan | Contextual |
 | [Architect](archetypes/architect.md) | Evaluate structural design — decomposition, references, context budgets | Strict |
 
-For dispatch contracts (what the orchestrator provides each agent at each invocation point), see `core/workflows/dispatch-protocol.md`.
+For dispatch contracts (what the orchestrator provides each agent at each invocation point), see `core/workflows/protocols/dispatch-protocol.md`.
 
 ## Agent Files
 

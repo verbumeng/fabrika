@@ -8,7 +8,7 @@ Before sprint planning begins, the orchestrator runs Design Alignment
 when triggered. Triggers: new project starting, new phase or major
 feature, owner explicitly requests alignment, or the orchestrator
 detects ambiguity (can't describe what the user wants in 2-3
-sentences). See `core/workflows/design-alignment.md` for the full
+sentences). See `core/workflows/protocols/design-alignment.md` for the full
 protocol.
 
 The document hierarchy:
@@ -26,14 +26,14 @@ structured requirements that the scrum master then decomposes.
 
 ## Dispatch Protocol
 
-Before invoking any sub-agent, read `core/workflows/dispatch-protocol.md` for what to provide and what to withhold. The dispatch protocol defines per-agent input contracts (what the orchestrator must hand over) and output contracts (what the sub-agent must produce). Two tiers: strict dispatch for reviewers, validators, and designers (plan + file paths + rubric only — no editorial); contextual dispatch for planners and coordinators (richer project state).
+Before invoking any sub-agent, read `core/workflows/protocols/dispatch-protocol.md` for what to provide and what to withhold. The dispatch protocol defines per-agent input contracts (what the orchestrator must hand over) and output contracts (what the sub-agent must produce). Two tiers: strict dispatch for reviewers, validators, and designers (plan + file paths + rubric only — no editorial); contextual dispatch for planners and coordinators (richer project state).
 
 ## Starting a Story
 1. Read the story file (or issue tracker ticket) and the sprint contract for this sprint
 2. Read relevant project docs on demand: Architecture Overview, Data Model, relevant ADRs, research notes
 3. Read the grading rubrics at `docs/02-Engineering/rubrics/` to understand evaluation criteria
 4. Invoke the **planner** agent in **planning mode** to expand the story into a full implementation spec (saved to `docs/plans/[TICKET]-spec.md`)
-5. After the spec is drafted, invoke the token cost estimation protocol (`core/workflows/token-estimation.md`) to present the cost estimate alongside the spec briefing.
+5. After the spec is drafted, invoke the token cost estimation protocol (`core/workflows/protocols/token-estimation.md`) to present the cost estimate alongside the spec briefing.
 6. Present the spec to the owner for approval using the **Spec Briefing** format (see briefing docs)
 7. **(Optional) Invoke the architect agent for design review.** If the spec proposes new modules, significant restructuring, or changes to component boundaries, dispatch the appropriate architect (software-architect or data-architect based on project type) in **design mode** with the spec's module section. The architect reviews proposed module depth, interface design, and component boundaries. Present the architect's findings alongside the spec for owner approval. Skip if the story is a small feature change within existing module boundaries.
 8. Create feature branch: `feature/[PROJECT_KEY]-S-042-description`

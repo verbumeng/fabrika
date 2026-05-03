@@ -296,7 +296,7 @@ Phases: Alignment → Planning → Story chats → Close-Out → Maintenance →
 Alignment runs before planning when triggered (new project, new phase, ambiguity detected, owner request). It produces a Project Charter (first time) and PRD, then hands off to sprint planning in a fresh chat. Not every sprint cycle requires alignment — it fires on trigger, not on schedule.
 STATUS.md's `Cycle phase` field tells each new chat which phase it is in and what to do next. Valid `Cycle phase` values include `alignment`.
 
-**On phase transitions, read:** `[FABRIKA_PATH]/core/workflows/sprint-lifecycle.md`
+**On phase transitions, read:** `[FABRIKA_PATH]/core/workflows/protocols/sprint-coordination.md`
 
 ---
 
@@ -311,7 +311,7 @@ For sprint-based projects, Design Alignment produces:
 
 After the owner approves the Charter and/or PRD, the orchestrator issues a fresh-chat handoff to sprint planning. The scrum master receives the approved PRD as its primary input for story decomposition.
 
-**For the full protocol, read:** `[FABRIKA_PATH]/core/workflows/design-alignment.md`
+**For the full protocol, read:** `[FABRIKA_PATH]/core/workflows/protocols/design-alignment.md`
 
 ---
 
@@ -319,9 +319,9 @@ After the owner approves the Charter and/or PRD, the orchestrator issues a fresh
 
 Claude Code drives the development process proactively. Don't wait for the owner to orchestrate each step.
 
-**Before starting any story, sprint planning, or bug fix, read:** `[FABRIKA_PATH]/core/workflows/development-workflow.md`
+**Before starting any story, sprint planning, or bug fix, read:** `[FABRIKA_PATH]/core/workflows/types/development-workflow.md`
 
-Token cost estimates are presented alongside plan/spec briefings — see `[FABRIKA_PATH]/core/workflows/token-estimation.md`.
+Token cost estimates are presented alongside plan/spec briefings — see `[FABRIKA_PATH]/core/workflows/protocols/token-estimation.md`.
 
 Summary of workflows covered:
 - **Design Alignment** — structured requirements gathering → Project Charter + PRD → fresh-chat handoff to sprint planning (see Design Alignment section above)
@@ -347,7 +347,7 @@ Mixed sources use highest tier. Stakes (low/medium/high) scale review intensity 
 
 For complex analyses (3+ data sources, multiple stakeholders, novel domain, >2 day effort, or significant decision impact), Design Alignment triggers to produce an enhanced Analysis Brief — not a Charter/PRD. This is optional and driven by complexity, not by default.
 
-**For analytics-workspace projects, read:** `[FABRIKA_PATH]/core/workflows/analytics-workspace.md`
+**For analytics-workspace projects, read:** `[FABRIKA_PATH]/core/workflows/types/analytics-workspace.md`
 
 ---
 
@@ -357,7 +357,7 @@ No sprints. Work is organized as structural changes following a 7-step protocol:
 
 Operational mode (if enabled) is human-initiated and interactive — no agent orchestration for operational sessions.
 
-**For agentic-workflow projects, read:** `[FABRIKA_PATH]/core/workflows/agentic-workflow-lifecycle.md`
+**For agentic-workflow projects, read:** `[FABRIKA_PATH]/core/workflows/types/agentic-workflow.md`
 
 ---
 
@@ -385,7 +385,7 @@ All briefings that report on completed work (session summaries, retros, task out
 - **Sprint Progress File** — `docs/04-Backlog/Sprints/Sprint-XX-progress.md` — append-only sprint log.
 - **Dev Logs** — `docs/session-logs/YYYY-MM-DD-[topic].md` — narrative first-person dev diary entries (200-500 words).
 
-**For templates and format details, read:** `[FABRIKA_PATH]/core/workflows/progress-files.md`
+**For templates and format details, read:** `[FABRIKA_PATH]/core/workflows/protocols/progress-files.md`
 
 ---
 
@@ -396,7 +396,7 @@ Hooks enforce workflow conventions mechanically — the agent cannot rationalize
 Git hooks: pre-commit (branch protection, secret scanning, STATUS.md gate, mesh scope), commit-msg (conventional format), post-commit (STATUS.md advisory), pre-push (test gate).
 Claude Code hooks: destructive git guard, protected file guard, auto-format, lock file cleanup.
 
-**For full hook inventory and hook discovery workflow, read:** `[FABRIKA_PATH]/core/workflows/hooks-reference.md`
+**For full hook inventory and hook discovery workflow, read:** `[FABRIKA_PATH]/core/workflows/protocols/hooks-reference.md`
 
 ---
 
@@ -432,8 +432,8 @@ If this project has a `wiki/` directory, it contains a knowledge layer that synt
 
 The wiki is maintained automatically during maintenance sessions (see the Knowledge Synthesis section of the maintenance checklist). Topic articles are created via a notice-and-proceed model — the agent creates and notifies the owner, proceeding unless the owner objects. All topic articles use Domain Language terms.
 
-**For the synthesis workflow, read:** `[FABRIKA_PATH]/core/workflows/knowledge-synthesis.md`
-**For the pipeline specification, read:** `[FABRIKA_PATH]/core/workflows/knowledge-pipeline.md`
+**For the synthesis workflow, read:** `[FABRIKA_PATH]/core/workflows/protocols/knowledge-synthesis.md`
+**For the pipeline specification, read:** `[FABRIKA_PATH]/core/workflows/protocols/knowledge-pipeline.md`
 
 ---
 
@@ -455,7 +455,7 @@ See `docs/evals/README.md` for detailed format and process.
 
 When technical decisions, data sources, schema changes, architecture divergences, bugs, or other trigger events occur during development, create the appropriate document.
 
-**For the full trigger table, read:** `[FABRIKA_PATH]/core/workflows/doc-triggers.md`
+**For the full trigger table, read:** `[FABRIKA_PATH]/core/workflows/protocols/doc-triggers.md`
 
 ---
 
@@ -473,7 +473,7 @@ When technical decisions, data sources, schema changes, architecture divergences
 
 All agents are invoked proactively by Claude Code at the trigger points in the Development Workflow. Agent prompts are **stack-agnostic** — they read project-specific details from this CLAUDE.md file and on-demand reference docs. Which agents are installed depends on the project type — see the Agent Catalog.
 
-**Dispatch protocol:** Before invoking any sub-agent, read `[FABRIKA_PATH]/core/workflows/dispatch-protocol.md`. It defines what to provide and what to withhold for each agent at each invocation point. Reviewers, validators, and designers get strict dispatch (plan + file paths + rubric only — no editorial, no hints); planners and coordinators get contextual dispatch (richer project state).
+**Dispatch protocol:** Before invoking any sub-agent, read `[FABRIKA_PATH]/core/workflows/protocols/dispatch-protocol.md`. It defines what to provide and what to withhold for each agent at each invocation point. Reviewers, validators, and designers get strict dispatch (plan + file paths + rubric only — no editorial, no hints); planners and coordinators get contextual dispatch (richer project state).
 
 **Archetypes:** Each agent implements one of seven archetypes (Planner, Reviewer, Validator, Coordinator, Designer, Implementer, Architect) that define base tool profiles and contracts. See `[FABRIKA_PATH]/core/agents/archetypes/` for templates.
 
@@ -594,7 +594,7 @@ contract per story and determines the implementation flow:
   cycle.
 
 The development workflow branches on testing approach. See
-`[FABRIKA_PATH]/core/workflows/development-workflow.md` for the
+`[FABRIKA_PATH]/core/workflows/types/development-workflow.md` for the
 full flow.
 
 ### General Testing Rules

@@ -80,7 +80,7 @@ formats the readout for the owner using the Readout Format below.
 ```json
 {
   "recorded": true,
-  "key": "agentic-workflow-lifecycle.methodology-reviewer.claude-opus-4-6",
+  "key": "agentic-workflow.methodology-reviewer.claude-opus-4-6",
   "new_run_count": 8
 }
 ```
@@ -124,7 +124,7 @@ With k=5: after 5 runs, local data reaches 50% weight. After 10 runs,
 67%. After 20, 80%.
 
 **Calibration key structure:** `<workflow>.<agent>.<model>`
-Example: `agentic-workflow-lifecycle.methodology-reviewer.claude-opus-4-6`
+Example: `agentic-workflow.methodology-reviewer.claude-opus-4-6`
 
 ### When Calibration Updates
 

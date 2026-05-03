@@ -7,7 +7,7 @@ For `analytics-workspace` project types only. No sprints. Work is organized as i
 Before the standard task lifecycle, the orchestrator checks whether the
 analysis warrants structured alignment. If any of the following
 complexity triggers are met, the orchestrator runs the Design Alignment
-protocol (`core/workflows/design-alignment.md`) before creating the
+protocol (`core/workflows/protocols/design-alignment.md`) before creating the
 brief:
 
 - 3+ data sources involved
@@ -92,12 +92,12 @@ data dictionaries in the source registry. Platform configuration
 (connection type, local tools) comes from onboarding-scaffolded
 files at `sources/connections/[platform]/README.md` when available.
 After the plan is written, present the token cost estimate per
-`core/workflows/token-estimation.md`.
+`core/workflows/protocols/token-estimation.md`.
 
 **Promotion check.** Analysis planner checks `templates/` and
 `recurring/` for prior similar tasks. If this is a repeat, flags it
 and optionally initiates the promotion conversation (see
-`[FABRIKA_PATH]/core/workflows/task-promotion.md`).
+`[FABRIKA_PATH]/core/workflows/protocols/task-promotion.md`).
 
 **Write.** Data analyst produces all code (SQL, Python, notebooks).
 No execution manifest needed — local data is cheap to query. Code is
@@ -132,7 +132,7 @@ validation report to `tasks/[date-name]/validation-report.md`
 (detailed evidence chain — always full detail regardless of stakes).
 
 **Brief check.** Analysis planner in validation mode (see dispatch
-contract in `[FABRIKA_PATH]/core/workflows/dispatch-protocol.md`).
+contract in `[FABRIKA_PATH]/core/workflows/protocols/dispatch-protocol.md`).
 Validates output answers the brief's question in the right format for
 the stakeholder.
 
@@ -172,7 +172,7 @@ created manually. Includes preliminary cost estimate based on the
 cost model documented there (or published defaults if cost model
 unknown — see Platform-Specific EXPLAIN Mechanisms below).
 After the plan is written, present the token cost estimate per
-`core/workflows/token-estimation.md`.
+`core/workflows/protocols/token-estimation.md`.
 
 **Promotion check.** Same as Tier 1.
 
@@ -511,7 +511,7 @@ For Tableau, Power BI, Alteryx, and similar tools the agent cannot directly acce
 - `sources/files/` — recurring flat file sources (CSVs, Excel, YXDBs)
 
 ## Task Promotion
-When analyses recur, the analysis planner initiates a promotion conversation with the owner. Five levels from least to most overhead: templatize, scriptify, visualize, automate, spin out. Most promotions stay within the current workspace (Levels 1-4). See `[FABRIKA_PATH]/core/workflows/task-promotion.md` for the full workflow.
+When analyses recur, the analysis planner initiates a promotion conversation with the owner. Five levels from least to most overhead: templatize, scriptify, visualize, automate, spin out. Most promotions stay within the current workspace (Levels 1-4). See `[FABRIKA_PATH]/core/workflows/protocols/task-promotion.md` for the full workflow.
 
 Promoted task assets:
 - `templates/` — reusable analysis templates (Level 1)
@@ -524,9 +524,9 @@ Promoted task assets:
 When an analytics workspace has a `wiki/` directory, the knowledge
 pipeline runs at cadences tied to task delivery rather than sprints.
 For the full pipeline specification, see
-`[FABRIKA_PATH]/core/workflows/knowledge-pipeline.md`. For the
+`[FABRIKA_PATH]/core/workflows/protocols/knowledge-pipeline.md`. For the
 step-by-step procedure, see
-`[FABRIKA_PATH]/core/workflows/knowledge-synthesis.md`.
+`[FABRIKA_PATH]/core/workflows/protocols/knowledge-synthesis.md`.
 
 | Cadence | Pipeline Phases | What Happens |
 |---------|----------------|--------------|

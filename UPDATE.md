@@ -112,7 +112,7 @@ steps apply beyond the standard update flow:
    accuracy but is not required for agents to work.
 
 4. **Workflow file pointers.** The four workflow files gained one-line
-   pointers to `core/workflows/token-estimation.md`. These are
+   pointers to `core/workflows/protocols/token-estimation.md`. These are
    informational — they tell the orchestrator when to surface
    estimates.
 

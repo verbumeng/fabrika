@@ -4,6 +4,78 @@ When a Fabrika update requires consumer projects to do more than a straight file
 
 ---
 
+## 0.27.0 — Workflow folder reorganization
+
+**Affects:** All consumer projects with copied workflow files or
+cross-references to `core/workflows/` paths.
+
+**What changed:** The flat `core/workflows/` directory is now
+organized into `types/` (workflow type definitions) and `protocols/`
+(supporting processes). Two files were also renamed:
+`agentic-workflow-lifecycle.md` -> `agentic-workflow.md`,
+`sprint-lifecycle.md` -> `sprint-coordination.md`.
+
+**Complete path mapping:**
+
+| Old path | New path |
+|----------|----------|
+| `core/workflows/agentic-workflow-lifecycle.md` | `core/workflows/types/agentic-workflow.md` |
+| `core/workflows/development-workflow.md` | `core/workflows/types/development-workflow.md` |
+| `core/workflows/task-workflow.md` | `core/workflows/types/task-workflow.md` |
+| `core/workflows/analytics-workspace.md` | `core/workflows/types/analytics-workspace.md` |
+| `core/workflows/dispatch-protocol.md` | `core/workflows/protocols/dispatch-protocol.md` |
+| `core/workflows/design-alignment.md` | `core/workflows/protocols/design-alignment.md` |
+| `core/workflows/sprint-lifecycle.md` | `core/workflows/protocols/sprint-coordination.md` |
+| `core/workflows/doc-triggers.md` | `core/workflows/protocols/doc-triggers.md` |
+| `core/workflows/hooks-reference.md` | `core/workflows/protocols/hooks-reference.md` |
+| `core/workflows/knowledge-pipeline.md` | `core/workflows/protocols/knowledge-pipeline.md` |
+| `core/workflows/knowledge-synthesis.md` | `core/workflows/protocols/knowledge-synthesis.md` |
+| `core/workflows/progress-files.md` | `core/workflows/protocols/progress-files.md` |
+| `core/workflows/task-promotion.md` | `core/workflows/protocols/task-promotion.md` |
+| `core/workflows/token-estimation.md` | `core/workflows/protocols/token-estimation.md` |
+| `core/workflows/analytics-onboarding.md` | `core/workflows/protocols/analytics-onboarding.md` |
+
+**Migration steps:**
+
+1. **Reorganize your local workflow files.** Create `types/` and
+   `protocols/` subdirectories under your local workflows directory
+   (`.fabrika/workflows/` or wherever you store Fabrika workflow
+   copies). Move each file according to the path mapping above.
+
+2. **Apply renames.** Rename `agentic-workflow-lifecycle.md` to
+   `agentic-workflow.md` and `sprint-lifecycle.md` to
+   `sprint-coordination.md`.
+
+3. **Update cross-references in your local copies.** Search all
+   copied Fabrika files for `core/workflows/` references and update
+   to the new paths (`core/workflows/types/` or
+   `core/workflows/protocols/` as appropriate). This includes
+   workflow files that reference each other, agent prompts, and any
+   project-specific instruction files.
+
+4. **Update your project instruction file.** Regenerate your
+   CLAUDE.md or copilot-instructions.md from the new integration
+   template — all workflow path references have changed.
+
+5. **Copy updated Fabrika source files.** The following files have
+   updated cross-references and should be re-copied from Fabrika:
+   - `core/agents/AGENT-CATALOG.md`
+   - `core/agents/analysis-planner.md`
+   - `core/agents/data-architect.md`
+   - `core/agents/software-architect.md`
+   - `core/agents/archetypes/architect.md`
+   - `core/Document-Catalog.md`
+   - `core/maintenance-checklist.md`
+   - `core/templates/Batch-Index-Schema.md`
+   - `core/topologies/Sprint-Contract-Pipeline.md`
+   - All workflow files (now under `types/` and `protocols/`)
+
+6. **Copy the new README.** Copy `core/workflows/README.md` to your
+   workflows directory — it documents the types vs. protocols
+   distinction.
+
+---
+
 ## 0.26.0 — Base workflow type, base agents, and workflow composition
 
 **Affects:** All consumer projects.

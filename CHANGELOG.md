@@ -6,6 +6,105 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.27.0 — Workflow folder reorganization
+
+Reorganizes `core/workflows/` into two subdirectories — `types/` for
+workflow type definitions and `protocols/` for supporting processes.
+Renames two inconsistent files: `agentic-workflow-lifecycle.md`
+becomes `agentic-workflow.md`, `sprint-lifecycle.md` becomes
+`sprint-coordination.md`. Moves `development-workflow.md` without
+renaming (domain-specific workflow split deferred to CR-22). No
+behavioral changes to any workflow or agent. Also fixes a systemic
+issue where the project-level CLAUDE.md and structural-validator
+agent were not properly scoped for path reference checks during
+structural updates.
+
+### New files
+- `core/workflows/README.md` — documents the types vs. protocols
+  directory structure
+
+### Moved/renamed files
+- `core/workflows/agentic-workflow-lifecycle.md` ->
+  `core/workflows/types/agentic-workflow.md`
+- `core/workflows/development-workflow.md` ->
+  `core/workflows/types/development-workflow.md`
+- `core/workflows/task-workflow.md` ->
+  `core/workflows/types/task-workflow.md`
+- `core/workflows/analytics-workspace.md` ->
+  `core/workflows/types/analytics-workspace.md`
+- `core/workflows/dispatch-protocol.md` ->
+  `core/workflows/protocols/dispatch-protocol.md`
+- `core/workflows/design-alignment.md` ->
+  `core/workflows/protocols/design-alignment.md`
+- `core/workflows/sprint-lifecycle.md` ->
+  `core/workflows/protocols/sprint-coordination.md`
+- `core/workflows/doc-triggers.md` ->
+  `core/workflows/protocols/doc-triggers.md`
+- `core/workflows/hooks-reference.md` ->
+  `core/workflows/protocols/hooks-reference.md`
+- `core/workflows/knowledge-pipeline.md` ->
+  `core/workflows/protocols/knowledge-pipeline.md`
+- `core/workflows/knowledge-synthesis.md` ->
+  `core/workflows/protocols/knowledge-synthesis.md`
+- `core/workflows/progress-files.md` ->
+  `core/workflows/protocols/progress-files.md`
+- `core/workflows/task-promotion.md` ->
+  `core/workflows/protocols/task-promotion.md`
+- `core/workflows/token-estimation.md` ->
+  `core/workflows/protocols/token-estimation.md`
+- `core/workflows/analytics-onboarding.md` ->
+  `core/workflows/protocols/analytics-onboarding.md`
+
+### Changed files (cross-reference updates)
+- `core/agents/AGENT-CATALOG.md` — workflow file path references
+- `core/agents/analysis-planner.md` — task-promotion path
+- `core/agents/data-architect.md` — dispatch-protocol path
+- `core/agents/software-architect.md` — dispatch-protocol path
+- `core/agents/archetypes/architect.md` — dispatch-protocol path
+- `core/Document-Catalog.md` — design-alignment path
+- `core/maintenance-checklist.md` — knowledge-synthesis path
+- `core/templates/Batch-Index-Schema.md` — knowledge-pipeline path
+- `core/topologies/Sprint-Contract-Pipeline.md` — development-
+  workflow path
+- `integrations/claude-code/CLAUDE.md` — all workflow path
+  references
+- `integrations/copilot/copilot-instructions.md` — all workflow
+  path references
+- `BOOTSTRAP.md` — workflow path references
+- `ADOPT.md` — workflow path references
+- `ADD-WORKFLOW.md` — task-workflow path
+- `Domain-Language.md` — workflow path references
+- `UPDATE.md` — token-estimation path
+- `wiki/topics/workflow-design.md` — all workflow path references
+- `wiki/topics/agent-model.md` — dispatch-protocol path
+- `wiki/topics/owner-preferences.md` — design-alignment path
+- `core/agents/structural-validator.md` — added path reference
+  checking for project CLAUDE.md (smell test exclusion preserved)
+
+### Consumer update instructions
+1. Reorganize your local workflow files to match the new structure:
+   - Create `types/` and `protocols/` subdirectories in your
+     workflows directory
+   - Move workflow type definitions to `types/`
+   - Move supporting processes to `protocols/`
+2. Apply renames:
+   - `agentic-workflow-lifecycle.md` -> `agentic-workflow.md`
+   - `sprint-lifecycle.md` -> `sprint-coordination.md`
+3. Update all cross-references in your local copies to use new
+   paths (search for `core/workflows/` and update to
+   `core/workflows/types/` or `core/workflows/protocols/` as
+   appropriate)
+4. Update from Fabrika source: `AGENT-CATALOG.md`,
+   `Document-Catalog.md`, `dispatch-protocol.md`,
+   `maintenance-checklist.md`, `Batch-Index-Schema.md`,
+   `Sprint-Contract-Pipeline.md`, `analysis-planner.md`,
+   `data-architect.md`, `software-architect.md`,
+   `archetypes/architect.md`, `structural-validator.md`
+5. Update your project instruction file from integration template
+6. Copy `core/workflows/README.md` to your workflows directory
+
+---
+
 ## 0.26.0 — Base workflow type and base agents
 
 Introduces the task workflow type — the domain-agnostic base workflow

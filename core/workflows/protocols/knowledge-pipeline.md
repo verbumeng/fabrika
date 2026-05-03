@@ -3,7 +3,7 @@
 The five-phase pipeline that transforms raw project artifacts into
 structured, continuously updated wiki knowledge. This is the
 reference specification — the practical step-by-step procedure is in
-`core/workflows/knowledge-synthesis.md`.
+`core/workflows/protocols/knowledge-synthesis.md`.
 
 ---
 
@@ -311,7 +311,7 @@ artifacts to process:
   clean. After we finish this [adoption/update], start a new chat
   and ask me to run the wiki backfill."
 
-The backfill is documented in `core/workflows/knowledge-synthesis.md`
+The backfill is documented in `core/workflows/protocols/knowledge-synthesis.md`
 as a callable procedure.
 
 ---

@@ -166,7 +166,14 @@ Record:
 
 Read every changed canonical file in the dispatch scope. Do not check
 integration templates (they contain placeholders by design) or the
-project's own CLAUDE.md (it is project-specific, not canonical).
+project's own CLAUDE.md (it is project-specific and contains
+personal paths by design — smell test exclusions only).
+
+**Note:** The project CLAUDE.md IS exempt from smell tests but is NOT
+exempt from path reference checks. If a structural update moves or
+renames files, verify that the project CLAUDE.md's file references
+are updated. Stale paths there cause every future session to start
+with wrong information.
 
 Search for: specific personal names, product names (LifeOS, Obsidian,
 Motion, PARA, Notnomo, Hearthen, MNEMOS, Opifex, edw labs,
