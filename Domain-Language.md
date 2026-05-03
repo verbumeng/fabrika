@@ -297,6 +297,18 @@ correctness for agentic-workflow. Defined in
 `core/design-principles.md`. [Identified in 0.20.0, codified in
 0.22.0.]
 
+**Compaction** — The principle that each phase transition produces a
+compressed artifact self-contained for the next phase. The receiving
+agent reads outputs, not inputs — preserving signal and discarding
+noise. Governs all workflows universally. The dispatch protocol's
+output format constraints
+(`core/workflows/protocols/dispatch-protocol.md`) are the enforcement
+mechanism. Anti-patterns: dumping full file contents instead of
+excerpts, re-reading files a prior phase already summarized,
+orchestrator synthesizing reviewer findings instead of routing report
+paths, including "might be relevant" context that burns context
+window. Defined in `core/design-principles.md`. [Codified in 0.28.0.]
+
 **Orchestrator diagnosis** — The protocol after 3 failed **retry
 protocol** cycles. The orchestrator reads all evaluation reports
 across all cycles, identifies the failure pattern (same issue

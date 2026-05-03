@@ -1,0 +1,26 @@
+entries:
+  agentic-workflow.workflow-planner.claude-opus-4-6:
+    count: 1
+    mean_input: 80000
+    mean_output: 20491
+    last_updated: '2026-05-03'
+  agentic-workflow.agentic-engineer.claude-opus-4-6:
+    count: 1
+    mean_input: 50000
+    mean_output: 30196
+    last_updated: '2026-05-03'
+  agentic-workflow.methodology-reviewer.claude-opus-4-6:
+    count: 1
+    mean_input: 60000
+    mean_output: 21818
+    last_updated: '2026-05-03'
+  agentic-workflow.structural-validator.claude-opus-4-6:
+    count: 1
+    mean_input: 55000
+    mean_output: 21001
+    last_updated: '2026-05-03'
+  agentic-workflow.context-architect.claude-opus-4-6:
+    count: 1
+    mean_input: 67000
+    mean_output: 25479
+    last_updated: '2026-05-03'

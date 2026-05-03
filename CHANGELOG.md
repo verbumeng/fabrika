@@ -6,6 +6,43 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.28.0 — Context compaction as design principle
+
+Codifies context compaction as a named design principle governing how
+all workflows hand off between phases. Each phase transition produces
+a compressed, self-contained artifact for the next phase — the
+receiving agent reads outputs, not inputs. Adds output format
+constraints to the dispatch protocol as the enforcement mechanism.
+
+### Changed files
+- `core/design-principles.md` — added Compaction principle section
+  (definition, phase boundary table, anti-patterns, application
+  guidance)
+- `core/workflows/protocols/dispatch-protocol.md` — added Output
+  Format Constraints section specifying compressed output requirements
+  for research, plan, evaluation, and sub-agent return categories
+- `Domain-Language.md` — added Compaction term definition in Workflow
+  section
+- `integrations/claude-code/CLAUDE.md` — added compaction bullet to
+  Key Constraints (after context window hygiene)
+- `integrations/copilot/copilot-instructions.md` — added compaction
+  bullet to Key Constraints (after context window hygiene)
+
+### Consumer update instructions
+1. Update `core/design-principles.md` from Fabrika source (new
+   Compaction principle section added after Implementer-Validator
+   Pairing)
+2. Update `core/workflows/protocols/dispatch-protocol.md` from
+   Fabrika source (new Output Format Constraints section added after
+   Retry Protocol)
+3. Update `Domain-Language.md` with new Compaction term definition
+   (if your project maintains a Domain Language file)
+4. Update your project instruction file (CLAUDE.md or
+   copilot-instructions.md) from integration template (new compaction
+   constraint bullet in Key Constraints)
+
+---
+
 ## 0.27.0 — Workflow folder reorganization
 
 Reorganizes `core/workflows/` into two subdirectories — `types/` for

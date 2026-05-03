@@ -1039,3 +1039,59 @@ pairing).
    break into smaller stories, research the blocker, or override.
    The orchestrator dispatches accordingly; the review cycle still
    runs after intervention.
+
+---
+
+## Output Format Constraints
+
+The dispatch contracts above specify what the orchestrator sends to
+each agent (inputs). This section specifies what agents return
+(outputs). The goal is compaction: each agent produces a compressed
+artifact that is self-contained for whoever reads it next. See
+`core/design-principles.md` for the principle and anti-patterns.
+
+Organized by role category, not per-agent, to complement rather than
+duplicate the per-agent dispatch contracts above.
+
+### Research and exploration outputs
+
+Sub-agent research, file lookups, and exploratory reads should return:
+
+- File paths with line numbers and relevant code snippets
+- Behavior summaries and constraints discovered
+- Gotchas or surprising findings that affect the plan
+
+Exclude: full file contents, raw tool call outputs, exploration
+dead-ends that did not yield useful signal.
+
+### Plan and spec outputs
+
+All planner agents produce plans or specs that must be self-contained
+— the implementer reads the plan, not the research that produced it.
+
+- Include actual code snippets showing what changes (not just
+  descriptions of what to change)
+- Include mechanically verifiable acceptance criteria
+- Include the test or validation approach
+
+### Evaluation report outputs
+
+All reviewers and validators produce evaluation reports. Lead with
+signal, not ceremony.
+
+- Lead with the verdict (PASS / FAIL / SOUND / UNSOUND / etc.)
+- Include specific file paths and line numbers for each finding
+- Suggest a fix approach, not just "this is wrong"
+
+Exclude: general praise, restated code the reader can already see,
+preamble about the review process.
+
+### Sub-agent returns
+
+When any agent is dispatched as a sub-agent by another agent, the
+dispatch contract should specify what signal the parent needs. The
+sub-agent returns compressed results so the parent does not need to
+re-read the sub-agent's inputs.
+
+If the dispatch does not specify signal requirements, default to:
+paths, summaries, and verdicts — not raw content.

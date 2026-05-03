@@ -39,10 +39,12 @@ Four workflow types — the base task workflow (v0.26.0), sprint-based,
 analytics-workspace, and agentic-workflow — and the patterns that
 govern them: lifecycle definitions, dispatch protocol, design
 alignment, graduated testing, the briefing system, and the knowledge
-pipeline. As of v0.27.0, workflows are organized into types
-(lifecycle definitions) and protocols (supporting processes), and
+pipeline. As of v0.28.0, workflows are organized into types
+(lifecycle definitions) and protocols (supporting processes),
 "project types" are becoming "workflow types" — reusable multi-agent
-patterns that projects compose on demand via ADD-WORKFLOW.md.
+patterns that projects compose on demand via ADD-WORKFLOW.md — and
+context compaction is codified as a named design principle governing
+phase transitions.
 
 ### [Harvest Patterns](topics/harvest-patterns.md)
 
