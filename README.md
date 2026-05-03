@@ -4,7 +4,7 @@ An agentic workflow methodology for software development and data work. Fabrika 
 
 ## What's in the box
 
-- **28 specialized agents** across 7 archetypes (planner, reviewer, validator, coordinator, designer, implementer, architect) — the [Agent Catalog](core/agents/AGENT-CATALOG.md) maps each project type to the right set
+- **32 specialized agents** across 7 archetypes (planner, reviewer, validator, coordinator, designer, implementer, architect) — the [Agent Catalog](core/agents/AGENT-CATALOG.md) maps each project type to the right set
 - **A dispatch protocol** governing what context each agent receives at each invocation point — strict isolation for reviewers, contextual dispatch for planners
 - **Three sprint topologies** (pipeline, mesh, hierarchical) for sprint-based projects, plus a tiered pre-execution review workflow for analytics workspaces
 - **A Design Alignment protocol** that turns brain dumps into durable Project Charters and PRDs before sprint planning begins
@@ -43,10 +43,11 @@ Fabrika is project-type-aware. The Document Catalog, agents, and bootstrap proce
 | `automation` | Scripts, CLIs, bots, scheduled jobs |
 | `library` | Reusable packages, SDKs, shared modules |
 
-### Task-based types (tiered pre-execution review)
+### Task-based types (brief, plan, execute, validate, deliver)
 | Type | Description |
 |------|-------------|
-| `analytics-workspace` | Ad hoc analysis, investigations, data requests |
+| `task-workspace` | Bounded tasks — domain-agnostic work with base agents (planner, implementer, reviewer, validator). The base workflow type that all specialized workflows extend. |
+| `analytics-workspace` | Ad hoc analysis, investigations, data requests — analytics-specific agents and tiered pre-execution review |
 
 ### Methodology-based types (structural update lifecycle)
 | Type | Description |

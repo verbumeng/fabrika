@@ -699,6 +699,43 @@ review described logic. The human executes inside the tool.
 overhead: templatize, scriptify, visualize, automate, spin out. The
 analysis planner initiates this when a task recurs.
 
+**Task-workspace project** — A task-based project type for bounded
+work that doesn't fit into software development, data analysis, or
+methodology maintenance. Uses the **task workflow** — the base
+multi-agent lifecycle (brief -> plan -> implement -> review -> validate
+-> deliver) with domain-agnostic agents (planner, implementer,
+reviewer, validator). The catch-all type: if a more specific type
+fits, use it — domain-specific agents produce better results than
+generic ones.
+
+**Workflow type** — A reusable multi-agent pattern that projects can
+compose. The evolved abstraction replacing the taxonomic "project
+type" model. A project is not locked to a single workflow type — it
+can add workflow types on demand via `ADD-WORKFLOW.md`. The task
+workflow is the base; analytics, sprint-based, and agentic workflows
+are domain-specific parameterizations. "Project type" remains as a
+legacy/transition term in existing content.
+
+**Base workflow** — The task workflow
+(`core/workflows/task-workflow.md`): the domain-agnostic foundation
+that all specialized workflows are parameterized versions of. Carries
+no domain knowledge — its criteria come from the plan, not from a
+domain model.
+
+**Base agent** — An agent with no domain assumptions. The four base
+agents (planner, implementer, reviewer, validator) are the
+unparameterized versions that all domain-specific agents extend. The
+analytics-workspace agents (analysis-planner, data-analyst,
+logic-reviewer, data-validator) are the analytics-specific
+parameterization; sprint-based agents (product-manager, code-reviewer,
+software-engineer, etc.) are the software-specific parameterization.
+
+**On-demand workflow addition** — The mechanism by which a project
+adds a new workflow type after initial bootstrap, documented in
+`ADD-WORKFLOW.md`. The orchestrator proposes this when it detects work
+that doesn't fit installed workflow types. The workflow-level
+equivalent of `ADOPT.md`'s tiered adoption.
+
 ---
 
 ## Maintenance

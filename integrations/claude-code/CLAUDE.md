@@ -8,12 +8,25 @@ Claude Code orchestrates the entire development workflow. The human's role is de
 
 ## Project Basics
 - **Project Key:** [PROJECT_KEY] (e.g. MYAPP — used for branch naming and story IDs)
-- **Project Type:** [web-app | data-app | analytics-engineering | data-engineering | ml-engineering | ai-engineering | automation | library | analytics-workspace | agentic-workflow] (can be multi-type for sprint-based types)
+- **Project Type:** [web-app | data-app | analytics-engineering | data-engineering | ml-engineering | ai-engineering | automation | library | analytics-workspace | task-workspace | agentic-workflow] (can be multi-type for sprint-based types)
 - **Repo:** `~/projects/[project-name]`
 - **Project docs:** `~/projects/[project-name]/docs`
 - **Document Catalog:** `[FABRIKA_PATH]/core/Document-Catalog.md`
 - **Agent Catalog:** See `.fabrika/AGENT-CATALOG.md` or `[FABRIKA_PATH]/core/agents/AGENT-CATALOG.md` for which agents apply to this project type
 - **Domain Language:** `docs/00-Index/Domain-Language.md` (shared domain vocabulary — if it exists)
+
+## Workflow Composition
+
+This project is not locked to its declared project type. If the work
+you are doing does not fit the installed workflow type, you can add
+additional workflow types on demand — the right tool for the right
+problem at the right time. See `ADD-WORKFLOW.md` for the procedure.
+
+When you detect that a user's work doesn't fit the installed workflow
+(e.g., a sprint-based project needs a quick bounded task, or an
+analytics workspace needs structured document production), propose
+adding the appropriate workflow type rather than shoehorning the work
+into the wrong workflow.
 
 ## Current Phase
 
@@ -483,6 +496,19 @@ All agents are invoked proactively by Claude Code at the trigger points in the D
 - **Implementer** — Writes production code against the approved spec. Dispatched by the orchestrator after spec approval — the orchestrator never writes code directly, even for trivial tasks. Specialized implementers carry domain expertise for their project type(s). For lightweight changes (single-file, fully specified, not a new feature), uses reduced-ceremony dispatch but still goes through the implementer agent.
 - **Architect** — Evaluates structural design: module depth, interface simplicity, component boundaries. Three modes: **design mode** (reviews proposed modules in a spec, invoked after spec approval), **review mode** (evaluates implemented changes, optional supplement to code-reviewer), and **ad hoc** (owner-initiated assessment of existing code). Specialized architects adapt: software-architect for web-app/automation/library/ai-engineering; data-architect for data-engineering/analytics-engineering/data-app/ml-engineering. Output is proposals and assessments, never code changes — refactor proposals require owner approval.
 
+### Task-based types (task-workspace) — Base Workflow
+
+| Role | Agent |
+|------|-------|
+| **Planner** | planner — reads brief, produces plan with deliverables, acceptance criteria, sequencing; validation mode checks output against brief |
+| **Reviewer** | reviewer — reviews against plan's acceptance criteria + general quality signals (completeness, consistency, clarity, correctness); no predefined rubric |
+| **Validator** | validator — validates deliverables satisfy the brief; checks completeness, acceptance criteria coverage, internal consistency |
+| **Implementer** | implementer — executes the plan, produces any artifact type (documents, code, configs, research, anything) |
+
+These are the base agents — domain-agnostic versions that all
+specialized agents extend. The task workflow is the base lifecycle:
+brief -> plan -> implement -> review -> validate -> deliver.
+
 ### Task-based types (analytics-workspace)
 
 | Role | Agent |
@@ -493,7 +519,7 @@ All agents are invoked proactively by Claude Code at the trigger points in the D
 | **Validator** | data-validator — sanity checks, cross-references, spot-checks on output; produces validation report |
 | **Implementer** | data-analyst — implements analysis scripts, SQL, notebooks; write-only and execute-metadata modes |
 
-No coordinator agent for analytics workspaces (no sprints to coordinate).
+No coordinator agent for analytics or task workspaces (no sprints to coordinate).
 
 ### Methodology-based types (agentic-workflow)
 

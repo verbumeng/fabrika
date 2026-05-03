@@ -69,6 +69,7 @@ From the response, identify the project type using these signals:
 | `automation` | "script", "CLI", "bot", "cron", "scheduled", "scraper", "automate" | Is this a thing that runs on a schedule/trigger, or a package others import? |
 | `library` | "package", "SDK", "module", "npm publish", "PyPI", "reusable", "API design" | Will other developers import and use this in their own projects? |
 | `analytics-workspace` | "ad hoc", "analysis", "investigation", "data request", "one-off", "just need a place to work", "SQL queries" | Is this ongoing analytical work without a single end product? |
+| `task-workspace` | "just need to get something done", "none of these fit", "it's not really code or data", "one-off project", "generic tasks", "catch-all", "bounded task" | Is this work that doesn't fit into software development, data analysis, or methodology maintenance — but you still want structured agent support? |
 | `agentic-workflow` | "methodology", "operating system", "agent workflow", "prompts and workflows", "the system itself is the product", "maintaining a framework" | Is the methodology/workflow system itself the product you're building and maintaining? |
 
 Confirm with the user: **"Based on what you've described, this sounds like a [type] project — [one sentence explaining what that means]. Does that sound right?"**
@@ -76,6 +77,8 @@ Confirm with the user: **"Based on what you've described, this sounds like a [ty
 For sprint-based types, also explain briefly: "This means we'll do a brain dump to capture everything you know, set up documentation, and plan your first sprint with agents for [planner role], [reviewer role], [validator role], and sprint coordination."
 
 For `analytics-workspace`, explain: "This means we'll set up a workspace for ad hoc analysis — we'll catalog your data sources and BI tools, then you'll be ready to start tasks. No sprints — work is organized as individual analysis tasks."
+
+For `task-workspace`, explain: "This means we'll set up a workspace for bounded tasks — anything that needs structured agent support but doesn't fit the other types. Work follows a simple lifecycle: brief, plan, implement, review, validate, deliver. No sprints, no domain assumptions. The agents work with whatever the task produces."
 
 For `agentic-workflow`, explain: "This means we'll set up a system where the methodology itself is the product — agent prompts, workflows, instruction files, and templates. Changes follow a 7-step protocol (plan, align, execute, verify, incorporate feedback, present, ship). No sprints — work is organized as structural changes with version tracking."
 
@@ -426,6 +429,62 @@ Now that there's real content: **"The vault is populated with [N] documents, [N]
 git add -A
 git commit -m "feat: populate vault with project context, epics, and stories"
 ```
+
+---
+
+## Phase 2T: Task Workspace Onboarding (task-workspace only)
+
+> This phase replaces Phase 2 for `task-workspace` projects. There is no brain dump, no backlog, no sprint planning. The onboarding is the simplest of any project type — set up agents, create the workspace structure, and start working.
+
+### 2T.1 Set up agentic tool configuration
+
+Copy base agents from `[FABRIKA_PATH]/core/agents/` to the tool-appropriate location:
+
+- **Claude Code:** Copy to `.claude/agents/`:
+  - `planner.md`, `implementer.md`, `reviewer.md`, `validator.md`
+  - Copy CLAUDE.md template from `[FABRIKA_PATH]/integrations/claude-code/CLAUDE.md`, set project type to `task-workspace`
+  - Copy settings from `[FABRIKA_PATH]/integrations/claude-code/settings-template.json` to `.claude/settings.json`
+- **GitHub Copilot:** Copy to `.github/agents/` (renaming `*.md` to `*.agent.md`):
+  - `planner.agent.md`, `implementer.agent.md`, `reviewer.agent.md`, `validator.agent.md`
+  - Copy copilot-instructions.md from `[FABRIKA_PATH]/integrations/copilot/copilot-instructions.md`, set project type to `task-workspace`
+
+### 2T.2 Onboarding conversation
+
+Ask these three questions:
+
+1. **"What kind of work will you typically do in this workspace?"** — not to classify into a type (that already happened) but to understand the shape of tasks so the planner can orient faster.
+2. **"Are there any tools, platforms, or systems your tasks typically involve?"** — captured in the project instruction file so agents have baseline context.
+3. **"How do you want deliverables organized? The default is one folder per task with a brief, plan, work artifacts, and outcome. Does that work?"** — allows customization if the user has a preference.
+
+### 2T.3 Set up workspace structure
+
+1. Create `tasks/` directory
+2. Create `docs/evaluations/` directory
+3. Copy templates from `[FABRIKA_PATH]/core/templates/`:
+   - `Brief-Template.md`, `Plan-Template.md`, `Outcome-Template.md`
+4. If Domain Language is warranted (user described domain-specific terminology), create from `[FABRIKA_PATH]/core/templates/Domain-Language-Template.md`
+5. Initialize `STATUS.md` with workspace type and active task count (0)
+
+### 2T.4 Offer wiki (same as all types)
+
+Follow the wiki knowledge layer offer protocol described in the Phase 1 section.
+
+### 2T.5 Generate manifest and commit
+
+1. Generate `.fabrika/manifest.yml` with all installed files
+2. Copy `[FABRIKA_PATH]/core/FABRIKA.md` to `.fabrika/FABRIKA.md`
+3. Commit:
+
+```bash
+git add -A
+git commit -m "feat: bootstrap task-workspace with base agents and task lifecycle"
+```
+
+**Do NOT proceed to Phase 3 or Phase 4.** Task workspaces do not have sprints. The workspace is ready for tasks.
+
+### 2T.6 On-demand workflow addition
+
+Task workspaces — and any project — can add additional workflow types after initial bootstrap. If the user's work evolves to need domain-specific agents (analytics, sprint-based), use the on-demand workflow addition mechanism documented in `ADD-WORKFLOW.md`. The orchestrator should propose this when it detects work that doesn't fit the installed workflow types.
 
 ---
 
@@ -824,6 +883,14 @@ Use this during the Phase 4 readiness check.
 - [ ] Task templates in `docs/Templates/`
 - [ ] Baseline evals copied (planner, reviewer, validator — not coordinator)
 - [ ] `STATUS.md` initialized with local tools and source count
+
+### Type-specific (task-workspace)
+- [ ] `tasks/` directory exists
+- [ ] `docs/evaluations/` directory exists
+- [ ] Base agents installed (planner, implementer, reviewer, validator)
+- [ ] Base templates available (Brief-Template, Plan-Template, Outcome-Template)
+- [ ] `STATUS.md` initialized with workspace type
+- [ ] `.fabrika/manifest.yml` generated with all installed files
 
 ### Type-specific (agentic-workflow)
 - [ ] `VERSION` file exists with starting version

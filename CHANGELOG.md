@@ -6,6 +6,65 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.26.0 — Base workflow type and base agents
+
+Introduces the task workflow type — the domain-agnostic base workflow
+that all specialized workflows parameterize — and four base agents
+(planner, implementer, reviewer, validator). First step in Fabrika's
+Phase 2 shift from taxonomic project types to composable workflow
+types. Projects can now add workflow types on demand via
+ADD-WORKFLOW.md.
+
+### New files
+- `core/agents/planner.md` — base planner agent
+- `core/agents/implementer.md` — base implementer agent
+- `core/agents/reviewer.md` — base reviewer agent
+- `core/agents/validator.md` — base validator agent
+- `core/workflows/task-workflow.md` — task workflow definition
+- `core/templates/Brief-Template.md` — base brief template
+- `core/templates/Plan-Template.md` — base plan template
+- `core/templates/Outcome-Template.md` — base outcome template
+- `ADD-WORKFLOW.md` — on-demand workflow addition mechanism
+
+### Changed files
+- `core/agents/AGENT-CATALOG.md` — base agent roster and files added,
+  workflow type language note
+- `core/Document-Catalog.md` — base documents section (all workflow
+  types), task-workspace quick reference
+- `core/workflows/dispatch-protocol.md` — base agent dispatch
+  contracts (planner planning/validation, implementer, reviewer,
+  validator)
+- `core/workflows/doc-triggers.md` — task-workflow document triggers
+- `BOOTSTRAP.md` — type alignment table entry, Phase 2T onboarding,
+  on-demand workflow addition section, readiness checklist
+- `ADOPT.md` — task-workspace adoption support
+- `MANIFEST_SPEC.md` — task-workspace as valid project_type
+- `MIGRATIONS.md` — consumer migration entry for 0.26.0
+- `Domain-Language.md` — workflow type, base workflow, base agent,
+  task-workspace, on-demand workflow addition terms
+- `integrations/claude-code/CLAUDE.md` — task-workspace availability,
+  base agent table, workflow composition section
+- `integrations/copilot/copilot-instructions.md` — same
+- `README.md` — agent count (28 -> 32), task-workspace in type table
+
+### Consumer update instructions
+1. Copy new base agent files: `planner.md`, `implementer.md`,
+   `reviewer.md`, `validator.md`
+2. Copy new templates: `Brief-Template.md`, `Plan-Template.md`,
+   `Outcome-Template.md`
+3. Copy `ADD-WORKFLOW.md` to your project root
+3b. Copy `core/workflows/task-workflow.md` to `.fabrika/workflows/`
+    (reference copy of the workflow definition)
+4. Update from Fabrika source: `AGENT-CATALOG.md`,
+   `Document-Catalog.md`, `dispatch-protocol.md`, `doc-triggers.md`,
+   `Domain-Language.md`, `BOOTSTRAP.md`, `ADOPT.md`,
+   `MANIFEST_SPEC.md`, `MIGRATIONS.md`
+5. Update your project instruction file from integration template
+6. Key change: projects can now compose multiple workflow types on
+   demand via `ADD-WORKFLOW.md`
+
+---
+
 ## 0.25.0 — Rename context engineer to agentic engineer
 
 Renames the agentic-workflow implementer agent from "context engineer"
