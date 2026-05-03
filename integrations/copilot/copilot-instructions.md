@@ -544,6 +544,7 @@ This project uses **Fabrika**, an agentic workflow framework. Local agent change
 - **Privacy first.** No credentials in git. No third-party services unless decided via ADR.
 - **Conservative sprint scope.** 2-3 stories per sprint. Favor shipping over perfecting.
 - **Context window hygiene.** Load docs on demand, not up front. Return concise summaries.
+- **Compaction at phase transitions.** Each phase handoff produces a compressed artifact self-contained for the next agent. Do not dump full file contents, raw tool outputs, or exploration dead-ends into dispatch payloads or agent returns. See `[FABRIKA_PATH]/core/design-principles.md`.
 - **Stack-agnostic agent prompts.** Tech details live in this file's Project Stack section.
 - **Pure orchestrator.** The orchestrator dispatches to implementer agents for all production code changes — it does not implement directly, even for trivial tasks. Lightweight dispatch reduces ceremony, not the dispatch itself.
 - **Implementer-reviewer pairing.** Every implementer output gets an independent review. During revision, the implementer reads review reports directly — the orchestrator routes file paths, it does not synthesize findings. See `[FABRIKA_PATH]/core/design-principles.md`.

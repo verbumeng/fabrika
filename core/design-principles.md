@@ -58,3 +58,41 @@ How it applies:
   verifies structural facts (file existence, version consistency,
   catalog accuracy). The methodology reviewer and context architect
   verify methodology quality and structural design.
+
+---
+
+## Compaction
+
+Each phase transition produces a compressed, self-contained artifact
+for the next phase. The receiving agent reads outputs, not inputs —
+it should never need to re-read what the sending agent already
+processed. Better tokens in, better tokens out.
+
+Phase boundary compression:
+
+| Transition | Output (compressed) | Discarded |
+|------------|-------------------|-----------|
+| Research -> Plan | File paths with line numbers, behavior summaries, constraints | Full file contents, dead-end explorations, raw tool output |
+| Plan -> Implement | Self-contained spec with code snippets and acceptance criteria | Research notes, alternative approaches considered |
+| Implement -> Review | Changed file paths and implementation summary | Build logs, intermediate attempts, scratch work |
+| Review -> Revise | Verdict, specific file paths, suggested fix approach | Restated code, general praise, context the implementer already has |
+| Revise -> Re-review | Updated files and revision summary | Prior review reports (evaluators get fresh dispatch) |
+
+Anti-patterns:
+
+1. **"Here's everything I found"** — dumping full file contents
+   instead of excerpts with line numbers
+2. **"Let me re-read the research"** — re-reading files the prior
+   phase already summarized into the plan
+3. **"The orchestrator will explain"** — orchestrator synthesizing
+   reviewer findings instead of passing report paths (already
+   addressed by implementer-reviewer pairing)
+4. **"I'll include this just in case"** — burning context window on
+   "might be relevant" material that is not directly needed
+
+Compaction is universal across all workflow types. It is not specified
+per-project-type — the dispatch protocol's output format constraints
+are the enforcement mechanism
+(`core/workflows/protocols/dispatch-protocol.md`). In v1 this is a
+principle for prompt authors and dispatch contract designers, not a
+runtime check.
