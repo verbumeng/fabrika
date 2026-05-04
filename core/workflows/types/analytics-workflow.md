@@ -1,6 +1,7 @@
-# Analytics Workspace Workflow
+# Analytics Workflow
 
-For `analytics-workspace` project types only. No sprints. Work is organized as individual analysis tasks.
+For analytics workflow projects. No sprints. Work is organized as
+individual analysis tasks.
 
 ## Design Alignment for Complex Analyses
 
@@ -19,7 +20,7 @@ brief:
 When triggered, Design Alignment produces an enhanced Analysis Brief
 with deeper coverage of scope, terminology, and success criteria. The
 output uses the standard brief template — it is NOT a Charter or PRD
-(analytics-workspace is task-based, not sprint-based).
+(analytics workflow is task-based, not sprint-based).
 
 Simple analyses skip alignment and proceed directly to the task
 lifecycle below.
@@ -461,7 +462,7 @@ convention across all project types.
 
 ## Review-Revise Loop
 
-The analytics-workspace review-revise loop follows the universal
+The analytics workflow review-revise loop follows the universal
 pattern defined in `core/design-principles.md`
 (implementer-reviewer pairing):
 
