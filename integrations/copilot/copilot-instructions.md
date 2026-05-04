@@ -209,6 +209,7 @@ Every conversation follows this lifecycle. No steps are optional.
 ### Session Start (Orientation)
 1. Read `STATUS.md` for current project state
 2. Read the current sprint's progress file
+   When reading Tier 1 context documents (Architecture Overview, Data Model, Canonical Patterns, etc.), the orchestrator checks the document's `last-validated` frontmatter against the project's freshness threshold. If stale, the orchestrator emits a one-line note during orientation (e.g., "Note: Architecture Overview last validated 6 weeks ago") and loads the document with a caveat. Stale docs are never automatically skipped — Strategy A (skip) is only used when the owner explicitly overrides. See `[FABRIKA_PATH]/core/workflows/types/development-workflow.md` (Freshness-Aware Context Loading).
 3. Read `git log --oneline -10` for recent history
 4. Read `features.json` for current pass/fail state
 5. Run quick health check: fast test command
@@ -594,6 +595,7 @@ This project uses **Fabrika**, an agentic workflow framework. Local agent change
 - **Conservative sprint scope.** 2-3 stories per sprint. Favor shipping over perfecting.
 - **Context window hygiene.** Load docs on demand, not up front. Return concise summaries.
 - **Compaction at phase transitions.** Each phase handoff produces a compressed artifact self-contained for the next agent. Do not dump full file contents, raw tool outputs, or exploration dead-ends into dispatch payloads or agent returns. See `[FABRIKA_PATH]/core/design-principles.md`.
+- **Freshness-aware context loading.** Before loading Tier 1 context documents at story/task start, the orchestrator checks `last-validated` against the project's freshness threshold. Stale docs are loaded with a caveat (universal default). The orchestrator decides what to include in dispatch payloads — the implementer receives whatever context the orchestrator gives it. See `[FABRIKA_PATH]/core/workflows/types/development-workflow.md`.
 - **Stack-agnostic agent prompts.** Tech details live in this file's Project Stack section.
 - **Pure orchestrator.** The orchestrator dispatches to implementer agents for all production code changes — it does not implement directly, even for trivial tasks. Lightweight dispatch reduces ceremony, not the dispatch itself.
 - **Implementer-reviewer pairing.** Every implementer output gets an independent review. During revision, the implementer reads review reports directly — the orchestrator routes file paths, it does not synthesize findings. See `[FABRIKA_PATH]/core/design-principles.md`.

@@ -53,7 +53,7 @@ story file → implementer → code-reviewer → commit
 ```
 
 1. Read the story file and sprint contract
-2. Read relevant project docs on demand (architecture, data model)
+2. Read relevant project docs on demand, applying the freshness check described above (architecture, data model)
 3. Skip spec creation — the story's acceptance criteria are the spec
 4. Create feature branch: `feature/[PROJECT_KEY]-S-042-description`
 5. Update story: `status: In Progress`
@@ -151,9 +151,60 @@ the architect review of the spec is already done at that point so
 the practical difference is skipping the post-implementation architect
 review.
 
+## Freshness-Aware Context Loading
+
+When loading Tier 1 context documents at story/task start, the
+orchestrator checks each document's `last-validated` frontmatter field
+against the project's freshness threshold. This applies to all workflow
+types that load Tier 1 docs — development-workflow, task-workflow, and
+any future workflow that reads structural context at start.
+
+**Freshness threshold.** Configurable per project, recorded in the
+project's instruction file (CLAUDE.md or equivalent) as
+`freshness-threshold`. Default: 2 completed sprints (~4 weeks). If no
+threshold is configured, use the default. Individual documents can
+override the global threshold via their own `freshness-threshold`
+frontmatter field (useful for docs that drift slowly, like Domain
+Language).
+
+**Passive freshness note at story/task start.** The freshness check at
+story/task start is passive. When the orchestrator detects a stale
+document during orientation, it emits a one-line warning in its
+orientation output (e.g., "Note: Architecture Overview last validated
+6 weeks ago") and proceeds with Strategy B — load the document with a
+caveat. No blocking, no user interaction, no triage at start. The
+orchestrator includes the document in the dispatch payload with the
+caveat note prepended: "This document was last validated on [date]. If
+your work touches areas described here, verify against the actual code
+before relying on it."
+
+**Strategy B: Load with caveat (universal default).** Load the stale
+document with a caveat note prepended. This is the default for ALL
+tiers — Patch, Story, and Deep Story alike. Rationale: stale-but-
+mostly-accurate context is almost always cheaper than reconstructing
+from scratch, which burns the context window and may produce worse
+results.
+
+**Strategy A: Skip and research (owner override only).** Do not load
+the stale document. Strategy A exists only as an explicit owner
+override for docs the owner knows are seriously wrong. It is never an
+automatic default. When the owner specifies Strategy A for a document,
+the orchestrator skips it and the implementer relies on research and
+on-demand file reads for that area.
+
+**Triage belongs to sweeps, not story start.** The three-option triage
+(re-validate, mark for refresh, accept staleness) is NOT performed at
+story/task start. It belongs only in periodic sweeps — maintenance
+sessions for sprint projects, on-demand sweeps for non-sprint projects.
+See `core/workflows/protocols/sprint-coordination.md` for the sprint
+maintenance sweep.
+
+See the Freshness Metadata section in `core/Document-Catalog.md` for
+which documents carry the `last-validated` field.
+
 ## Starting a Story
 1. Read the story file (or issue tracker ticket) and the sprint contract for this sprint
-2. Read relevant project docs on demand: Architecture Overview, Data Model, relevant ADRs, research notes
+2. Read relevant project docs on demand, applying the freshness check described above: Architecture Overview, Data Model, relevant ADRs, research notes
 3. Read the grading rubrics at `docs/02-Engineering/rubrics/` to understand evaluation criteria
 4. Invoke the **planner** agent in **planning mode** to expand the story into a full implementation spec (saved to `docs/plans/[TICKET]-spec.md`)
 5. After the spec is drafted, invoke the token cost estimation protocol (`core/workflows/protocols/token-estimation.md`) to present the cost estimate alongside the spec briefing.

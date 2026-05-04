@@ -309,6 +309,34 @@ orchestrator synthesizing reviewer findings instead of routing report
 paths, including "might be relevant" context that burns context
 window. Defined in `core/design-principles.md`. [Codified in 0.28.0.]
 
+**Freshness signal** — The `last-validated` frontmatter field on
+Tier 1 context documents, recording the date when a human or agent
+last confirmed that the document accurately reflects the current
+codebase. Not auto-updated on every edit — explicitly set during
+validation. The orchestrator reads this field during story/task start
+to decide whether the document is fresh (load normally) or stale
+(load with a caveat). See `core/Document-Catalog.md` for which
+documents carry the field. [Introduced in 0.31.0.]
+
+**Staleness threshold** — The configurable duration after which a
+Tier 1 document's `last-validated` date is considered potentially
+stale. Default: 2 completed sprints (~4 weeks). Recorded in the
+project's instruction file (CLAUDE.md or equivalent) as
+`freshness-threshold`. Individual documents can override the global
+threshold via their own `freshness-threshold` frontmatter field. The
+orchestrator compares `last-validated` against this threshold during
+story/task start context loading. [Introduced in 0.31.0.]
+
+**Freshness validation** — The process of confirming that a Tier 1
+document still accurately reflects the current codebase and updating
+its `last-validated` date. Happens during sprint maintenance (for
+sprint projects), on-demand sweeps (for non-sprint projects),
+optionally post-story/task (if the work significantly changed an area
+covered by a doc), and on demand. Three sweep outcomes: re-validate
+(update `last-validated`), mark for refresh (add Patch-tier story to
+backlog), or accept staleness (take no action). [Introduced in
+0.31.0.]
+
 **Orchestrator diagnosis** — The protocol after 3 failed **retry
 protocol** cycles. The orchestrator reads all evaluation reports
 across all cycles, identifies the failure pattern (same issue

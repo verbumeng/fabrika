@@ -3,6 +3,7 @@ type: reference
 status: active
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
+last-validated: YYYY-MM-DD
 tags: [domain-language, glossary, terminology]
 ---
 

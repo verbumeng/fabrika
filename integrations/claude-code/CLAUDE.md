@@ -296,6 +296,7 @@ Every conversation follows this lifecycle. No steps are optional.
 ### Session Start (Orientation)
 1. Read `STATUS.md` for current project state
 2. Read the current sprint's progress file (`docs/04-Backlog/Sprints/Sprint-XX-progress.md`)
+   When reading Tier 1 context documents (Architecture Overview, Data Model, Canonical Patterns, etc.), the orchestrator checks the document's `last-validated` frontmatter against the project's freshness threshold. If stale, the orchestrator emits a one-line note during orientation (e.g., "Note: Architecture Overview last validated 6 weeks ago") and loads the document with a caveat. Stale docs are never automatically skipped — Strategy A (skip) is only used when the owner explicitly overrides. See `[FABRIKA_PATH]/core/workflows/types/development-workflow.md` (Freshness-Aware Context Loading).
 3. Read `git log --oneline -10` for recent history
 4. Read `features.json` for current pass/fail state
 5. Check `.claude/current_tasks/` for any stale lock files
@@ -677,6 +678,7 @@ If a stale lock file exists (from a session that didn't clean up), the session o
 - **Conservative sprint scope.** 2-3 stories per sprint. Favor shipping over perfecting.
 - **Context window hygiene.** Load docs on demand, not up front. Return concise summaries from subagent invocations. Avoid reading large files when targeted grep would suffice.
 - **Compaction at phase transitions.** Each phase handoff produces a compressed artifact self-contained for the next agent. Do not dump full file contents, raw tool outputs, or exploration dead-ends into dispatch payloads or agent returns. See `[FABRIKA_PATH]/core/design-principles.md`.
+- **Freshness-aware context loading.** Before loading Tier 1 context documents at story/task start, the orchestrator checks `last-validated` against the project's freshness threshold. Stale docs are loaded with a caveat (universal default). The orchestrator decides what to include in dispatch payloads — the implementer receives whatever context the orchestrator gives it. See `[FABRIKA_PATH]/core/workflows/types/development-workflow.md`.
 - **Progressive context disclosure.** This CLAUDE.md is front-loaded into every session — keep it to what every session needs (identity, lifecycle, git conventions, stack config). Phase-specific context (sprint planning rules, evaluation workflow, maintenance checklist) lives in agent prompt files and referenced docs, loaded only when that phase is active. If a section of this file has not been relevant in 3+ sprints, move it to an on-demand doc and add a pointer here.
 - **Stack-agnostic agent prompts.** Never put technology-specific references in global agent prompts. All tech details live in this CLAUDE.md's Project Stack section.
 - **Prefer improving existing agents over adding new ones.** If a new capability is needed, first check if it belongs in an existing agent's scope. Only create a new agent if the capability requires a fundamentally different evaluation lens.

@@ -12,6 +12,7 @@ An agentic workflow methodology for software development and data work. Fabrika 
 - **A wiki knowledge layer** that consolidates scattered project artifacts into organized, continuously updated topic articles
 - **Token cost estimation** — cost-informed planning with deterministic token estimation, per-project calibration, and advisory budget warnings
 - **A briefing system** with 9 formats for translating technical output into plain-language owner communication
+- **Freshness-aware context loading** — Tier 1 docs carry a `last-validated` date; the orchestrator checks freshness before loading context and warns when docs are stale
 - **Graduated testing** — TDD, test-informed, or test-after assigned per story based on complexity
 - **A project documentation structure** with a catalog of 90+ document types organized by project type and priority tier
 - **An evaluation harness** with baseline evals that ship day one, plus a framework for building project-specific evals from real observed failures
