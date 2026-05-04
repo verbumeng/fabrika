@@ -61,8 +61,11 @@ three categories (cross-cutting, workflow-bundled,
 complexity-triggered). Workflows are organized into types and
 protocols, all types are now "workflow types" (the "project types"
 transition completed in v0.32.0), context compaction governs phase
-transitions, and freshness-aware context loading prevents stale Tier
-1 docs from polluting agent work.
+transitions, freshness-aware context loading prevents stale Tier
+1 docs from polluting agent work, and the decomposition hierarchy
+(Charter → Roadmap → PRD → Epic → Story | Task | Bug) was formalized
+as the alignment hierarchy in v0.33.0 — "brief" merged into "task"
+and the "enhanced brief" concept was killed.
 
 ### [Harvest Patterns](topics/harvest-patterns.md)
 
@@ -131,12 +134,16 @@ loading from CR-21. In v0.32.0, Agent Model was updated with the
 skills model formalization and category dissolution, and Workflow
 Design was updated with development-workflow decomposition, domain
 workflows, story-execution protocol, sprint coordination reframing,
-and procedure classification from CR-22.
+and procedure classification from CR-22. In v0.33.0, Workflow Design
+was updated with the unified document hierarchy: decomposition
+hierarchy formalized as alignment hierarchy, brief merged into task,
+enhanced brief killed, brief check retired to plan check, and
+Roadmap-Template added from CR-29.
 
 ### Sources Summary
 
 Articles draw from:
-- CHANGELOG entries for versions 0.1.0 through 0.32.0
+- CHANGELOG entries for versions 0.1.0 through 0.33.0
 - Planning PRDs 01-15 and CRs 17-29 (in `planning/`)
 - Core workflow files, agent prompts, and integration templates
 - Alignment session outputs from the v0.10.0-v0.25.0 roadmap

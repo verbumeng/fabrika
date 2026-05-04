@@ -50,6 +50,8 @@ The design philosophy is that workflows define the *sequence and contracts* for 
 
 - **Development-workflow decomposition and domain workflows (v0.32.0).** The single development-workflow.md — the general-purpose sprint-based workflow for all eight development project types — was deleted and decomposed into two layers. The shared story execution mechanics (the step-by-step sequence from spec through implementation, evaluation, and delivery that all story-complexity work follows regardless of domain) were extracted into a new protocol file: `core/workflows/protocols/story-execution.md`. The domain-specific concerns (which agents to dispatch, what domain expertise to apply, which supplemental reviewers to invoke) were distributed across seven new domain workflow files, one per domain: software-development, data-engineering, analytics-engineering, data-app, ml-engineering, ai-engineering, and library. Each domain workflow references the story-execution protocol for shared mechanics and adds its own agent roster, domain-specific verification criteria, and workflow-bundled procedures. This decomposition was deferred in v0.27.0 (CR-28) when the owner noted that each domain would eventually need its own workflow definition. CR-22 executed that vision. The analytics-workspace workflow was also renamed to analytics-workflow (file and concept) to match the unified workflow type naming convention. Source: CR-22, CHANGELOG 0.32.0.
 
+- **Decomposition hierarchy as alignment hierarchy; brief merged into task (v0.33.0).** CR-29 addressed a conceptual inconsistency: Fabrika had multiple alignment documents (brief, story, PRD, charter, roadmap) that were treated as separate, unrelated artifacts rather than layers of a single decomposition hierarchy. The original plan proposed inventing a new "alignment artifact hierarchy" with "brief" as the base — the owner rejected this entirely during design alignment. The insight: the decomposition hierarchy (Charter → Roadmap → PRD → Epic → Story | Task | Bug) already IS the alignment hierarchy. No new abstraction layer was needed. The documents at each level capture shared understanding between orchestrator and owner; the orchestrator's complexity assessment determines which level of alignment ceremony is needed. Additionally, "brief" was always just the task document under a different name — it captured the stakeholder's ask before the planner turned it into an actionable plan. Brief-Template and Analysis-Brief-Template were merged into a single Task-Template.md. File path `brief.md` became `task.md`. The "enhanced brief" concept (Design Alignment producing a more thorough brief for complex analytics) was killed because CR-18/19's complexity spectrum already handles graduated ceremony — if work is complex enough, the orchestrator routes it to a higher ceremony level (story, PRD). The "brief check" evaluation step was retired in favor of "plan check" — the planner validates against the plan, not the task document. This is consistent: stories validate against the spec/plan, tasks validate against the plan. Outcome-Report-Template was renamed to Analysis-Outcome-Template (naming convention: specialized = descriptor + base name). A Roadmap-Template was added — a light template with active/completed/deferred phases that serves as an index pointing to PRDs and epics rather than duplicating content. Source: CR-29, CHANGELOG 0.33.0.
+
 - **Procedure classification (v0.32.0).** Protocols in `core/workflows/protocols/` were classified into three categories based on how they attach to workflows. Cross-cutting procedures (token-estimation, knowledge-pipeline, knowledge-synthesis) apply to all workflow types and are referenced universally. Workflow-bundled procedures (task-promotion, analytics-workflow-onboarding) are specific to a particular workflow type and only apply when that workflow is installed. Complexity-triggered procedures (sprint-coordination, story-execution) activate based on the complexity of the work being done — sprint coordination triggers at story complexity or above when a project has enough concurrent stories to warrant sprint structure, and story execution triggers for all work at story complexity or above regardless of domain. This classification resolves the cross-cutting concern gap identified in v0.26.0: procedures are independent governance concerns that attach to workflows based on their classification, not by copy-pasting references into each workflow file. Sprint coordination was reframed from a workflow phase manager to a complexity-triggered procedure with explicit trigger documentation. Source: CR-22, CHANGELOG 0.32.0.
 
 - **Freshness-aware context loading as a context quality principle (v0.31.0).** Tier 1 context documents (Architecture Overview, Data Model, Canonical Patterns, etc.) can drift from code truth over time. CR-21 introduces a `last-validated` frontmatter field — the date when a human or agent last confirmed the document still reflects the codebase. The orchestrator checks this against a configurable staleness threshold (default: 2 sprints / ~4 weeks) during story/task start. The check is passive: if stale, the orchestrator emits a one-line warning and loads the document with a caveat ("last validated [date] — verify against actual code before relying on it"). This is Strategy B, the universal default for all tiers. Strategy A (skip the stale document entirely) exists only as an explicit owner override for documents known to be seriously wrong — the owner's reasoning being that stale-but-mostly-accurate context is almost always cheaper than reconstructing from scratch, which burns the context window. The original plan had Strategy A as the automatic default for Patch/Story tiers, but the owner pushed back: the whole point of Tier 1 docs is to compress context so agents don't crawl the codebase. Three-option triage (re-validate, mark for refresh, accept staleness) happens during periodic sweeps — sprint maintenance for sprint projects, on-demand for non-sprint projects — not at story/task start. The freshness check is universal across all workflow types; only the sweep cadence is workflow-specific. This is the context quality companion to compaction (CR-20): compaction governs what agents produce at phase boundaries, freshness governs what the orchestrator loads before a phase begins. Source: CR-21, CHANGELOG 0.31.0.
@@ -58,7 +60,7 @@ The design philosophy is that workflows define the *sequence and contracts* for 
 
 ## Current State
 
-As of v0.32.0, the workflow system includes:
+As of v0.33.0, the workflow system includes:
 
 **Directory structure:**
 - `core/workflows/types/` — 10 workflow type definitions (task-workflow, 7 domain workflows, analytics-workflow, agentic-workflow)
@@ -72,7 +74,7 @@ As of v0.32.0, the workflow system includes:
 - Four base agents (planner, implementer, reviewer, validator) with no domain assumptions
 - Reviewer derives checklist from plan's acceptance criteria + four general quality signals
 - Bug tasks: tasks with reproduction-context task documents (observed vs. expected, reproduction steps); reviewer additionally verifies the fix addresses the reproduction case (v0.30.0)
-- Design Alignment for complex tasks (same triggers as analytics workflow)
+- Task document (task.md) captures the ask; plan.md captures the approach; planner validates against the plan (v0.33.0)
 - Wiki knowledge pipeline: Extract+Index after delivery, Synthesize+Link monthly
 - On-demand workflow addition via ADD-WORKFLOW.md
 
@@ -92,13 +94,13 @@ As of v0.32.0, the workflow system includes:
 
 **Analytics workflow** (renamed from analytics-workspace in v0.32.0):
 - Tiered pre-execution review workflow (v0.20.0): Tier 1 (local data) and Tier 2 (production data), with "highest tier wins" for mixed sources
-- Tier 1: plan -> promotion check -> write -> logic review -> [revise -> re-review]* -> execute -> validate + plan check -> deliver
-- Tier 2: plan -> promotion check -> write (code + metadata queries) -> logic review -> [revise -> re-review]* -> execute metadata (INFORMATION_SCHEMA + EXPLAIN) -> performance review -> [revise -> re-review]* -> [cost approval - cloud only] -> execute -> validate + plan check -> deliver
+- Tier 1: task -> plan -> promotion check -> write -> logic review -> [revise -> re-review]* -> execute -> validate + plan check -> deliver
+- Tier 2: task -> plan -> promotion check -> write (code + metadata queries) -> logic review -> [revise -> re-review]* -> execute metadata (INFORMATION_SCHEMA + EXPLAIN) -> performance review -> [revise -> re-review]* -> [cost approval - cloud only] -> execute -> validate + plan check -> deliver
 - Three stakes levels (low/medium/high) scale review intensity independently of tier
-- Design Alignment for complex analyses (3+ sources, novel domain, >2 day effort)
+- Design Alignment fires at project/phase level per standard triggers; individual tasks use the task/plan flow regardless of complexity (v0.33.0 — "enhanced brief" concept removed)
 - Cost estimation in the plan phase, execution manifest with EXPLAIN output for Tier 2
 - Task promotion workflow (5-level graduation ladder for recurring analyses)
-- Analysis planner validation mode (plan check) verifies output answers the question
+- Analysis planner validation mode (plan check) verifies output meets requirements (v0.33.0 — renamed from "brief check", verdict changed to MEETS REQUIREMENTS)
 - Human-facing validation report (evidence chain) as a task deliverable
 - Task plan and task outcome briefing formats
 - Knowledge pipeline: Extract+Index after each task delivery, Synthesize+Link monthly
@@ -190,6 +192,7 @@ As of v0.32.0, the workflow system includes:
 - v0.30.0 -- universal backlog types (task, bug, story, epic) replacing the linear complexity spectrum. Ceremony graduates within each type independently. Simple task mode for trivially scoped work. Work type routing teaches the orchestrator type-first assessment. Complexity tiers reframed as story-internal. "Ad-hoc" retired as active terminology.
 - v0.31.0 -- freshness-aware context loading: `last-validated` field on Tier 1 docs, passive orchestrator check at story/task start, Strategy B (load with caveat) as universal default, periodic freshness sweeps in maintenance. Context quality companion to compaction (CR-20).
 - v0.32.0 -- development-workflow.md decomposed and deleted; story-execution.md protocol created (shared story execution mechanics); 7 domain workflow files created (one per domain); analytics-workspace renamed to analytics-workflow; sprint coordination reframed as complexity-triggered procedure; procedure classification (cross-cutting, workflow-bundled, complexity-triggered); dispatch protocol decomposed into hub + 7 per-archetype contract files.
+- v0.33.0 -- unified document hierarchy: decomposition hierarchy formalized as the alignment hierarchy; "brief" merged into "task" (Brief-Template + Analysis-Brief-Template → Task-Template.md, brief.md → task.md); "enhanced brief" killed (complexity handled by CR-18/19 spectrum); "brief check" retired → "plan check" (planner validates against plan); Roadmap-Template.md added; Outcome-Report-Template renamed to Analysis-Outcome-Template.
 
 ### PRDs and CRs
 - PRD-01 -- agentic-workflow lifecycle design
@@ -212,6 +215,7 @@ As of v0.32.0, the workflow system includes:
 - CR-19 -- universal backlog types, simple task mode, work type routing (implemented v0.30.0)
 - CR-21 -- freshness-aware context loading, context quality principle (implemented v0.31.0)
 - CR-22 -- agents as composable skills, development-workflow decomposition, domain workflows, procedure classification (implemented v0.32.0)
+- CR-29 -- unified document hierarchy, brief merged into task, enhanced brief killed, plan check replaces brief check (implemented v0.33.0)
 
 ### Core files
 - core/workflows/README.md -- types vs. protocols directory structure guide
