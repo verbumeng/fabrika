@@ -139,7 +139,7 @@ A good plan:
 - Provides mitigations actionable by someone who follows instructions
   literally (not "be careful" but "after creating the file, add a row
   to AGENT-CATALOG.md with columns: name, file path, archetype,
-  project types")
+  workflow types")
 - Includes version bump reasoning, not just the version number
 
 A bad plan:
@@ -155,11 +155,11 @@ A bad plan:
 **GOOD:** "Adding a new agent `performance-reviewer.md` to
 `core/agents/`. Integration points: (1) AGENT-CATALOG.md needs a new
 row — name: performance-reviewer, file: core/agents/performance-
-reviewer.md, archetype: Reviewer, project types: sprint-based;
-(2) dispatch-protocol.md needs a new entry in the contextual dispatch
-table with input/output fields; (3) development-workflow.md Step 4
-verification section needs to reference the new reviewer if it
-participates in the review gate; (4) integration templates
+reviewer.md, archetype: Reviewer, workflow types: all domain workflows;
+(2) dispatch-protocol.md needs a new entry in the appropriate
+per-archetype contract file; (3) story-execution.md evaluation cycle
+needs to reference the new reviewer if it participates in the review
+gate; (4) integration templates
 (CLAUDE.md, copilot-instructions.md) need the agent added to the
 subagents table. Risk: if AGENT-CATALOG is updated but dispatch-
 protocol is not, the orchestrator will attempt to dispatch to an agent
@@ -172,10 +172,10 @@ Make sure everything is consistent. Bump the version."
 **EDGE CASE — renaming an agent role:** Renaming `code-reviewer` to
 `implementation-reviewer` looks like a one-file rename but touches:
 the agent file itself, AGENT-CATALOG (file path and display name),
-dispatch-protocol (agent reference), development-workflow (every
-mention of the reviewer role), integration templates (subagent table
-entry), and any other agent prompts that reference the code-reviewer
-by name. The plan must trace every occurrence. Use Grep to search for
+dispatch-protocol (agent reference), story-execution.md and domain
+workflow files (every mention of the reviewer role), integration
+templates (subagent table entry), and any other agent prompts that
+reference the code-reviewer by name. The plan must trace every occurrence. Use Grep to search for
 the old name across the entire repo — the integration point map will
 catch the structural references, but prose mentions in workflow files
 or other agent prompts might not be in the map.

@@ -4,6 +4,70 @@ When a Fabrika update requires consumer projects to do more than a straight file
 
 ---
 
+## 0.32.0 — Category dissolution, workflow decomposition, file renames
+
+### File renames
+
+**analytics-workspace.md renamed to analytics-workflow.md:**
+- Old path: `core/workflows/types/analytics-workspace.md`
+- New path: `core/workflows/types/analytics-workflow.md`
+- Action: Rename the file in your project. Update
+  `.fabrika/manifest.yml` to reflect the new path. Update any
+  project-level references to the old path.
+
+**analytics-onboarding.md renamed to analytics-workflow-onboarding.md:**
+- Old path: `core/workflows/protocols/analytics-onboarding.md`
+- New path: `core/workflows/protocols/analytics-workflow-onboarding.md`
+- Action: Rename the file in your project. Update
+  `.fabrika/manifest.yml` to reflect the new path.
+
+### development-workflow.md deleted
+
+The file `core/workflows/types/development-workflow.md` has been
+deleted. Its content has been split:
+- **Shared story execution mechanics** (story-start orientation,
+  dispatch protocol reference, tier-conditional branching,
+  freshness-aware context loading, testing approach branching,
+  evaluation cycle, multi-domain story completion) are now in
+  `core/workflows/protocols/story-execution.md` (new file — copy it)
+- **Domain-specific content** (agent rosters, domain-specific gates,
+  testing approach details) lives in 7 new domain workflow files in
+  `core/workflows/types/` (copy the one(s) for your project type)
+
+Action: Remove `development-workflow.md` from your project. Copy
+`story-execution.md` and your domain workflow file(s). Update any
+project-level references that pointed to `development-workflow.md`.
+
+### New files
+
+- `core/workflows/protocols/story-execution.md` — shared story
+  execution protocol
+- 7 domain workflow files in `core/workflows/types/`:
+  `software-development-workflow.md`, `data-engineering-workflow.md`,
+  `analytics-engineering-workflow.md`, `data-app-workflow.md`,
+  `ml-engineering-workflow.md`, `ai-engineering-workflow.md`,
+  `library-workflow.md`
+- `core/workflows/protocols/dispatch/` directory with 7 per-archetype
+  contract files
+
+### Dispatch protocol decomposition
+
+The monolithic `dispatch-protocol.md` (1,097 lines) has been
+decomposed into a hub file (~250 lines) and 7 per-archetype contract
+files in `core/workflows/protocols/dispatch/`. Copy the entire
+`dispatch/` directory and update your local copy of
+`dispatch-protocol.md` from Fabrika source.
+
+### Category dissolution
+
+The three project type categories (Sprint-Based Types, Task-Based
+Types, Methodology-Based Types) have been dissolved. All types are
+now workflow types. If your project's CLAUDE.md or
+copilot-instructions.md uses category headers in the Subagents
+section, update from the Fabrika integration template.
+
+---
+
 ## 0.27.0 — Workflow folder reorganization
 
 **Affects:** All consumer projects with copied workflow files or

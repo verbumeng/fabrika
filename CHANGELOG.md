@@ -6,6 +6,153 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.32.0 — Agents as composable skills; category dissolution
+
+Formalizes Fabrika's skills model: agents carry skills — the atomic
+unit of agent capability exercised in one invocation. Base agents
+(planner, implementer, reviewer, validator) carry unparameterized
+skills. All specialized agents carry parameterized versions of these
+skills, adding domain knowledge. Workflows invoke agents with their
+skills in sequence. Projects compose workflow types. Dissolves the
+three project type categories (sprint-based, task-based,
+methodology-based) into a unified model where all types are workflow
+types.
+
+### Changed files
+
+**Agent model restructuring**
+- `core/agents/AGENT-CATALOG.md` — reorganized from three-category
+  tables to unified archetype-based organization; formalized skill
+  relationship (agents carry skills); renamed analytics-workspace to
+  analytics workflow
+- `core/Document-Catalog.md` — removed three-category organization;
+  unified workflow type table; renamed analytics-workspace to analytics
+  workflow; updated Quick Reference section
+
+**Agent prompt updates**
+- `core/agents/agentic-engineer.md` — updated "project type" to
+  "workflow type"
+- `core/agents/logic-reviewer.md` — updated "analytics-workspace" to
+  "analytics workflow"
+- `core/agents/workflow-planner.md` — updated "project types" to
+  "workflow types"
+- `core/agents/data-analyst.md` — updated all "analytics-workspace"
+  references to "analytics workflow"
+- `core/agents/visualization-designer.md` — updated category
+  references to workflow type language
+- `core/agents/structural-validator.md` — updated "project types" to
+  "workflow types"
+- `core/agents/performance-reviewer.md` — updated
+  "analytics-workspace" to "analytics workflow"
+- `core/agents/archetypes/architect.md` — updated "project type
+  categories" to workflow type language
+- `core/agents/archetypes/implementer.md` — updated "project types"
+  and "analytics-workspace" to workflow type language
+- `core/agents/archetypes/designer.md` — updated "sprint-based" to
+  workflow type language
+- `core/agents/archetypes/planner.md` — updated "sprint-based" to
+  workflow type language
+- `core/agents/archetypes/reviewer.md` — updated "sprint-based" to
+  workflow type language
+- `core/agents/archetypes/validator.md` — updated "sprint-based" to
+  workflow type language
+
+**Dispatch protocol decomposition**
+- `core/workflows/protocols/dispatch-protocol.md` — decomposed from
+  monolithic 1,097-line file into hub (~250 lines) with pointers to
+  per-archetype contract files
+- `core/workflows/protocols/dispatch/planner-contracts.md` — NEW
+- `core/workflows/protocols/dispatch/reviewer-contracts.md` — NEW
+- `core/workflows/protocols/dispatch/validator-contracts.md` — NEW
+- `core/workflows/protocols/dispatch/implementer-contracts.md` — NEW
+- `core/workflows/protocols/dispatch/architect-contracts.md` — NEW
+- `core/workflows/protocols/dispatch/coordinator-contracts.md` — NEW
+- `core/workflows/protocols/dispatch/designer-contracts.md` — NEW
+
+**Workflow restructuring**
+- `core/workflows/types/development-workflow.md` — DELETED; fully
+  decomposed into story-execution.md and 7 domain workflow files
+- `core/workflows/protocols/story-execution.md` — NEW: shared story
+  execution mechanics for work at story complexity or above
+- `core/workflows/types/software-development-workflow.md` — NEW
+- `core/workflows/types/data-engineering-workflow.md` — NEW
+- `core/workflows/types/analytics-engineering-workflow.md` — NEW
+- `core/workflows/types/data-app-workflow.md` — NEW
+- `core/workflows/types/ml-engineering-workflow.md` — NEW
+- `core/workflows/types/ai-engineering-workflow.md` — NEW
+- `core/workflows/types/library-workflow.md` — NEW
+- `core/workflows/types/analytics-workflow.md` — RENAMED from
+  analytics-workspace.md
+- `core/workflows/types/task-workflow.md` — strengthened skills model
+  framing; added three-tier abstraction note
+
+**Cross-cutting procedure classification**
+- `core/workflows/protocols/token-estimation.md` — added cross-cutting
+  procedure classification note
+- `core/workflows/protocols/knowledge-pipeline.md` — same
+- `core/workflows/protocols/knowledge-synthesis.md` — same
+- `core/workflows/protocols/sprint-coordination.md` — updated to
+  complexity-triggered language; added trigger mechanism documentation
+- `core/workflows/protocols/design-alignment.md` — updated to
+  workflow type language
+- `core/workflows/protocols/task-promotion.md` — renamed
+  analytics-workspace to analytics workflow; classified as
+  workflow-bundled (analytics)
+- `core/workflows/protocols/analytics-workflow-onboarding.md` —
+  RENAMED from analytics-onboarding.md
+
+**Framework-level files**
+- `BOOTSTRAP.md` — unified onboarding flow; renamed analytics-workspace;
+  updated file path references for renamed files
+- `ADOPT.md` — updated to workflow type language
+- `ADD-WORKFLOW.md` — updated to skills model framing; added domain
+  workflow section with sprint coordination assessment
+- `MANIFEST_SPEC.md` — updated to workflow type language
+- `Domain-Language.md` — added terms: skill, process, procedure/SOP;
+  strengthened: workflow type, base agent, specialist, roster, Agent
+  Catalog; retired category labels; renamed analytics-workspace to
+  analytics workflow
+- `README.md` — removed three-category Project types section; unified
+  workflow types table
+
+**Integration templates**
+- `integrations/claude-code/CLAUDE.md` — removed three-category
+  Subagents organization; unified agent tables; renamed
+  analytics-workspace; updated file path references
+- `integrations/copilot/copilot-instructions.md` — same changes
+
+**Versioning**
+- `VERSION` — 0.31.0 -> 0.32.0
+- `CHANGELOG.md` — this entry
+- `MIGRATIONS.md` — consumer migration entries
+
+### Consumer update instructions
+
+1. **File renames (do first):**
+   - Rename `core/workflows/types/analytics-workspace.md` to
+     `core/workflows/types/analytics-workflow.md` in your project
+   - Rename `core/workflows/protocols/analytics-onboarding.md` to
+     `core/workflows/protocols/analytics-workflow-onboarding.md`
+   - Update `.fabrika/manifest.yml` to reflect the new paths
+2. **Domain workflow files:** Copy the domain workflow file(s) for your
+   project's workflow type(s) from `core/workflows/types/`
+3. **Story execution protocol:** Copy
+   `core/workflows/protocols/story-execution.md`
+4. **Dispatch protocol decomposition:** Copy the new
+   `core/workflows/protocols/dispatch/` directory and update your local
+   copy of `dispatch-protocol.md`
+5. **Updated catalogs:** Update `core/agents/AGENT-CATALOG.md` and
+   `core/Document-Catalog.md` from Fabrika source
+6. **Agent prompt updates:** Update all agent prompt files listed above
+7. **Integration template:** Update your project's CLAUDE.md or
+   copilot-instructions.md from the Fabrika integration template
+8. **development-workflow.md DELETED:** Remove
+   `core/workflows/types/development-workflow.md` from your project.
+   Its content has been split into story-execution.md and domain
+   workflow files.
+
+---
+
 ## 0.31.0 — Freshness-aware context loading
 
 Introduces a freshness signal for Tier 1 context documents across all

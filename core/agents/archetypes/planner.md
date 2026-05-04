@@ -63,7 +63,7 @@ because they are creating, not judging.
 
 **Planning mode — required inputs:**
 - Story or ticket content (the request to be planned)
-- Sprint contract (if sprint-based) or task context (if analytics)
+- Sprint contract (if using sprint coordination) or task context (if analytics/task workflow)
 - Pointers to relevant project docs: Architecture Overview, Data
   Model, ADRs, research notes — whichever are relevant to this story
 - Any owner context from the conversation that bears on the story
@@ -83,8 +83,8 @@ because they are creating, not judging.
 ## Output Contract (what the agent produces)
 
 **Planning mode:**
-- Spec document at `docs/plans/[TICKET]-spec.md` (sprint-based) or
-  `tasks/[date-name]/plan.md` (analytics workspace)
+- Spec document at `docs/plans/[TICKET]-spec.md` (domain workflow) or
+  `tasks/[date-name]/plan.md` (analytics/task workflow)
 - Must include: overview, acceptance criteria (checkbox list), out of
   scope, open questions
 - Specialized planners add domain-specific sections (user stories,

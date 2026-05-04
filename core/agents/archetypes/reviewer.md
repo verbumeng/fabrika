@@ -88,8 +88,8 @@ independence.
 - The approved spec or plan (the contract the work was built against)
 - File paths to review (specific, not "look at the whole repo")
 - Rubric pointer (e.g., `docs/02-Engineering/rubrics/code-review-rubric.md`)
-- Sprint contract acceptance criteria (sprint-based) or task brief
-  (analytics workspace)
+- Sprint contract acceptance criteria (domain workflow) or task brief
+  (analytics/task workflow)
 
 **What NOT to include in dispatch:**
 - Opinions about the implementation ("I think X might be an issue")
@@ -104,8 +104,8 @@ having an independent evaluation.
 ## Output Contract (what the agent produces)
 
 - Evaluation report at `docs/evaluations/[TICKET]-[agent]-review.md`
-  (sprint-based) or `docs/evaluations/[task-name]-[agent]-review.md`
-  (analytics workspace)
+  (domain workflow) or `docs/evaluations/[task-name]-[agent]-review.md`
+  (analytics/task workflow)
 - Verdict: the agent's verdict scale (varies by specialization, but
   always a clear PASS/FAIL signal)
 - Per-criterion grades against the rubric (if applicable)

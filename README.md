@@ -6,7 +6,7 @@ An agentic workflow methodology for software development and data work. Fabrika 
 
 - **32 specialized agents** across 7 archetypes (planner, reviewer, validator, coordinator, designer, implementer, architect) — the [Agent Catalog](core/agents/AGENT-CATALOG.md) maps each project type to the right set
 - **A dispatch protocol** governing what context each agent receives at each invocation point — strict isolation for reviewers, contextual dispatch for planners
-- **Three sprint topologies** (pipeline, mesh, hierarchical) for sprint-based projects, plus a tiered pre-execution review workflow for analytics workspaces
+- **Three sprint topologies** (pipeline, mesh, hierarchical) for sprint-based projects, plus a tiered pre-execution review workflow for analytics workflows
 - **A Design Alignment protocol** that turns brain dumps into durable Project Charters and PRDs before sprint planning begins
 - **A Domain Language system** — living vocabulary documents that flow into briefings, dispatch contracts, code review, and maintenance checks
 - **A wiki knowledge layer** that consolidates scattered project artifacts into organized, continuously updated topic articles
@@ -28,34 +28,28 @@ An agentic workflow methodology for software development and data work. Fabrika 
 
 **Updating:** When a new Fabrika version ships, point an agent at [UPDATE.md](UPDATE.md). It reads your project's `.fabrika/manifest.yml`, diffs against the changelog, and updates only what changed.
 
-## Project types
+## Workflow types
 
-Fabrika is project-type-aware. The Document Catalog, agents, and bootstrap process adapt based on what you're building:
+Fabrika organizes work through composable workflow types. Each agent
+carries a skill — the capability it exercises in one invocation.
+Workflows invoke agents with their skills in sequence. Projects
+compose one or more workflow types.
 
-### Sprint-based types (plan, build, evaluate, iterate)
-| Type | Description |
-|------|-------------|
-| `web-app` | Full-stack web applications, SaaS, APIs |
-| `data-app` | Dashboards, reporting tools, data entry apps — replacing Excel |
-| `analytics-engineering` | Modeled data layers — dbt, DuckDB, warehouse transformations |
-| `data-engineering` | Full pipeline infrastructure — ingestion, storage, orchestration, serving |
-| `ml-engineering` | Model development, training, evaluation |
-| `ai-engineering` | LLM-powered applications — RAG, agents, prompt engineering |
-| `automation` | Scripts, CLIs, bots, scheduled jobs |
-| `library` | Reusable packages, SDKs, shared modules |
+| Type | Workflow | Description |
+|------|---------|-------------|
+| `web-app` | Software Development | Full-stack web applications, SaaS, APIs |
+| `data-app` | Data App | Dashboards, reporting tools, data entry apps |
+| `analytics-engineering` | Analytics Engineering | Modeled data layers — dbt, DuckDB, warehouse transformations |
+| `data-engineering` | Data Engineering | Full pipeline infrastructure — ingestion, storage, orchestration, serving |
+| `ml-engineering` | ML Engineering | Model development, training, evaluation |
+| `ai-engineering` | AI Engineering | LLM-powered applications — RAG, agents, prompt engineering |
+| `automation` | Software Development | Scripts, CLIs, bots, scheduled jobs |
+| `library` | Library | Reusable packages, SDKs, shared modules |
+| `task-workspace` | Task (base) | Bounded tasks — domain-agnostic base agents. The foundation all specialized workflows extend. |
+| `analytics-workflow` | Analytics | Ad hoc analysis, investigations, data requests — analytics-specific agents and tiered pre-execution review |
+| `agentic-workflow` | Agentic | Systems where the methodology itself is the product |
 
-### Task-based types (brief, plan, execute, validate, deliver)
-| Type | Description |
-|------|-------------|
-| `task-workspace` | Bounded tasks — domain-agnostic work with base agents (planner, implementer, reviewer, validator). The base workflow type that all specialized workflows extend. |
-| `analytics-workspace` | Ad hoc analysis, investigations, data requests — analytics-specific agents and tiered pre-execution review |
-
-### Methodology-based types (structural update lifecycle)
-| Type | Description |
-|------|-------------|
-| `agentic-workflow` | Systems where the methodology itself is the product — agent prompts, workflows, instruction files |
-
-Sprint-based projects can be multi-type. A data app with scrapers is `data-app` + `automation`. An AI chatbot with a web frontend is `ai-engineering` + `web-app`.
+Projects can be multi-type. A data app with scrapers is `data-app` + `automation`. An AI chatbot with a web frontend is `ai-engineering` + `web-app`.
 
 ## Integrations
 

@@ -1,6 +1,6 @@
-# Analytics Workspace Onboarding
+# Analytics Workflow Onboarding
 
-Platform and source configuration protocol for analytics-workspace
+Platform and source configuration protocol for analytics workflow
 projects. Run during bootstrap (BOOTSTRAP.md Phase 2W.1a) or
 retroactively via ADOPT.md for existing workspaces.
 

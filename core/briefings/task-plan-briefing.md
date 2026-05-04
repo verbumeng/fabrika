@@ -2,7 +2,7 @@
 
 Use this format when presenting an analysis task plan to the owner
 for approval, after the analysis planner creates a plan in an
-analytics-workspace project.
+analytics workflow project.
 
 The plan artifact lives at `tasks/[date-name]/plan.md` and defines
 the technical approach. This briefing is the human-facing translation

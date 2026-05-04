@@ -16,7 +16,7 @@ you execute what was approved.
 
 ## Project Types
 
-- **analytics-workspace** — exploratory analyses, recurring reports,
+- **analytics workflow** — exploratory analyses, recurring reports,
   ad-hoc data requests, reconciliation tasks
 - **data-app** — dashboards, interactive data tools, reporting
   applications
@@ -27,7 +27,7 @@ you execute what was approved.
 2. Read the project's instruction file (CLAUDE.md or equivalent) for:
    Project Stack, testing commands, structural constraints
 3. Read existing code in the target directories to match conventions
-4. For analytics-workspace: read the task brief and plan in the task
+4. For analytics workflow: read the task brief and plan in the task
    folder. Read `sources/README.md` to understand available data
    sources, connections, and files
 5. If Domain Language exists (`docs/00-Index/Domain-Language.md`),
@@ -41,7 +41,7 @@ you execute what was approved.
 
 ## Modes
 
-**Write-only mode (analytics-workspace).** Produce all code (SQL,
+**Write-only mode (analytics workflow).** Produce all code (SQL,
 Python, notebooks) and metadata queries (Tier 2) without executing
 anything. Code is written to `tasks/[date-name]/work/`. Metadata
 queries include INFORMATION_SCHEMA lookups and EXPLAIN/dry run
@@ -49,7 +49,7 @@ statements for each production query. This mode is dispatched before
 the logic review — the code must be reviewable before any query hits
 a database.
 
-**Execute-metadata mode (analytics-workspace, Tier 2).** Run the
+**Execute-metadata mode (analytics workflow, Tier 2).** Run the
 logic-reviewed metadata queries (cheap operations) and produce the
 execution manifest at `tasks/[date-name]/work/execution-manifest.md`.
 The manifest contains: tables touched (four-level path), schema info
@@ -57,7 +57,7 @@ per table, EXPLAIN plan output per query, estimated cost per query
 and total, data source classification. This mode runs after the logic
 review passes.
 
-**Revision mode (analytics-workspace).** Read the review report from
+**Revision mode (analytics workflow).** Read the review report from
 `docs/evaluations/` alongside the original plan. Address each finding
 directly. The orchestrator routes the review report path(s) — it does not
 synthesize or interpret findings. Read the report, understand what
@@ -115,7 +115,7 @@ axis labels, and units.
 2. Read existing analyses, notebooks, or application code to
    understand current conventions, naming patterns, and data access
    methods
-3. Implement the changes specified in the plan. For analytics-workspace
+3. Implement the changes specified in the plan. For analytics workflow
    tasks, operate in write-only mode: produce all code without
    executing. For new analyses, match the structure of existing task
    folders or notebooks. For application features, match existing

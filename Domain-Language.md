@@ -22,8 +22,10 @@ and add domain-specific expertise.
 
 **Agent** — An AI sub-agent dispatched by the **orchestrator** to
 perform a scoped task. Each agent implements one **archetype** and
-carries domain-specific evaluation criteria, procedures, and
-**calibration examples**. Agents do not call each other — all
+carries a **skill** — the capability it exercises in one invocation.
+Each agent also carries domain-specific evaluation criteria,
+procedures, and **calibration examples**. The agent HAS a skill; the
+agent is not "a skill." Agents do not call each other — all
 coordination flows through the orchestrator.
 
 **Orchestrator** — The top-level AI session that drives the
@@ -41,15 +43,28 @@ contracts), present briefings, and manage the evaluation feedback
 loop, but all production file changes go through an **implementer**
 agent. [Introduced in 0.12.0.]
 
-**Roster** — The set of agents installed for a given **project type**.
-Each project type maps to a specific combination of agent roles
-(planner, reviewer, validator, etc.) defined in the **Agent Catalog**.
-Multi-type projects install the union of all applicable rosters.
+**Skill** — The capability an agent exercises in one invocation. The
+agent carries the skill; the **workflow type** invokes agents with
+their skills in sequence. A skill does not decompose further within
+the Fabrika model — it defines WHAT an agent knows how to do,
+independent of WHERE it does it. **Base skills** are carried by base
+agents (planner, implementer, reviewer, validator) with zero domain
+assumptions. **Parameterized skills** are carried by specialized
+agents that extend a base skill with domain knowledge — domain-specific
+evaluation criteria, domain-specific dispatch contract fields, and
+domain principles. Example: `code-reviewer.md` = agent carrying the
+reviewer skill + software review criteria.
+
+**Roster** — The set of agents (with their skills) invoked by a given
+**workflow type**. Each workflow type defines which agent roles are
+needed; the **Agent Catalog** maps the specifics. Multi-type projects
+install the union of all applicable rosters.
 
 **Agent Catalog** — The reference document
-(`core/agents/AGENT-CATALOG.md`) that maps each **project type** to
-its **roster** of agents. Also lists all agent files, their roles,
-archetypes, and which project types use them.
+(`core/agents/AGENT-CATALOG.md`) that organizes agents by archetype
+and skill level (base agents vs. domain specializations). Maps each
+**workflow type** to its **roster** of agents. Also lists all agent
+files, their roles, archetypes, and which workflow types use them.
 
 **Dispatch** — The act of the **orchestrator** invoking a sub-agent
 with a structured payload. The payload contents depend on the
@@ -106,8 +121,8 @@ step-by-step procedures, calibration examples, and context window
 hygiene guidance. Immature agents have stub prompts with basic role
 descriptions. [All canonical agents reached maturity by 0.13.0.]
 
-**Specialist** — An agent that implements an archetype with
-domain-specific expertise. Five specialist **implementers**
+**Specialist** — An agent carrying a **parameterized skill**: a base
+skill extended with domain knowledge. Five specialist **implementers**
 (software-engineer, data-engineer, data-analyst, ml-engineer,
 ai-engineer) and three specialist **architects** (software-architect,
 data-architect, context-architect) exist. Specialists carry domain
@@ -212,22 +227,40 @@ back, the planner is re-invoked and appends to this section.
 Persists the design rationale that would otherwise evaporate in
 conversation. [Introduced in 0.21.0.]
 
-**Sprint lifecycle** — The multi-chat cycle governing sprint-based
-projects: Design Alignment (when triggered) -> Sprint Planning ->
-Story chats (one per story) -> Sprint Close-Out -> Maintenance ->
-Sprint Retro -> next Sprint Planning. Each phase boundary is a hard
-new-chat handoff to keep context windows clean. Defined in
-`core/workflows/protocols/sprint-coordination.md`.
+**Process** — A named vocabulary concept in Fabrika's hierarchy.
+Processes are higher-level coordination patterns that do not currently
+have their own structural expression in the framework. The term exists
+to distinguish them from **procedures** (which do have structural
+expression as protocol files).
 
-**Task lifecycle** — The tiered workflow governing
-**analytics-workspace** projects. Two tiers: Tier 1 (local data:
-plan -> promotion check -> write -> logic review -> [revise ->
-re-review]* -> execute -> validate + brief check -> deliver) and
-Tier 2 (production data: adds metadata queries, execution manifest,
-performance review, and cost approval gate before main execution).
-Each task is independent — no sprint structure. Defined in
-`core/workflows/types/analytics-workspace.md`. [Tiered workflow introduced
-in 0.20.0.]
+**Procedure (SOP)** — A reusable protocol file in
+`core/workflows/protocols/` that defines a specific multi-step
+process. Three trigger classifications exist: **cross-cutting**
+(workflow-agnostic — referenced by all or most workflow types),
+**workflow-bundled** (installed with a specific workflow type via
+`ADD-WORKFLOW.md`), and **complexity-triggered** (activates when a
+project's work reaches story/epic complexity, regardless of which
+workflow type is installed). [Classified in 0.32.0.]
+
+**Sprint lifecycle** — The multi-chat ceremony cycle coordinated by
+`core/workflows/protocols/sprint-coordination.md`. Sprint coordination
+is a complexity-triggered **procedure** — it activates when a
+project's work includes story-type or epic-type backlog items,
+regardless of which domain workflow is installed. Phases: Design
+Alignment (when triggered) -> Sprint Planning -> Story chats (one per
+story) -> Sprint Close-Out -> Maintenance -> Sprint Retro -> next
+Sprint Planning. Each phase boundary is a hard new-chat handoff to
+keep context windows clean.
+
+**Task lifecycle** — The tiered workflow governing **analytics
+workflow** projects. Two tiers: Tier 1 (local data: plan -> promotion
+check -> write -> logic review -> [revise -> re-review]* -> execute ->
+validate + brief check -> deliver) and Tier 2 (production data: adds
+metadata queries, execution manifest, performance review, and cost
+approval gate before main execution). Each task is independent — no
+sprint structure. Defined in `core/workflows/types/analytics-workflow.md`.
+[Tiered workflow introduced in 0.20.0; renamed from
+analytics-workspace in 0.32.0.]
 
 **Session lifecycle** — The per-chat workflow within a single story
 or task: orient (read STATUS.md, sprint contract), plan, implement,
@@ -240,7 +273,7 @@ sub-agent dispatch) because the iterative back-and-forth with the
 owner requires conversational context. Produces a **Project Charter**
 (first time) and a **PRD** (per phase or feature). Triggers: new
 project, new phase, owner request, or detected ambiguity. For
-**analytics-workspace**, produces an enhanced Analysis Brief instead
+the **analytics workflow**, produces an enhanced Analysis Brief instead
 of a Charter/PRD. [Formalized in 0.14.0.]
 
 **Sprint contract** — A per-sprint agreement defining the stories in
@@ -292,7 +325,7 @@ codified in 0.22.0.]
 **implementer-reviewer pairing**: every implementer output that
 produces observable results gets validated against expected outcomes.
 The nature of validation differs by project type: data output for
-analytics-workspace, test passage for sprint-based, structural
+analytics workflow, test passage for domain workflows, structural
 correctness for agentic-workflow. Defined in
 `core/design-principles.md`. [Identified in 0.20.0, codified in
 0.22.0.]
@@ -379,7 +412,7 @@ story-internal tier in 0.30.0.]
 
 **Story** — The standard ceremony tier within story-type work.
 Multi-file changes (3-5 points) with bounded scope. The current full
-**development workflow** applies with no modifications: spec creation,
+**story execution protocol** applies with no modifications: spec creation,
 all evaluation gates, 3 retry cycles. This is the default tier when
 none is specified. [Named in 0.29.0; behavior predates Fabrika.
 Reframed as story-internal tier in 0.30.0.]
@@ -402,10 +435,9 @@ and standard modes, stories have patch/story/deep story tiers, bugs
 use task workflow with reproduction context, and epics are coordination
 envelopes. The **orchestrator** first identifies the backlog type
 ("What kind of work is this?"), then assesses how much ceremony it
-needs within that type. The three old project type categories
-(sprint-based, task-based, methodology-based) are dissolving into
-composable **workflow types** with backlog types as the connecting
-vocabulary. [Conceptualized in 0.29.0; CR-18 implements story tiers
+needs within that type. The former three project type categories (sprint-based, task-based,
+methodology-based) have dissolved into composable **workflow types**
+with backlog types as the connecting vocabulary. [Conceptualized in 0.29.0; CR-18 implements story tiers
 (patch, story, deep story). CR-19 defines backlog types and simple
 task mode. CR-17 covers the task workflow. CR-24 addresses epic
 coordination mechanics.]
@@ -430,8 +462,8 @@ agents — bugs are tasks with a specific brief structure.
 **Epic** — A backlog type representing a coordination envelope that
 groups related tasks and stories toward a larger goal. Epics do not
 have their own execution workflow — they organize and sequence work
-items that each follow their own workflow (task workflow or development
-workflow). Formalizes what already exists (Epics/ folder, Epic
+items that each follow their own workflow (task workflow or domain
+workflow via story-execution protocol). Formalizes what already exists (Epics/ folder, Epic
 template). Coordination mechanics (how epics span workflows, how
 items are tracked within an epic) are CR-24 scope.
 [Defined as backlog type in 0.30.0.]
@@ -496,15 +528,16 @@ Defined formats exist for specs, sprint plans, task plans, task
 outcomes, structural plans, change summaries, and retros. Principles
 in `core/briefings/briefing-principles.md`. [Formalized in 0.17.0.]
 
-**Tier (analytics workspace)** — A data environment classification
-that determines the workflow process for an analytics-workspace task.
+**Tier (analytics workflow)** — A data environment classification
+that determines the workflow process for an analytics workflow task.
 Tier 1 (local data) skips execution manifest and performance review.
 Tier 2 (production data) adds metadata queries, execution manifest,
 performance review, and cost approval (cloud only). Mixed sources use
 the highest tier. Separate from **stakes** — tier determines process,
-stakes determine intensity. [Introduced in 0.20.0.]
+stakes determine intensity. [Introduced in 0.20.0; renamed from
+analytics workspace tier in 0.32.0.]
 
-**Stakes** — A review intensity classification for analytics-workspace
+**Stakes** — A review intensity classification for analytics workflow
 tasks. Low (exploratory, throwaway), medium (stakeholder ad hoc, team
 consumption), or high (executive audience, financial reporting,
 compliance). Determines how thoroughly reviewers and validators check
@@ -515,7 +548,7 @@ in 0.20.0.]
 
 **Execution manifest** — A metadata query results document at
 `tasks/[date-name]/work/execution-manifest.md` produced during Tier 2
-analytics-workspace tasks. Contains INFORMATION_SCHEMA lookups, EXPLAIN
+analytics workflow tasks. Contains INFORMATION_SCHEMA lookups, EXPLAIN
 plan output, estimated costs per query, and data source classification.
 The primary input for the performance reviewer's pre-execution
 assessment. [Introduced in 0.20.0.]
@@ -536,7 +569,7 @@ code and data that supports it. Always detailed regardless of
 the review loop). [Introduced in 0.20.0.]
 
 **Pre-execution review** — The review phase between code writing and
-code execution in the analytics-workspace tiered workflow. The logic
+code execution in the analytics workflow's tiered workflow. The logic
 reviewer and (for Tier 2) performance reviewer assess code before any
 query hits a database. Prevents expensive, incorrect, or destructive
 queries from executing. [Introduced in 0.20.0.]
@@ -791,31 +824,36 @@ sprint retro phase.
 
 ## Project Types
 
-**Sprint-based project** — A project that follows the **sprint
-lifecycle**: plan -> build -> evaluate -> retro, organized into
-time-boxed sprints with stories and epics. Eight types: web-app,
-data-app, analytics-engineering, data-engineering, ml-engineering,
-ai-engineering, automation, library. Can be multi-type (union of
-rosters and documents).
+**Sprint-based project** — A project whose work includes story-type
+or epic-type backlog items, organized into time-boxed sprints.
+Uses a **domain workflow** for execution mechanics and **sprint
+coordination** (a complexity-triggered procedure) for ceremony. Eight
+project types use domain workflows: web-app, data-app,
+analytics-engineering, data-engineering, ml-engineering, ai-engineering,
+automation, library. Can be multi-type (union of rosters and
+documents). The term "sprint-based" is retained as a convenience but
+is no longer a category label — all project types are **workflow
+types**. [Category label retired in 0.32.0.]
 
-**Analytics-workspace project** — A task-based project type for ad
-hoc analysis, investigations, and data requests. Follows the **task
-lifecycle** (brief -> plan -> execute -> validate -> deliver) with no
-sprint structure. Work is organized as individual tasks in
-`tasks/[date-name]/` directories.
+**Analytics workflow project** — A project type for ad hoc analysis,
+investigations, and data requests. Follows the **task lifecycle**
+(brief -> plan -> execute -> validate -> deliver) with no sprint
+structure. Work is organized as individual tasks in
+`tasks/[date-name]/` directories. [Renamed from analytics-workspace
+in 0.32.0.]
 
-**Agentic-workflow project** — A methodology-based project type where
-the methodology itself is the product. Agent prompts, workflow
-definitions, instruction files, and templates are the primary
-artifacts. Two modes: **structural** (required, 7-step protocol) and
-**operational** (optional, human-driven sessions). Fabrika itself is
-an agentic-workflow project.
+**Agentic-workflow project** — A project type where the methodology
+itself is the product. Agent prompts, workflow definitions, instruction
+files, and templates are the primary artifacts. Two modes:
+**structural** (required, 7-step protocol) and **operational**
+(optional, human-driven sessions). Fabrika itself is an
+agentic-workflow project.
 
-**Multi-type project** — A project combining two or more sprint-based
-types (e.g., web-app + ai-engineering). Installs the union of all
-applicable agent rosters and documents. Task-based and
-methodology-based types cannot be combined with sprint-based types —
-use a separate repo.
+**Multi-type project** — A project composing two or more **workflow
+types** (e.g., web-app + ai-engineering). Installs the union of all
+applicable agent rosters and documents. Any workflow types can be
+composed — the orchestrator routes work to the appropriate workflow
+based on backlog type assessment. See `ADD-WORKFLOW.md`.
 
 **Document tier** — The priority level governing when a project
 document should be created. Tier 1: must exist before Sprint 1
@@ -840,7 +878,7 @@ strategic thinking), **agent** (for the AI to reference during
 implementation), or **both**.
 
 **Source registry** — The central index at `sources/README.md` in
-**analytics-workspace** projects. Catalogs three categories: data
+**analytics workflow** projects. Catalogs three categories: data
 connections (warehouses, databases, APIs), BI/ETL tools (in advisory
 mode), and recurring flat file sources.
 
@@ -850,40 +888,46 @@ write SQL, draft DAX/M expressions, draft calculated fields, and
 review described logic. The human executes inside the tool.
 
 **Task promotion** — The workflow for recurring analyses in
-**analytics-workspace** projects. Five levels from least to most
+**analytics workflow** projects. Five levels from least to most
 overhead: templatize, scriptify, visualize, automate, spin out. The
 analysis planner initiates this when a task recurs.
 
-**Task-workspace project** — A task-based project type for bounded
-work that doesn't fit into software development, data analysis, or
-methodology maintenance. Uses the **task workflow** — the base
-multi-agent lifecycle (brief -> plan -> implement -> review -> validate
--> deliver) with domain-agnostic agents (planner, implementer,
-reviewer, validator). The catch-all type: if a more specific type
-fits, use it — domain-specific agents produce better results than
-generic ones.
+**Task-workspace project** — A workflow type for bounded work that
+doesn't fit into software development, data analysis, or methodology
+maintenance. Uses the **task workflow** — the base multi-agent
+lifecycle (brief -> plan -> implement -> review -> validate -> deliver)
+with domain-agnostic base agents (planner, implementer, reviewer,
+validator). The catch-all type: if a more specific type fits, use
+it — domain-specific agents produce better results than generic ones.
 
-**Workflow type** — A reusable multi-agent pattern that projects can
-compose. The evolved abstraction replacing the taxonomic "project
-type" model. A project is not locked to a single workflow type — it
-can add workflow types on demand via `ADD-WORKFLOW.md`. The task
-workflow is the base; analytics, sprint-based, and agentic workflows
-are domain-specific parameterizations. "Project type" remains as a
-legacy/transition term in existing content.
+**Workflow type** — A reusable multi-agent pattern that invokes agents
+with their **skills** in an end-to-end work lifecycle. Workflows
+define the shape of work. A project is not locked to a single workflow
+type — it can add workflow types on demand via `ADD-WORKFLOW.md`. The
+task workflow is the base (unparameterized); analytics, domain
+workflows, and agentic workflows add domain knowledge. Current
+workflow types: task, analytics, 7 domain workflows
+(software-development, data-engineering, analytics-engineering,
+data-app, ml-engineering, ai-engineering, library), and agentic.
+**Sprint coordination** is NOT a workflow type — it is a
+complexity-triggered **procedure**. [Strengthened in 0.32.0.]
 
 **Base workflow** — The task workflow
-(`core/workflows/types/task-workflow.md`): the domain-agnostic foundation
-that all specialized workflows are parameterized versions of. Carries
-no domain knowledge — its criteria come from the plan, not from a
-domain model.
+(`core/workflows/types/task-workflow.md`): the domain-agnostic
+foundation that all specialized workflows are parameterized versions
+of. Carries no domain knowledge — its criteria come from the plan,
+not from a domain model. The task workflow is the unparameterized
+**workflow type**; specialized workflows (analytics, domain workflows,
+agentic) add domain knowledge to this foundation.
 
-**Base agent** — An agent with no domain assumptions. The four base
-agents (planner, implementer, reviewer, validator) are the
-unparameterized versions that all domain-specific agents extend. The
-analytics-workspace agents (analysis-planner, data-analyst,
-logic-reviewer, data-validator) are the analytics-specific
-parameterization; sprint-based agents (product-manager, code-reviewer,
-software-engineer, etc.) are the software-specific parameterization.
+**Base agent** — An agent carrying a base (unparameterized) **skill**
+with no domain assumptions. The four base agents (planner,
+implementer, reviewer, validator) are the foundation that all
+domain-specific agents extend. The analytics workflow agents
+(analysis-planner, data-analyst, logic-reviewer, data-validator) are
+the analytics-specific parameterization; domain workflow agents
+(product-manager, code-reviewer, software-engineer, etc.) are
+parameterized for their respective domains.
 
 **On-demand workflow addition** — The mechanism by which a project
 adds a new workflow type after initial bootstrap, documented in

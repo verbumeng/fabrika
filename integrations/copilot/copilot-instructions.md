@@ -8,7 +8,7 @@ The AI agent orchestrates the entire development workflow. The human's role is d
 
 ## Project Basics
 - **Project Key:** [PROJECT_KEY] (e.g. MYAPP — used for branch naming and story IDs)
-- **Project Type:** [web-app | data-app | analytics-engineering | data-engineering | ml-engineering | ai-engineering | automation | library | analytics-workspace | task-workspace | agentic-workflow] (can be multi-type for sprint-based types)
+- **Project Type:** [web-app | data-app | analytics-engineering | data-engineering | ml-engineering | ai-engineering | automation | library | analytics workflow | task-workspace | agentic-workflow] (can be multi-type)
 - **Repo:** `[project-root]`
 - **Project docs:** `[project-root]/docs`
 - **Document Catalog:** `[FABRIKA_PATH]/core/Document-Catalog.md`
@@ -42,9 +42,10 @@ it?" Four backlog types exist:
   behavior, reproduction steps). Uses the task workflow. The reviewer
   additionally verifies the fix addresses the reproduction case.
 - **Story** — Sprint-scoped work with acceptance criteria. Uses the
-  development workflow (`core/workflows/types/development-workflow.md`).
-  Ceremony tiers within stories: Patch / Story / Deep Story (see
-  Tier-Conditional Workflow Branching in the development workflow).
+  project's domain workflow + story execution protocol
+  (`core/workflows/protocols/story-execution.md`). Ceremony tiers
+  within stories: Patch / Story / Deep Story (see Tier-Conditional
+  Workflow Branching in the story execution protocol).
 - **Epic** — A coordination envelope grouping tasks and stories toward
   a larger goal. Epics do not have their own execution workflow — they
   organize work items that each follow their own workflow.
@@ -93,7 +94,7 @@ mid-sprint or outside sprint boundaries.
 
 ## Project Structure
 
-### Sprint-based types
+### Domain workflow types
 ```
 [project-name]/
 ├── .github/
@@ -140,7 +141,7 @@ mid-sprint or outside sprint boundaries.
 └── Justfile
 ```
 
-### Task-based types (analytics-workspace)
+### Analytics workflow type
 ```
 [project-name]/
 ├── .github/
@@ -209,7 +210,7 @@ Every conversation follows this lifecycle. No steps are optional.
 ### Session Start (Orientation)
 1. Read `STATUS.md` for current project state
 2. Read the current sprint's progress file
-   When reading Tier 1 context documents (Architecture Overview, Data Model, Canonical Patterns, etc.), the orchestrator checks the document's `last-validated` frontmatter against the project's freshness threshold. If stale, the orchestrator emits a one-line note during orientation (e.g., "Note: Architecture Overview last validated 6 weeks ago") and loads the document with a caveat. Stale docs are never automatically skipped — Strategy A (skip) is only used when the owner explicitly overrides. See `[FABRIKA_PATH]/core/workflows/types/development-workflow.md` (Freshness-Aware Context Loading).
+   When reading Tier 1 context documents (Architecture Overview, Data Model, Canonical Patterns, etc.), the orchestrator checks the document's `last-validated` frontmatter against the project's freshness threshold. If stale, the orchestrator emits a one-line note during orientation (e.g., "Note: Architecture Overview last validated 6 weeks ago") and loads the document with a caveat. Stale docs are never automatically skipped — Strategy A (skip) is only used when the owner explicitly overrides. See `[FABRIKA_PATH]/core/workflows/protocols/story-execution.md` (Freshness-Aware Context Loading).
 3. Read `git log --oneline -10` for recent history
 4. Read `features.json` for current pass/fail state
 5. Run quick health check: fast test command
@@ -265,7 +266,20 @@ After the owner approves the Charter and/or PRD, the orchestrator issues a fresh
 
 The agent drives the development process proactively. Don't wait for the owner to orchestrate each step.
 
-**Before starting any story, sprint planning, or bug fix, read:** `[FABRIKA_PATH]/core/workflows/types/development-workflow.md`
+**Before starting any story, sprint planning, or bug fix, read:** the project's domain workflow file in `[FABRIKA_PATH]/core/workflows/types/` and `[FABRIKA_PATH]/core/workflows/protocols/story-execution.md`
+
+**Project type to domain workflow file mapping:**
+
+| Project Type | Domain Workflow File |
+|-------------|---------------------|
+| `web-app` | `software-development-workflow.md` |
+| `automation` | `software-development-workflow.md` |
+| `data-engineering` | `data-engineering-workflow.md` |
+| `analytics-engineering` | `analytics-engineering-workflow.md` |
+| `data-app` | `data-app-workflow.md` |
+| `ml-engineering` | `ml-engineering-workflow.md` |
+| `ai-engineering` | `ai-engineering-workflow.md` |
+| `library` | `library-workflow.md` |
 
 Token cost estimates are presented alongside plan/spec briefings — see `[FABRIKA_PATH]/core/workflows/protocols/token-estimation.md`.
 
@@ -280,7 +294,7 @@ Summary of workflows covered:
   mandatory research phase and architect review at both plan and
   evaluate stages. The orchestrator reads `tier` from the story
   frontmatter and routes to the appropriate path. See
-  `[FABRIKA_PATH]/core/workflows/types/development-workflow.md`
+  `[FABRIKA_PATH]/core/workflows/protocols/story-execution.md`
   (Tier-Conditional Workflow Branching).
 - **Starting a Story** — spec expansion → token cost estimate → approval → optional architect design review → branch → testing approach branching (TDD: test-writer spec-first → implementer vertical slices → refactor; test-informed: implementer → test-writer coverage; test-after: implementer → evaluation cycle) → evaluate → fix cycle
 - **Completing a Story (Evaluation Cycle)** — tests → lint → commit → reviewer → validator → planner validation → optional architect structural evaluation → review-revise loop (max 3 cycles, implementer reads reviews directly — see `core/design-principles.md`)
@@ -292,7 +306,7 @@ Summary of workflows covered:
 
 ---
 
-## Analytics Workspace Workflow (analytics-workspace type only)
+## Analytics Workflow (analytics workflow type only)
 
 No sprints. Work is organized as individual analysis tasks with a tiered review workflow based on data environment.
 
@@ -304,7 +318,7 @@ Mixed sources use highest tier. Stakes (low/medium/high) scale review intensity 
 
 For complex analyses (3+ data sources, multiple stakeholders, novel domain, >2 day effort, or significant decision impact), Design Alignment triggers to produce an enhanced Analysis Brief — not a Charter/PRD. This is optional and driven by complexity, not by default.
 
-**For analytics-workspace projects, read:** `[FABRIKA_PATH]/core/workflows/types/analytics-workspace.md`
+**For analytics workflow projects, read:** `[FABRIKA_PATH]/core/workflows/types/analytics-workflow.md`
 
 ---
 
@@ -327,8 +341,8 @@ When presenting plans, results, or summaries to the owner, do not dump raw artif
 - **After sprint planning:** `[FABRIKA_PATH]/core/briefings/sprint-plan-briefing.md`
 - **Session close-out / story completion:** `[FABRIKA_PATH]/core/briefings/session-summary-briefing.md`
 - **After sprint retro:** `[FABRIKA_PATH]/core/briefings/retro-briefing.md`
-- **After analytics-workspace plan creation:** `[FABRIKA_PATH]/core/briefings/task-plan-briefing.md`
-- **After analytics-workspace task delivery:** `[FABRIKA_PATH]/core/briefings/task-outcome-briefing.md`
+- **After analytics workflow plan creation:** `[FABRIKA_PATH]/core/briefings/task-plan-briefing.md`
+- **After analytics workflow task delivery:** `[FABRIKA_PATH]/core/briefings/task-outcome-briefing.md`
 - **After agentic-workflow plan (Step 2):** `[FABRIKA_PATH]/core/briefings/structural-plan-briefing.md`
 - **After agentic-workflow execution (Step 6):** `[FABRIKA_PATH]/core/briefings/change-summary-briefing.md`
 
@@ -354,17 +368,17 @@ All agents are invoked proactively at trigger points in the Development Workflow
 
 **Archetypes:** Each agent implements one of seven archetypes (Planner, Reviewer, Validator, Coordinator, Designer, Implementer, Architect) that define base tool profiles and contracts. See `[FABRIKA_PATH]/core/agents/archetypes/` for templates.
 
-### Sprint-based types
+### Domain workflows
 | Role | Default Agent | Specialized Variants |
 |------|--------------|---------------------|
 | **Planner** | product-manager | experiment-planner (ml-engineering), api-designer (library) |
 | **Reviewer** | code-reviewer | + prompt-reviewer (ai-engineering, supplemental) |
 | **Validator** | test-writer | model-evaluator (ml-engineering), eval-engineer (ai-engineering), data-quality-engineer (data-engineering) |
-| **Coordinator** | scrum-master | (same for all sprint-based types) |
-| **Implementer** | software-engineer | data-engineer (data-engineering, analytics-engineering), data-analyst (analytics-workspace, data-app), ml-engineer (ml-engineering), ai-engineer (ai-engineering) |
+| **Coordinator** | scrum-master | complexity-triggered (story/epic work) |
+| **Implementer** | software-engineer | data-engineer (data-engineering, analytics-engineering), data-analyst (analytics workflow, data-app), ml-engineer (ml-engineering), ai-engineer (ai-engineering) |
 | **Architect** | software-architect | data-architect (data-engineering, analytics-engineering, data-app, ml-engineering) |
 
-### Task-based types (task-workspace) — Base Workflow
+### Task workflow (base)
 | Role | Agent |
 |------|-------|
 | **Planner** | planner — reads brief, produces plan with deliverables, acceptance criteria, sequencing; validation mode checks output against brief. Skipped in simple mode. |
@@ -377,7 +391,7 @@ specialized agents extend. For trivially scoped work, simple mode
 skips the planner and validator — see
 `[FABRIKA_PATH]/core/workflows/types/task-workflow.md` (Simple Mode).
 
-### Task-based types (analytics-workspace)
+### Analytics workflow
 | Role | Agent |
 |------|-------|
 | **Planner** | analysis-planner — takes vague asks, produces briefs and technical plans; validation mode checks output against brief |
@@ -386,7 +400,7 @@ skips the planner and validator — see
 | **Validator** | data-validator — sanity checks, cross-references, spot-checks on output; produces validation report |
 | **Implementer** | data-analyst — implements analysis scripts, SQL, notebooks; write-only and execute-metadata modes |
 
-### Methodology-based types (agentic-workflow)
+### Agentic workflow
 
 | Role | Agent |
 |------|-------|
@@ -565,7 +579,7 @@ contract per story and determines the implementation flow:
   cycle.
 
 The development workflow branches on testing approach. See
-`[FABRIKA_PATH]/core/workflows/types/development-workflow.md` for the
+`[FABRIKA_PATH]/core/workflows/protocols/story-execution.md` for the
 full flow.
 
 ### General Testing Rules
@@ -595,7 +609,7 @@ This project uses **Fabrika**, an agentic workflow framework. Local agent change
 - **Conservative sprint scope.** 2-3 stories per sprint. Favor shipping over perfecting.
 - **Context window hygiene.** Load docs on demand, not up front. Return concise summaries.
 - **Compaction at phase transitions.** Each phase handoff produces a compressed artifact self-contained for the next agent. Do not dump full file contents, raw tool outputs, or exploration dead-ends into dispatch payloads or agent returns. See `[FABRIKA_PATH]/core/design-principles.md`.
-- **Freshness-aware context loading.** Before loading Tier 1 context documents at story/task start, the orchestrator checks `last-validated` against the project's freshness threshold. Stale docs are loaded with a caveat (universal default). The orchestrator decides what to include in dispatch payloads — the implementer receives whatever context the orchestrator gives it. See `[FABRIKA_PATH]/core/workflows/types/development-workflow.md`.
+- **Freshness-aware context loading.** Before loading Tier 1 context documents at story/task start, the orchestrator checks `last-validated` against the project's freshness threshold. Stale docs are loaded with a caveat (universal default). The orchestrator decides what to include in dispatch payloads — the implementer receives whatever context the orchestrator gives it. See `[FABRIKA_PATH]/core/workflows/protocols/story-execution.md`.
 - **Stack-agnostic agent prompts.** Tech details live in this file's Project Stack section.
 - **Pure orchestrator.** The orchestrator dispatches to implementer agents for all production code changes — it does not implement directly, even for trivial tasks. Lightweight dispatch reduces ceremony, not the dispatch itself.
 - **Implementer-reviewer pairing.** Every implementer output gets an independent review. During revision, the implementer reads review reports directly — the orchestrator routes file paths, it does not synthesize findings. See `[FABRIKA_PATH]/core/design-principles.md`.

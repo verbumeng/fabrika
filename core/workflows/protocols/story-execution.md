@@ -1,6 +1,26 @@
-# Development Workflow
+# Story Execution Protocol
 
-The agent drives the development process proactively. Do not wait for the owner to orchestrate each step.
+Shared execution mechanics for work at story complexity or above,
+regardless of domain. This protocol is referenced by all domain
+workflow files. It is NOT a workflow type — it is a cross-cutting
+procedure containing the mechanics that domain workflows compose with.
+
+For the domain-specific agent roster, domain-specific gates, and
+testing approach guidance for a particular domain, see the project's
+domain workflow file:
+
+- `core/workflows/types/software-development-workflow.md`
+- `core/workflows/types/data-engineering-workflow.md`
+- `core/workflows/types/analytics-engineering-workflow.md`
+- `core/workflows/types/data-app-workflow.md`
+- `core/workflows/types/ml-engineering-workflow.md`
+- `core/workflows/types/ai-engineering-workflow.md`
+- `core/workflows/types/library-workflow.md`
+
+**Procedure classification:** Cross-cutting. Referenced by all domain
+workflow types for work at story complexity or above.
+
+---
 
 ## Design Alignment (Pre-Sprint)
 
@@ -49,11 +69,11 @@ spec. The orchestrator skips spec creation and runs a reduced
 evaluation cycle.
 
 ```
-story file → implementer → code-reviewer → commit
+story file -> implementer -> code-reviewer -> commit
 ```
 
 1. Read the story file and sprint contract
-2. Read relevant project docs on demand, applying the freshness check described above (architecture, data model)
+2. Read relevant project docs on demand, applying the freshness check described below (architecture, data model)
 3. Skip spec creation — the story's acceptance criteria are the spec
 4. Create feature branch: `feature/[PROJECT_KEY]-S-042-description`
 5. Update story: `status: In Progress`
@@ -84,7 +104,7 @@ architect review.
 
 ### Story Path (tier: story)
 
-The current full development workflow. Follow "Starting a Story" and
+The standard execution workflow. Follow "Starting a Story" and
 "Completing a Story (Evaluation Cycle)" below with no modifications.
 All existing gates apply.
 
@@ -94,8 +114,8 @@ Deep Stories add a mandatory research phase and architect review. The
 orchestrator must complete all Deep Story gates — none are optional.
 
 ```
-research → planner (spec) → architect review → implementer →
-full evaluation cycle + architect structural review → commit
+research -> planner (spec) -> architect review -> implementer ->
+full evaluation cycle + architect structural review -> commit
 ```
 
 1. **Research phase.** Before invoking the planner, the orchestrator
@@ -114,10 +134,10 @@ full evaluation cycle + architect structural review → commit
    protocol.
 4. Present the spec to the owner for approval.
 5. **Mandatory architect review.** Invoke the appropriate architect
-   (software-architect or data-architect) in **design mode** with the
-   spec's module section. This is NOT optional for Deep Stories — the
-   architect must review before implementation begins. Present the
-   architect's findings alongside the spec for owner approval.
+   in **design mode** with the spec's module section. This is NOT
+   optional for Deep Stories — the architect must review before
+   implementation begins. Present the architect's findings alongside
+   the spec for owner approval.
 6. Proceed with "Starting a Story" steps 8-10 (branch creation,
    status update, testing approach branching).
 7. After implementation, run the full evaluation cycle (steps 1-9 of
@@ -145,18 +165,14 @@ A Story can be promoted to Deep Story if:
 
 Promotion is one-way (up only) and triggers the orchestrator to
 present the situation to the owner before continuing. Demotion
-(Deep Story to Story) is owner-initiated only — if research reveals
-the change is simpler than anticipated, the owner can demote, but
-the architect review of the spec is already done at that point so
-the practical difference is skipping the post-implementation architect
-review.
+(Deep Story to Story) is owner-initiated only.
 
 ## Freshness-Aware Context Loading
 
 When loading Tier 1 context documents at story/task start, the
 orchestrator checks each document's `last-validated` frontmatter field
 against the project's freshness threshold. This applies to all workflow
-types that load Tier 1 docs — development-workflow, task-workflow, and
+types that load Tier 1 docs — domain workflows, task workflow, and
 any future workflow that reads structural context at start.
 
 **Freshness threshold.** Configurable per project, recorded in the
@@ -180,17 +196,11 @@ before relying on it."
 
 **Strategy B: Load with caveat (universal default).** Load the stale
 document with a caveat note prepended. This is the default for ALL
-tiers — Patch, Story, and Deep Story alike. Rationale: stale-but-
-mostly-accurate context is almost always cheaper than reconstructing
-from scratch, which burns the context window and may produce worse
-results.
+tiers — Patch, Story, and Deep Story alike.
 
 **Strategy A: Skip and research (owner override only).** Do not load
 the stale document. Strategy A exists only as an explicit owner
-override for docs the owner knows are seriously wrong. It is never an
-automatic default. When the owner specifies Strategy A for a document,
-the orchestrator skips it and the implementer relies on research and
-on-demand file reads for that area.
+override for docs the owner knows are seriously wrong.
 
 **Triage belongs to sweeps, not story start.** The three-option triage
 (re-validate, mark for refresh, accept staleness) is NOT performed at
@@ -209,7 +219,7 @@ which documents carry the `last-validated` field.
 4. Invoke the **planner** agent in **planning mode** to expand the story into a full implementation spec (saved to `docs/plans/[TICKET]-spec.md`)
 5. After the spec is drafted, invoke the token cost estimation protocol (`core/workflows/protocols/token-estimation.md`) to present the cost estimate alongside the spec briefing.
 6. Present the spec to the owner for approval using the **Spec Briefing** format (see briefing docs)
-7. **(Optional) Invoke the architect agent for design review.** If the spec proposes new modules, significant restructuring, or changes to component boundaries, dispatch the appropriate architect (software-architect or data-architect based on project type) in **design mode** with the spec's module section. The architect reviews proposed module depth, interface design, and component boundaries. Present the architect's findings alongside the spec for owner approval. Skip if the story is a small feature change within existing module boundaries.
+7. **(Optional) Invoke the architect agent for design review.** If the spec proposes new modules, significant restructuring, or changes to component boundaries, dispatch the appropriate architect in **design mode** with the spec's module section. The architect reviews proposed module depth, interface design, and component boundaries. Present the architect's findings alongside the spec for owner approval. Skip if the story is a small feature change within existing module boundaries.
    For Deep Story tier, architect review is mandatory — see
    "Tier-Conditional Workflow Branching" above.
 8. Create feature branch: `feature/[PROJECT_KEY]-S-042-description`
@@ -228,28 +238,16 @@ which documents carry the `last-validated` field.
       failing tests from step 1. The implementer writes the minimum
       code necessary to make those specific tests pass.
    3. Repeat steps 1-2 for each remaining behavior identified in the
-      spec. The orchestrator manages the loop. When the tool supports
-      persistent agent sessions (e.g., Claude Code), reuse the same
-      test-writer and implementer sessions across cycles to preserve
-      context. When it does not (e.g., Copilot subagents), each
-      dispatch is self-contained — include all prior test files and
-      implementation files in the dispatch payload.
+      spec. The orchestrator manages the loop.
    4. Once all spec behaviors have passing tests, dispatch the
       implementer for **refactor** — same dispatch plus instruction
       to improve code structure while keeping tests green.
-   5. (Optional, if story is architecturally flagged or code-reviewer's
-      Module Depth criterion scored Partial/Fail) Dispatch the
-      **architect** in review mode after refactor.
+   5. (Optional) Dispatch the **architect** in review mode after refactor.
    6. Proceed to Completing a Story (Evaluation Cycle).
 
    **If testing approach = Test-informed:**
    1. Dispatch the **implementer** — contextual dispatch per the
-      dispatch protocol. The implementer has access to the spec's
-      Test Boundaries section (if produced by the planner), which
-      identifies expected behaviors, I/O contracts, and edge cases
-      that tests will cover. This shapes implementation choices
-      (keeping interfaces testable, not hiding logic in private
-      methods) but does not change the dispatch mechanics.
+      dispatch protocol.
    2. Dispatch the **test-writer** in **coverage mode** — strict
       dispatch with spec, source paths, and test conventions.
    3. (Optional) Dispatch the implementer for refactor if the
@@ -296,7 +294,7 @@ Before marking a story complete, run the full evaluation cycle:
 7. Invoke the **planner** agent in **validation mode** — strict
    dispatch. It verifies acceptance criteria from the sprint contract
    are met
-8. **(Optional) Invoke the architect agent for structural evaluation.** If the implementation creates new modules, changes component boundaries, or the code-reviewer flagged structural concerns (Module Depth / Interface Simplicity criterion scored Partial or Fail), dispatch the appropriate architect in **review mode** with strict dispatch. The architect evaluates whether the implementation maintains or degrades module depth. This supplements the code-reviewer — the code-reviewer evaluates code quality, the architect evaluates structural design. Skip for implementations that work entirely within existing module boundaries.
+8. **(Optional) Invoke the architect agent for structural evaluation.**
    For Deep Story tier, architect structural evaluation is mandatory —
    see "Tier-Conditional Workflow Branching" above.
 9. Each evaluator writes a report to
@@ -306,41 +304,20 @@ Before marking a story complete, run the full evaluation cycle:
 
 10. Dispatch the implementer for revision with: the original spec,
     relevant file paths, and a `Review report paths` field containing
-    the paths to all evaluation reports from the current cycle. The
-    implementer reads the review reports directly alongside the
-    original plan — the orchestrator does not synthesize or interpret
-    findings. See `core/design-principles.md` for the rationale.
+    the paths to all evaluation reports from the current cycle.
 11. The implementer addresses each finding and returns an updated
     output summary.
-12. Sanity-check the fixes: does the implementer's summary address
-    each evaluator finding? If a finding was clearly missed, dispatch
-    clarification back to the implementer before burning a retry cycle.
-13. Re-invoke ALL evaluators with fresh dispatch — same spec, same
-    rubric, updated file paths. No prior evaluation report included.
-    All evaluators re-check, not just the ones that failed — a fix
-    can introduce new issues in areas that previously passed.
-14. **Maximum 3 retry cycles** through steps 10-13. After 3 failed
-    cycles, the orchestrator reads all reports across all cycles,
-    diagnoses the failure pattern (same issue recurring? different
-    issues each time? narrowing but not resolving?), and presents the
-    diagnosis to the user in plain language. The user decides the path
-    forward: rescope, break into smaller stories, research the
-    blocker, or override. The review cycle still runs after
-    intervention.
-    For Patch tier, the maximum is 2 retry cycles — see the Patch Path
-    above. If a Patch exceeds 2 cycles, promote to Story.
+12. Sanity-check the fixes.
+13. Re-invoke ALL evaluators with fresh dispatch.
+14. **Maximum 3 retry cycles** (2 for Patch tier).
 
 **If all evaluators pass:**
 
-15. Update project docs if implementation diverged (architecture, data
-    model, research notes)
-16. Create an ADR for any significant technical decision made during
-    implementation
+15. Update project docs if implementation diverged
+16. Create an ADR for any significant technical decision
 17. Update story: `status: In Review`, add `## Completion Summary`
-18. If an external task management system is configured, mark the
-    corresponding task as done
-19. Present the session summary to the owner using the **Session
-    Summary Briefing** format (see briefing docs)
+18. If an external task management system is configured, mark done
+19. Present the session summary to the owner
 
 ## Multi-Domain Story Completion
 
@@ -351,92 +328,63 @@ implementation domains), each task runs as its own session:
 
 Each task runs in a separate session with the domain's implementer:
 
-1. Read the spec's Task Decomposition for this task — scope, files,
-   interface contracts
-2. Dispatch to the domain implementer with: task section from the
-   spec, interface contracts, file paths, relevant architecture docs
-3. After implementation, run the evaluation cycle above — with the
-   domain-appropriate validator (data-quality-engineer for pipeline
-   tasks, model-evaluator for ML tasks, etc.)
-4. Include prior task output summaries as context when dispatching
-   subsequent implementers — so later tasks can implement against the
-   interfaces produced by earlier tasks
-5. **Session handoff:** After the task's evaluation cycle passes, run
-   the standard session close-out (commit, update STATUS.md, append
-   to sprint progress file). Update STATUS.md's `Next chat should:`
-   field to point to the next task: *"Continue [TICKET] — Task N:
-   [task name] ([domain] implementer)"*. Issue the deterministic
-   handoff prompt: *"Task N-1 complete. Open a new chat to continue
-   [TICKET] — Task N: [task name]."* Do NOT start the next task in
-   the same chat.
+1. Read the spec's Task Decomposition for this task
+2. Dispatch to the domain implementer
+3. After implementation, run the evaluation cycle
+4. Include prior task output summaries as context for subsequent tasks
+5. **Session handoff:** After the task's evaluation cycle passes,
+   issue the deterministic handoff prompt
 
 ### Integration Session (Final)
 
-After all per-task sessions complete, the final handoff prompt
-from the last task session should read: *"All tasks complete. Open
-a new chat for [TICKET] integration verification."*
-
-The integration session:
+After all per-task sessions complete:
 
 1. No implementer dispatch — this session verifies integration
-2. Invoke the **planner** agent in **validation mode** — check the
-   unified story's acceptance criteria, especially integration criteria
-   ("data flows end-to-end from ingestion through serving")
-3. Invoke the **reviewer** agent on the full change set — looking
-   specifically at the seams between domains (interface contracts
-   honored, data formats match, error handling at boundaries)
+2. Invoke the **planner** agent in **validation mode**
+3. Invoke the **reviewer** agent on the full change set
 4. If integration issues are found, dispatch to the relevant domain
-   implementer in a follow-up session with specific fix instructions
+   implementer
 
 ### Guidance for Orchestrators
 
 - **Prefer single-domain stories.** Multi-domain stories are the
   exception, not the norm.
 - **Two-domain stories** are acceptable when the domains are tightly
-  coupled (e.g., pipeline + dashboard for the same data).
-- **Three+ domain stories** should be decomposed by the planner
-  during spec expansion. The scrum-master should flag these during
-  sprint planning.
-- The planner defines interface contracts between tasks at spec time.
-  These contracts are the alignment mechanism — they specify data
-  formats, API contracts, file paths, and schema expectations so each
-  implementer can work independently.
+  coupled.
+- **Three+ domain stories** should be decomposed by the planner.
 
 ## Sprint Planning
-1. Invoke the **scrum-master** (coordinator) agent to facilitate. If an approved PRD exists for this phase, provide the PRD pointer — the scrum master decomposes the PRD into epics and stories for the first sprint of the phase
-2. Check when the last maintenance session ran (read `maintenance-latest` git tag). If >1 week or >1 sprint ago, run maintenance first
-3. Query backlog (`status: To Do`) and check for unfinished stories from the previous sprint
-4. The scrum-master assesses **sprint topology** based on task coupling:
-   - **Pipeline** (default): Single feature through plan → build → evaluate cycle
-   - **Mesh**: Independent tasks, no shared state, can be worked in any order
-   - **Hierarchical**: Coupled tasks with dependencies, must be sequenced
-5. Propose 2-3 stories (10-15 points) based on priority, dependencies, and topology
-6. Create sprint file (`docs/04-Backlog/Sprints/Sprint-XX.md`), sprint contract (using the appropriate topology template from `docs/Templates/`), and sprint progress file
-7. Update story assignments and create `features.json` entries for the sprint
-8. If an external task management system is configured, create one task per sprint story linking to the story file
-9. Present the sprint plan and contract to the owner for approval using the **Sprint Plan Briefing** format (see briefing docs)
+1. Invoke the **scrum-master** (coordinator) agent to facilitate
+2. Check maintenance timing
+3. Query backlog and check for unfinished stories
+4. The scrum-master assesses **sprint topology**
+5. Propose 2-3 stories (10-15 points)
+6. Create sprint file, sprint contract, and sprint progress file
+7. Update story assignments and create `features.json` entries
+8. If an external task management system is configured, create tasks
+9. Present the sprint plan to the owner for approval
 
 ## Ideation & Backlog Grooming
 When the owner is brainstorming features, re-prioritizing, or refining stories:
-1. New stories defined → create story files (and Jira tickets if Jira mode) and update epic
-2. Existing stories re-scoped → update story frontmatter/body (and Jira ticket if Jira mode)
-3. Ideas that are exploratory and not committed → add to `docs/09-Personal-Tasks/Someday-Maybe.md`
-4. Scope moves between phases → update `docs/01-Product/Phase Definitions.md`
+1. New stories defined -> create story files
+2. Existing stories re-scoped -> update story frontmatter/body
+3. Ideas that are exploratory -> add to Someday-Maybe
+4. Scope moves between phases -> update Phase Definitions
 
 ## Research & Technical Discussion
 When the conversation involves investigating a technology or debating an approach:
-1. Technology evaluation → create or update a research doc in `05-Research/`
-2. Data source investigation → create or update a research note in `05-Research/Data Source Research/`
-3. If the discussion produces a decision → create an ADR in `02-Engineering/ADRs/`
-4. If the discussion changes the data model or architecture → update those docs
+1. Technology evaluation -> create/update research doc
+2. Data source investigation -> create/update research note
+3. Discussion produces a decision -> create an ADR
+4. Discussion changes architecture or data model -> update those docs
 
 ## Bug Reporting & Fix Workflow
-When the owner reports a bug, read and follow `docs/02-Engineering/bug-workflow.md`. Summary: file bug → trace root cause through evaluator reports → fix with regression test → invoke reviewer (always), validator (always), planner (if behavior changed or spec was root cause) → create eval case for the missed failure mode.
+When the owner reports a bug, read and follow `docs/02-Engineering/bug-workflow.md`.
 
 ## Architecture Assessment (Ad Hoc)
-When the owner requests an architectural review of existing code, or when the orchestrator detects the owner is discussing refactoring, module organization, or code structure:
-1. Identify the appropriate architect agent based on project type (software-architect for web-app/automation/library/ai-engineering, data-architect for data-engineering/analytics-engineering/data-app/ml-engineering)
-2. Dispatch with **contextual dispatch (ad hoc mode):** Architecture Overview pointer, the target module/directory/codebase scope, owner's specific concern (if any)
-3. The architect produces an assessment report with findings, recommendations, and done thresholds
-4. Present the assessment to the owner. Architect proposals are owner-gated — they go on the backlog only if the owner approves
-5. For approved refactor proposals: create stories in the backlog with the architect's recommendations as acceptance criteria and the done threshold from the assessment
+When the owner requests an architectural review of existing code, or when the orchestrator detects refactoring discussion:
+1. Identify the appropriate architect agent based on domain
+2. Dispatch with contextual dispatch (ad hoc mode)
+3. The architect produces an assessment report
+4. Present the assessment to the owner
+5. For approved refactor proposals: create stories in the backlog

@@ -1,5 +1,9 @@
 # Knowledge Pipeline
 
+**Procedure classification:** Cross-cutting. The pipeline runs at
+cadences tied to delivery events and is workflow-agnostic — all
+workflow types invoke it at their delivery points.
+
 The five-phase pipeline that transforms raw project artifacts into
 structured, continuously updated wiki knowledge. This is the
 reference specification — the practical step-by-step procedure is in

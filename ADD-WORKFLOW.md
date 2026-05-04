@@ -49,17 +49,28 @@ not exist.
 
 Same as task workflow base, plus analytics-specific agents and
 configuration. See BOOTSTRAP.md Phase 2W for the full analytics
-workspace setup, which includes source registry scaffolding, platform
+workflow setup, which includes source registry scaffolding, platform
 onboarding, and analytics-specific agents (analysis-planner,
-data-analyst, logic-reviewer, data-validator).
+data-analyst, logic-reviewer, data-validator). Bundled procedures:
+analytics-workflow-onboarding and task-promotion are installed
+alongside the analytics workflow.
 
-### Sprint Workflow
+### Domain Workflows
 
-Sprint-based workflows require the full sprint framework (sprint
-contracts, rubrics, hooks, evaluation scaffold). See BOOTSTRAP.md
-Phase 2 and ADOPT.md Tier 2 for the full installation. Adding sprint
-ceremony to an existing project is a larger change than adding a
-task-based workflow.
+Domain workflows (software-development, data-engineering,
+analytics-engineering, data-app, ml-engineering, ai-engineering,
+library) provide domain-specific agent rosters and gates that compose
+with the story-execution protocol. Adding a domain workflow installs:
+the domain workflow file, the domain-specific agents, and a reference
+to `core/workflows/protocols/story-execution.md` for shared execution
+mechanics. The orchestrator also assesses whether **sprint
+coordination** is needed based on the project's work complexity —
+sprint coordination can be added independently of any workflow
+addition. It is a complexity-triggered procedure, not a workflow type.
+
+See BOOTSTRAP.md Phase 2 and ADOPT.md Tier 2 for full sprint
+framework installation (sprint contracts, rubrics, hooks, evaluation
+scaffold).
 
 ## Installation Procedure
 

@@ -1,18 +1,24 @@
 # Task Workflow
 
-The base workflow type — the domain-agnostic foundation that all
-specialized workflows parameterize. Provides the full multi-agent
+The unparameterized workflow type — the domain-agnostic foundation
+that all specialized workflows extend. Provides the full multi-agent
 lifecycle (brief, plan, implement, review, validate, deliver) without
 any domain assumptions about what the task produces or how it is
 evaluated. For trivially scoped work, simple mode lets the
 orchestrator plan inline and skip the task folder — see the Simple
 Mode section below.
 
-The analytics-workspace workflow is a parameterized version of this
-base, adding data-specific agents (data-analyst, logic-reviewer,
-data-validator), tiered workflows (local vs. production), and
-domain-specific review criteria. Sprint-based workflows (development
-workflow) add sprint ceremony, stories, and domain-specific planners.
+In Fabrika's three-tier abstraction, this workflow sits in the middle:
+**skills** (what agents do in one invocation) compose into **workflow
+types** (multi-agent patterns), which compose into **projects**. The
+task workflow is the base workflow type: it invokes base agents
+(planner, implementer, reviewer, validator) with their unparameterized
+skills. Specialized workflows add domain knowledge at each tier:
+the analytics workflow adds data-specific agents, tiered review, and
+domain criteria; domain workflows (software-development,
+data-engineering, etc.) add sprint ceremony via the story-execution
+protocol (`core/workflows/protocols/story-execution.md`) and
+domain-specific planners, reviewers, validators, and implementers.
 This base workflow carries no domain knowledge — its criteria come
 from the plan, not from a domain model.
 
@@ -136,7 +142,7 @@ checks the document's `last-validated` frontmatter against the
 project's freshness threshold. If stale, the orchestrator emits a
 one-line note (e.g., "Note: Architecture Overview last validated 6
 weeks ago") and loads the document with a caveat. See
-`core/workflows/types/development-workflow.md` (Freshness-Aware
+`core/workflows/protocols/story-execution.md` (Freshness-Aware
 Context Loading) for the full protocol.
 
 ### Brief

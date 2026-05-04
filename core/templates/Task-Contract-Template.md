@@ -6,7 +6,7 @@ status: active
 
 # Task Contract: [Short descriptive title]
 
-> This contract defines the scope, approach, and acceptance criteria for an analytics-workspace task. It is the lightweight equivalent of a sprint contract — scoped to a single task rather than a sprint of stories.
+> This contract defines the scope, approach, and acceptance criteria for an analytics workflow task. It is the lightweight equivalent of a sprint contract — scoped to a single task rather than a sprint of stories.
 
 ## Task Summary
 - **Brief:** `tasks/[date-name]/brief.md`

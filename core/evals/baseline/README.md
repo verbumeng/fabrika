@@ -30,7 +30,7 @@ During maintenance sessions, run baseline evals alongside project-specific evals
 ## When to Skip
 
 Baseline evals are designed to be universal, but some may not apply:
-- `analytics-workspace` projects skip coordinator evals (no scrum master)
+- analytics workflow projects skip coordinator evals (no scrum master)
 - Validator evals reference "tests" generically — adapt the specific check to the validator type (test-writer runs unit tests, data-validator runs sanity checks, model-evaluator runs metrics, etc.)
 
 ## Relationship to Project-Specific Evals

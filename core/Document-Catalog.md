@@ -17,35 +17,26 @@ tags: [project, documentation, catalog, reference]
 ### Project Types
 Every document is tagged with the project types that need it:
 
-### Sprint-Based Types
-These follow the full sprint lifecycle (plan → build → evaluate → retro):
+### Workflow Types
 
-| Tag | Description | Examples |
-|-----|-------------|---------|
-| `web-app` | Full-stack web applications — personal tools, SaaS products, consumer apps, APIs | Personal SaaS, consumer SaaS, internal web tools |
-| `data-app` | Interactive tools replacing Excel — dashboards, forms, data entry apps, reporting tools | Streamlit dashboard, internal reporting tool, data entry webapp |
-| `analytics-engineering` | Modeled data layers — dbt transformations, DuckDB analytics, warehouse modeling, tested datasets that downstream tools consume | DuckDB + dbt layer, Alteryx → SQL migration, star schema builds |
-| `data-engineering` | Full pipeline infrastructure — ingestion, storage, orchestration, serving across systems. Organized around the data engineering lifecycle (Reis): generation → ingestion → storage → transformation → serving | Airflow DAGs, CDC pipelines, warehouse-to-warehouse ETL, streaming ingestion |
-| `ml-engineering` | Machine learning — model development, training data, feature engineering, evaluation | Predictive models, classification, forecasting |
-| `ai-engineering` | LLM-powered applications — RAG systems, agent frameworks, prompt engineering, eval harnesses | RAG chatbot, AI-powered search, agent workflow, LLM-augmented tools |
-| `automation` | Scripts, CLIs, bots, workflow automation, scheduled jobs | Data scrapers, cron jobs, CLI tools, Slack bots |
-| `library` | Reusable packages, SDKs, shared modules published for other developers to import | npm packages, PyPI libraries, internal SDKs, shared utility modules |
+All project types are workflow types — reusable multi-agent patterns
+that projects can compose. A project is not locked to a single type.
 
-### Task-Based Types
-These follow the task lifecycle (brief → plan → execute → validate → deliver) with no sprint structure:
+| Tag | Workflow | Description | Examples |
+|-----|---------|-------------|---------|
+| `web-app` | Software Development | Full-stack web applications — personal tools, SaaS products, consumer apps, APIs | Personal SaaS, consumer SaaS, internal web tools |
+| `data-app` | Data App | Interactive tools replacing Excel — dashboards, forms, data entry apps, reporting tools | Streamlit dashboard, internal reporting tool, data entry webapp |
+| `analytics-engineering` | Analytics Engineering | Modeled data layers — dbt transformations, DuckDB analytics, warehouse modeling | DuckDB + dbt layer, Alteryx migration, star schema builds |
+| `data-engineering` | Data Engineering | Full pipeline infrastructure — ingestion, storage, orchestration, serving | Airflow DAGs, CDC pipelines, warehouse ETL, streaming ingestion |
+| `ml-engineering` | ML Engineering | Machine learning — model development, training data, feature engineering, evaluation | Predictive models, classification, forecasting |
+| `ai-engineering` | AI Engineering | LLM-powered applications — RAG systems, agent frameworks, prompt engineering | RAG chatbot, AI-powered search, agent workflow |
+| `automation` | Software Development | Scripts, CLIs, bots, workflow automation, scheduled jobs | Data scrapers, cron jobs, CLI tools, Slack bots |
+| `library` | Library | Reusable packages, SDKs, shared modules published for other developers to import | npm packages, PyPI libraries, internal SDKs |
+| `analytics workflow` | Analytics | Ad hoc analysis, investigations, data requests. Task lifecycle, no sprints. | Revenue variance investigation, ad hoc SQL, data quality audit |
+| `task-workspace` | Task (base) | Bounded tasks — domain-agnostic work with base agents. The base workflow type. | Catch-all for work not fitting other types |
+| `agentic-workflow` | Agentic | Systems where the methodology itself is the product. 7-step structural update lifecycle. | Agentic workflow frameworks |
 
-| Tag | Description | Examples |
-|-----|-------------|---------|
-| `analytics-workspace` | Home base for ad hoc analysis, investigations, data requests. Work is organized as individual tasks, not stories in a backlog. | Revenue variance investigation, ad hoc SQL analysis, data quality audit, stakeholder data requests |
-
-### Methodology-Based Types
-These follow the agentic-workflow lifecycle (plan → align → execute → verify → incorporate → present → ship):
-
-| Tag | Description | Examples |
-|-----|-------------|---------|
-| `agentic-workflow` | Systems where the methodology itself is the product — agent prompts, workflow definitions, instruction files, templates, hooks. Has two modes: structural (required, full 7-step protocol) and operational (optional, human-driven day-to-day sessions). | Agentic workflow frameworks, personal operating systems maintained by agents |
-
-A project can be **multi-type** (sprint-based types only). A data app with scrapers feeding a dashboard is `data-app` + `automation`. A SaaS product with ML features is `web-app` + `ml-engineering`. An AI chatbot with a web frontend is `ai-engineering` + `web-app`. The agent should union all applicable document sets. Task-based types (`analytics-workspace`) and methodology-based types (`agentic-workflow`) cannot be combined with sprint-based types — use a separate repo.
+A project can be **multi-type**. A data app with scrapers is `data-app` + `automation`. An AI chatbot with a web frontend is `ai-engineering` + `web-app`. The agent should union all applicable document sets. Any workflow types can be composed — the orchestrator routes work to the appropriate workflow.
 
 ### Priority Tiers
 | Tier | When to Create | During Bootstrapping? |
@@ -80,7 +71,7 @@ date]` to the frontmatter during creation.
 
 The orchestrator uses this field during story/task start to determine
 whether a document is fresh or stale — see
-`core/workflows/types/development-workflow.md` (Freshness-Aware Context
+`core/workflows/protocols/story-execution.md` (Freshness-Aware Context
 Loading) for the behavioral protocol and
 `core/workflows/protocols/sprint-coordination.md` for the periodic
 freshness sweep.
@@ -91,16 +82,16 @@ freshness sweep.
 
 ### Home.md
 - **Purpose:** Central navigation hub. Links to all major sections, shows project status at a glance.
-- **Types:** all sprint-based types | **Tier:** 1 | **Audience:** both
+- **Types:** all domain workflow types | **Tier:** 1 | **Audience:** both
 - **Structure:** Project name, one-line description, quick links to key docs, current phase, what to read first.
-- **Notes:** This is the first thing anyone opens. Keep it short — links, not content. For `analytics-workspace`, the equivalent is `sources/README.md` (the source registry index).
+- **Notes:** This is the first thing anyone opens. Keep it short — links, not content. For `analytics workflow`, the equivalent is `sources/README.md` (the source registry index).
 
 ### Domain-Language.md
 - **Purpose:** Shared vocabulary of domain concepts — a living reference that evolves with the project. Each term has a plain-language definition, a mandatory code-level name (populated at implementation), relationships to other terms, and anti-terms (what this term is NOT). Organized by domain area, not alphabetically. Created during Design Alignment, updated during implementation and maintenance. Feeds into briefings (jargon glossary source), implementer dispatch (code naming), and code review (terminology consistency criterion).
 - **Types:** all | **Tier:** 1 | **Audience:** both
 - **Template:** `core/templates/Domain-Language-Template.md`
 - **Structure:** One section per domain area. Within each area, one block per term: definition, code-level name, relationships, anti-terms. Cross-domain terms section for terms spanning multiple areas.
-- **Notes:** Created via the Design Alignment protocol (`core/workflows/protocols/design-alignment.md`). Updated during implementation (implementers populate code-level names and flag new concepts), PRD creation (new terms added), and maintenance (terminology drift check). For multi-type projects, use domain area sections to disambiguate terms that mean different things in different contexts. For `analytics-workspace`, Domain Language covers business domain vocabulary; the source registry (`sources/README.md`) covers data infrastructure vocabulary — they are complementary, not overlapping.
+- **Notes:** Created via the Design Alignment protocol (`core/workflows/protocols/design-alignment.md`). Updated during implementation (implementers populate code-level names and flag new concepts), PRD creation (new terms added), and maintenance (terminology drift check). For multi-type projects, use domain area sections to disambiguate terms that mean different things in different contexts. For `analytics workflow`, Domain Language covers business domain vocabulary; the source registry (`sources/README.md`) covers data infrastructure vocabulary — they are complementary, not overlapping.
 
 ---
 
@@ -114,13 +105,13 @@ freshness sweep.
 
 ### Project Charter.md
 - **Purpose:** Internal design document capturing shared understanding between the owner and agents. Defines the problem space, target user, core capabilities, constraints, success criteria, and design principles. Created once at project inception or during a major pivot.
-- **Types:** all sprint-based types, agentic-workflow | **Tier:** 1 | **Audience:** both
+- **Types:** all domain workflow types, agentic-workflow | **Tier:** 1 | **Audience:** both
 - **Template:** `core/templates/Project-Charter-Template.md`
 - **Notes:** Created via the Design Alignment protocol (`core/workflows/protocols/design-alignment.md`). The Charter captures what the product IS; Vision & Positioning captures why it matters externally; Phase Definitions breaks the Charter's capabilities into buildable phases. All three must be tightly aligned.
 
 ### PRD.md (Product Requirements Document)
 - **Purpose:** Detailed requirements for a specific phase or major feature. User stories, module changes, implementation decisions, testing approach, and scope boundaries. Created per phase or major feature.
-- **Types:** all sprint-based types, agentic-workflow | **Tier:** 1 | **Audience:** both
+- **Types:** all domain workflow types, agentic-workflow | **Tier:** 1 | **Audience:** both
 - **Template:** `core/templates/PRD-Template.md`
 - **Notes:** Created via the Design Alignment protocol. The architect reviews the Module Changes section before owner approval. After approval, the scrum master decomposes the PRD into sprint stories.
 
@@ -321,7 +312,7 @@ freshness sweep.
 - **Purpose:** How the project is tested. What types of tests, coverage targets, fixture conventions, CI pipeline, verification method.
 - **Types:** all | **Tier:** 1 | **Audience:** agent
 - **Structure:** Test types (unit, integration, fixture-based, e2e), coverage targets, fixture conventions, CI pipeline description, what to mock vs. not mock, verification method (browser automation, output diffing, etc.), fast vs. full test commands.
-- **Notes:** For data projects, testing often means output validation (do SQL results match Excel?). For ML, testing means evaluation metrics. For AI, testing means eval suites against model behavior. For libraries, testing includes backward compatibility and public API contract tests. The verification method determines how the validator agent runs E2E checks. Not applicable to `analytics-workspace` (validation is per-task, handled by the data-validator agent).
+- **Notes:** For data projects, testing often means output validation (do SQL results match Excel?). For ML, testing means evaluation metrics. For AI, testing means eval suites against model behavior. For libraries, testing includes backward compatibility and public API contract tests. The verification method determines how the validator agent runs E2E checks. Not applicable to `analytics workflow` (validation is per-task, handled by the data-validator agent).
 
 ### rubrics/code-review-rubric.md
 - **Purpose:** Weighted grading criteria for the code-reviewer agent. Defines what PASS/FAIL means for each criterion with skepticism calibration.
@@ -455,7 +446,7 @@ freshness sweep.
 - **Purpose:** Per-source documentation for data pipeline projects. Login flows, APIs, file formats, access methods, quirks.
 - **Types:** data-app, analytics-engineering, data-engineering, automation | **Tier:** 1 (for known sources) | **Audience:** agent
 - **Structure:** One file per data source. See Data-Source-Research-Template.md. Overview, access method, authentication, data format, known issues, refresh cadence.
-- **Notes:** Critical for any project that pulls data from external sources. One file per source keeps research organized and agent-accessible. For `analytics-workspace`, source documentation lives in `sources/` (see analytics-workspace folder structure) rather than here.
+- **Notes:** Critical for any project that pulls data from external sources. One file per source keeps research organized and agent-accessible. For `analytics workflow`, source documentation lives in `sources/` (see analytics workflow folder structure) rather than here.
 
 ### Market Analysis.md
 - **Purpose:** Market size, trends, opportunity assessment.
@@ -564,7 +555,7 @@ freshness sweep.
 > These documents are available to any workflow type. They are the
 > domain-agnostic lifecycle documents that the task workflow uses
 > directly and that specialized workflows extend with domain-specific
-> versions. The analytics-workspace has domain-specific versions
+> versions. The analytics workflow has domain-specific versions
 > (Analysis-Brief, Analysis-Plan, Outcome-Report) that add data source
 > sections, SQL logic, and cost estimation. Sprint-based workflows use
 > stories and specs instead. But the base brief, plan, outcome, and
@@ -581,26 +572,26 @@ freshness sweep.
 
 ### tasks/[date-name]/brief.md (Brief)
 - **Purpose:** Documents what needs to be done — the goal, audience, deadline, desired output, and constraints. The base alignment artifact between orchestrator and owner.
-- **Types:** task-workspace, analytics-workspace (as Analysis Brief) | **Tier:** 1 (created per task) | **Audience:** both
+- **Types:** task-workspace, analytics workflow (as Analysis Brief) | **Tier:** 1 (created per task) | **Audience:** both
 - **Template:** `core/templates/Brief-Template.md` (base), `core/templates/Analysis-Brief-Template.md` (analytics-specific)
-- **Notes:** Analytics-workspace extends the base brief with data source sections, SQL-specific constraints, and stakeholder context. The base brief is domain-agnostic — it works for any task type.
+- **Notes:** The analytics workflow extends the base brief with data source sections, SQL-specific constraints, and stakeholder context. The base brief is domain-agnostic — it works for any task type.
 
 ### tasks/[date-name]/plan.md (Plan)
 - **Purpose:** How the work will be done — deliverables, acceptance criteria, sequencing, constraints, validation approach. The contract the implementer executes against and the reviewer evaluates against.
-- **Types:** task-workspace, analytics-workspace (as Analysis Plan) | **Tier:** 1 (created per task) | **Audience:** both
+- **Types:** task-workspace, analytics workflow (as Analysis Plan) | **Tier:** 1 (created per task) | **Audience:** both
 - **Template:** `core/templates/Plan-Template.md` (base), `core/templates/Analysis-Plan-Template.md` (analytics-specific)
-- **Notes:** Analytics-workspace extends the base plan with data source tables, SQL logic sections, and cost estimates. The base plan derives its structure from the brief, not from a domain model.
+- **Notes:** The analytics workflow extends the base plan with data source tables, SQL logic sections, and cost estimates. The base plan derives its structure from the brief, not from a domain model.
 
 ### tasks/[date-name]/outcome.md (Outcome)
 - **Purpose:** Results, methodology, deliverable summary, and follow-up recommendations. The "what we found/produced" of a task.
-- **Types:** task-workspace, analytics-workspace (as Outcome Report) | **Tier:** 1 (created per task at delivery) | **Audience:** both
+- **Types:** task-workspace, analytics workflow (as Outcome Report) | **Tier:** 1 (created per task at delivery) | **Audience:** both
 - **Template:** `core/templates/Outcome-Template.md` (base), `core/templates/Outcome-Report-Template.md` (analytics-specific)
-- **Notes:** Analytics-workspace extends the base outcome with data quality notes, output locations (SQL files, CSVs), and source-specific methodology. The base outcome works for any deliverable type.
+- **Notes:** The analytics workflow extends the base outcome with data quality notes, output locations (SQL files, CSVs), and source-specific methodology. The base outcome works for any deliverable type.
 
 ### tasks/[date-name]/validation-report.md (Validation Report)
 - **Purpose:** Human-facing evidence chain tracing key claims in the outcome back to the plan and brief. Lets the audience understand why they can trust the output.
-- **Types:** task-workspace, analytics-workspace | **Tier:** 1 (created per task at delivery) | **Audience:** both
-- **Notes:** Written by the validator as a second output alongside its internal evaluation report. Lives at the task root (not in `docs/evaluations/`) because it is a stakeholder-facing deliverable. The analytics-workspace version traces claims back through SQL and data; the base version traces claims back through whatever the deliverables are.
+- **Types:** task-workspace, analytics workflow | **Tier:** 1 (created per task at delivery) | **Audience:** both
+- **Notes:** Written by the validator as a second output alongside its internal evaluation report. Lives at the task root (not in `docs/evaluations/`) because it is a stakeholder-facing deliverable. The analytics workflow version traces claims back through SQL and data; the base version traces claims back through whatever the deliverables are.
 
 ### docs/evaluations/[task-name]-review.md (Review Report)
 - **Purpose:** Reviewer findings for a task — verdict, per-criterion assessment against the plan's acceptance criteria, quality signal assessment, fix instructions.
@@ -614,7 +605,7 @@ freshness sweep.
 
 ### docs/evaluations/[task-name]-brief-check.md (Brief Check)
 - **Purpose:** Planner validation mode report. Verifies that the output answers the brief's goal in the right format for the audience.
-- **Types:** task-workspace, analytics-workspace | **Tier:** 1 (created per task at delivery) | **Audience:** agent
+- **Types:** task-workspace, analytics workflow | **Tier:** 1 (created per task at delivery) | **Audience:** agent
 - **Notes:** The planner validates independently — it does not receive reviewer or validator findings.
 
 ---
@@ -649,7 +640,7 @@ freshness sweep.
 ### .fabrika/calibration.yml
 - **Purpose:** Per-project calibration data for token cost estimation. Records actual token usage after workflow runs and improves estimate accuracy over time via EWMA blending against bundled priors. Scaffolded from `core/templates/Calibration-Template.yml` at bootstrap time.
 - **Types:** all | **Audience:** agent
-- **Notes:** Consumer-project artifact. Updated automatically during session close-out (sprint-based and analytics-workspace) or Step 7 Ship (agentic-workflow) when token data is available. Not manually edited — the estimation script manages it via `--record-actuals`.
+- **Notes:** Consumer-project artifact. Updated automatically during session close-out (sprint-based and analytics workflow) or Step 7 Ship (agentic-workflow) when token data is available. Not manually edited — the estimation script manages it via `--record-actuals`.
 
 ### VERSION
 - **Purpose:** Single-line file containing the current semantic version. The version authority for the system.
@@ -663,68 +654,68 @@ freshness sweep.
 
 ---
 
-## analytics-workspace Documents
+## Analytics Workflow Documents
 
-> These documents live outside the standard `docs/` vault structure. The `analytics-workspace` type uses a flat, task-centric folder layout instead of the numbered docs hierarchy.
+> These documents live outside the standard `docs/` vault structure. The analytics workflow type uses a flat, task-centric folder layout instead of the numbered docs hierarchy.
 
 ### sources/README.md (Source Registry Index)
 - **Purpose:** Central index of all data sources, BI tools, and flat file sources available in this workspace. The equivalent of Home.md for analytics workspaces.
-- **Types:** analytics-workspace | **Tier:** 1 (populated during onboarding) | **Audience:** agent
+- **Types:** analytics workflow | **Tier:** 1 (populated during onboarding) | **Audience:** agent
 - **Structure:** Three sections: Connections (queryable data sources), Tools (BI/ETL tools), Files (recurring flat file sources). Each entry: name, one-line description, link to detail file.
 
 ### sources/connections/[platform]/README.md (Platform Connection)
 - **Purpose:** Platform-level overview documenting the database platform type, environment (cloud/on-prem/local), connection method, cost model, and EXPLAIN mechanism. One per platform. Level 1 project/instance connections live in subdirectories beneath this.
-- **Types:** analytics-workspace | **Tier:** 1 (populated during onboarding) | **Audience:** agent
+- **Types:** analytics workflow | **Tier:** 1 (populated during onboarding) | **Audience:** agent
 - **Template:** `core/templates/Platform-Connection-Template.md`
 - **Structure:** Platform type, environment, connection method, cost model (actual or default), default pricing reference table, EXPLAIN mechanism, list of Level 1 connections beneath this platform.
-- **Notes:** Created during workspace onboarding (BOOTSTRAP.md Phase 2W.1a). If the user does not know their cost model, the file uses published default pricing and flags this. The analytics-workspace workflow reads the cost model from this file during plan and performance review phases.
+- **Notes:** Created during workspace onboarding (BOOTSTRAP.md Phase 2W.1a). If the user does not know their cost model, the file uses published default pricing and flags this. The analytics workflow workflow reads the cost model from this file during plan and performance review phases.
 
 ### sources/connections/[platform]/[instance]/*.md
 - **Purpose:** Per-connection documentation for Level 1 project/instance data sources beneath a platform: specific databases, projects, or servers the agent can query programmatically.
-- **Types:** analytics-workspace | **Tier:** 1 (one per known connection) | **Audience:** agent
+- **Types:** analytics workflow | **Tier:** 1 (one per known connection) | **Audience:** agent
 - **Template:** `core/templates/Source-Connection-Template.md`
 - **Structure:** Connection type, connection string/path, authentication method, key schemas/tables, known gotchas, SLA/reliability notes, who owns it.
 
 ### sources/tools/*.md
 - **Purpose:** Per-tool documentation for BI and ETL tools the agent can reason about but cannot touch directly: Tableau Server, Power BI Service, Alteryx Server/Designer.
-- **Types:** analytics-workspace | **Tier:** 1 (one per known tool) | **Audience:** agent
+- **Types:** analytics workflow | **Tier:** 1 (one per known tool) | **Audience:** agent
 - **Structure:** Tool name, URL/location, key workbooks/workflows/reports, data sources used, refresh schedule, who maintains it. Advisory mode note: what the agent can do (write SQL, review logic, draft DAX) vs. what the human executes in the tool.
 
 ### sources/files/*.md
 - **Purpose:** Per-source documentation for recurring flat files: CSVs, Excel files, YXDBs. Documents metadata about the file, not the file itself (files go in `data/input/`).
-- **Types:** analytics-workspace | **Tier:** 2 (as encountered) | **Audience:** agent
+- **Types:** analytics workflow | **Tier:** 2 (as encountered) | **Audience:** agent
 - **Structure:** File name/pattern, who sends it, delivery frequency, format, known quality issues, expected columns/schema, where it lands in `data/input/`.
 
 ### tasks/[date-name]/brief.md (Analysis Brief)
 - **Purpose:** Documents the business question, who asked, deadline, desired output format. The "why" of a task.
-- **Types:** analytics-workspace | **Tier:** 1 (created per task) | **Audience:** both
+- **Types:** analytics workflow | **Tier:** 1 (created per task) | **Audience:** both
 - **Structure:** See Analysis-Brief-Template.md.
 
 ### tasks/[date-name]/plan.md (Analysis Plan)
 - **Purpose:** Technical approach: what data sources to pull, joins/transforms, logic, assumptions, validation approach. The "how" of a task.
-- **Types:** analytics-workspace | **Tier:** 1 (created per task) | **Audience:** both
+- **Types:** analytics workflow | **Tier:** 1 (created per task) | **Audience:** both
 - **Structure:** See Analysis-Plan-Template.md.
 
 ### tasks/[date-name]/outcome.md (Outcome Report)
 - **Purpose:** Results, methodology summary, data quality notes, output location, follow-up recommendations. The "what we found" of a task.
-- **Types:** analytics-workspace | **Tier:** 1 (created per task at delivery) | **Audience:** both
+- **Types:** analytics workflow | **Tier:** 1 (created per task at delivery) | **Audience:** both
 - **Structure:** See Outcome-Report-Template.md.
 
 ### tasks/[date-name]/work/execution-manifest.md (Execution Manifest)
 - **Purpose:** Metadata query results for Tier 2 tasks: INFORMATION_SCHEMA lookups, EXPLAIN plan output, estimated costs per query. Produced by running metadata queries before main query execution. The primary input for the performance reviewer.
-- **Types:** analytics-workspace | **Tier:** 1 (created per Tier 2 task) | **Audience:** agent
+- **Types:** analytics workflow | **Tier:** 1 (created per Tier 2 task) | **Audience:** agent
 - **Structure:** Tables touched (four-level path), schema info per table, EXPLAIN plan output per query, estimated cost per query and total, data source classification.
 - **Notes:** Only created for Tier 2 tasks (production data). Lives in `work/` because it is a work product (output of running metadata queries).
 
 ### tasks/[date-name]/validation-report.md (Validation Report)
 - **Purpose:** Human-facing evidence chain tracing each key claim in the outcome report back to the code and data that supports it. Lets a stakeholder understand WHY they can trust each number without re-reading the SQL.
-- **Types:** analytics-workspace | **Tier:** 1 (created per task at delivery) | **Audience:** both
+- **Types:** analytics workflow | **Tier:** 1 (created per task at delivery) | **Audience:** both
 - **Structure:** Per claim: which code produced it, what filters/logic were applied, what validation checks confirmed. Always detailed regardless of stakes.
 - **Notes:** Written by the data validator as a second output alongside the internal evaluation report. Lives at the task root (not in `docs/evaluations/`) because it is a stakeholder-facing deliverable.
 
 ### docs/evaluations/[task-name]-brief-check.md (Brief Check)
 - **Purpose:** Analysis planner validation mode report. Verifies that the analysis output answers the business question from the brief in the right format for the stakeholder. Requirements validation, not data validation.
-- **Types:** analytics-workspace | **Tier:** 1 (created per task at delivery) | **Audience:** agent
+- **Types:** analytics workflow | **Tier:** 1 (created per task at delivery) | **Audience:** agent
 - **Structure:** Verdict (MEETS BRIEF / PARTIALLY MEETS BRIEF / DOES NOT MEET BRIEF), per-check findings, gaps identified, recommendations.
 - **Notes:** The analysis planner validates independently — it does not receive data validation results or logic review findings.
 
@@ -850,7 +841,7 @@ freshness sweep.
 
 Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based projects) and are used by the agent when creating new documents.
 
-### Always included (sprint-based types):
+### Always included (domain workflow types):
 - Project-Charter-Template.md
 - PRD-Template.md
 - Epic-Template.md
@@ -873,24 +864,24 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 - Calibration-Template.yml — all project types (scaffolded to `.fabrika/calibration.yml` at bootstrap)
 - Data-Source-Research-Template.md — `data-app`, `analytics-engineering`, `data-engineering`, `automation`
 - Feature-Spec-Template.md — `web-app`, `data-app`, `ai-engineering`
-- Session-Log-Template.md — all sprint-based types
+- Session-Log-Template.md — all domain workflow types
 - Dashboard-Spec-Template.md — `data-app`
 - Model-Design-Template.md — `ml-engineering`
-- Platform-Connection-Template.md — `analytics-workspace`
-- Source-Connection-Template.md — `analytics-workspace`, `data-engineering`
-- Source-Tool-Template.md — `analytics-workspace`
-- Source-File-Template.md — `analytics-workspace`
-- Analysis-Brief-Template.md — `analytics-workspace`
-- Analysis-Plan-Template.md — `analytics-workspace`
-- Outcome-Report-Template.md — `analytics-workspace`
-- Task-Contract-Template.md — `analytics-workspace`
+- Platform-Connection-Template.md — `analytics workflow`
+- Source-Connection-Template.md — `analytics workflow`, `data-engineering`
+- Source-Tool-Template.md — `analytics workflow`
+- Source-File-Template.md — `analytics workflow`
+- Analysis-Brief-Template.md — `analytics workflow`
+- Analysis-Plan-Template.md — `analytics workflow`
+- Outcome-Report-Template.md — `analytics workflow`
+- Task-Contract-Template.md — `analytics workflow`
 - System-Update-Plan-Template.md — `agentic-workflow`
 
 ---
 
 ## Quick Reference: Documents by Project Type
 
-### Sprint-Based Types
+### Domain Workflows
 
 #### web-app (SaaS, personal tools, consumer apps)
 **Tier 1:** Home, Domain Language, Project Charter, PRD, Phase Definitions, Architecture Overview, Data Model, Testing Strategy, Canonical Patterns, ADR, Epics, Stories, Someday-Maybe, Pre-Dev Checklist
@@ -935,9 +926,9 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 **Tier 2:** API Conventions, Migration Guide Template, Publishing Checklist, Deployment Guide, Structural Constraints, wiki/index.md, wiki/topics/
 **Tier 3:** Session Logs, wiki/meta/
 
-### Task-Based Types
+### Analytics Workflow
 
-#### analytics-workspace (ad hoc analysis, investigations, data requests)
+#### analytics workflow (ad hoc analysis, investigations, data requests)
 **Onboarding:** sources/README.md (Source Registry Index), sources/connections/[platform]/README.md (Platform Connection), sources/connections/[platform]/[instance]/*.md, sources/tools/*.md, Domain Language
 **Per-task:** brief.md, plan.md, outcome.md, validation-report.md (in each `tasks/[date-name]/` folder)
 **Per-task (Tier 2 only):** execution-manifest.md (in `tasks/[date-name]/work/`)
@@ -952,7 +943,7 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 **As needed:** Domain Language, wiki/index.md, wiki/topics/
 **Note:** No sprint artifacts, no data tiers, no domain-specific review. Work is organized as tasks with domain-agnostic agents. The reviewer derives its checklist from the plan's acceptance criteria (or inline plan in simple mode). Wiki is opt-in and populated via incremental synthesis after task deliveries.
 
-### Methodology-Based Types
+### Agentic Workflow
 
 #### agentic-workflow (agent methodology systems, personal operating systems)
 **Core:** Domain Language, Project Charter, PRD, VERSION, CHANGELOG, MIGRATIONS (version history and consumer communication)

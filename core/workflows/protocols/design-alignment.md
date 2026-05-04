@@ -138,8 +138,8 @@ Standard behavior described above. Produces Charter (first time) + PRD.
 
 ### Analytics-Workspace
 
-Analytics-workspace is task-based, not sprint-based. Design Alignment
-does NOT produce Charter/PRD for analytics-workspace projects. Instead,
+The analytics workflow is task-based. Design Alignment does NOT
+produce Charter/PRD for analytics workflow projects. Instead,
 it produces an enhanced Analysis Brief when the analysis is complex
 enough to warrant structured alignment.
 

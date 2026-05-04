@@ -166,19 +166,19 @@ that want to add bounded task support.
 
 ---
 
-## Analytics Workspace Onboarding (Existing Workspaces)
+## Analytics Workflow Onboarding (Existing Workspaces)
 
-For analytics-workspace projects adopting Fabrika — or existing
-workspaces upgrading to 0.23.0+ — the platform onboarding protocol
-can be run retroactively to scaffold platform configuration and cost
-model documentation.
+For analytics workflow projects adopting Fabrika — or existing
+workspaces upgrading — the platform onboarding protocol can be run
+retroactively to scaffold platform configuration and cost model
+documentation.
 
-Run: `[FABRIKA_PATH]/core/workflows/protocols/analytics-onboarding.md`
+Run: `[FABRIKA_PATH]/core/workflows/protocols/analytics-workflow-onboarding.md`
 
 This asks about database platforms, cost models, source connections,
 and data governance tooling. All questions are skippable. Answers
 produce `sources/connections/[platform]/README.md` files that the
-analytics-workspace workflow uses for cost estimation and performance
+analytics workflow uses for cost estimation and performance
 review.
 
 Existing source registry files created manually are not affected —

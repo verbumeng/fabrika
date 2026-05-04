@@ -28,13 +28,13 @@ expertise.
 
 ## Domain Specialization Model
 
-Five specialist implementers map to project types:
+Five specialist implementers map to workflow types:
 
-| Specialist | Project Types |
-|------------|--------------|
+| Specialist | Workflow Types |
+|------------|---------------|
 | [software-engineer](../software-engineer.md) | web-app, automation, library |
 | [data-engineer](../data-engineer.md) | data-engineering, analytics-engineering |
-| [data-analyst](../data-analyst.md) | analytics-workspace, data-app |
+| [data-analyst](../data-analyst.md) | analytics workflow, data-app |
 | [ml-engineer](../ml-engineer.md) | ml-engineering |
 | [ai-engineer](../ai-engineer.md) | ai-engineering |
 

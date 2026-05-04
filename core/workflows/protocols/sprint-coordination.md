@@ -56,8 +56,20 @@ The tier is recorded in each story file's frontmatter (`tier: patch |
 story | deep-story`) and in the sprint contract per story. The
 orchestrator reads the tier before entering the story chat to
 determine which workflow path to follow (see
-`core/workflows/types/development-workflow.md`, Tier-Conditional
+`core/workflows/protocols/story-execution.md`, Tier-Conditional
 Workflow Branching).
+
+**Procedure classification:** Complexity-triggered. Sprint coordination
+activates when a project's work includes story-type or epic-type
+backlog items, regardless of which domain workflow is installed. The
+orchestrator assesses need at three points: (1) at bootstrap — from
+Design Alignment output, if charter + PRDs produce epics + stories,
+sprint coordination is obviously needed; (2) at adopt/add-workflow —
+the orchestrator assesses whether the project's backlog has story/epic-
+level work and proposes sprint coordination if needed; (3) mid-project
+— the orchestrator detects growing complexity (interwoven stories,
+epic-level goals) and proposes adding sprint coordination. Installation
+is proposed by the orchestrator, approved by the owner.
 
 **Story chat (each)** — Standard Session Lifecycle. One story per chat. **Close-out prompt branches on whether more stories remain in the sprint:**
 - More stories remain → set `Cycle phase: story-in-progress`. Prompt: *"Story [TICKET] complete and reviewed. Open a new chat to start [NEXT-TICKET] — [Next title]."*

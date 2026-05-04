@@ -36,7 +36,7 @@ installed_files:                        # every file Fabrika placed in this proj
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `fabrika_version` | string | yes | Semver string matching the Fabrika VERSION file at install/update time |
-| `project_type` | string | yes | One of: `web-app`, `data-app`, `analytics-engineering`, `data-engineering`, `ml-engineering`, `ai-engineering`, `automation`, `library`, `analytics-workspace`, `task-workspace`, `agentic-workflow`. Multi-type projects use the primary type. |
+| `project_type` | string | yes | The project's workflow type: `web-app`, `data-app`, `analytics-engineering`, `data-engineering`, `ml-engineering`, `ai-engineering`, `automation`, `library`, `analytics-workflow`, `task-workspace`, `agentic-workflow`. Multi-type projects use the primary type. |
 | `integrations` | list | yes | Tool integrations installed: `claude-code`, `copilot`, or both |
 | `installed_at` | string | yes | ISO date of initial Fabrika installation |
 | `updated_at` | string | yes | ISO date of most recent Fabrika update |
