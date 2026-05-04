@@ -28,6 +28,42 @@ analytics workspace needs structured document production), propose
 adding the appropriate workflow type rather than shoehorning the work
 into the wrong workflow.
 
+### Work Type Routing
+
+When unplanned work arrives outside sprint planning, the orchestrator's
+first question is "What kind of work is this?" — not "How complex is
+it?" Four backlog types exist:
+
+- **Task** — Bounded work with a clear deliverable. Uses the task
+  workflow (`core/workflows/types/task-workflow.md`). Ceremony options:
+  simple mode (orchestrator plans inline, no task folder) or standard
+  mode (full brief/plan/implement/review/validate/deliver lifecycle).
+- **Bug** — A task with reproduction context (observed vs. expected
+  behavior, reproduction steps). Uses the task workflow. The reviewer
+  additionally verifies the fix addresses the reproduction case.
+- **Story** — Sprint-scoped work with acceptance criteria. Uses the
+  development workflow (`core/workflows/types/development-workflow.md`).
+  Ceremony tiers within stories: Patch / Story / Deep Story (see
+  Tier-Conditional Workflow Branching in the development workflow).
+- **Epic** — A coordination envelope grouping tasks and stories toward
+  a larger goal. Epics do not have their own execution workflow — they
+  organize work items that each follow their own workflow.
+
+**Signals for routing:** Does it fix a defect? Bug. Is it bounded work
+outside a sprint? Task. Is it sprint-scoped with acceptance criteria
+and story points? Story. Does it span multiple tasks or stories toward
+a larger goal? Epic.
+
+**Within-type ceremony:** After identifying the backlog type, assess
+how much ceremony the work needs within that type. Tasks and bugs:
+simple mode if the plan fits in a sentence or two, standard mode
+otherwise. Stories: the coordinator assigns Patch / Story / Deep Story
+during sprint planning. Epics: coordination only (no direct execution).
+
+Sprint-planned work already has its type determined during sprint
+planning — this routing is primarily for unplanned work that arrives
+mid-sprint or outside sprint boundaries.
+
 ## Current Phase
 
 [Describe the current focus. What is the MVP? What are you building right now?]
@@ -234,13 +270,15 @@ Token cost estimates are presented alongside plan/spec briefings — see `[FABRI
 
 Summary of workflows covered:
 - **Design Alignment** — structured requirements gathering → Project Charter + PRD → fresh-chat handoff to sprint planning (see Design Alignment section above)
-- **Complexity Tiers** — each story has a tier (Patch / Story / Deep
-  Story) assigned during sprint planning. Patch skips spec creation
-  and uses reduced evaluation (code-reviewer only, max 2 retries).
-  Story is the current full workflow. Deep Story adds mandatory
-  research phase and architect review at both plan and evaluate
-  stages. The orchestrator reads `tier` from the story frontmatter
-  and routes to the appropriate path. See
+- **Complexity Tiers (story-internal)** — each story has a tier
+  (Patch / Story / Deep Story) assigned during sprint planning. These
+  tiers are ceremony levels internal to story-type work — they do not
+  apply to tasks, bugs, or epics (see Work Type Routing above). Patch
+  skips spec creation and uses reduced evaluation (code-reviewer only,
+  max 2 retries). Story is the current full workflow. Deep Story adds
+  mandatory research phase and architect review at both plan and
+  evaluate stages. The orchestrator reads `tier` from the story
+  frontmatter and routes to the appropriate path. See
   `[FABRIKA_PATH]/core/workflows/types/development-workflow.md`
   (Tier-Conditional Workflow Branching).
 - **Starting a Story** — spec expansion → token cost estimate → approval → optional architect design review → branch → testing approach branching (TDD: test-writer spec-first → implementer vertical slices → refactor; test-informed: implementer → test-writer coverage; test-after: implementer → evaluation cycle) → evaluate → fix cycle
@@ -328,13 +366,15 @@ All agents are invoked proactively at trigger points in the Development Workflow
 ### Task-based types (task-workspace) — Base Workflow
 | Role | Agent |
 |------|-------|
-| **Planner** | planner — reads brief, produces plan with deliverables, acceptance criteria, sequencing; validation mode checks output against brief |
-| **Reviewer** | reviewer — reviews against plan's acceptance criteria + general quality signals (completeness, consistency, clarity, correctness); no predefined rubric |
-| **Validator** | validator — validates deliverables satisfy the brief; checks completeness, acceptance criteria coverage, internal consistency |
+| **Planner** | planner — reads brief, produces plan with deliverables, acceptance criteria, sequencing; validation mode checks output against brief. Skipped in simple mode. |
+| **Reviewer** | reviewer — reviews against plan's acceptance criteria + general quality signals (completeness, consistency, clarity, correctness); no predefined rubric. In simple mode, reviews against the orchestrator's inline plan. |
+| **Validator** | validator — validates deliverables satisfy the brief; checks completeness, acceptance criteria coverage, internal consistency. Skipped in simple mode. |
 | **Implementer** | implementer — executes the plan, produces any artifact type (documents, code, configs, research, anything) |
 
 These are the base agents — domain-agnostic versions that all
-specialized agents extend.
+specialized agents extend. For trivially scoped work, simple mode
+skips the planner and validator — see
+`[FABRIKA_PATH]/core/workflows/types/task-workflow.md` (Simple Mode).
 
 ### Task-based types (analytics-workspace)
 | Role | Agent |

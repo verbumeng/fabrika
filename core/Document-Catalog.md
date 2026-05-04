@@ -546,6 +546,15 @@ A project can be **multi-type** (sprint-based types only). A data app with scrap
 > sections, SQL logic, and cost estimation. Sprint-based workflows use
 > stories and specs instead. But the base brief, plan, outcome, and
 > validation report pattern applies universally.
+>
+> **Backlog type applicability:** Briefs apply to tasks and bugs (bugs
+> include reproduction context fields: observed/expected behavior,
+> reproduction steps). Plans apply to standard-mode tasks and bugs
+> (simple-mode tasks skip the plan — the commit message is the
+> documentation artifact). Story specs apply to story-type work (see
+> `plans/` section). Epics have no execution documents — they are a
+> coordination envelope; epic-level coordination artifacts are CR-24
+> scope.
 
 ### tasks/[date-name]/brief.md (Brief)
 - **Purpose:** Documents what needs to be done — the goal, audience, deadline, desired output, and constraints. The base alignment artifact between orchestrator and owner.
@@ -914,10 +923,11 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 **Note:** No sprint artifacts, no backlog. Work is organized as tasks with tiered review (Tier 1 for local data, Tier 2 for production data). Wiki is opt-in during workspace onboarding and populated via backfill and incremental synthesis after task deliveries.
 
 #### task-workspace (bounded tasks, domain-agnostic work)
-**Per-task:** brief.md, plan.md, outcome.md, validation-report.md (in each `tasks/[date-name]/` folder)
-**Evaluations:** [task-name]-review.md, [task-name]-validation.md, [task-name]-brief-check.md (in `docs/evaluations/`)
+**Per-task (standard mode):** brief.md, plan.md, outcome.md, validation-report.md (in each `tasks/[date-name]/` folder)
+**Per-task (simple mode):** No task folder, no plan.md — the orchestrator plans inline and dispatches the implementer directly. The commit message is the documentation artifact. The reviewer receives the inline plan and the diff.
+**Evaluations:** [task-name]-review.md, [task-name]-validation.md, [task-name]-brief-check.md (in `docs/evaluations/`) — standard mode only. Simple mode produces only the reviewer's assessment.
 **As needed:** Domain Language, wiki/index.md, wiki/topics/
-**Note:** No sprint artifacts, no data tiers, no domain-specific review. Work is organized as tasks with domain-agnostic agents. The reviewer derives its checklist from the plan's acceptance criteria. Wiki is opt-in and populated via incremental synthesis after task deliveries.
+**Note:** No sprint artifacts, no data tiers, no domain-specific review. Work is organized as tasks with domain-agnostic agents. The reviewer derives its checklist from the plan's acceptance criteria (or inline plan in simple mode). Wiki is opt-in and populated via incremental synthesis after task deliveries.
 
 ### Methodology-Based Types
 

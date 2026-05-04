@@ -30,6 +30,12 @@ Before invoking any sub-agent, read `core/workflows/protocols/dispatch-protocol.
 
 ## Tier-Conditional Workflow Branching
 
+Patch, Story, and Deep Story are ceremony tiers internal to story-type
+work. They are unchanged from 0.29.0. These tiers do not apply to
+tasks, bugs, or epics — those backlog types have their own ceremony
+models (see `core/workflows/types/task-workflow.md` for task and bug
+ceremony, `Domain-Language.md` for the full backlog type vocabulary).
+
 Every story has a complexity tier assigned during sprint planning (see
 `core/workflows/protocols/sprint-coordination.md`). The tier
 determines which workflow gates apply. The orchestrator reads the

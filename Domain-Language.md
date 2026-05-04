@@ -328,52 +328,111 @@ story complexity. Three levels: **spec-first** (TDD), **test-informed**,
 and **test-after**. The coordinator assigns the approach per story
 during sprint planning. [Introduced in 0.16.0.]
 
-**Complexity tier** — A classification of work item complexity that
-determines which workflow gates apply. Three tiers for sprint-based
-work: **Patch** (reduced ceremony), **Story** (full ceremony), and
-**Deep Story** (enhanced ceremony). Part of the **universal complexity
-spectrum**. Assigned by the **coordinator** during sprint planning
-based on story points, scope indicators, and owner override. Recorded
-in the story file frontmatter (`tier: patch | story | deep-story`)
-and in the **sprint contract**. The **orchestrator** reads the tier
-and routes to the appropriate execution path. [Introduced in 0.29.0.]
+**Complexity tier** — A ceremony classification internal to
+story-type work that determines which workflow gates apply. Three
+tiers: **Patch** (reduced ceremony), **Story** (full ceremony), and
+**Deep Story** (enhanced ceremony). These are not points on a
+universal linear spectrum — they are ceremony levels within the story
+**backlog type**. Assigned by the **coordinator** during sprint
+planning based on story points, scope indicators, and owner override.
+Recorded in the story file frontmatter (`tier: patch | story |
+deep-story`) and in the **sprint contract**. The **orchestrator**
+reads the tier and routes to the appropriate execution path.
+[Introduced in 0.29.0; reframed as story-internal in 0.30.0.]
 
-**Patch** — The lightest complexity tier for sprint-based work.
+**Patch** — The lightest ceremony tier within story-type work.
 Single-concern changes (1-2 points) where the story file IS the spec.
 Skips spec creation and planner validation. Evaluation is reduced to
 code-reviewer only (max 2 retry cycles). If a Patch exceeds 2 review
 cycles or the code-reviewer flags scope creep, the orchestrator
 promotes it to **Story**. Conventional commit format is the primary
-documentation artifact. [Introduced in 0.29.0.]
+documentation artifact. [Introduced in 0.29.0; reframed as
+story-internal tier in 0.30.0.]
 
-**Story** — The standard complexity tier for sprint-based work.
+**Story** — The standard ceremony tier within story-type work.
 Multi-file changes (3-5 points) with bounded scope. The current full
 **development workflow** applies with no modifications: spec creation,
 all evaluation gates, 3 retry cycles. This is the default tier when
-none is specified. [Named in 0.29.0; behavior predates Fabrika.]
+none is specified. [Named in 0.29.0; behavior predates Fabrika.
+Reframed as story-internal tier in 0.30.0.]
 
-**Deep Story** — The highest complexity tier for sprint-based work.
+**Deep Story** — The highest ceremony tier within story-type work.
 Cross-cutting, novel, or high-risk changes (8-13 points). Adds a
 mandatory research phase (producing
 `docs/plans/[TICKET]-research.md`) before spec creation, mandatory
 **architect** review of the spec before implementation, and mandatory
 architect structural review after implementation. Research findings
 are compressed before being passed to the planner (**compaction**
-applies). [Introduced in 0.29.0.]
+applies). [Introduced in 0.29.0; reframed as story-internal tier in
+0.30.0.]
 
-**Universal complexity spectrum** — The graduated scale of ceremony
-levels that applies across all workflow types, not just sprint-based
-work. The full spectrum: ad-hoc (near-zero ceremony) -> task (base
-workflow) -> patch (reduced sprint ceremony) -> story (full sprint
-ceremony) -> deep story (enhanced sprint ceremony) -> epic (multi-story
-coordination). The **orchestrator** dynamically assesses where a piece
-of work falls on this spectrum based on scope, risk, and coordination
-needs — not by checking the project type. The three old project type
-categories (sprint-based, task-based, methodology-based) are dissolving
-into composable **workflow types** with the spectrum as the connecting
-thread. [Conceptualized in 0.29.0; CR-18 implements the sprint-based
-portion (patch, story, deep story). CR-19 covers ad-hoc. CR-17
-covers task. CR-24 addresses epic-level orchestration.]
+**Universal complexity spectrum** — The model of ceremony graduation
+across all workflow types. Work is categorized into **backlog types**
+(task, bug, story, epic) that determine which workflow handles it.
+Within each type, ceremony graduates independently: tasks have simple
+and standard modes, stories have patch/story/deep story tiers, bugs
+use task workflow with reproduction context, and epics are coordination
+envelopes. The **orchestrator** first identifies the backlog type
+("What kind of work is this?"), then assesses how much ceremony it
+needs within that type. The three old project type categories
+(sprint-based, task-based, methodology-based) are dissolving into
+composable **workflow types** with backlog types as the connecting
+vocabulary. [Conceptualized in 0.29.0; CR-18 implements story tiers
+(patch, story, deep story). CR-19 defines backlog types and simple
+task mode. CR-17 covers the task workflow. CR-24 addresses epic
+coordination mechanics.]
+
+**Backlog type** — The category of work that determines which workflow
+handles it and what ceremony options are available within it. Four
+types exist: **task** (bounded work using the task workflow), **bug**
+(task with reproduction context), **story** (sprint-based work with
+patch/story/deep story tiers), and **epic** (coordination envelope
+grouping tasks and stories toward a larger goal). The orchestrator's
+first routing question is "What kind of work is this?" — the backlog
+type, not the complexity tier, is the primary classification.
+[Introduced in 0.30.0.]
+
+**Bug** — A backlog type for defect correction. A task with
+reproduction context: observed vs. expected behavior, reproduction
+steps. Uses the **task workflow**. The reviewer additionally verifies
+the fix addresses the reproduction case. No separate workflow or
+agents — bugs are tasks with a specific brief structure.
+[Defined as backlog type in 0.30.0.]
+
+**Epic** — A backlog type representing a coordination envelope that
+groups related tasks and stories toward a larger goal. Epics do not
+have their own execution workflow — they organize and sequence work
+items that each follow their own workflow (task workflow or development
+workflow). Formalizes what already exists (Epics/ folder, Epic
+template). Coordination mechanics (how epics span workflows, how
+items are tracked within an epic) are CR-24 scope.
+[Defined as backlog type in 0.30.0.]
+
+**Simple mode** — An orchestrator behavior within the **task workflow**
+where the orchestrator conceives the plan inline and dispatches the
+**implementer** directly with the plan embedded in the dispatch
+context. Skips the task folder, plan.md artifact, and planner
+subagent. The scope assessment threshold is judgment-based: if the
+orchestrator can fully conceive the plan in a sentence or two, it
+qualifies for simple mode. The reviewer receives the inline plan and
+the diff. The commit message is the primary documentation artifact.
+[Introduced in 0.30.0.]
+
+**Work type routing** — The orchestrator's type-first assessment
+question when new work arrives: "What kind of work is this?" followed
+by "How much ceremony does it need within that kind?" The first
+question determines the **backlog type** (task, bug, story, epic);
+the second determines ceremony level within that type (simple/standard
+for tasks and bugs, patch/story/deep story for stories). Primarily
+relevant for unplanned work that arrives outside sprint planning —
+sprint-planned work already has its type determined during planning.
+[Introduced in 0.30.0.]
+
+**Ad-hoc** — Historical term. The concept of near-zero-ceremony work
+previously described as a point on a linear spectrum resolves into
+**simple mode** within the task workflow. The term is retired from
+active use as of 0.30.0. Older change requests and planning documents
+may still reference it.
 
 **Tier promotion** — The one-way escalation of a story's
 **complexity tier** during execution. Patch can promote to Story;

@@ -6,6 +6,66 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.30.0 — Universal backlog types and ceremony graduation
+
+Introduces four universal backlog types (task, bug, story, epic) as
+workflow-agnostic categories that replace the linear complexity
+spectrum. Ceremony graduates within each type, not across types:
+tasks have simple and standard modes, stories have patch/story/deep
+story tiers (unchanged from 0.29.0), bugs use the task workflow with
+reproduction-context briefs, and epics are a coordination envelope
+(mechanics deferred to CR-24). Adds simple task mode to the task
+workflow for trivially scoped work where the orchestrator plans inline
+and dispatches the implementer directly. The orchestrator's routing
+question is now "What kind of work is this?" followed by "How much
+ceremony does it need within that kind?"
+
+### Changed files
+- `Domain-Language.md` — redefined "Universal complexity spectrum"
+  from linear scale to type-based model with internal ceremony
+  graduation; added terms: Backlog type, Bug (as backlog type),
+  Epic (as backlog type), Simple mode, Work type routing; reframed
+  Complexity tier, Patch, Story, Deep Story as story-internal tiers;
+  retired "ad-hoc" as active terminology
+- `core/workflows/types/task-workflow.md` — added Simple Mode section
+  (orchestrator plans inline for trivially scoped work, no task folder
+  or plan.md artifact), added Bug Tasks subsection (bugs use task
+  workflow with reproduction-context briefs)
+- `core/workflows/types/development-workflow.md` — added clarifying
+  paragraph that Patch/Story/Deep Story are ceremony tiers internal to
+  story-type work, not points on a universal spectrum (no behavioral
+  change to tiers)
+- `integrations/claude-code/CLAUDE.md` — added Work Type Routing
+  subsection (four backlog types, routing question, signals, within-
+  type ceremony assessment); updated Development Workflow summary to
+  note story-internal tiers; updated task-workspace description to
+  mention simple mode
+- `integrations/copilot/copilot-instructions.md` — same changes as
+  CLAUDE.md integration template
+- `core/Document-Catalog.md` — added backlog type applicability notes
+  to Base Documents section (which documents apply to which backlog
+  types); added simple mode note to task-workspace Quick Reference
+  (no plan.md or task folder for simple-mode tasks)
+
+### Consumer update instructions
+1. Copy updated `Domain-Language.md` from Fabrika source (redefined
+   complexity spectrum, new backlog type terms, retired ad-hoc)
+2. Copy updated `core/workflows/types/task-workflow.md` (new Simple
+   Mode and Bug Tasks sections)
+3. Copy updated `core/workflows/types/development-workflow.md` (new
+   clarifying paragraph in Tier-Conditional Workflow Branching — no
+   behavioral change)
+4. Update your project instruction file (CLAUDE.md or
+   copilot-instructions.md) from the integration template — add the
+   Work Type Routing subsection and update Development Workflow and
+   task-workspace references
+5. Copy updated `core/Document-Catalog.md` (backlog type
+   applicability notes)
+6. Update your project's Domain Language with the new backlog type
+   terms if your project maintains its own Domain Language
+
+---
+
 ## 0.29.0 — Universal complexity tiers
 
 Introduces three complexity tiers (Patch, Story, Deep Story) that

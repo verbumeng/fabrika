@@ -4,7 +4,9 @@ The base workflow type — the domain-agnostic foundation that all
 specialized workflows parameterize. Provides the full multi-agent
 lifecycle (brief, plan, implement, review, validate, deliver) without
 any domain assumptions about what the task produces or how it is
-evaluated.
+evaluated. For trivially scoped work, simple mode lets the
+orchestrator plan inline and skip the task folder — see the Simple
+Mode section below.
 
 The analytics-workspace workflow is a parameterized version of this
 base, adding data-specific agents (data-analyst, logic-reviewer,
@@ -47,8 +49,78 @@ output uses the standard brief template — it is not a Charter or PRD
 (the task workflow is task-based, not sprint-based).
 
 Simple tasks skip alignment and proceed directly to the lifecycle
-below. The universal complexity assessment (CR-18, when codified)
-will formalize when Design Alignment fires across all workflow types.
+below.
+
+---
+
+## Simple Mode
+
+For trivially scoped work, the orchestrator can skip the standard
+lifecycle and plan inline. Simple mode is a ceremony reduction within
+the task workflow, not a separate workflow.
+
+**What it is.** The orchestrator conceives the plan in a sentence or
+two, dispatches the implementer directly with the plan embedded in
+the dispatch context, and routes the output through the reviewer.
+There is no task folder, no plan.md artifact, and no planner subagent
+invocation.
+
+**Scope assessment threshold.** Judgment-based. If the orchestrator
+can fully conceive the plan — deliverables, acceptance criteria, and
+sequencing — in a sentence or two without needing the planner's
+structured expansion, the task qualifies for simple mode. When in
+doubt, use standard mode. Examples that qualify: a single file edit
+with a clear spec, a configuration change, a brief research lookup.
+Examples that do not: multi-step work with dependencies, tasks
+requiring stakeholder alignment, anything where the acceptance
+criteria need discussion.
+
+**What it skips.**
+- No task folder (`tasks/[date-name]/`)
+- No plan.md artifact
+- No planner subagent dispatch
+- No validator dispatch (the reviewer covers quality)
+
+**What it keeps.**
+- Implementer dispatch (the orchestrator never implements directly)
+- Reviewer dispatch (receives the inline plan and the diff)
+- The commit message serves as the primary documentation artifact
+
+**Reviewer behavior in simple mode.** The reviewer receives strict
+dispatch with: the orchestrator's inline plan (as the spec equivalent)
+and file paths to the deliverables. The reviewer checks the
+deliverables against the inline plan and general quality signals.
+If the reviewer fails the implementation, the standard review-revise
+loop applies (max 3 cycles).
+
+**Promotion to standard mode.** If the orchestrator discovers during
+dispatch that the work is more complex than initially assessed (e.g.,
+the implementer surfaces unexpected dependencies, or the inline plan
+grows beyond a sentence or two), the orchestrator promotes to standard
+mode: creates the task folder, invokes the planner, and proceeds with
+the full lifecycle. Promotion is one-way.
+
+---
+
+## Bug Tasks
+
+Bugs are tasks with reproduction context. They use this workflow
+(simple or standard mode) with a brief that includes:
+
+- **Observed behavior** — what actually happens
+- **Expected behavior** — what should happen
+- **Reproduction steps** — how to trigger the bug
+- **Environment context** — where it was observed (if relevant)
+
+The reviewer additionally verifies that the fix addresses the
+reproduction case — not just that the code changed, but that the
+observed behavior now matches the expected behavior. No separate
+agents, templates, or workflow changes — bugs are tasks with a
+specific brief structure.
+
+For sprint-based projects, bugs that surface during sprints follow
+the project's bug workflow (`docs/02-Engineering/bug-workflow.md`)
+rather than this task workflow.
 
 ---
 
