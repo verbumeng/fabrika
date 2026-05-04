@@ -8,6 +8,7 @@ An agentic workflow methodology for software development and data work. Fabrika 
 - **A dispatch protocol** governing what context each agent receives at each invocation point — strict isolation for reviewers, contextual dispatch for planners
 - **Three sprint topologies** (pipeline, mesh, hierarchical) for sprint-based projects, plus a tiered pre-execution review workflow for analytics workflows
 - **A Design Alignment protocol** that turns brain dumps into durable Project Charters and PRDs before sprint planning begins
+- **A decomposition hierarchy** (Charter -> Roadmap -> PRD -> Epic -> Story / Task / Bug) where each level captures shared understanding between orchestrator and owner — the alignment hierarchy IS the decomposition hierarchy
 - **A Domain Language system** — living vocabulary documents that flow into briefings, dispatch contracts, code review, and maintenance checks
 - **A wiki knowledge layer** that consolidates scattered project artifacts into organized, continuously updated topic articles
 - **Token cost estimation** — cost-informed planning with deterministic token estimation, per-project calibration, and advisory budget warnings

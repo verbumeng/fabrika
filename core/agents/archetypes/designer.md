@@ -61,7 +61,7 @@ judgments.
 
 **Design mode — required inputs:**
 - Requirements: story acceptance criteria (domain workflow) or task
-  brief (analytics workflow)
+  document (analytics workflow)
 - Constraints: audience, tools available, integration targets
   (existing dashboards, UI components, etc.)
 - Existing designs or screenshots if this is an iteration, not a

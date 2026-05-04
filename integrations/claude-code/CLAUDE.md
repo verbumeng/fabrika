@@ -37,7 +37,7 @@ it?" Four backlog types exist:
 - **Task** — Bounded work with a clear deliverable. Uses the task
   workflow (`core/workflows/types/task-workflow.md`). Ceremony options:
   simple mode (orchestrator plans inline, no task folder) or standard
-  mode (full brief/plan/implement/review/validate/deliver lifecycle).
+  mode (full task/plan/implement/review/validate/deliver lifecycle).
 - **Bug** — A task with reproduction context (observed vs. expected
   behavior, reproduction steps). Uses the task workflow. The reviewer
   additionally verifies the fix addresses the reproduction case.
@@ -221,7 +221,7 @@ Agent model preferences are declared in frontmatter on each agent prompt file (`
 │   └── output/                        # Generated datasets, exports
 ├── tasks/                             # One folder per analysis task
 │   └── YYYY-MM-DD-name/
-│       ├── brief.md                   # Business question
+│       ├── task.md                    # Business question
 │       ├── plan.md                    # Technical approach
 │       ├── outcome.md                 # Results and methodology
 │       ├── validation-report.md       # Human-facing evidence chain
@@ -401,13 +401,11 @@ Summary of workflows covered:
 
 No sprints. Work is organized as individual analysis tasks with a tiered review workflow based on data environment.
 
-**Tier 1 (local data only):** plan -> promotion check -> write -> logic review -> [revise -> re-review]* -> execute -> validate + brief check -> deliver. No execution manifest or performance review.
+**Tier 1 (local data only):** plan -> promotion check -> write -> logic review -> [revise -> re-review]* -> execute -> validate + plan check -> deliver. No execution manifest or performance review.
 
-**Tier 2 (production data):** plan -> promotion check -> write (code + metadata queries) -> logic review -> [revise -> re-review]* -> execute metadata -> performance review -> [revise -> re-review]* -> [cost approval - cloud only] -> execute -> validate + brief check -> deliver.
+**Tier 2 (production data):** plan -> promotion check -> write (code + metadata queries) -> logic review -> [revise -> re-review]* -> execute metadata -> performance review -> [revise -> re-review]* -> [cost approval - cloud only] -> execute -> validate + plan check -> deliver.
 
 Mixed sources use highest tier. Stakes (low/medium/high) scale review intensity within tiers. The orchestrator classifies tier and stakes after plan approval, before workflow begins. Platform configuration and cost model info are pre-populated during workspace onboarding (BOOTSTRAP.md Phase 2W.1a) at `sources/connections/[platform]/README.md`.
-
-For complex analyses (3+ data sources, multiple stakeholders, novel domain, >2 day effort, or significant decision impact), Design Alignment triggers to produce an enhanced Analysis Brief — not a Charter/PRD. This is optional and driven by complexity, not by default.
 
 **For analytics workflow projects, read:** `[FABRIKA_PATH]/core/workflows/types/analytics-workflow.md`
 
@@ -562,14 +560,14 @@ All agents are invoked proactively by Claude Code at the trigger points in the D
 
 | Role | Agent |
 |------|-------|
-| **Planner** | planner — reads brief, produces plan with deliverables, acceptance criteria, sequencing; validation mode checks output against brief. Skipped in simple mode. |
+| **Planner** | planner — reads task document, produces plan with deliverables, acceptance criteria, sequencing; validation mode checks output against task document. Skipped in simple mode. |
 | **Reviewer** | reviewer — reviews against plan's acceptance criteria + general quality signals (completeness, consistency, clarity, correctness); no predefined rubric. In simple mode, reviews against the orchestrator's inline plan. |
-| **Validator** | validator — validates deliverables satisfy the brief; checks completeness, acceptance criteria coverage, internal consistency. Skipped in simple mode. |
+| **Validator** | validator — validates deliverables satisfy the task document; checks completeness, acceptance criteria coverage, internal consistency. Skipped in simple mode. |
 | **Implementer** | implementer — executes the plan, produces any artifact type (documents, code, configs, research, anything) |
 
 These are the base agents — domain-agnostic versions that all
 specialized agents extend. The task workflow is the base lifecycle:
-brief -> plan -> implement -> review -> validate -> deliver. For
+task -> plan -> implement -> review -> validate -> deliver. For
 trivially scoped work, simple mode skips the planner and validator —
 see `[FABRIKA_PATH]/core/workflows/types/task-workflow.md` (Simple
 Mode).
@@ -578,7 +576,7 @@ Mode).
 
 | Role | Agent |
 |------|-------|
-| **Planner** | analysis-planner — takes vague asks, produces briefs and technical plans; validation mode checks output against brief |
+| **Planner** | analysis-planner — takes vague asks, produces task documents and technical plans; validation mode checks output against task document |
 | **Reviewer** | logic-reviewer — validates SQL/Python/DAX logic (pre-execution) |
 | **Reviewer (Tier 2)** | performance-reviewer — assesses execution manifest for cost/efficiency (Tier 2 production data only) |
 | **Validator** | data-validator — sanity checks, cross-references, spot-checks on output; produces validation report |

@@ -27,7 +27,7 @@ you execute what was approved.
 2. Read the project's instruction file (CLAUDE.md or equivalent) for:
    Project Stack, testing commands, structural constraints
 3. Read existing code in the target directories to match conventions
-4. For analytics workflow: read the task brief and plan in the task
+4. For analytics workflow: read the task document and plan in the task
    folder. Read `sources/README.md` to understand available data
    sources, connections, and files
 5. If Domain Language exists (`docs/00-Index/Domain-Language.md`),

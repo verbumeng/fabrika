@@ -115,9 +115,9 @@ documentation complete.
 | Owner context | Optional | Deadline, audience, desired output format from conversation |
 | Domain Language pointer | Conditional | Path to Domain Language doc if it exists — planner uses its terms in specs |
 
-**Output expected:** Brief at `tasks/[date-name]/brief.md`, then plan
-at `tasks/[date-name]/plan.md` (two-step, owner approves brief before
-plan)
+**Output expected:** Task document at `tasks/[date-name]/task.md`,
+then plan at `tasks/[date-name]/plan.md` (two-step, owner approves
+task document before plan)
 
 ---
 
@@ -127,7 +127,7 @@ plan)
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Task brief | Yes | Path to `tasks/[date-name]/brief.md` — the business question, stakeholder, desired output format |
+| Task document | Yes | Path to `tasks/[date-name]/task.md` — the business question, stakeholder, desired output format |
 | Task plan | Yes | Path to `tasks/[date-name]/plan.md` — the approach that was approved |
 | Task outcome | Yes | Path to `tasks/[date-name]/outcome.md` — the results produced |
 | Work product paths | Yes | Paths to output files in `tasks/[date-name]/work/` — for format and completeness assessment |
@@ -135,16 +135,16 @@ plan)
 
 **Do not provide:** Data validation results, logic review findings,
 performance review results, opinions on data quality. The analysis
-planner validates independently against the brief's requirements.
+planner validates independently against the task document's requirements.
 
 **Output expected:** Validation report at
-`docs/evaluations/[task-name]-brief-check.md`
+`docs/evaluations/[task-name]-plan-check.md`
 
 Review checklist:
 1. **Question answered** — does the outcome directly answer the
-   business question stated in the brief?
+   business question stated in the task document?
 2. **Completeness** — does the output cover all sub-questions or
-   dimensions the brief specified?
+   dimensions the task document specified?
 3. **Format match** — is the output in the format the stakeholder
    requested?
 4. **Audience appropriateness** — is the output at the right level
@@ -156,8 +156,9 @@ Review checklist:
 7. **Caveats documented** — are data quality limitations, known gaps,
    or confidence levels stated?
 
-Verdict: MEETS BRIEF / PARTIALLY MEETS BRIEF / DOES NOT MEET BRIEF.
-If not MEETS BRIEF, the orchestrator routes findings to the data
+Verdict: MEETS REQUIREMENTS / PARTIALLY MEETS REQUIREMENTS / DOES NOT
+MEET REQUIREMENTS. If not MEETS REQUIREMENTS, the orchestrator routes
+findings to the data
 analyst for revision. Standard review-revise loop applies.
 
 ---
@@ -168,7 +169,7 @@ analyst for revision. Standard review-revise loop applies.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Brief | Yes | Path to the task brief at `tasks/[date-name]/brief.md`, or brief content if not yet written to a file |
+| Task document | Yes | Path to the task document at `tasks/[date-name]/task.md`, or task document content if not yet written to a file |
 | Prior task pointers | Conditional | Paths to similar prior tasks if this might build on previous work |
 | Domain Language pointer | Conditional | Path to Domain Language doc if it exists — planner uses its terms in the plan |
 | Owner context | Optional | Constraints, preferences, or prior decisions from the conversation |
@@ -186,7 +187,7 @@ validation approach.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Brief | Yes | Path to `tasks/[date-name]/brief.md` — the original ask |
+| Task document | Yes | Path to `tasks/[date-name]/task.md` — the original ask |
 | Approved plan | Yes | Path to `tasks/[date-name]/plan.md` — the approach that was approved |
 | Outcome | Yes | Path to `tasks/[date-name]/outcome.md` — the results produced |
 | Work product paths | Yes | Paths to deliverable files in `tasks/[date-name]/work/` |
@@ -194,10 +195,10 @@ validation approach.
 
 **Do not provide:** Reviewer findings, validator findings, opinions on
 deliverable quality. The planner validates independently against the
-brief's requirements.
+task document's requirements.
 
 **Output expected:** Validation report at
-`docs/evaluations/[task-name]-brief-check.md`
+`docs/evaluations/[task-name]-plan-check.md`
 
 ---
 

@@ -53,7 +53,7 @@ How it applies:
 - **Analytics-workspace projects.** The data validator runs
   post-execution checks (row counts, distributions, cross-references)
   and produces a human-facing validation report. The analysis planner
-  in validation mode checks that the output answers the brief.
+  in validation mode checks that the output answers the task document.
 - **Agentic-workflow projects.** The structural validator mechanically
   verifies structural facts (file existence, version consistency,
   catalog accuracy). The methodology reviewer and context architect

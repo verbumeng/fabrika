@@ -19,7 +19,7 @@ status: draft
 
 ### Deliverable 1: [Name]
 - [ ] [Criterion — specific and checkable, not opinion-based]
-- [ ] [e.g., "Covers all 5 competitors named in the brief"]
+- [ ] [e.g., "Covers all 5 competitors named in the task document"]
 - [ ] [e.g., "Each competitor section includes pricing, features, and market position"]
 
 ### Deliverable 2: [Name]
@@ -42,7 +42,7 @@ status: draft
 - [e.g., "Based on information available as of [date]"]
 
 ## Validation Approach
-[How will the validator confirm the output satisfies the brief?]
-- [e.g., "Each brief requirement maps to a section in the deliverable"]
-- [e.g., "Cross-reference competitor names in brief against sections in output"]
-- [e.g., "Verify recommendation section directly addresses the brief's positioning question"]
+[How will the validator confirm the output satisfies the task document?]
+- [e.g., "Each requirement maps to a section in the deliverable"]
+- [e.g., "Cross-reference competitor names in task document against sections in output"]
+- [e.g., "Verify recommendation section directly addresses the task document's positioning question"]

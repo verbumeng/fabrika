@@ -29,7 +29,7 @@ During ongoing development, create new documents when these situations arise. Re
 | Dashboard or visual output designed or changed | Invoke visualization-designer agent for review |
 | Recurring theme identified across 2+ artifacts during maintenance (when wiki/ exists) | Write or update wiki topic article in `wiki/topics/` using `core/templates/Wiki-Topic-Template.md`. Notify owner (notice-and-proceed). Use Domain Language terms. |
 | Wiki backfill needed (project adopting wiki with existing artifacts) | Run the backfill procedure in `core/workflows/protocols/knowledge-synthesis.md`. Assess artifact count for chat-size decision. |
-| New task in task-workspace | Create task folder `tasks/[date-name]/`, write brief using `core/templates/Brief-Template.md` |
-| Task brief approved in task-workspace | Planner writes plan to `tasks/[date-name]/plan.md` using `core/templates/Plan-Template.md` |
+| New task in task-workspace | Create task folder `tasks/[date-name]/`, write task document using `core/templates/Task-Template.md` |
+| Task document approved in task-workspace | Planner writes plan to `tasks/[date-name]/plan.md` using `core/templates/Plan-Template.md` |
 | Task validated and delivered in task-workspace | Planner writes outcome to `tasks/[date-name]/outcome.md` using `core/templates/Outcome-Template.md`. If `wiki/` exists, run Extract+Index. |
 | Task work doesn't fit installed workflow types | Propose on-demand workflow addition via `ADD-WORKFLOW.md` |

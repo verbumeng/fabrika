@@ -6,6 +6,150 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.33.0 — Unified document hierarchy: brief -> task, decomposition = alignment
+
+Formalizes the decomposition hierarchy as the alignment hierarchy.
+The "brief" concept merges into "task" — the task document captures
+the ask, and the plan captures the approach. The "enhanced brief"
+concept is killed; Design Alignment produces Charter+PRD or PRD only.
+"Brief check" is retired in favor of "plan check." Adds a unified
+Task-Template.md (merged from Brief-Template and
+Analysis-Brief-Template) and a Roadmap-Template.md.
+
+### Changed files
+
+**Templates**
+- `core/templates/Task-Template.md` — NEW: merged from
+  Brief-Template.md and Analysis-Brief-Template.md. The unified task
+  document template.
+- `core/templates/Roadmap-Template.md` — NEW: light template for
+  roadmaps (active/completed/deferred phases, execution order,
+  dependency graph).
+- `core/templates/Brief-Template.md` — DELETED: merged into
+  Task-Template.md
+- `core/templates/Analysis-Brief-Template.md` — DELETED: merged into
+  Task-Template.md
+- `core/templates/Outcome-Report-Template.md` — RENAMED to
+  `core/templates/Analysis-Outcome-Template.md` (naming convention:
+  specialized = descriptor + base name)
+- `core/templates/Task-Contract-Template.md` — brief.md -> task.md,
+  "brief" -> "task document"
+- `core/templates/Plan-Template.md` — "brief" -> "task document"
+- `core/templates/Outcome-Template.md` — "brief" -> "task document"
+
+**Document hierarchy and protocols**
+- `core/Document-Catalog.md` — added decomposition hierarchy section;
+  renamed all "brief" -> "task" in document listings and templates;
+  added Task-Template.md and Roadmap-Template.md to templates list;
+  removed Brief-Template.md and Analysis-Brief-Template.md; renamed
+  Outcome-Report-Template.md -> Analysis-Outcome-Template.md; renamed
+  "brief check" -> "plan check"
+- `core/workflows/protocols/design-alignment.md` — removed "enhanced
+  brief" concept; removed Analytics-Workspace subsection; reframed
+  output as Charter+PRD or PRD only
+- `Domain-Language.md` — retired "brief check" -> "plan check"; added
+  "decomposition hierarchy" term; updated Design Alignment definition;
+  renamed "brief" -> "task document" across all affected terms
+
+**Workflow files**
+- `core/workflows/types/task-workflow.md` — renamed all "brief" ->
+  "task document" (file paths, lifecycle, folder structure, template
+  references); removed "enhanced brief" from Design Alignment section
+- `core/workflows/types/analytics-workflow.md` — renamed all "brief"
+  -> "task document"; removed "enhanced Analysis Brief" concept;
+  renamed "brief check" -> "plan check"; updated template references
+
+**Agent prompts**
+- `core/agents/analysis-planner.md` — "brief" -> "task document";
+  brief.md -> task.md; brief-check -> plan-check; MEETS BRIEF ->
+  MEETS REQUIREMENTS
+- `core/agents/planner.md` — "brief" -> "task document"; brief.md ->
+  task.md; brief-check -> plan-check; MEETS BRIEF -> MEETS
+  REQUIREMENTS
+- `core/agents/reviewer.md` — "brief" -> "task document"
+- `core/agents/validator.md` — "brief" -> "task document"
+- `core/agents/implementer.md` — "brief" -> "task document"
+- `core/agents/data-analyst.md` — "brief" -> "task document"
+- `core/agents/data-validator.md` — brief.md -> task.md
+- `core/agents/logic-reviewer.md` — brief.md -> task.md
+- `core/agents/performance-reviewer.md` — brief.md -> task.md
+- `core/agents/visualization-designer.md` — brief.md -> task.md
+- `core/agents/archetypes/reviewer.md` — "task brief" -> "task
+  document"
+- `core/agents/archetypes/designer.md` — "brief" -> "task document"
+
+**Dispatch contracts**
+- `core/workflows/protocols/dispatch/planner-contracts.md` — "Brief"
+  field -> "Task document"; brief.md -> task.md; brief-check ->
+  plan-check in validation outputs
+- `core/workflows/protocols/dispatch/reviewer-contracts.md` — "Task
+  brief" / "Brief" -> "Task document"; brief.md -> task.md
+- `core/workflows/protocols/dispatch/validator-contracts.md` — "Task
+  brief" / "Brief" -> "Task document"; brief.md -> task.md
+- `core/workflows/protocols/dispatch/implementer-contracts.md` —
+  "Brief" -> "Task document"; brief.md -> task.md
+- `core/workflows/protocols/dispatch/designer-contracts.md` — "task
+  brief" -> "task document"
+
+**Supporting protocols**
+- `core/workflows/protocols/doc-triggers.md` — Brief-Template ->
+  Task-Template; "task brief approved" -> "task document approved"
+- `core/workflows/protocols/knowledge-pipeline.md` — "task's brief"
+  -> "task's task document"
+- `core/workflows/protocols/task-promotion.md` — "brief template" ->
+  "task template"
+- `core/design-principles.md` — "answers the brief" -> "answers the
+  task document"
+
+**Integration templates**
+- `integrations/claude-code/CLAUDE.md` — removed "enhanced Analysis
+  Brief" from Design Alignment; renamed all "brief" -> "task" for
+  task documents; brief.md -> task.md; brief check -> plan check
+- `integrations/copilot/copilot-instructions.md` — same changes as
+  CLAUDE.md
+
+**Consumer-facing**
+- `BOOTSTRAP.md` — Brief-Template -> Task-Template;
+  Outcome-Report-Template -> Analysis-Outcome-Template; removed
+  "enhanced Analysis Brief" reference
+- `ADOPT.md` — Brief-Template -> Task-Template
+- `ADD-WORKFLOW.md` — Brief-Template -> Task-Template
+- `MIGRATIONS.md` — added 0.33.0 migration entry
+
+**Wiki**
+- `wiki/topics/workflow-design.md` — "brief" -> "task"; "brief check"
+  -> "plan check"
+- `wiki/topics/framework-philosophy.md` — "brief" -> "task document"
+- `wiki/topics/agent-model.md` — "brief" -> "task document"
+
+**Meta**
+- `planning/CR-29-unified-document-hierarchy.md` — updated Alignment
+  Notes with v2 decisions
+- `README.md` — added decomposition hierarchy mention
+- `VERSION` — bumped 0.32.0 to 0.33.0
+
+### Consumer update instructions
+
+1. **Rename task documents.** In existing task folders, rename
+   `brief.md` to `task.md`. This is not required for completed tasks
+   — only active/future tasks.
+2. **Replace templates.** Delete `Brief-Template.md` and
+   `Analysis-Brief-Template.md` from your templates directory. Copy
+   new `Task-Template.md`. Rename `Outcome-Report-Template.md` to
+   `Analysis-Outcome-Template.md`. Copy new `Roadmap-Template.md`.
+3. **Update agent prompts.** Copy updated agent prompts (any that
+   reference brief.md or brief check).
+4. **Update evaluation paths.** Existing `*-brief-check.md` files in
+   `docs/evaluations/` do not need to be renamed retroactively. New
+   evaluations will use `*-plan-check.md`.
+5. **Update your CLAUDE.md or copilot-instructions.md.** Copy the
+   Design Alignment section and task workflow sections from the
+   updated integration templates.
+6. **MIGRATIONS.md has the full migration checklist** for consumer
+   projects that need step-by-step guidance.
+
+---
+
 ## 0.32.0 — Agents as composable skills; category dissolution
 
 Formalizes Fabrika's skills model: agents carry skills — the atomic

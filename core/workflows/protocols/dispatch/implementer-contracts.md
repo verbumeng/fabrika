@@ -173,7 +173,7 @@ deviations flagged. Include token usage impact estimates if applicable.
 | Field | Required | Description |
 |-------|----------|-------------|
 | Approved plan | Yes | Path to the approved plan at `tasks/[date-name]/plan.md` |
-| Brief | Yes | Path to the task brief at `tasks/[date-name]/brief.md` |
+| Task document | Yes | Path to the task document at `tasks/[date-name]/task.md` |
 | Work directory | Yes | Path to the task directory where deliverables are written |
 | Domain Language pointer | Conditional | Path to Domain Language doc if it exists — implementer uses its terms in deliverables |
 | Owner constraints | Optional | Preferences or constraints from the conversation |

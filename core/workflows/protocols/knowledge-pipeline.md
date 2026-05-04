@@ -210,7 +210,7 @@ Salience is assigned based on the artifact type and its review state
 
 | Cadence | Pipeline Phases | What Happens |
 |---------|----------------|--------------|
-| After each task delivery | Phases 1-2 | Index the task's brief, plan, and outcome as a batch |
+| After each task delivery | Phases 1-2 | Index the task's task document, plan, and outcome as a batch |
 | Monthly or on demand | Phases 3-4 | Synthesize recurring themes across tasks |
 | Quarterly | All phases | Full reintegration (same as sprint-based) |
 

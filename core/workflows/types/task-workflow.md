@@ -2,7 +2,7 @@
 
 The unparameterized workflow type — the domain-agnostic foundation
 that all specialized workflows extend. Provides the full multi-agent
-lifecycle (brief, plan, implement, review, validate, deliver) without
+lifecycle (task, plan, implement, review, validate, deliver) without
 any domain assumptions about what the task produces or how it is
 evaluated. For trivially scoped work, simple mode lets the
 orchestrator plan inline and skip the task folder — see the Simple
@@ -26,10 +26,10 @@ from the plan, not from a domain model.
 
 | Role | Agent | Purpose |
 |------|-------|---------|
-| Planner | [planner](../agents/planner.md) | Reads brief, produces plan with deliverables, acceptance criteria, sequencing |
+| Planner | [planner](../agents/planner.md) | Reads task document, produces plan with deliverables, acceptance criteria, sequencing |
 | Implementer | [implementer](../agents/implementer.md) | Executes the plan, produces deliverables |
 | Reviewer | [reviewer](../agents/reviewer.md) | Reviews against plan's acceptance criteria + general quality signals |
-| Validator | [validator](../agents/validator.md) | Validates deliverables satisfy the brief |
+| Validator | [validator](../agents/validator.md) | Validates deliverables satisfy the task document |
 
 All four are base agents — domain-agnostic versions that specialized
 agents extend.
@@ -39,20 +39,22 @@ agents extend.
 ## Design Alignment for Complex Tasks
 
 Before the standard lifecycle, the orchestrator assesses whether the
-task warrants structured alignment. If any complexity trigger is met,
-the orchestrator runs the Design Alignment protocol
-(`core/workflows/protocols/design-alignment.md`) before creating the brief:
+work warrants structured alignment. If the orchestrator determines
+the work is a new phase or feature rather than a task, Design
+Alignment fires per the standard triggers. Individual tasks use the
+task/plan flow regardless of complexity.
 
-- Multiple stakeholders with different needs
-- Estimated effort exceeds 2 days
-- High-stakes outcome (significant decisions depend on this)
-- Orchestrator detects ambiguity in the ask that cannot be resolved
-  with clarifying questions alone
+Design Alignment triggers:
 
-When triggered, Design Alignment produces an enhanced brief with
-deeper coverage of scope, terminology, and success criteria. The
-output uses the standard brief template — it is not a Charter or PRD
-(the task workflow is task-based, not sprint-based).
+- New project or new phase
+- Owner explicitly requests alignment
+- Orchestrator detects ambiguity that cannot be resolved with
+  clarifying questions alone
+
+When triggered, Design Alignment produces a PRD (or Charter + PRD for
+new projects). It does not produce task documents — tasks use the
+standard task/plan flow without Design Alignment unless complexity
+triggers escalation to a PRD.
 
 Simple tasks skip alignment and proceed directly to the lifecycle
 below.
@@ -111,7 +113,7 @@ the full lifecycle. Promotion is one-way.
 ## Bug Tasks
 
 Bugs are tasks with reproduction context. They use this workflow
-(simple or standard mode) with a brief that includes:
+(simple or standard mode) with a task document that includes:
 
 - **Observed behavior** — what actually happens
 - **Expected behavior** — what should happen
@@ -122,7 +124,7 @@ The reviewer additionally verifies that the fix addresses the
 reproduction case — not just that the code changed, but that the
 observed behavior now matches the expected behavior. No separate
 agents, templates, or workflow changes — bugs are tasks with a
-specific brief structure.
+specific task document structure.
 
 For sprint-based projects, bugs that surface during sprints follow
 the project's bug workflow (`docs/02-Engineering/bug-workflow.md`)
@@ -133,7 +135,7 @@ rather than this task workflow.
 ## Lifecycle
 
 ```
-brief -> plan -> implement -> review ->
+task -> plan -> implement -> review ->
 [revise -> re-review]* -> validate -> deliver
 ```
 
@@ -145,25 +147,22 @@ weeks ago") and loads the document with a caveat. See
 `core/workflows/protocols/story-execution.md` (Freshness-Aware
 Context Loading) for the full protocol.
 
-### Brief
+### Task Document
 
 The owner describes what they need. The orchestrator captures this as
-`tasks/[date-name]/brief.md` using the Brief Template
-(`core/templates/Brief-Template.md`).
+`tasks/[date-name]/task.md` using the Task Template
+(`core/templates/Task-Template.md`).
 
-The brief establishes:
+The task document establishes:
 - **What** is needed — the goal, question, or deliverable
 - **Who** needs it — the audience and their context
 - **When** — deadline and whether it is hard or soft
 - **What format** — how the output should be delivered
 - **Constraints** — boundaries, limitations, known challenges
 
-For complex tasks (Design Alignment triggered), the brief includes
-deeper scope, terminology, and success criteria coverage.
-
 ### Plan
 
-Planner reads the brief and produces a plan at
+Planner reads the task document and produces a plan at
 `tasks/[date-name]/plan.md` using the Plan Template
 (`core/templates/Plan-Template.md`).
 
@@ -176,10 +175,10 @@ The plan includes:
 - **Constraints and assumptions** — what is being assumed, what is
   out of scope
 - **Validation approach** — how the validator will confirm the output
-  satisfies the brief
+  satisfies the task document
 
 No domain-specific sections (no data sources, no SQL logic, no module
-changes). The plan's structure comes from the brief, not from a
+changes). The plan's structure comes from the task document, not from a
 predefined domain model.
 
 After the plan is written, present the token cost estimate per
@@ -188,14 +187,14 @@ for approval before execution begins.
 
 ### Implement
 
-Implementer receives contextual dispatch with the plan and brief.
+Implementer receives contextual dispatch with the plan and task document.
 Produces deliverables to `tasks/[date-name]/work/`. Artifact type
 depends entirely on the plan — documents, code, configurations,
 research, designs, data, anything.
 
 ### Review
 
-Reviewer receives strict dispatch: plan, brief, and file paths to the
+Reviewer receives strict dispatch: plan, task document, and file paths to the
 deliverables. Reviews against:
 
 1. **Plan's acceptance criteria** — each criterion is a checklist item
@@ -224,17 +223,17 @@ pattern and presents it to the user for intervention.
 
 ### Validate
 
-Validator receives strict dispatch: brief, plan, and deliverable file
-paths. Checks:
+Validator receives strict dispatch: task document, plan, and
+deliverable file paths. Checks:
 
-- **Brief satisfaction** — does the output answer the brief's
-  question or fulfill its goal?
+- **Task document satisfaction** — does the output answer the task
+  document's question or fulfill its goal?
 - **Deliverable completeness** — is everything the plan promised
   present?
 - **Acceptance criteria coverage** — does each criterion have
   corresponding evidence?
 - **Internal consistency** — do deliverables agree with each other
-  and with the brief?
+  and with the task document?
 
 Writes internal evaluation to
 `docs/evaluations/[task-name]-validation.md`. Writes human-facing
@@ -271,7 +270,7 @@ defined in `core/design-principles.md` (implementer-reviewer pairing):
 
 ```
 tasks/[date-name]/
-  brief.md                          <- What is needed
+  task.md                           <- What is needed
   plan.md                           <- How it will be done
   work/                             <- The deliverables
     (artifacts depend on the task)
@@ -291,10 +290,10 @@ docs/evaluations/
 After delivery, the orchestrator prompts the user:
 
 > "Results delivered. If you have follow-up work, start a new chat
-> and reference `tasks/[date-name]/outcome.md` and the brief for
-> context."
+> and reference `tasks/[date-name]/outcome.md` and the task document
+> for context."
 
-Each task is a bounded unit of work with its own brief, plan,
+Each task is a bounded unit of work with its own task document, plan,
 validation, and outcome. Follow-up iteration starts a new chat that
 picks up from the outcome. The planner in the new session reads the
 prior outcome as part of its orientation.
@@ -311,11 +310,11 @@ procedure, see `core/workflows/protocols/knowledge-synthesis.md`.
 
 | Cadence | Pipeline Phases | What Happens |
 |---------|----------------|--------------|
-| After each task delivery | Phases 1-2 (Extract + Index) | Index the task's brief, plan, and outcome as a batch in `wiki/meta/` |
+| After each task delivery | Phases 1-2 (Extract + Index) | Index the task's task document, plan, and outcome as a batch in `wiki/meta/` |
 | Monthly or on demand | Phases 3-4 (Synthesize + Link) | Synthesize recurring themes across tasks, update topic articles and `wiki/index.md` narrative. Triggered when 3+ batch indexes exist without a synthesis pass, or on owner request. |
 | Quarterly | All phases (full reintegration) | Re-score salience, rewrite stale articles, merge/retire topics, rebuild narrative, clean up batch entries. Triggered when 3+ months since last reintegration. |
 
 Extract+Index runs as part of the Deliver phase when a `wiki/`
 directory exists. After the outcome report is written, the agent
-indexes the task's brief, plan, and outcome as a batch. This is
-automatic — no additional user action required.
+indexes the task's task document, plan, and outcome as a batch. This
+is automatic — no additional user action required.

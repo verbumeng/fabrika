@@ -26,7 +26,7 @@ Not every recurring analysis needs to become a product. The levels below are ord
 
 ### Level 1: Templatize
 
-**What changes:** Save the completed task as a reusable template. The brief, plan, and key SQL/scripts are preserved in a `templates/` folder within the workspace (not in the task-dated folder). Next time, the analysis planner instantiates from the template with updated parameters (date range, filters, etc.).
+**What changes:** Save the completed task as a reusable template. The task document, plan, and key SQL/scripts are preserved in a `templates/` folder within the workspace (not in the task-dated folder). Next time, the analysis planner instantiates from the template with updated parameters (date range, filters, etc.).
 
 **When this is enough:**
 - The analysis runs a few times a year
@@ -34,7 +34,7 @@ Not every recurring analysis needs to become a product. The levels below are ord
 - The owner is the one running it (no external stakeholder waiting on a schedule)
 
 **What the agent does:**
-1. Extract the reusable parts of the task (brief template, plan template, parameterized SQL/scripts)
+1. Extract the reusable parts of the task (task template, plan template, parameterized SQL/scripts)
 2. Save to `templates/[analysis-name]/`
 3. Document which parameters change between runs
 4. Update `templates/README.md` (create if it doesn't exist) with a one-line entry

@@ -24,7 +24,7 @@ plan, produce the deliverables, flag deviations.
 
 1. Read the approved plan — this is your implementation contract. Do
    not deviate from it without flagging the deviation explicitly
-2. Read the brief — understand the original ask so you can make
+2. Read the task document — understand the original ask so you can make
    judgment calls that serve the intent, not just the letter of the
    plan
 3. If Domain Language exists for the project, read it. Use its terms
@@ -87,7 +87,7 @@ deliver to the task's work directory.
 - Every acceptance criterion in the plan has corresponding evidence in
   the deliverables
 - Deliverables are internally consistent — they do not contradict each
-  other or the brief
+  other or the task document
 - Work is in the specified format and location
 - Deviations from the plan are flagged, not hidden
 - The output is self-contained — a reviewer can evaluate it without
@@ -129,7 +129,7 @@ to read, search, create, edit, and verify their work.
 | Field | Required | Description |
 |-------|----------|-------------|
 | Approved plan | Yes | Path to the approved plan at `tasks/[date-name]/plan.md` |
-| Brief | Yes | Path to the task brief at `tasks/[date-name]/brief.md` |
+| Task document | Yes | Path to the task document at `tasks/[date-name]/task.md` |
 | Work directory | Yes | Path to the task directory where deliverables are written |
 | Domain Language pointer | Conditional | Path to Domain Language doc if it exists — implementer uses its terms in deliverables |
 | Owner constraints | Optional | Preferences or constraints from the conversation |
@@ -161,11 +161,11 @@ reports. Those are the reviewer's and validator's jobs.
 ## Context Window Hygiene
 
 - Read the plan first — it is your implementation contract
-- Read the brief second — it provides the intent behind the plan
+- Read the task document second — it provides the intent behind the plan
 - Read Domain Language if it exists — use its terms rather than
   inventing vocabulary
-- Do not read unrelated project files. The plan, brief, and any
-  referenced materials are your context
+- Do not read unrelated project files. The plan, task document, and
+  any referenced materials are your context
 - If revising after review, read the review report before reading the
   deliverables you are about to revise — understand what was flagged
   before looking at your prior work

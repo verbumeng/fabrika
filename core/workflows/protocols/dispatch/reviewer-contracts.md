@@ -34,7 +34,7 @@ semgrep, reads the diff, and forms its own judgment.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Task brief | Yes | Path to `tasks/[date-name]/brief.md` |
+| Task document | Yes | Path to `tasks/[date-name]/task.md` |
 | Task plan | Yes | Path to `tasks/[date-name]/plan.md` |
 | Source docs | Yes | Paths to relevant source documentation in `sources/` |
 | Work product paths | Yes | Paths to SQL, scripts, notebooks in `tasks/[date-name]/work/` |
@@ -42,7 +42,7 @@ semgrep, reads the diff, and forms its own judgment.
 | Domain Language pointer | Conditional | Path to Domain Language doc if it exists — for term usage checking |
 
 **Do not provide:** Opinions on logic correctness, suspected issues,
-data quality concerns. The logic reviewer reads the brief, reads the
+data quality concerns. The logic reviewer reads the task document, reads the
 plan, reads the code, and evaluates independently.
 
 **Pre-execution context:** In the analytics workflow's tiered workflow,
@@ -112,7 +112,7 @@ its own assessment.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Task brief | Yes | Path to `tasks/[date-name]/brief.md` |
+| Task document | Yes | Path to `tasks/[date-name]/task.md` |
 | Task plan | Yes | Path to `tasks/[date-name]/plan.md` |
 | Source docs | Yes | Paths to relevant source documentation |
 | Work product paths | Yes | Paths to SQL, scripts in `tasks/[date-name]/work/` |
@@ -143,7 +143,7 @@ output data.
 | Field | Required | Description |
 |-------|----------|-------------|
 | Approved plan | Yes | Path to the approved plan at `tasks/[date-name]/plan.md` |
-| Brief | Yes | Path to the task brief at `tasks/[date-name]/brief.md` |
+| Task document | Yes | Path to the task document at `tasks/[date-name]/task.md` |
 | Work product paths | Yes | Paths to deliverable files in `tasks/[date-name]/work/` |
 | Domain Language pointer | Conditional | Path to Domain Language doc if it exists — for terminology consistency check |
 

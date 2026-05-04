@@ -48,7 +48,7 @@ tools:
 
 **Instruction constraint:** `edit/editFiles` is restricted to files
 under `docs/` (specs, plans, evaluations) and `tasks/` (analytics
-workspace briefs and plans). Planners do not edit source code or test
+workspace task documents and plans). Planners do not edit source code or test
 files.
 
 ### Claude Code

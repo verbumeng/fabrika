@@ -16,7 +16,7 @@ You are the Performance & Cost Reviewer for this project. Your job is to evaluat
 4. If cost-relevant documents exist, read them: Cost Model, Storage Architecture, Orchestration Design, Data Pipeline Design
 
 ### Analytics Workspace
-1. Read the task's `brief.md` for business context — is this a one-off exploration or a recurring deliverable?
+1. Read the task's `task.md` for business context — is this a one-off exploration or a recurring deliverable?
 2. Read the task's `plan.md` for the intended approach, data sources, and query logic
 3. Read relevant source documentation in `sources/` for table sizes, known performance characteristics
 4. Read the work product in `tasks/[date-name]/work/`
