@@ -74,7 +74,7 @@ From the response, identify the project type using these signals:
 
 Confirm with the user: **"Based on what you've described, this sounds like a [type] project — [one sentence explaining what that means]. Does that sound right?"**
 
-For sprint-based types, also explain briefly: "This means we'll do a brain dump to capture everything you know, set up documentation, and plan your first sprint with agents for [planner role], [reviewer role], [validator role], and sprint coordination."
+For domain workflow types, also explain briefly: "This means we'll do a brain dump to capture everything you know, set up documentation, and plan your first sprint with agents for [planner role], [reviewer role], [validator role], and sprint coordination."
 
 For `analytics-workspace`, explain: "This means we'll set up a workspace for ad hoc analysis — we'll catalog your data sources and BI tools, then you'll be ready to start tasks. No sprints — work is organized as individual analysis tasks."
 

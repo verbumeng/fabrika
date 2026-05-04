@@ -9,8 +9,9 @@ Workflow type definitions. Each file defines a complete workflow that
 an orchestrator can run — it specifies the lifecycle phases, agent
 roster, dispatch contracts, and verification criteria for a category
 of work. Examples: agentic-workflow.md (structural/methodology
-projects), development-workflow.md (sprint-based software projects),
-task-workflow.md (single-session tasks), analytics-workspace.md
+projects), 7 domain workflow files (software-development, data-engineering,
+analytics-engineering, data-app, ml-engineering, ai-engineering, library),
+task-workflow.md (single-session tasks), analytics-workflow.md
 (analytical investigations).
 
 When adding a new workflow type, place it here. See ADD-WORKFLOW.md

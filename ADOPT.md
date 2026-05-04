@@ -178,7 +178,7 @@ Run: `[FABRIKA_PATH]/core/workflows/protocols/analytics-workflow-onboarding.md`
 This asks about database platforms, cost models, source connections,
 and data governance tooling. All questions are skippable. Answers
 produce `sources/connections/[platform]/README.md` files that the
-analytics-workspace workflow uses for cost estimation and performance
+analytics workflow uses for cost estimation and performance
 review.
 
 Existing source registry files created manually are not affected —

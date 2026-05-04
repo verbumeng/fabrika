@@ -1,7 +1,7 @@
 # Task Outcome Briefing Format
 
 Use this format when presenting analysis results to the owner after
-task delivery in an analytics-workspace project.
+task delivery in an analytics workflow project.
 
 The outcome artifact lives at `tasks/[date-name]/outcome.md` and
 contains the full methodology, data quality notes, and output

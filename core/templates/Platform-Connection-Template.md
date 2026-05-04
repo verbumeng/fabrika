@@ -25,7 +25,7 @@ with a `README.md` using the Source-Connection-Template.
 ### Default Pricing Reference
 
 If cost model source is "default," the following published defaults
-are used (from the analytics-workspace workflow):
+are used (from the analytics workflow):
 
 | Platform | Default Rate | Basis |
 |----------|-------------|-------|

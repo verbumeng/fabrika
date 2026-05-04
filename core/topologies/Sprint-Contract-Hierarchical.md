@@ -94,7 +94,7 @@ Because tickets are coupled, a failure in a downstream ticket may indicate an is
 ## Tier-Conditional Gates
 
 The complexity tier determines which workflow stages apply per story.
-See `core/workflows/types/development-workflow.md` (Tier-Conditional
+See `core/workflows/protocols/story-execution.md` (Tier-Conditional
 Workflow Branching) for the full specification. In a Hierarchical
 sprint, upstream stories may be Patches while downstream stories that
 depend on them are Stories or Deep Stories. Tier is orthogonal to

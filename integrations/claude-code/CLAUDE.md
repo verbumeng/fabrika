@@ -8,7 +8,7 @@ Claude Code orchestrates the entire development workflow. The human's role is de
 
 ## Project Basics
 - **Project Key:** [PROJECT_KEY] (e.g. MYAPP — used for branch naming and story IDs)
-- **Project Type:** [web-app | data-app | analytics-engineering | data-engineering | ml-engineering | ai-engineering | automation | library | analytics-workspace | task-workspace | agentic-workflow] (can be multi-type for sprint-based types)
+- **Project Type:** [web-app | data-app | analytics-engineering | data-engineering | ml-engineering | ai-engineering | automation | library | analytics-workspace | task-workspace | agentic-workflow] (can be multi-type)
 - **Repo:** `~/projects/[project-name]`
 - **Project docs:** `~/projects/[project-name]/docs`
 - **Document Catalog:** `[FABRIKA_PATH]/core/Document-Catalog.md`

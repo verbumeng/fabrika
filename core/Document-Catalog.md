@@ -82,7 +82,7 @@ freshness sweep.
 
 ### Home.md
 - **Purpose:** Central navigation hub. Links to all major sections, shows project status at a glance.
-- **Types:** all sprint-based types | **Tier:** 1 | **Audience:** both
+- **Types:** all domain workflow types | **Tier:** 1 | **Audience:** both
 - **Structure:** Project name, one-line description, quick links to key docs, current phase, what to read first.
 - **Notes:** This is the first thing anyone opens. Keep it short — links, not content. For `analytics workflow`, the equivalent is `sources/README.md` (the source registry index).
 
@@ -105,13 +105,13 @@ freshness sweep.
 
 ### Project Charter.md
 - **Purpose:** Internal design document capturing shared understanding between the owner and agents. Defines the problem space, target user, core capabilities, constraints, success criteria, and design principles. Created once at project inception or during a major pivot.
-- **Types:** all sprint-based types, agentic-workflow | **Tier:** 1 | **Audience:** both
+- **Types:** all domain workflow types, agentic-workflow | **Tier:** 1 | **Audience:** both
 - **Template:** `core/templates/Project-Charter-Template.md`
 - **Notes:** Created via the Design Alignment protocol (`core/workflows/protocols/design-alignment.md`). The Charter captures what the product IS; Vision & Positioning captures why it matters externally; Phase Definitions breaks the Charter's capabilities into buildable phases. All three must be tightly aligned.
 
 ### PRD.md (Product Requirements Document)
 - **Purpose:** Detailed requirements for a specific phase or major feature. User stories, module changes, implementation decisions, testing approach, and scope boundaries. Created per phase or major feature.
-- **Types:** all sprint-based types, agentic-workflow | **Tier:** 1 | **Audience:** both
+- **Types:** all domain workflow types, agentic-workflow | **Tier:** 1 | **Audience:** both
 - **Template:** `core/templates/PRD-Template.md`
 - **Notes:** Created via the Design Alignment protocol. The architect reviews the Module Changes section before owner approval. After approval, the scrum master decomposes the PRD into sprint stories.
 
@@ -841,7 +841,7 @@ freshness sweep.
 
 Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based projects) and are used by the agent when creating new documents.
 
-### Always included (sprint-based types):
+### Always included (domain workflow types):
 - Project-Charter-Template.md
 - PRD-Template.md
 - Epic-Template.md
@@ -864,7 +864,7 @@ Templates live in the `Templates/` folder (or `docs/Templates/` in sprint-based 
 - Calibration-Template.yml — all project types (scaffolded to `.fabrika/calibration.yml` at bootstrap)
 - Data-Source-Research-Template.md — `data-app`, `analytics-engineering`, `data-engineering`, `automation`
 - Feature-Spec-Template.md — `web-app`, `data-app`, `ai-engineering`
-- Session-Log-Template.md — all sprint-based types
+- Session-Log-Template.md — all domain workflow types
 - Dashboard-Spec-Template.md — `data-app`
 - Model-Design-Template.md — `ml-engineering`
 - Platform-Connection-Template.md — `analytics workflow`

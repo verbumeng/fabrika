@@ -26,7 +26,7 @@ created: YYYY-MM-DD
 
 ## Stage 2: Build
 - **Entry condition:** Approved spec document
-- **Agent:** Implementer + test-writer (flow depends on testing approach — see `core/workflows/types/development-workflow.md`)
+- **Agent:** Implementer + test-writer (flow depends on testing approach — see `core/workflows/protocols/story-execution.md`)
 - **Exit condition:** Feature implemented, all tests passing, committed to feature branch
 - **Exit artifacts:**
   - [ ] Implementation complete per spec
@@ -52,7 +52,7 @@ created: YYYY-MM-DD
 ## Tier-Conditional Gates
 
 The complexity tier determines which workflow stages apply. See
-`core/workflows/types/development-workflow.md` (Tier-Conditional
+`core/workflows/protocols/story-execution.md` (Tier-Conditional
 Workflow Branching) for the full specification.
 
 - **Patch:** Stage 1 (Plan) is skipped — the story file IS the spec.

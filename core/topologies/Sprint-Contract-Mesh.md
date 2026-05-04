@@ -76,7 +76,7 @@ Each story is evaluated independently. If one story's evaluation fails, it does 
 ## Tier-Conditional Gates
 
 The complexity tier determines which workflow stages apply per story.
-See `core/workflows/types/development-workflow.md` (Tier-Conditional
+See `core/workflows/protocols/story-execution.md` (Tier-Conditional
 Workflow Branching) for the full specification. Each story in a Mesh
 sprint can have a different tier — a Mesh sprint might contain two
 Patches and one Deep Story.
