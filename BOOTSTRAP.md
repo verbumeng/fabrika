@@ -4,7 +4,7 @@
 >
 > **Note:** This guide is for agents bootstrapping **new** projects. For adding Fabrika to an existing project, see [ADOPT.md](ADOPT.md).
 >
-> **Note:** This guide covers both sprint-based project types (web-app, data-app, analytics-engineering, data-engineering, ml-engineering, ai-engineering, automation, library) and task-based types (analytics-workspace). The flow branches after type alignment in Phase 1.
+> **Note:** This guide covers all workflow types. The flow branches after type alignment in Phase 1: domain workflows continue to Phase 2, analytics workflow goes to Phase 2W, task workflow to Phase 2T, and agentic workflow to Phase 2A.
 
 ## Path Configuration
 
@@ -21,7 +21,7 @@ All paths in this guide use the defaults above. Replace them with the actual pat
 
 ## What This Produces
 
-### Sprint-based types (web-app, data-app, analytics-engineering, data-engineering, ml-engineering, ai-engineering, automation, library)
+### Domain workflow types (web-app, data-app, analytics-engineering, data-engineering, ml-engineering, ai-engineering, automation, library)
 - A project repo with scaffold, git, agentic tool configuration, and hooks
 - A docs vault (`docs/`) with type-appropriate documentation fully populated
 - A Project Charter and first PRD produced via Design Alignment
@@ -33,7 +33,7 @@ All paths in this guide use the defaults above. Replace them with the actual pat
 - Sprint 1 scoped with a topology-aware sprint contract
 - If an external task management system is configured, one task per Sprint 1 story
 
-### Task-based types (analytics-workspace)
+### Analytics workflow type
 - A workspace repo with task-centric folder structure, git, and agentic tool configuration
 - A source registry (`sources/`) documenting data connections, BI tools, and file sources
 - Task templates (brief, plan, outcome report)
@@ -82,11 +82,11 @@ For `task-workspace`, explain: "This means we'll set up a workspace for bounded 
 
 For `agentic-workflow`, explain: "This means we'll set up a system where the methodology itself is the product — agent prompts, workflows, instruction files, and templates. Changes follow a 7-step protocol (plan, align, execute, verify, incorporate feedback, present, ship). No sprints — work is organized as structural changes with version tracking."
 
-Multi-type is possible for sprint-based types (e.g., `data-app` + `automation`). Task-based types (`analytics-workspace`) and methodology-based types (`agentic-workflow`) cannot be combined with sprint-based types — use a separate repo.
+Multi-type is possible (e.g., `data-app` + `automation`). Any workflow types can be composed — the orchestrator routes work to the appropriate workflow.
 
 ### 1.3 Create the type-appropriate folder structure
 
-**For sprint-based types**, create:
+**For domain workflow types**, create:
 ```
 [project-name]/
 ├── src/
@@ -138,7 +138,7 @@ Multi-type is possible for sprint-based types (e.g., `data-app` + `automation`).
 └── [other dirs added after brain dump]
 ```
 
-**For `analytics-workspace`**, create:
+**For analytics workflow (`analytics-workspace`)**, create:
 ```
 [project-name]/
 ├── src/
@@ -243,7 +243,7 @@ git commit -m "chore: initialize [project-name] with vault structure"
 
 Proceed immediately to Phase 2. Do **not** ask the user to open the docs vault yet — there's no content to look at.
 
-> **Branch point:** If the project type is `analytics-workspace`, skip to **Phase 2W** below. If `agentic-workflow`, skip to **Phase 2A** below. All other types continue to Phase 2.
+> **Branch point:** If the project type is `analytics-workspace`, skip to **Phase 2W** below. If `task-workspace`, skip to **Phase 2T** below. If `agentic-workflow`, skip to **Phase 2A** below. All domain workflow types (web-app, data-app, analytics-engineering, data-engineering, ml-engineering, ai-engineering, automation, library) continue to Phase 2.
 
 ---
 
@@ -488,13 +488,13 @@ Task workspaces — and any project — can add additional workflow types after 
 
 ---
 
-## Phase 2W: Analytics Workspace Onboarding (analytics-workspace only)
+## Phase 2W: Analytics Workflow Onboarding (analytics-workspace only)
 
-> This phase replaces Phase 2 for `analytics-workspace` projects. There is no brain dump, no backlog, no sprint planning. Instead, the onboarding focuses on cataloging data sources and BI tools so the agent can be useful from the first task.
+> This phase replaces Phase 2 for analytics workflow projects. There is no brain dump, no backlog, no sprint planning. Instead, the onboarding focuses on cataloging data sources and BI tools so the agent can be useful from the first task.
 
 ### 2W.1 Set up agentic tool configuration
 
-Copy analytics-workspace agents from `[FABRIKA_PATH]/core/agents/` to the tool-appropriate location:
+Copy analytics workflow agents from `[FABRIKA_PATH]/core/agents/` to the tool-appropriate location:
 
 - **Claude Code:** Copy to `.claude/agents/`:
   - `analysis-planner.md`, `logic-reviewer.md`, `data-validator.md`
@@ -532,7 +532,7 @@ Set up the CLAUDE.md or copilot-instructions as applicable.
 ### 2W.1a Platform onboarding (optional)
 
 Run the analytics onboarding protocol at
-`[FABRIKA_PATH]/core/workflows/protocols/analytics-onboarding.md`. This asks
+`[FABRIKA_PATH]/core/workflows/protocols/analytics-workflow-onboarding.md`. This asks
 the user about platforms, cost models, source connections, and data
 governance tooling. All questions are skippable. Answers produce
 pre-populated platform connection stubs in the source registry.
@@ -856,7 +856,7 @@ Use this during the Phase 4 readiness check.
 - [ ] Evaluation scaffold in place
 - [ ] `.fabrika/manifest.yml` generated with all installed files
 
-### Type-specific (sprint-based)
+### Type-specific (domain workflows)
 - [ ] `data-app`: Dashboard Spec, Data Model, Data Pipeline Design populated
 - [ ] `analytics-engineering`: Transformation Logic, Data Model, Data Pipeline Design populated
 - [ ] `data-engineering`: Source System Contracts, Ingestion Design, Storage Architecture, Serving Contracts, Orchestration Design, Data Pipeline Design populated
@@ -875,7 +875,7 @@ Use this during the Phase 4 readiness check.
 - [ ] `wiki/index.md` has at least a stub with the project name
 - [ ] If the project has existing artifacts (brain dump content, adopted docs), backfill has been run or is scheduled for a follow-up chat
 
-### Type-specific (analytics-workspace)
+### Type-specific (analytics workflow)
 - [ ] `sources/README.md` populated with source registry index
 - [ ] At least one source documented in `sources/connections/`, `sources/tools/`, or `sources/files/`
 - [ ] Platform connection stubs created for identified platforms (`sources/connections/[platform]/README.md`) — if onboarding (2W.1a) was completed
