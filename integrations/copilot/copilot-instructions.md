@@ -266,7 +266,20 @@ After the owner approves the Charter and/or PRD, the orchestrator issues a fresh
 
 The agent drives the development process proactively. Don't wait for the owner to orchestrate each step.
 
-**Before starting any story, sprint planning, or bug fix, read:** `[FABRIKA_PATH]/core/workflows/protocols/story-execution.md`
+**Before starting any story, sprint planning, or bug fix, read:** the project's domain workflow file in `[FABRIKA_PATH]/core/workflows/types/` and `[FABRIKA_PATH]/core/workflows/protocols/story-execution.md`
+
+**Project type to domain workflow file mapping:**
+
+| Project Type | Domain Workflow File |
+|-------------|---------------------|
+| `web-app` | `software-development-workflow.md` |
+| `automation` | `software-development-workflow.md` |
+| `data-engineering` | `data-engineering-workflow.md` |
+| `analytics-engineering` | `analytics-engineering-workflow.md` |
+| `data-app` | `data-app-workflow.md` |
+| `ml-engineering` | `ml-engineering-workflow.md` |
+| `ai-engineering` | `ai-engineering-workflow.md` |
+| `library` | `library-workflow.md` |
 
 Token cost estimates are presented alongside plan/spec briefings — see `[FABRIKA_PATH]/core/workflows/protocols/token-estimation.md`.
 

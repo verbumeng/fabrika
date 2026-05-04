@@ -172,10 +172,10 @@ Make sure everything is consistent. Bump the version."
 **EDGE CASE — renaming an agent role:** Renaming `code-reviewer` to
 `implementation-reviewer` looks like a one-file rename but touches:
 the agent file itself, AGENT-CATALOG (file path and display name),
-dispatch-protocol (agent reference), development-workflow (every
-mention of the reviewer role), integration templates (subagent table
-entry), and any other agent prompts that reference the code-reviewer
-by name. The plan must trace every occurrence. Use Grep to search for
+dispatch-protocol (agent reference), story-execution.md and domain
+workflow files (every mention of the reviewer role), integration
+templates (subagent table entry), and any other agent prompts that
+reference the code-reviewer by name. The plan must trace every occurrence. Use Grep to search for
 the old name across the entire repo — the integration point map will
 catch the structural references, but prose mentions in workflow files
 or other agent prompts might not be in the map.

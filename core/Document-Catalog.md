@@ -574,19 +574,19 @@ freshness sweep.
 - **Purpose:** Documents what needs to be done — the goal, audience, deadline, desired output, and constraints. The base alignment artifact between orchestrator and owner.
 - **Types:** task-workspace, analytics workflow (as Analysis Brief) | **Tier:** 1 (created per task) | **Audience:** both
 - **Template:** `core/templates/Brief-Template.md` (base), `core/templates/Analysis-Brief-Template.md` (analytics-specific)
-- **Notes:** Analytics-workspace extends the base brief with data source sections, SQL-specific constraints, and stakeholder context. The base brief is domain-agnostic — it works for any task type.
+- **Notes:** The analytics workflow extends the base brief with data source sections, SQL-specific constraints, and stakeholder context. The base brief is domain-agnostic — it works for any task type.
 
 ### tasks/[date-name]/plan.md (Plan)
 - **Purpose:** How the work will be done — deliverables, acceptance criteria, sequencing, constraints, validation approach. The contract the implementer executes against and the reviewer evaluates against.
 - **Types:** task-workspace, analytics workflow (as Analysis Plan) | **Tier:** 1 (created per task) | **Audience:** both
 - **Template:** `core/templates/Plan-Template.md` (base), `core/templates/Analysis-Plan-Template.md` (analytics-specific)
-- **Notes:** Analytics-workspace extends the base plan with data source tables, SQL logic sections, and cost estimates. The base plan derives its structure from the brief, not from a domain model.
+- **Notes:** The analytics workflow extends the base plan with data source tables, SQL logic sections, and cost estimates. The base plan derives its structure from the brief, not from a domain model.
 
 ### tasks/[date-name]/outcome.md (Outcome)
 - **Purpose:** Results, methodology, deliverable summary, and follow-up recommendations. The "what we found/produced" of a task.
 - **Types:** task-workspace, analytics workflow (as Outcome Report) | **Tier:** 1 (created per task at delivery) | **Audience:** both
 - **Template:** `core/templates/Outcome-Template.md` (base), `core/templates/Outcome-Report-Template.md` (analytics-specific)
-- **Notes:** Analytics-workspace extends the base outcome with data quality notes, output locations (SQL files, CSVs), and source-specific methodology. The base outcome works for any deliverable type.
+- **Notes:** The analytics workflow extends the base outcome with data quality notes, output locations (SQL files, CSVs), and source-specific methodology. The base outcome works for any deliverable type.
 
 ### tasks/[date-name]/validation-report.md (Validation Report)
 - **Purpose:** Human-facing evidence chain tracing key claims in the outcome back to the plan and brief. Lets the audience understand why they can trust the output.

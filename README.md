@@ -6,7 +6,7 @@ An agentic workflow methodology for software development and data work. Fabrika 
 
 - **32 specialized agents** across 7 archetypes (planner, reviewer, validator, coordinator, designer, implementer, architect) — the [Agent Catalog](core/agents/AGENT-CATALOG.md) maps each project type to the right set
 - **A dispatch protocol** governing what context each agent receives at each invocation point — strict isolation for reviewers, contextual dispatch for planners
-- **Three sprint topologies** (pipeline, mesh, hierarchical) for sprint-based projects, plus a tiered pre-execution review workflow for analytics workspaces
+- **Three sprint topologies** (pipeline, mesh, hierarchical) for sprint-based projects, plus a tiered pre-execution review workflow for analytics workflows
 - **A Design Alignment protocol** that turns brain dumps into durable Project Charters and PRDs before sprint planning begins
 - **A Domain Language system** — living vocabulary documents that flow into briefings, dispatch contracts, code review, and maintenance checks
 - **A wiki knowledge layer** that consolidates scattered project artifacts into organized, continuously updated topic articles
@@ -46,7 +46,7 @@ compose one or more workflow types.
 | `automation` | Software Development | Scripts, CLIs, bots, scheduled jobs |
 | `library` | Library | Reusable packages, SDKs, shared modules |
 | `task-workspace` | Task (base) | Bounded tasks — domain-agnostic base agents. The foundation all specialized workflows extend. |
-| `analytics-workspace` | Analytics | Ad hoc analysis, investigations, data requests — analytics-specific agents and tiered pre-execution review |
+| `analytics-workflow` | Analytics | Ad hoc analysis, investigations, data requests — analytics-specific agents and tiered pre-execution review |
 | `agentic-workflow` | Agentic | Systems where the methodology itself is the product |
 
 Projects can be multi-type. A data app with scrapers is `data-app` + `automation`. An AI chatbot with a web frontend is `ai-engineering` + `web-app`.

@@ -8,7 +8,7 @@ Claude Code orchestrates the entire development workflow. The human's role is de
 
 ## Project Basics
 - **Project Key:** [PROJECT_KEY] (e.g. MYAPP — used for branch naming and story IDs)
-- **Project Type:** [web-app | data-app | analytics-engineering | data-engineering | ml-engineering | ai-engineering | automation | library | analytics-workspace | task-workspace | agentic-workflow] (can be multi-type)
+- **Project Type:** [web-app | data-app | analytics-engineering | data-engineering | ml-engineering | ai-engineering | automation | library | analytics-workflow | task-workspace | agentic-workflow] (can be multi-type)
 - **Repo:** `~/projects/[project-name]`
 - **Project docs:** `~/projects/[project-name]/docs`
 - **Document Catalog:** `[FABRIKA_PATH]/core/Document-Catalog.md`
@@ -106,7 +106,7 @@ The verification approach depends on project type:
 | `ai-engineering` | Eval harness (LLM output quality) + guardrail tests | Test runner + eval framework |
 | `automation` | Integration tests against real/mock targets | Test runner |
 | `library` | Unit + integration + backward compat + API contract | Test runner |
-| `analytics-workspace` | Per-task validation (sanity checks, cross-references) | Data validator agent |
+| `analytics-workflow` | Per-task validation (sanity checks, cross-references) | Data validator agent |
 
 **This project's verification method:** [Describe which approach applies and any project-specific details]
 
@@ -359,6 +359,19 @@ Claude Code drives the development process proactively. Don't wait for the owner
 
 **Before starting any story, sprint planning, or bug fix, read:** the project's domain workflow file in `[FABRIKA_PATH]/core/workflows/types/` and `[FABRIKA_PATH]/core/workflows/protocols/story-execution.md`
 
+**Project type to domain workflow file mapping:**
+
+| Project Type | Domain Workflow File |
+|-------------|---------------------|
+| `web-app` | `software-development-workflow.md` |
+| `automation` | `software-development-workflow.md` |
+| `data-engineering` | `data-engineering-workflow.md` |
+| `analytics-engineering` | `analytics-engineering-workflow.md` |
+| `data-app` | `data-app-workflow.md` |
+| `ml-engineering` | `ml-engineering-workflow.md` |
+| `ai-engineering` | `ai-engineering-workflow.md` |
+| `library` | `library-workflow.md` |
+
 Token cost estimates are presented alongside plan/spec briefings — see `[FABRIKA_PATH]/core/workflows/protocols/token-estimation.md`.
 
 Summary of workflows covered:
@@ -384,7 +397,7 @@ Summary of workflows covered:
 
 ---
 
-## Analytics Workflow (analytics-workspace type only)
+## Analytics Workflow (analytics-workflow type only)
 
 No sprints. Work is organized as individual analysis tasks with a tiered review workflow based on data environment.
 
@@ -545,7 +558,7 @@ All agents are invoked proactively by Claude Code at the trigger points in the D
 - **Implementer** — Writes production code against the approved spec. Dispatched by the orchestrator after spec approval — the orchestrator never writes code directly, even for trivial tasks. Specialized implementers carry domain expertise for their project type(s). For lightweight changes (single-file, fully specified, not a new feature), uses reduced-ceremony dispatch but still goes through the implementer agent.
 - **Architect** — Evaluates structural design: module depth, interface simplicity, component boundaries. Three modes: **design mode** (reviews proposed modules in a spec, invoked after spec approval), **review mode** (evaluates implemented changes, optional supplement to code-reviewer), and **ad hoc** (owner-initiated assessment of existing code). Specialized architects adapt: software-architect for web-app/automation/library/ai-engineering; data-architect for data-engineering/analytics-engineering/data-app/ml-engineering. Output is proposals and assessments, never code changes — refactor proposals require owner approval.
 
-### Task-based types (task-workspace) — Base Workflow
+### Task Workflow (task-workspace) — Base Workflow
 
 | Role | Agent |
 |------|-------|
