@@ -157,7 +157,7 @@ not generic advice.
 
 **BAD:** A new agent prompt created by copying another agent's file
 and doing find-replace on domain terms. The orientation steps
-reference artifacts that do not exist for this agent's project type.
+reference artifacts that do not exist for this agent's workflow type.
 The procedure steps are generic ("review the changes carefully")
 rather than specific to this agent's evaluation lens. The calibration
 examples are abstract rather than concrete. The dispatch contract

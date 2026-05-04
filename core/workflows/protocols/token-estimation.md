@@ -1,5 +1,9 @@
 # Token Cost Estimation Protocol
 
+**Procedure classification:** Cross-cutting. Referenced by all workflow
+types at plan/spec presentation time. This protocol is workflow-agnostic
+— any workflow that produces a plan or spec invokes it.
+
 How the orchestrator surfaces token cost estimates to the owner during
 planning. The goal: give the owner enough cost visibility to make
 informed scope decisions, without adding friction or requiring action.
@@ -130,7 +134,7 @@ Example: `agentic-workflow.methodology-reviewer.claude-opus-4-6`
 
 Calibration updates happen during session close-out:
 
-- **Sprint-based and analytics-workspace:** During session close-out
+- **Domain workflows and analytics workflow:** During session close-out
   when token data is available from the tool
 - **Agentic-workflow:** During Step 7 (Ship), after commit but before
   PR

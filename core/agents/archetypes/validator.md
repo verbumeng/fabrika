@@ -122,8 +122,8 @@ independent verifier.
 ## Output Contract (what the agent produces)
 
 - Evaluation report at `docs/evaluations/[TICKET]-test-review.md`
-  (sprint-based) or `docs/evaluations/[task-name]-data-validation.md`
-  (analytics workspace)
+  (domain workflow) or `docs/evaluations/[task-name]-data-validation.md`
+  (analytics/task workflow)
 - Verdict: PASS / PASS WITH NOTES / FAIL (or domain-specific scale)
 - Verification artifacts: test files, eval scripts, validation
   queries — these persist in the project alongside the report

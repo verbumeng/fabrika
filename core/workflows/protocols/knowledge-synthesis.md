@@ -1,9 +1,13 @@
 # Knowledge Synthesis Workflow
 
+**Procedure classification:** Cross-cutting. Companion to the
+knowledge pipeline. All workflow types invoke it at their delivery
+and maintenance points.
+
 The practical step-by-step procedure for maintaining a project's wiki
 knowledge layer. This workflow is called from the maintenance
-checklist (for sprint-based projects) or after task delivery (for
-analytics-workspace projects). For the pipeline reference
+checklist (for domain workflow projects) or after task delivery (for
+analytics workflow projects). For the pipeline reference
 specification, see `core/workflows/protocols/knowledge-pipeline.md`.
 
 ---

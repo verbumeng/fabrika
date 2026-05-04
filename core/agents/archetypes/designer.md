@@ -60,8 +60,8 @@ Designers receive strict dispatch — they form independent design
 judgments.
 
 **Design mode — required inputs:**
-- Requirements: story acceptance criteria (sprint-based) or task
-  brief (analytics workspace)
+- Requirements: story acceptance criteria (domain workflow) or task
+  brief (analytics workflow)
 - Constraints: audience, tools available, integration targets
   (existing dashboards, UI components, etc.)
 - Existing designs or screenshots if this is an iteration, not a
@@ -83,8 +83,8 @@ judgments.
 
 **Design mode:**
 - Design spec at `docs/03-Design/[feature]-[type]-spec.md`
-  (sprint-based) or `tasks/[date-name]/work/[type]-spec.md`
-  (analytics workspace)
+  (domain workflow) or `tasks/[date-name]/work/[type]-spec.md`
+  (analytics workflow)
 - Must include: audience and context, recommended approach with
   rationale, layout or structure (wireframe, schema diagram, etc.),
   integration assessment, alternatives considered

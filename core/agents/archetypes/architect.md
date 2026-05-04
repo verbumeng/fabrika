@@ -22,9 +22,9 @@ Required fields: `model` or `model_tier` (at least one).
 
 ## Domain Specialization Model
 
-Three specialist architects map to project type categories:
+Three specialist architects map to workflow types:
 
-| Specialist | Project Types | Structural Focus |
+| Specialist | Workflow Types | Structural Focus |
 |------------|--------------|-----------------|
 | [software-architect](../software-architect.md) | web-app, automation, library, ai-engineering | Module depth, interface design, dependency structure, API surface, component boundaries |
 | [data-architect](../data-architect.md) | data-engineering, analytics-engineering, data-app, ml-engineering | Schema design, pipeline topology, storage layering, query patterns, data flow boundaries |

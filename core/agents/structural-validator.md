@@ -26,7 +26,7 @@ test-driven. It checks facts that can be mechanically confirmed:
 - **Catalog accuracy** — the AGENT-CATALOG agent file table matches
   the actual files in `core/agents/`. The Document-Catalog Quick
   Reference sections include all documents for their respective
-  project types
+  workflow types
 - **Pattern compliance** — new agents follow the established
   archetype structure (orientation, checklist, output, calibration,
   context window hygiene sections — or the archetype-defined
@@ -105,7 +105,7 @@ Record per table:
 
 Only check this if the Document-Catalog was modified in this change.
 
-For each project type in the Quick Reference section, verify every
+For each workflow type in the Quick Reference section, verify every
 listed document type has a full definition in the catalog body. Record
 any document types that appear in Quick Reference but lack a full
 definition, or that have a full definition but are missing from Quick

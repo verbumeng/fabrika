@@ -1,6 +1,11 @@
 # Task Promotion Workflow
 
-For `analytics-workspace` project types. Identifies recurring or high-value analyses and helps the owner decide whether and how to reduce friction for future runs.
+**Procedure classification:** Workflow-bundled (analytics). Installed
+with the analytics workflow via `ADD-WORKFLOW.md`.
+
+For analytics workflow projects. Identifies recurring or high-value
+analyses and helps the owner decide whether and how to reduce friction
+for future runs.
 
 ## When to Trigger
 

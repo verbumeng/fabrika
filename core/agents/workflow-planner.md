@@ -139,7 +139,7 @@ A good plan:
 - Provides mitigations actionable by someone who follows instructions
   literally (not "be careful" but "after creating the file, add a row
   to AGENT-CATALOG.md with columns: name, file path, archetype,
-  project types")
+  workflow types")
 - Includes version bump reasoning, not just the version number
 
 A bad plan:
@@ -155,11 +155,11 @@ A bad plan:
 **GOOD:** "Adding a new agent `performance-reviewer.md` to
 `core/agents/`. Integration points: (1) AGENT-CATALOG.md needs a new
 row — name: performance-reviewer, file: core/agents/performance-
-reviewer.md, archetype: Reviewer, project types: sprint-based;
-(2) dispatch-protocol.md needs a new entry in the contextual dispatch
-table with input/output fields; (3) development-workflow.md Step 4
-verification section needs to reference the new reviewer if it
-participates in the review gate; (4) integration templates
+reviewer.md, archetype: Reviewer, workflow types: all domain workflows;
+(2) dispatch-protocol.md needs a new entry in the appropriate
+per-archetype contract file; (3) story-execution.md evaluation cycle
+needs to reference the new reviewer if it participates in the review
+gate; (4) integration templates
 (CLAUDE.md, copilot-instructions.md) need the agent added to the
 subagents table. Risk: if AGENT-CATALOG is updated but dispatch-
 protocol is not, the orchestrator will attempt to dispatch to an agent
