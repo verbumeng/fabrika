@@ -1,7 +1,7 @@
 ---
 type: system-update-plan
 change-request: planning/CR-22-agents-as-composable-skills.md
-status: approved
+status: executed
 created: 2026-05-04
 ---
 
