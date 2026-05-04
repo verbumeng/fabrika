@@ -6,6 +6,7 @@ dependencies: [List of PRDs or deliverables this depends on, or "none"]
 status: Draft
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
+last-validated: YYYY-MM-DD
 ---
 
 # PRD: [Title]

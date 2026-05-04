@@ -6,6 +6,79 @@ Format: each version lists changed files and the nature of the change. Consumer 
 
 ---
 
+## 0.31.0 — Freshness-aware context loading
+
+Introduces a freshness signal for Tier 1 context documents across all
+workflow types. Each Tier 1 doc gets a `last-validated` frontmatter
+field. The orchestrator checks this against a configurable staleness
+threshold during story/task start: fresh docs load normally, stale
+docs are loaded with a caveat (Strategy B, universal default).
+Strategy A (skip and research) exists only as an explicit owner
+override. The freshness check at story/task start is passive — a
+one-line warning during orientation, then proceed. The three-option
+triage belongs only in periodic sweeps: sprint maintenance for sprint
+projects, on-demand sweeps for non-sprint projects. This is the
+context quality companion to CR-20's compaction principle — compaction
+governs what agents produce, freshness governs what the orchestrator
+loads.
+
+### Changed files
+- `core/Document-Catalog.md` — added Freshness Metadata subsection
+  describing the `last-validated` field, which documents carry it, and
+  consumer guidance
+- `core/workflows/types/development-workflow.md` — added
+  Freshness-Aware Context Loading section before Starting a Story;
+  Strategy B (load with caveat) as universal default; Strategy A (skip
+  and research) as owner override only; passive one-line warning at
+  story start; freshness qualifier added to story-start context
+  loading steps
+- `core/workflows/types/task-workflow.md` — added freshness check
+  cross-reference to task-start context loading
+- `core/workflows/protocols/sprint-coordination.md` — added freshness
+  sweep to maintenance phase (three-option triage); added stale doc
+  surfacing to retro phase; added note on non-sprint on-demand sweeps
+- `core/templates/Domain-Language-Template.md` — added
+  `last-validated: YYYY-MM-DD` to frontmatter
+- `core/templates/Project-Charter-Template.md` — added
+  `last-validated: YYYY-MM-DD` to frontmatter
+- `core/templates/PRD-Template.md` — added `last-validated: YYYY-MM-DD`
+  to frontmatter
+- `integrations/claude-code/CLAUDE.md` — added freshness note to
+  Session Lifecycle orientation; added freshness bullet to Key
+  Constraints
+- `integrations/copilot/copilot-instructions.md` — same changes as
+  CLAUDE.md
+- `Domain-Language.md` — added terms: freshness signal, staleness
+  threshold, freshness validation
+
+### Consumer update instructions
+1. Update `core/Document-Catalog.md` from Fabrika source (new
+   Freshness Metadata subsection)
+2. Update `core/workflows/types/development-workflow.md` from Fabrika
+   source (new Freshness-Aware Context Loading section and
+   story-start step updates)
+3. If your project uses task-workflow, update
+   `core/workflows/types/task-workflow.md` from Fabrika source
+   (freshness check cross-reference at task start)
+4. Update `core/workflows/protocols/sprint-coordination.md` from
+   Fabrika source (freshness sweep in maintenance, stale docs in retro,
+   non-sprint sweep note)
+5. Update templates from Fabrika source — `Domain-Language-Template.md`,
+   `Project-Charter-Template.md`, `PRD-Template.md` (new
+   `last-validated` frontmatter field)
+6. Update your project instruction file (CLAUDE.md or
+   copilot-instructions.md) from integration template (freshness
+   orientation note and Key Constraints bullet)
+7. If your project maintains a Domain Language file, add the three
+   new terms (freshness signal, staleness threshold, freshness
+   validation) or update from Fabrika source
+8. Add `freshness-threshold: 2-sprints` (or your preferred value) to
+   your project's instruction file
+9. For existing Tier 1 documents, add `last-validated: [today's date]`
+   to their frontmatter — they are accurate as of now
+
+---
+
 ## 0.30.0 — Universal backlog types and ceremony graduation
 
 Introduces four universal backlog types (task, bug, story, epic) as

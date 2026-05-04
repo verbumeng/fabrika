@@ -131,6 +131,14 @@ brief -> plan -> implement -> review ->
 [revise -> re-review]* -> validate -> deliver
 ```
 
+When reading Tier 1 context documents at task start, the orchestrator
+checks the document's `last-validated` frontmatter against the
+project's freshness threshold. If stale, the orchestrator emits a
+one-line note (e.g., "Note: Architecture Overview last validated 6
+weeks ago") and loads the document with a caveat. See
+`core/workflows/types/development-workflow.md` (Freshness-Aware
+Context Loading) for the full protocol.
+
 ### Brief
 
 The owner describes what they need. The orchestrator captures this as

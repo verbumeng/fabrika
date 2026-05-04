@@ -62,6 +62,29 @@ A project can be **multi-type** (sprint-based types only). A data app with scrap
 | **agent** | Written for the AI agent to reference during implementation. The agent both writes and reads it. |
 | **both** | Serves both the owner's understanding and the agent's implementation context. |
 
+### Freshness Metadata
+
+Tier 1 documents that the orchestrator loads into dispatch context at
+story/task start carry a `last-validated` frontmatter field — the date
+when a human or agent last confirmed that the document accurately
+reflects the current codebase. This field is not auto-updated on every
+edit; it is explicitly set during validation.
+
+Documents that carry it: Architecture Overview, Data Model, Canonical
+Patterns, Testing Strategy, Phase Definitions, Domain Language, Project
+Charter, PRD, and domain-specific Tier 1 docs for the project type.
+For Tier 1 documents created during bootstrap that do not have a
+canonical template (Architecture Overview, Data Model, Canonical
+Patterns, Testing Strategy, etc.), add `last-validated: [bootstrap
+date]` to the frontmatter during creation.
+
+The orchestrator uses this field during story/task start to determine
+whether a document is fresh or stale — see
+`core/workflows/types/development-workflow.md` (Freshness-Aware Context
+Loading) for the behavioral protocol and
+`core/workflows/protocols/sprint-coordination.md` for the periodic
+freshness sweep.
+
 ---
 
 ## 00-Index/

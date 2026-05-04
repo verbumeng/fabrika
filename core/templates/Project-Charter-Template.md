@@ -5,6 +5,7 @@ version: "1.0"
 status: Draft
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
+last-validated: YYYY-MM-DD
 ---
 
 # Project Charter: [Project Name]
