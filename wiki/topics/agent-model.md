@@ -40,9 +40,15 @@ The design philosophy is that agents carry *methodology expertise*, not tool exp
 
 - **Base agents as the unparameterized foundation (v0.26.0).** Four base agents (planner, implementer, reviewer, validator) were created as the domain-agnostic versions that all specialized agents extend. The base reviewer derives its checklist from the plan's acceptance criteria and four general quality signals (completeness, consistency, clarity, correctness) rather than a predefined domain rubric. The base planner produces plans structured by the brief rather than a domain model. This inverts the original design where each new project type required new agent definitions — the base agents work across any workflow context. The naming convention reinforces this: `planner.md` not `task-planner.md`, because these are the base, not a domain specialization. Source: CR-17, CHANGELOG 0.26.0.
 
+- **Skills model formalization (v0.32.0).** The relationship between base agents and specialists, implicit since v0.26.0, was formalized as the skills abstraction. A skill is the atomic unit of agent capability exercised in one invocation. Base agents (planner, implementer, reviewer, validator) carry unparameterized skills — they work in any domain without modification. All specialized agents carry parameterized versions of these skills, adding domain knowledge: the code-reviewer parameterizes the reviewer skill with rubric-based code quality checking, the data-analyst parameterizes the implementer skill with SQL and analytics domain expertise. Workflows invoke agents with their skills in sequence; projects compose workflow types. This framing completes the conceptual arc that began with archetypes (v0.9.0) and base agents (v0.26.0): archetypes define behavioral contracts, base agents provide unparameterized implementations, and the skills model names the relationship between them. Source: CR-22, CHANGELOG 0.32.0.
+
+- **Three-category dissolution (v0.32.0).** The AGENT-CATALOG previously organized agents into three categories: sprint-based, task-based, and methodology-based. This taxonomy, which originated in v0.6.0, was dissolved. All project types are now workflow types in a unified model — the catalog is reorganized by archetype rather than by category. The rationale: the category boundaries had been eroding since v0.26.0 (when the base agents showed that task-based and sprint-based agents share the same archetypes with different parameterization), and the skills model made the categories actively misleading. An agent carries a skill; a workflow invokes agents; a project composes workflows. Categories added a layer that obscured this clean chain. The Document-Catalog was similarly unified. Source: CR-22, CHANGELOG 0.32.0.
+
+- **Dispatch protocol decomposition (v0.32.0).** The monolithic dispatch-protocol.md had grown to 1,097 lines — the single largest file in Fabrika, containing per-agent contracts for all 32 agents across all workflow types. It was decomposed into a hub file (~250 lines) covering shared dispatch mechanics (tiers, lightweight dispatch criteria, retry protocol, compaction rules) with pointers to seven per-archetype contract files in a `dispatch/` subdirectory: planner-contracts.md, reviewer-contracts.md, validator-contracts.md, implementer-contracts.md, architect-contracts.md, coordinator-contracts.md, and designer-contracts.md. Each contract file contains the dispatch contracts for all agents of that archetype. This follows the context decomposition principle established in CLAUDE.md — the hub carries what every orchestrator dispatch needs, while per-archetype details load only when that archetype is being dispatched. Source: CR-22, CHANGELOG 0.32.0.
+
 ## Current State
 
-As of v0.26.0, the agent model consists of:
+As of v0.32.0, the agent model consists of:
 
 **7 archetypes** defining base behavioral contracts:
 - Planner (contextual dispatch for planning, strict for validation)
@@ -53,8 +59,8 @@ As of v0.26.0, the agent model consists of:
 - Implementer (contextual dispatch, production changes against approved plans)
 - Architect (contextual for design mode, strict for review mode)
 
-**32 agent files** covering all 11 project types:
-- 4 base agents: planner, implementer, reviewer, validator (domain-agnostic, task-workspace)
+**32 agent files** organized by archetype (unified model, no category boundaries):
+- 4 base agents: planner, implementer, reviewer, validator (domain-agnostic, carry unparameterized skills)
 - 4 specialized planners: product-manager, experiment-planner, api-designer, analysis-planner
 - 3 primary reviewers: code-reviewer, logic-reviewer, methodology-reviewer
 - 3 supplemental reviewers: security-reviewer, performance-reviewer, prompt-reviewer
@@ -65,19 +71,14 @@ As of v0.26.0, the agent model consists of:
 - 5 specialist implementers: software-engineer, data-engineer, data-analyst, ml-engineer, ai-engineer (plus agentic-engineer for agentic-workflow)
 - 2 architects: software-architect, data-architect (plus context-architect for agentic-workflow)
 
-**Role mapping across project categories:**
-- Sprint-based types (8 types): full agent roster with planner, reviewer, supplemental reviewers, validator, optional designer, scrum-master coordinator, implementer, and architect
-- Task-based types (task-workspace): planner, implementer, reviewer, validator — base agents with no domain assumptions, no coordinator or architect
-- Task-based types (analytics-workspace): analysis-planner (planning + validation modes), logic-reviewer (pre-execution, all tiers), performance-reviewer (pre-execution, Tier 2 only), data-validator (post-execution + validation report), visualization-designer, data-analyst (write-only, execute-metadata, revision modes), no coordinator or architect
-- Methodology-based types (agentic-workflow): workflow-planner, methodology-reviewer, structural-validator, agentic-engineer, context-architect, scrum-master (for change backlog sequencing)
+**Skills model (v0.32.0):**
+The four base agents carry unparameterized skills — they work in any domain. All specialized agents carry parameterized versions of these skills, adding domain knowledge. Workflows invoke agents with their skills in sequence; projects compose workflow types. The three-tier abstraction: archetypes define behavioral contracts, base agents provide unparameterized implementations, specialized agents parameterize with domain expertise.
 
-**Base agent model (v0.26.0):**
-The four base agents (planner, implementer, reviewer, validator) are the domain-agnostic versions that all specialized agents are parameterized extensions of. The analytics-workspace agents are the analytics-specific parameterization (analysis-planner adds data source sections, logic-reviewer adds SQL checking). Sprint-based agents are the software-specific parameterization (product-manager adds acceptance criteria and sprint context, code-reviewer adds rubric-based code quality checking). This relationship — base agent as unparameterized skill, specialized agent as domain extension — is the foundation for the composable skills model being formalized in CR-22.
-
-**Dispatch infrastructure:**
-- Dispatch protocol (core/workflows/protocols/dispatch-protocol.md) defines per-agent contracts with required and conditional fields
+**Dispatch infrastructure (decomposed v0.32.0):**
+- Dispatch protocol hub (core/workflows/protocols/dispatch-protocol.md) covers shared mechanics: tiers, lightweight dispatch criteria, retry protocol, compaction rules
+- Seven per-archetype contract files in core/workflows/protocols/dispatch/ define per-agent contracts with required and conditional fields
 - Lightweight dispatch path for trivial changes (single file, fully specified, not a new feature)
-- Retry protocol: all project types use the same pattern — implementer reads review reports directly (orchestrator routes file paths, does not synthesize), all evaluators re-review after every revision, max 3 cycles with orchestrator diagnosis after cap. Converged in 0.22.0 (PRD-13).
+- Retry protocol: all workflow types use the same pattern — implementer reads review reports directly (orchestrator routes file paths, does not synthesize), all evaluators re-review after every revision, max 3 cycles with orchestrator diagnosis after cap. Converged in 0.22.0 (PRD-13).
 
 **Testing modes for the test-writer (v0.16.0):**
 - Spec-first mode (TDD stories): input is spec only, output is behavioral tests
@@ -85,7 +86,7 @@ The four base agents (planner, implementer, reviewer, validator) are the domain-
 
 ## Open Questions
 
-- **Should analytics-workspace get an architect?** Currently analytics-workspace has no architect agent. As analytics projects grow in complexity (multi-source pipelines, data models with many relationships), structural review may become valuable. The current position is that analytics-workspace is task-based and ephemeral enough not to need architectural governance, but this may not hold for all consumer projects.
+- **Should the analytics workflow get an architect?** Currently the analytics workflow has no architect agent. As analytics projects grow in complexity (multi-source pipelines, data models with many relationships), structural review may become valuable. The current position is that the analytics workflow is task-oriented and ephemeral enough not to need architectural governance, but this may not hold for all consumer projects.
 
 - **Agent session reuse across TDD cycles.** For tools that support persistent agent sessions (Claude Code), the orchestrator can reuse test-writer and implementer sessions across RED-GREEN-REFACTOR cycles. For tools that don't (Copilot subagents), each dispatch is self-contained. The design accommodates both, but the token cost difference is significant and may warrant a dedicated TDD session management pattern.
 
@@ -116,6 +117,7 @@ The four base agents (planner, implementer, reviewer, validator) are the domain-
 - v0.22.0 -- review-revise loop convergence: all project types use direct implementer-reads-reviews, mandatory full re-review, 3-cycle cap with orchestrator diagnosis. Implementer-reviewer pairing and implementer-validator pairing codified in core/design-principles.md
 - v0.26.0 -- base agents (planner, implementer, reviewer, validator) as domain-agnostic foundation. Base reviewer derives criteria from plan, not rubric. Agent count: 28 -> 32. Base agent model establishes skill-parameterization pattern for CR-22.
 - v0.27.0 -- structural-validator gains CLAUDE.md path reference checking (smell test exclusion preserved). Workflow path references updated across all agent files.
+- v0.32.0 -- skills model formalized (agents carry skills, base vs. parameterized). Three-category organization dissolved; unified archetype-based catalog. Dispatch protocol decomposed into hub + 7 per-archetype contract files. 14 agent prompt files updated to workflow type language.
 
 ### PRDs and CRs
 - PRD-01 -- agentic-workflow project type and initial archetype stubs
@@ -127,8 +129,10 @@ The four base agents (planner, implementer, reviewer, validator) are the domain-
 - PRD-11 -- analytics pre-execution review, implementer-reviewer pairing, data analyst modes
 - PRD-13 -- review-revise loop redesign across all project types (implemented v0.22.0)
 - CR-17 -- base workflow type and base agents (implemented v0.26.0)
+- CR-22 -- agents as composable skills, category dissolution, dispatch decomposition (implemented v0.32.0)
 
 ### Core files
-- core/agents/AGENT-CATALOG.md -- complete agent-to-project-type mapping
-- core/workflows/protocols/dispatch-protocol.md -- per-agent dispatch contracts and tiers
+- core/agents/AGENT-CATALOG.md -- unified archetype-based agent catalog
+- core/workflows/protocols/dispatch-protocol.md -- dispatch hub (shared mechanics)
+- core/workflows/protocols/dispatch/ -- 7 per-archetype contract files
 - core/agents/archetypes/ -- 7 archetype definitions

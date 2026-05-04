@@ -29,15 +29,21 @@ archetype system (Planner, Reviewer, Implementer, Coordinator,
 Architect, Designer, Validator), dispatch tiers (strict vs.
 contextual), the pure orchestrator principle, specialist implementers,
 agent maturity progression, the implementer-reviewer pairing
-philosophy (v0.20.0), and base agents as the unparameterized
-foundation (v0.26.0). The model grew from 4 agents to 32 across 26
-versions.
+philosophy (v0.20.0), base agents as the unparameterized foundation
+(v0.26.0), and the skills abstraction (v0.32.0) where agents carry
+skills — the atomic unit of capability exercised per invocation. The
+three project type categories (sprint-based, task-based,
+methodology-based) were dissolved in v0.32.0; all types are now
+workflow types in a unified model. The model grew from 4 agents to
+32 across 32 versions.
 
 ### [Workflow Design](topics/workflow-design.md)
 
-Four workflow types — the base task workflow (v0.26.0), sprint-based,
-analytics-workspace, and agentic-workflow — and the patterns that
-govern them: lifecycle definitions, dispatch protocol, design
+Ten workflow types — the base task workflow (v0.26.0), seven domain
+workflows (v0.32.0: software-development, data-engineering,
+analytics-engineering, data-app, ml-engineering, ai-engineering,
+library), analytics workflow, and agentic-workflow — and the patterns
+that govern them: lifecycle definitions, dispatch protocol, design
 alignment, graduated testing, the briefing system, and the knowledge
 pipeline. As of v0.31.0, work is categorized into four universal
 backlog types (task, bug, story, epic) that determine which workflow
@@ -45,11 +51,18 @@ handles it. Ceremony graduates within each type, not across types:
 tasks have simple and standard modes, stories have patch/story/deep
 story tiers, bugs use the task workflow with reproduction context,
 and epics are coordination envelopes. The orchestrator asks "What
-kind of work?" before "How much ceremony?" Workflows are organized
-into types and protocols, "project types" are becoming "workflow
-types," context compaction governs phase transitions, and
-freshness-aware context loading prevents stale Tier 1 docs from
-polluting agent work.
+kind of work?" before "How much ceremony?" In v0.32.0,
+development-workflow.md was decomposed and deleted — its story
+execution mechanics extracted into the story-execution.md protocol,
+with domain-specific concerns distributed across seven new domain
+workflow files. Sprint coordination was reframed as a
+complexity-triggered procedure, and procedures were classified into
+three categories (cross-cutting, workflow-bundled,
+complexity-triggered). Workflows are organized into types and
+protocols, all types are now "workflow types" (the "project types"
+transition completed in v0.32.0), context compaction governs phase
+transitions, and freshness-aware context loading prevents stale Tier
+1 docs from polluting agent work.
 
 ### [Harvest Patterns](topics/harvest-patterns.md)
 
@@ -114,12 +127,16 @@ the ceremony spectrum concept from CR-18. In v0.30.0, Workflow
 Design was updated with the backlog type model (task, bug, story,
 epic), simple task mode, and work type routing from CR-19. In
 v0.31.0, Workflow Design was updated with freshness-aware context
-loading from CR-21.
+loading from CR-21. In v0.32.0, Agent Model was updated with the
+skills model formalization and category dissolution, and Workflow
+Design was updated with development-workflow decomposition, domain
+workflows, story-execution protocol, sprint coordination reframing,
+and procedure classification from CR-22.
 
 ### Sources Summary
 
 Articles draw from:
-- CHANGELOG entries for versions 0.1.0 through 0.31.0
+- CHANGELOG entries for versions 0.1.0 through 0.32.0
 - Planning PRDs 01-15 and CRs 17-29 (in `planning/`)
 - Core workflow files, agent prompts, and integration templates
 - Alignment session outputs from the v0.10.0-v0.25.0 roadmap

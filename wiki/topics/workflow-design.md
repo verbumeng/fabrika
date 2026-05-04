@@ -2,7 +2,7 @@
 
 ## Summary
 
-Fabrika defines workflow types — reusable multi-agent patterns that projects can compose. As of v0.26.0, there are four workflow families, with the task workflow serving as the domain-agnostic base that all specialized workflows parameterize. Previously, Fabrika defined three workflow families, each tailored to a different category of project. Sprint-based projects follow a sprint lifecycle with planning, implementation, evaluation, and retro phases. Analytics-workspace projects follow a task lifecycle (brief, plan, execute, validate, deliver) without sprint structure. Agentic-workflow projects follow a 7-step structural update lifecycle (Plan, Align, Execute, Verify, Incorporate, Present, Ship) for changes to methodology artifacts. Each family uses the same agent archetypes but dispatches them differently and at different cadences.
+Fabrika defines workflow types — reusable multi-agent patterns that projects can compose. As of v0.32.0, there are ten workflow types across three families: the base task workflow (domain-agnostic), seven domain workflows for story-complexity work (software-development, data-engineering, analytics-engineering, data-app, ml-engineering, ai-engineering, library), the analytics workflow (task-based analytics), and the agentic-workflow (structural methodology updates). Domain workflows share story execution mechanics via the story-execution protocol and add domain-specific agent rosters and verification criteria. The analytics workflow follows a task lifecycle (brief, plan, execute, validate, deliver) with tiered pre-execution review. Agentic-workflow projects follow a 7-step structural update lifecycle (Plan, Align, Execute, Verify, Incorporate, Present, Ship) for changes to methodology artifacts. Each workflow type uses the same agent archetypes but dispatches them differently and at different cadences.
 
 The workflow system evolved from a monolithic set of instructions baked into integration templates (v0.1.0) into a decomposed set of shared, tool-agnostic workflow files (v0.7.0) that both Claude Code and Copilot integrations reference. Major workflow additions include the dispatch protocol (v0.9.0), the agentic-workflow lifecycle (v0.10.0), the pure orchestrator rewrite (v0.12.0), design alignment (v0.14.0), graduated testing (v0.16.0), the briefing system (v0.5.1 through v0.17.0), and the wiki knowledge pipeline (v0.18.0). Each addition addressed a specific process gap -- requirements capture, testing discipline, structured communication, or knowledge consolidation.
 
@@ -48,17 +48,22 @@ The design philosophy is that workflows define the *sequence and contracts* for 
 
 - **Universal backlog types and work type routing (v0.30.0).** The linear complexity spectrum from v0.29.0 — which positioned ad-hoc, task, patch, story, deep story, and epic as points on a single graduated scale — was replaced by four universal backlog types that each carry their own ceremony graduation. The four types: **task** (bounded work using the task workflow, with simple and standard modes), **bug** (a task with reproduction context — observed vs. expected behavior and reproduction steps), **story** (sprint-based work with patch/story/deep story tiers, unchanged from v0.29.0), and **epic** (a coordination envelope grouping tasks and stories toward a larger goal; mechanics deferred to CR-24). The key design shift: the orchestrator's first routing question is now "What kind of work is this?" (the backlog type) rather than "How much ceremony?" (the complexity level). The second question — how much ceremony within that type — follows naturally: simple vs. standard for tasks and bugs, patch/story/deep story for stories. This matters most for unplanned work arriving outside sprint planning, where the orchestrator must classify before routing. Sprint-planned work already has its type determined during planning. Simple task mode lets the orchestrator conceive the plan inline and dispatch the implementer directly, skipping the task folder, plan.md artifact, and planner subagent — the commit message is the primary documentation artifact. The "ad-hoc" concept from the linear spectrum resolves into simple mode within the task workflow; the term is retired from active use. Source: CR-19, CHANGELOG 0.30.0.
 
+- **Development-workflow decomposition and domain workflows (v0.32.0).** The single development-workflow.md — the general-purpose sprint-based workflow for all eight development project types — was deleted and decomposed into two layers. The shared story execution mechanics (the step-by-step sequence from spec through implementation, evaluation, and delivery that all story-complexity work follows regardless of domain) were extracted into a new protocol file: `core/workflows/protocols/story-execution.md`. The domain-specific concerns (which agents to dispatch, what domain expertise to apply, which supplemental reviewers to invoke) were distributed across seven new domain workflow files, one per domain: software-development, data-engineering, analytics-engineering, data-app, ml-engineering, ai-engineering, and library. Each domain workflow references the story-execution protocol for shared mechanics and adds its own agent roster, domain-specific verification criteria, and workflow-bundled procedures. This decomposition was deferred in v0.27.0 (CR-28) when the owner noted that each domain would eventually need its own workflow definition. CR-22 executed that vision. The analytics-workspace workflow was also renamed to analytics-workflow (file and concept) to match the unified workflow type naming convention. Source: CR-22, CHANGELOG 0.32.0.
+
+- **Procedure classification (v0.32.0).** Protocols in `core/workflows/protocols/` were classified into three categories based on how they attach to workflows. Cross-cutting procedures (token-estimation, knowledge-pipeline, knowledge-synthesis) apply to all workflow types and are referenced universally. Workflow-bundled procedures (task-promotion, analytics-workflow-onboarding) are specific to a particular workflow type and only apply when that workflow is installed. Complexity-triggered procedures (sprint-coordination, story-execution) activate based on the complexity of the work being done — sprint coordination triggers at story complexity or above when a project has enough concurrent stories to warrant sprint structure, and story execution triggers for all work at story complexity or above regardless of domain. This classification resolves the cross-cutting concern gap identified in v0.26.0: procedures are independent governance concerns that attach to workflows based on their classification, not by copy-pasting references into each workflow file. Sprint coordination was reframed from a workflow phase manager to a complexity-triggered procedure with explicit trigger documentation. Source: CR-22, CHANGELOG 0.32.0.
+
 - **Freshness-aware context loading as a context quality principle (v0.31.0).** Tier 1 context documents (Architecture Overview, Data Model, Canonical Patterns, etc.) can drift from code truth over time. CR-21 introduces a `last-validated` frontmatter field — the date when a human or agent last confirmed the document still reflects the codebase. The orchestrator checks this against a configurable staleness threshold (default: 2 sprints / ~4 weeks) during story/task start. The check is passive: if stale, the orchestrator emits a one-line warning and loads the document with a caveat ("last validated [date] — verify against actual code before relying on it"). This is Strategy B, the universal default for all tiers. Strategy A (skip the stale document entirely) exists only as an explicit owner override for documents known to be seriously wrong — the owner's reasoning being that stale-but-mostly-accurate context is almost always cheaper than reconstructing from scratch, which burns the context window. The original plan had Strategy A as the automatic default for Patch/Story tiers, but the owner pushed back: the whole point of Tier 1 docs is to compress context so agents don't crawl the codebase. Three-option triage (re-validate, mark for refresh, accept staleness) happens during periodic sweeps — sprint maintenance for sprint projects, on-demand for non-sprint projects — not at story/task start. The freshness check is universal across all workflow types; only the sweep cadence is workflow-specific. This is the context quality companion to compaction (CR-20): compaction governs what agents produce at phase boundaries, freshness governs what the orchestrator loads before a phase begins. Source: CR-21, CHANGELOG 0.31.0.
 
 - **CLAUDE.md as a structural artifact requiring path validation (v0.27.0).** CR-28 exposed a systemic issue: the project-level CLAUDE.md contains workflow path references that break when workflow files move, but the structural-validator was not checking those paths because CLAUDE.md was excluded from the structural update scope (to preserve smell test exclusion — CLAUDE.md is gitignored and contains project-specific content). The fix was surgical: the structural-validator now checks CLAUDE.md path references during structural updates while preserving the smell test exclusion. The CLAUDE.md template was also restructured to lead with the mandatory workflow pointer, making the workflow reference the first thing an orchestrator encounters. This is a design lesson: gitignored files that contain pointers to canonical files need their own validation path, separate from the canonical file validation. Source: CR-28, CHANGELOG 0.27.0.
 
 ## Current State
 
-As of v0.31.0, the workflow system includes:
+As of v0.32.0, the workflow system includes:
 
 **Directory structure:**
-- `core/workflows/types/` — workflow type definitions (agentic-workflow, development-workflow, task-workflow, analytics-workspace)
-- `core/workflows/protocols/` — supporting processes (dispatch-protocol, design-alignment, sprint-coordination, doc-triggers, hooks-reference, knowledge-pipeline, knowledge-synthesis, progress-files, task-promotion, token-estimation, analytics-onboarding)
+- `core/workflows/types/` — 10 workflow type definitions (task-workflow, 7 domain workflows, analytics-workflow, agentic-workflow)
+- `core/workflows/protocols/` — supporting processes, classified by attachment: cross-cutting (token-estimation, knowledge-pipeline, knowledge-synthesis), workflow-bundled (task-promotion, analytics-workflow-onboarding), complexity-triggered (sprint-coordination, story-execution)
+- `core/workflows/protocols/dispatch/` — 7 per-archetype contract files (decomposed from dispatch-protocol.md in v0.32.0)
 - `core/workflows/README.md` — documents the types vs. protocols distinction
 
 **Base task workflow** (task-workspace):
@@ -67,22 +72,25 @@ As of v0.31.0, the workflow system includes:
 - Four base agents (planner, implementer, reviewer, validator) with no domain assumptions
 - Reviewer derives checklist from plan's acceptance criteria + four general quality signals
 - Bug tasks: tasks with reproduction-context briefs (observed vs. expected, reproduction steps); reviewer additionally verifies the fix addresses the reproduction case (v0.30.0)
-- Design Alignment for complex tasks (same triggers as analytics-workspace)
+- Design Alignment for complex tasks (same triggers as analytics workflow)
 - Wiki knowledge pipeline: Extract+Index after delivery, Synthesize+Link monthly
 - On-demand workflow addition via ADD-WORKFLOW.md
 
-**Sprint-based workflow** (8 project types):
+**Domain workflows** (7 workflow types, v0.32.0):
+- Seven domain-specific workflows for story-complexity work: software-development, data-engineering, analytics-engineering, data-app, ml-engineering, ai-engineering, library
+- Each references the story-execution protocol for shared mechanics (spec through implementation, evaluation, delivery)
+- Each defines its own agent roster (which specialist implementer, which reviewers, which architect), domain-specific verification criteria, and workflow-bundled procedures
 - Design Alignment protocol for requirements gathering (brain dump -> Charter/PRD)
-- Sprint lifecycle with phase indicator (alignment, planning, dev, review, maintenance, retro)
+- Sprint coordination as a complexity-triggered procedure (activates when concurrent story volume warrants sprint structure)
 - Complexity tiers internal to story-type work: Patch (reduced ceremony), Story (full ceremony), Deep Story (enhanced ceremony with research and mandatory architect review) — assigned by scrum-master during sprint planning (v0.29.0, reframed as story-internal in v0.30.0)
-- Development workflow with tier-conditional branching and testing approach branching (TDD/test-informed/test-after)
-- Dispatch protocol with per-agent contracts, lightweight dispatch path, and tier-conditional dispatch tables (v0.29.0)
+- Tier-conditional branching and testing approach branching (TDD/test-informed/test-after)
+- Dispatch protocol hub with per-archetype contract files, lightweight dispatch path, and tier-conditional dispatch tables
 - Review-revise loop: implementer reads reviews directly, all evaluators re-review, max 3 cycles (2 for Patch) with orchestrator diagnosis
 - 9 briefing formats across sprint, session, retro, spec, task, and structural contexts
 - Maintenance checklist with 7+ sections including knowledge synthesis
 - Hook system with 7 git hooks and 4 tool-specific hooks
 
-**Task-based workflow** (analytics-workspace):
+**Analytics workflow** (renamed from analytics-workspace in v0.32.0):
 - Tiered pre-execution review workflow (v0.20.0): Tier 1 (local data) and Tier 2 (production data), with "highest tier wins" for mixed sources
 - Tier 1: plan -> promotion check -> write -> logic review -> [revise -> re-review]* -> execute -> validate + brief check -> deliver
 - Tier 2: plan -> promotion check -> write (code + metadata queries) -> logic review -> [revise -> re-review]* -> execute metadata (INFORMATION_SCHEMA + EXPLAIN) -> performance review -> [revise -> re-review]* -> [cost approval - cloud only] -> execute -> validate + brief check -> deliver
@@ -95,7 +103,7 @@ As of v0.31.0, the workflow system includes:
 - Task plan and task outcome briefing formats
 - Knowledge pipeline: Extract+Index after each task delivery, Synthesize+Link monthly
 
-**Agentic-workflow** (methodology-based):
+**Agentic-workflow**:
 - 7-step structural update lifecycle (Plan, Align, Execute, Verify, Incorporate, Present, Ship)
 - Persistent plan files at `docs/plans/[identifier]-plan.md` with status lifecycle (draft -> approved -> executed) and Alignment History
 - Owner pushback re-invokes the planner to revise the plan file (orchestrator never edits directly)
@@ -111,6 +119,7 @@ As of v0.31.0, the workflow system includes:
 - Output format constraints in the dispatch protocol specifying compressed output per agent role category (v0.28.0)
 - Work type routing: the orchestrator classifies incoming work by backlog type (task, bug, story, epic) before assessing ceremony level within that type (v0.30.0)
 - Freshness-aware context loading: Tier 1 docs carry `last-validated` dates; the orchestrator checks freshness at story/task start, warns if stale, and loads with a caveat (v0.31.0)
+- Procedure classification: cross-cutting (all workflows), workflow-bundled (specific workflow), complexity-triggered (activates based on work complexity) (v0.32.0)
 
 - **Tiered pre-execution review for analytics-workspace (v0.20.0).** The analytics-workspace workflow was rewritten from a single 6-step linear lifecycle (brief -> plan -> execute -> validate -> deliver) into a tiered system with pre-execution review. The core insight: every piece of code the data analyst writes should be independently reviewed before execution, regardless of data environment. For production data, an additional cost/efficiency gate using INFORMATION_SCHEMA and EXPLAIN metadata assesses query cost before anything runs. The design separates two independent dimensions: tier (data environment — determines which phases run) and stakes (audience/purpose — determines review intensity within phases). This separation prevents low-stakes exploratory queries on cloud warehouses from skipping cost protection, while also preventing high-stakes analyses on local files from drowning in unnecessary cost ceremony. The implementer-reviewer pairing principle — that every implementer output gets an independent review before being acted upon downstream — was identified as a framework-wide design philosophy during this alignment, not just an analytics-workspace rule. Source: PRD-11, CHANGELOG 0.20.0.
 
@@ -132,11 +141,11 @@ As of v0.31.0, the workflow system includes:
 
 - **~~Agentic-workflow plan persistence gap.~~** Resolved in v0.21.0 (PRD-12). The workflow-planner now writes plans to `docs/plans/[identifier]-plan.md` instead of keeping them in conversation. Owner pushback re-invokes the planner to revise the file (orchestrator never edits directly). Verification agents receive the plan file path in strict dispatch. An Alignment History section in the plan file captures what changed and why. All three project types now follow the same lifecycle pattern: change request -> planner writes plan file -> owner reviews -> approve -> implementer receives file path -> validators assess against file.
 
-- **TDD for analytics-workspace.** The graduated testing approach (v0.16.0) was designed primarily for sprint-based projects. Test boundaries for SQL and analysis work are less clear than for application code. Whether analytics-workspace tasks benefit from TDD-style spec-first testing, and what that looks like in practice, is unresolved. However, the pre-execution review workflow (v0.20.0) introduces a form of "test before run" discipline: code is reviewed for correctness before execution, which serves a similar function to TDD in the analytics context.
+- **TDD for the analytics workflow.** The graduated testing approach (v0.16.0) was designed primarily for domain workflows (story-complexity work). Test boundaries for SQL and analysis work are less clear than for application code. Whether analytics workflow tasks benefit from TDD-style spec-first testing, and what that looks like in practice, is unresolved. However, the pre-execution review workflow (v0.20.0) introduces a form of "test before run" discipline: code is reviewed for correctness before execution, which serves a similar function to TDD in the analytics context.
 
 - **~~Review-revise loop convergence across project types.~~** Resolved in v0.22.0 (PRD-13). All project types now use the same review-revise loop: implementer reads review reports directly, all evaluators re-review after every revision, 3-cycle cap with orchestrator diagnosis after cap. The orchestrator-as-translator pattern was fully replaced — the implementer is the domain expert better positioned to interpret review findings. Implementer-reviewer pairing and implementer-validator pairing codified in `core/design-principles.md`.
 
-- **Analytics workspace onboarding.** The pre-execution review workflow depends on platform configuration (cost models, source registry structure, data dictionary hierarchy) that is currently discovered ad hoc during the first analysis task. PRD-14 proposes a structured onboarding protocol that gathers this information upfront. Whether onboarding should also cover data governance tool integration (Alation, Collibra, DataHub) is an open question — the tooling exists but requires custom API configuration.
+- **Analytics workflow onboarding.** The pre-execution review workflow depends on platform configuration (cost models, source registry structure, data dictionary hierarchy) that is currently discovered ad hoc during the first analysis task. PRD-14 proposes a structured onboarding protocol that gathers this information upfront. Whether onboarding should also cover data governance tool integration (Alation, Collibra, DataHub) is an open question — the tooling exists but requires custom API configuration.
 
 - **~~Token cost estimation at plan time.~~** Resolved in v0.24.0 (PRD-15). Token cost estimation now surfaces during plan alignment using deterministic estimation from agent frontmatter and per-project calibration data. The estimation system uses bundled tier-level priors with EWMA blending against actual token usage over time. Cross-cutting concern identified in v0.26.0: token estimation references are copy-pasted per-workflow-file rather than attached as a universal procedure. CR-20 and CR-22 should formalize how cross-cutting concerns attach to workflows without duplication.
 
@@ -180,6 +189,7 @@ As of v0.31.0, the workflow system includes:
 - v0.29.0 -- universal complexity tiers (Patch/Story/Deep Story) as ceremony dial for sprint-based work. Tier-conditional workflow branching in development-workflow, tier-conditional dispatch tables, story template tier field, sprint contract tier fields, Document Catalog research document entry. Part of the universal complexity spectrum connecting all workflow types.
 - v0.30.0 -- universal backlog types (task, bug, story, epic) replacing the linear complexity spectrum. Ceremony graduates within each type independently. Simple task mode for trivially scoped work. Work type routing teaches the orchestrator type-first assessment. Complexity tiers reframed as story-internal. "Ad-hoc" retired as active terminology.
 - v0.31.0 -- freshness-aware context loading: `last-validated` field on Tier 1 docs, passive orchestrator check at story/task start, Strategy B (load with caveat) as universal default, periodic freshness sweeps in maintenance. Context quality companion to compaction (CR-20).
+- v0.32.0 -- development-workflow.md decomposed and deleted; story-execution.md protocol created (shared story execution mechanics); 7 domain workflow files created (one per domain); analytics-workspace renamed to analytics-workflow; sprint coordination reframed as complexity-triggered procedure; procedure classification (cross-cutting, workflow-bundled, complexity-triggered); dispatch protocol decomposed into hub + 7 per-archetype contract files.
 
 ### PRDs and CRs
 - PRD-01 -- agentic-workflow lifecycle design
@@ -193,7 +203,7 @@ As of v0.31.0, the workflow system includes:
 - PRD-11 -- analytics pre-execution review, tiered workflows, implementer-reviewer pairing
 - PRD-12 -- plan persistence alignment, consistent plan lifecycle across project types
 - PRD-13 -- review-revise loop redesign (cross-cutting, implemented v0.22.0)
-- PRD-14 -- analytics workspace onboarding protocol (planned)
+- PRD-14 -- analytics workflow onboarding protocol (planned)
 - PRD-15 -- token cost estimation across workspaces (implemented v0.24.0)
 - CR-17 -- base workflow type, base agents, workflow composition (implemented v0.26.0)
 - CR-28 -- workflow folder reorganization, types/protocols split (implemented v0.27.0)
@@ -201,15 +211,24 @@ As of v0.31.0, the workflow system includes:
 - CR-18 -- universal complexity tiers, ceremony dial for sprint work (implemented v0.29.0)
 - CR-19 -- universal backlog types, simple task mode, work type routing (implemented v0.30.0)
 - CR-21 -- freshness-aware context loading, context quality principle (implemented v0.31.0)
+- CR-22 -- agents as composable skills, development-workflow decomposition, domain workflows, procedure classification (implemented v0.32.0)
 
 ### Core files
 - core/workflows/README.md -- types vs. protocols directory structure guide
 - core/workflows/types/agentic-workflow.md -- 7-step structural update lifecycle
-- core/workflows/types/development-workflow.md -- sprint-based development workflow
+- core/workflows/types/software-development-workflow.md -- software development domain workflow
+- core/workflows/types/data-engineering-workflow.md -- data engineering domain workflow
+- core/workflows/types/analytics-engineering-workflow.md -- analytics engineering domain workflow
+- core/workflows/types/data-app-workflow.md -- data app domain workflow
+- core/workflows/types/ml-engineering-workflow.md -- ML engineering domain workflow
+- core/workflows/types/ai-engineering-workflow.md -- AI engineering domain workflow
+- core/workflows/types/library-workflow.md -- library domain workflow
 - core/workflows/types/task-workflow.md -- base (domain-agnostic) task lifecycle
-- core/workflows/types/analytics-workspace.md -- analytics-specific task lifecycle
-- core/workflows/protocols/dispatch-protocol.md -- per-agent dispatch contracts
-- core/workflows/protocols/sprint-coordination.md -- sprint phase management
+- core/workflows/types/analytics-workflow.md -- analytics-specific task lifecycle
+- core/workflows/protocols/dispatch-protocol.md -- dispatch hub (shared mechanics)
+- core/workflows/protocols/dispatch/ -- 7 per-archetype contract files
+- core/workflows/protocols/story-execution.md -- shared story execution mechanics
+- core/workflows/protocols/sprint-coordination.md -- complexity-triggered sprint phase management
 - core/workflows/protocols/knowledge-pipeline.md -- wiki 5-phase pipeline
 - core/workflows/protocols/knowledge-synthesis.md -- maintenance-integrated synthesis workflow
 - core/workflows/protocols/design-alignment.md -- requirements gathering protocol
