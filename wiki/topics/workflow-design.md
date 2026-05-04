@@ -48,11 +48,13 @@ The design philosophy is that workflows define the *sequence and contracts* for 
 
 - **Universal backlog types and work type routing (v0.30.0).** The linear complexity spectrum from v0.29.0 — which positioned ad-hoc, task, patch, story, deep story, and epic as points on a single graduated scale — was replaced by four universal backlog types that each carry their own ceremony graduation. The four types: **task** (bounded work using the task workflow, with simple and standard modes), **bug** (a task with reproduction context — observed vs. expected behavior and reproduction steps), **story** (sprint-based work with patch/story/deep story tiers, unchanged from v0.29.0), and **epic** (a coordination envelope grouping tasks and stories toward a larger goal; mechanics deferred to CR-24). The key design shift: the orchestrator's first routing question is now "What kind of work is this?" (the backlog type) rather than "How much ceremony?" (the complexity level). The second question — how much ceremony within that type — follows naturally: simple vs. standard for tasks and bugs, patch/story/deep story for stories. This matters most for unplanned work arriving outside sprint planning, where the orchestrator must classify before routing. Sprint-planned work already has its type determined during planning. Simple task mode lets the orchestrator conceive the plan inline and dispatch the implementer directly, skipping the task folder, plan.md artifact, and planner subagent — the commit message is the primary documentation artifact. The "ad-hoc" concept from the linear spectrum resolves into simple mode within the task workflow; the term is retired from active use. Source: CR-19, CHANGELOG 0.30.0.
 
+- **Freshness-aware context loading as a context quality principle (v0.31.0).** Tier 1 context documents (Architecture Overview, Data Model, Canonical Patterns, etc.) can drift from code truth over time. CR-21 introduces a `last-validated` frontmatter field — the date when a human or agent last confirmed the document still reflects the codebase. The orchestrator checks this against a configurable staleness threshold (default: 2 sprints / ~4 weeks) during story/task start. The check is passive: if stale, the orchestrator emits a one-line warning and loads the document with a caveat ("last validated [date] — verify against actual code before relying on it"). This is Strategy B, the universal default for all tiers. Strategy A (skip the stale document entirely) exists only as an explicit owner override for documents known to be seriously wrong — the owner's reasoning being that stale-but-mostly-accurate context is almost always cheaper than reconstructing from scratch, which burns the context window. The original plan had Strategy A as the automatic default for Patch/Story tiers, but the owner pushed back: the whole point of Tier 1 docs is to compress context so agents don't crawl the codebase. Three-option triage (re-validate, mark for refresh, accept staleness) happens during periodic sweeps — sprint maintenance for sprint projects, on-demand for non-sprint projects — not at story/task start. The freshness check is universal across all workflow types; only the sweep cadence is workflow-specific. This is the context quality companion to compaction (CR-20): compaction governs what agents produce at phase boundaries, freshness governs what the orchestrator loads before a phase begins. Source: CR-21, CHANGELOG 0.31.0.
+
 - **CLAUDE.md as a structural artifact requiring path validation (v0.27.0).** CR-28 exposed a systemic issue: the project-level CLAUDE.md contains workflow path references that break when workflow files move, but the structural-validator was not checking those paths because CLAUDE.md was excluded from the structural update scope (to preserve smell test exclusion — CLAUDE.md is gitignored and contains project-specific content). The fix was surgical: the structural-validator now checks CLAUDE.md path references during structural updates while preserving the smell test exclusion. The CLAUDE.md template was also restructured to lead with the mandatory workflow pointer, making the workflow reference the first thing an orchestrator encounters. This is a design lesson: gitignored files that contain pointers to canonical files need their own validation path, separate from the canonical file validation. Source: CR-28, CHANGELOG 0.27.0.
 
 ## Current State
 
-As of v0.30.0, the workflow system includes:
+As of v0.31.0, the workflow system includes:
 
 **Directory structure:**
 - `core/workflows/types/` — workflow type definitions (agentic-workflow, development-workflow, task-workflow, analytics-workspace)
@@ -61,8 +63,10 @@ As of v0.30.0, the workflow system includes:
 
 **Base task workflow** (task-workspace):
 - Domain-agnostic lifecycle: brief -> plan -> implement -> review -> [revise -> re-review]* -> validate -> deliver
+- Two modes: **simple** (orchestrator plans inline, no task folder or plan.md, commit message is documentation) and **standard** (full lifecycle with planner subagent and plan artifact) (v0.30.0)
 - Four base agents (planner, implementer, reviewer, validator) with no domain assumptions
 - Reviewer derives checklist from plan's acceptance criteria + four general quality signals
+- Bug tasks: tasks with reproduction-context briefs (observed vs. expected, reproduction steps); reviewer additionally verifies the fix addresses the reproduction case (v0.30.0)
 - Design Alignment for complex tasks (same triggers as analytics-workspace)
 - Wiki knowledge pipeline: Extract+Index after delivery, Synthesize+Link monthly
 - On-demand workflow addition via ADD-WORKFLOW.md
@@ -70,7 +74,7 @@ As of v0.30.0, the workflow system includes:
 **Sprint-based workflow** (8 project types):
 - Design Alignment protocol for requirements gathering (brain dump -> Charter/PRD)
 - Sprint lifecycle with phase indicator (alignment, planning, dev, review, maintenance, retro)
-- Complexity tiers: Patch (reduced ceremony), Story (full ceremony), Deep Story (enhanced ceremony with research and mandatory architect review) — assigned by scrum-master during sprint planning (v0.29.0)
+- Complexity tiers internal to story-type work: Patch (reduced ceremony), Story (full ceremony), Deep Story (enhanced ceremony with research and mandatory architect review) — assigned by scrum-master during sprint planning (v0.29.0, reframed as story-internal in v0.30.0)
 - Development workflow with tier-conditional branching and testing approach branching (TDD/test-informed/test-after)
 - Dispatch protocol with per-agent contracts, lightweight dispatch path, and tier-conditional dispatch tables (v0.29.0)
 - Review-revise loop: implementer reads reviews directly, all evaluators re-review, max 3 cycles (2 for Patch) with orchestrator diagnosis
@@ -105,6 +109,8 @@ As of v0.30.0, the workflow system includes:
 - Bug workflow connecting bug reports to agent quality improvement
 - Compaction principle: each phase transition produces a compressed, self-contained artifact for the next phase (v0.28.0)
 - Output format constraints in the dispatch protocol specifying compressed output per agent role category (v0.28.0)
+- Work type routing: the orchestrator classifies incoming work by backlog type (task, bug, story, epic) before assessing ceremony level within that type (v0.30.0)
+- Freshness-aware context loading: Tier 1 docs carry `last-validated` dates; the orchestrator checks freshness at story/task start, warns if stale, and loads with a caveat (v0.31.0)
 
 - **Tiered pre-execution review for analytics-workspace (v0.20.0).** The analytics-workspace workflow was rewritten from a single 6-step linear lifecycle (brief -> plan -> execute -> validate -> deliver) into a tiered system with pre-execution review. The core insight: every piece of code the data analyst writes should be independently reviewed before execution, regardless of data environment. For production data, an additional cost/efficiency gate using INFORMATION_SCHEMA and EXPLAIN metadata assesses query cost before anything runs. The design separates two independent dimensions: tier (data environment — determines which phases run) and stakes (audience/purpose — determines review intensity within phases). This separation prevents low-stakes exploratory queries on cloud warehouses from skipping cost protection, while also preventing high-stakes analyses on local files from drowning in unnecessary cost ceremony. The implementer-reviewer pairing principle — that every implementer output gets an independent review before being acted upon downstream — was identified as a framework-wide design philosophy during this alignment, not just an analytics-workspace rule. Source: PRD-11, CHANGELOG 0.20.0.
 
@@ -172,6 +178,8 @@ As of v0.30.0, the workflow system includes:
 - v0.27.0 -- workflow folder reorganization: types/ for workflow type definitions, protocols/ for supporting processes. Renames: agentic-workflow-lifecycle.md -> agentic-workflow.md, sprint-lifecycle.md -> sprint-coordination.md. CLAUDE.md restructured with mandatory workflow pointer. Structural-validator gains CLAUDE.md path reference checking.
 - v0.28.0 -- context compaction as named design principle governing workflow phase transitions. Output format constraints in dispatch protocol.
 - v0.29.0 -- universal complexity tiers (Patch/Story/Deep Story) as ceremony dial for sprint-based work. Tier-conditional workflow branching in development-workflow, tier-conditional dispatch tables, story template tier field, sprint contract tier fields, Document Catalog research document entry. Part of the universal complexity spectrum connecting all workflow types.
+- v0.30.0 -- universal backlog types (task, bug, story, epic) replacing the linear complexity spectrum. Ceremony graduates within each type independently. Simple task mode for trivially scoped work. Work type routing teaches the orchestrator type-first assessment. Complexity tiers reframed as story-internal. "Ad-hoc" retired as active terminology.
+- v0.31.0 -- freshness-aware context loading: `last-validated` field on Tier 1 docs, passive orchestrator check at story/task start, Strategy B (load with caveat) as universal default, periodic freshness sweeps in maintenance. Context quality companion to compaction (CR-20).
 
 ### PRDs and CRs
 - PRD-01 -- agentic-workflow lifecycle design
@@ -191,6 +199,8 @@ As of v0.30.0, the workflow system includes:
 - CR-28 -- workflow folder reorganization, types/protocols split (implemented v0.27.0)
 - CR-20 -- context compaction as design principle (implemented v0.28.0)
 - CR-18 -- universal complexity tiers, ceremony dial for sprint work (implemented v0.29.0)
+- CR-19 -- universal backlog types, simple task mode, work type routing (implemented v0.30.0)
+- CR-21 -- freshness-aware context loading, context quality principle (implemented v0.31.0)
 
 ### Core files
 - core/workflows/README.md -- types vs. protocols directory structure guide
