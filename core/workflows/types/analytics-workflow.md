@@ -5,11 +5,16 @@ individual analysis tasks.
 
 ## Design Alignment for Complex Analyses
 
-Before the standard task lifecycle, the orchestrator checks whether the
-analysis warrants structured alignment. If any of the following
-complexity triggers are met, the orchestrator runs the Design Alignment
-protocol (`core/workflows/protocols/design-alignment.md`) before creating the
-brief:
+Before the standard task lifecycle, the orchestrator checks whether
+the work warrants structured alignment. Design Alignment fires at
+project/phase level per standard triggers (new project, new phase,
+owner request, detected ambiguity). Individual analytics tasks use the
+task/plan flow regardless of complexity. If the orchestrator
+determines the work is a new phase or feature rather than a task,
+Design Alignment fires and produces a PRD.
+
+Complexity indicators that suggest the work may be a new phase rather
+than a task:
 
 - 3+ data sources involved
 - Multiple stakeholder groups with different needs
@@ -17,25 +22,18 @@ brief:
 - Estimated effort exceeds 2 days
 - Analysis informs a significant decision (budget, strategy, headcount)
 
-When triggered, Design Alignment produces an enhanced Analysis Brief
-with deeper coverage of scope, terminology, and success criteria. The
-output uses the standard brief template — it is NOT a Charter or PRD
-(analytics workflow is task-based, not sprint-based).
-
-Simple analyses skip alignment and proceed directly to the task
-lifecycle below.
+Simple analyses proceed directly to the task lifecycle below.
 
 ## Pre-Workflow Assessment
 
-After the brief is approved and the plan is written, before the
-workflow begins:
+After the task document is approved and the plan is written, before
+the workflow begins:
 
 1. Orchestrator reads the plan and classifies the task:
    - **Tier:** Local (Tier 1) vs. production (Tier 2), and which
      platforms. Highest tier wins for mixed sources.
    - **Stakes:** Low / medium / high (see Stakes Classification below).
-   - **Brief type:** Basic vs. enhanced (via Design Alignment).
-2. Orchestrator communicates to the user: tier, stakes, brief type.
+2. Orchestrator communicates to the user: tier, stakes.
 3. Workflow begins.
 
 ## Workflow Tiers
@@ -64,8 +62,8 @@ a single task creates confusing ceremony for no benefit.
 ### Stakes Classification
 
 Communicated to the user before the workflow begins, after plan
-approval. The orchestrator assesses stakes from the brief's audience
-and purpose.
+approval. The orchestrator assesses stakes from the task document's
+audience and purpose.
 
 | Stakes | Triggers | What scales |
 |---|---|---|
@@ -82,7 +80,7 @@ always gets full performance review regardless of stakes.
 
 ```
 plan -> promotion check -> write -> logic review ->
-[revise -> re-review]* -> execute -> validate + brief check -> deliver
+[revise -> re-review]* -> execute -> validate + plan check -> deliver
 ```
 
 ### Phase Details
@@ -132,16 +130,16 @@ spot-checks. Writes internal evaluation report to
 validation report to `tasks/[date-name]/validation-report.md`
 (detailed evidence chain — always full detail regardless of stakes).
 
-**Brief check.** Analysis planner in validation mode (see dispatch
+**Plan check.** Analysis planner in validation mode (see dispatch
 contract in `[FABRIKA_PATH]/core/workflows/protocols/dispatch-protocol.md`).
-Validates output answers the brief's question in the right format for
-the stakeholder.
+Validates output answers the task document's question in the right
+format for the stakeholder.
 
 **Deliver.** Analysis planner writes `outcome.md`. Presents outcome
 and validation report to owner using the Task Outcome Briefing format
 (`[FABRIKA_PATH]/core/briefings/task-outcome-briefing.md`). Prompts:
 "If you have follow-up analysis, start a new chat referencing this
-task's outcome and brief for context."
+task's outcome and task document for context."
 
 ---
 
@@ -157,7 +155,7 @@ execute metadata (INFORMATION_SCHEMA + EXPLAIN) ->
 performance review -> [revise -> logic re-review ->
 re-run metadata -> performance re-review]* ->
 [cost approval - cloud only] -> execute main queries ->
-validate + brief check -> deliver
+validate + plan check -> deliver
 ```
 
 ### Phase Details
@@ -275,7 +273,7 @@ spot-checks. Writes internal evaluation to
 validation report to `tasks/[date-name]/validation-report.md`
 (detailed evidence chain — always full detail regardless of stakes).
 
-**Brief check.** Analysis planner in validation mode. Same as Tier 1.
+**Plan check.** Analysis planner in validation mode. Same as Tier 1.
 
 **Deliver.** Same as Tier 1.
 
@@ -366,7 +364,7 @@ The following agents reference Domain Language and data dictionaries
 during their orientation:
 
 - **Analysis planner:** Reads Domain Language during plan creation.
-  Flags terms in the brief/plan that have multiple definitions. Points
+  Flags terms in the task document/plan that have multiple definitions. Points
   agents to the relevant data dictionary entries for the task's data
   sources.
 - **Data analyst:** Reads data dictionary entries for tables being
@@ -378,9 +376,8 @@ during their orientation:
   distributions, known quality issues, refresh cadence (source
   freshness assessment).
 
-For tasks that skip Design Alignment (basic brief path), the analysis
-planner still checks Domain Language during plan creation if the
-document exists.
+The analysis planner checks Domain Language during plan creation if
+the document exists.
 
 ---
 
@@ -434,7 +431,7 @@ the stakeholder (evidence chain, traceability, trust).
 
 ```
 tasks/[date-name]/
-  brief.md                          <- What is the question
+  task.md                           <- What is the question
   plan.md                           <- How we will answer it
   work/                             <- The code itself
     *.sql, *.py, *.ipynb
@@ -449,7 +446,7 @@ docs/evaluations/
   [task-name]-logic-review-v2.md    <- Versioned if revision occurred
   [task-name]-performance-review.md <- Performance reviewer findings
   [task-name]-data-validation.md    <- Data validator internal report
-  [task-name]-brief-check.md        <- Analysis planner validation
+  [task-name]-plan-check.md         <- Analysis planner validation
 ```
 
 The execution manifest lives in `work/` because it is a work product
@@ -489,11 +486,11 @@ pattern defined in `core/design-principles.md`
 After delivery, the orchestrator prompts the user:
 
 > "Results delivered. If you have follow-up analysis, start a new
-> chat and reference `tasks/[date-name]/outcome.md` and the brief
-> for context."
+> chat and reference `tasks/[date-name]/outcome.md` and the task
+> document for context."
 
-Each analysis task is a bounded unit of work with its own brief,
-plan, validation, and outcome. Follow-up iteration starts a new chat
+Each analysis task is a bounded unit of work with its own task
+document, plan, validation, and outcome. Follow-up iteration starts a new chat
 that picks up from the outcome, not from scratch. The analysis
 planner in the new session reads the prior outcome as part of its
 orientation.
@@ -531,11 +528,11 @@ step-by-step procedure, see
 
 | Cadence | Pipeline Phases | What Happens |
 |---------|----------------|--------------|
-| After each task delivery | Phases 1-2 (Extract + Index) | Index the task's brief, plan, and outcome as a batch in `wiki/meta/` |
+| After each task delivery | Phases 1-2 (Extract + Index) | Index the task's task document, plan, and outcome as a batch in `wiki/meta/` |
 | Monthly or on demand | Phases 3-4 (Synthesize + Link) | Synthesize recurring themes across tasks, update topic articles and `wiki/index.md` narrative. Triggered when 3+ batch indexes exist without a synthesis pass, or on owner request. |
 | Quarterly | All phases (full reintegration) | Re-score salience, rewrite stale articles, merge/retire topics, rebuild narrative, clean up batch entries. Triggered when 3+ months since last reintegration. |
 
 Extract+Index runs as part of the Deliver phase when a `wiki/`
 directory exists. After the outcome report is written, the agent
-indexes the task's brief, plan, and outcome as a batch. This is
-automatic — no additional user action required.
+indexes the task's task document, plan, and outcome as a batch. This
+is automatic — no additional user action required.

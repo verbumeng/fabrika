@@ -4,6 +4,32 @@ When a Fabrika update requires consumer projects to do more than a straight file
 
 ---
 
+## 0.33.0 — Brief -> Task rename, template consolidation
+
+**What changed:** The "brief" concept is now "task document." The file
+`brief.md` in task folders becomes `task.md`. Brief-Template.md and
+Analysis-Brief-Template.md are merged into Task-Template.md.
+Outcome-Report-Template.md is renamed to Analysis-Outcome-Template.md.
+"Brief check" evaluation artifacts become "plan check."
+
+**Consumer action required:**
+
+1. Delete `Brief-Template.md` and `Analysis-Brief-Template.md` from
+   your templates directory
+2. Copy `Task-Template.md` and `Roadmap-Template.md` to your
+   templates directory
+3. Rename `Outcome-Report-Template.md` to
+   `Analysis-Outcome-Template.md` in your templates directory
+4. In new task folders, create `task.md` instead of `brief.md`.
+   Existing completed task folders do NOT need retroactive renaming.
+5. Copy updated agent prompts to `.claude/agents/` (or equivalent)
+6. Copy updated integration template (CLAUDE.md or
+   copilot-instructions.md)
+7. Existing `*-brief-check.md` evaluation files do not need renaming.
+   New evaluations will be created as `*-plan-check.md`.
+
+---
+
 ## 0.32.0 — Category dissolution, workflow decomposition, file renames
 
 ### File renames

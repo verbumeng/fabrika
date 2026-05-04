@@ -130,28 +130,22 @@ that understanding in a Charter/PRD, and hands off to the scrum master
 for sprint planning. It does not define phases, assign work, or
 manage timelines — that is the scrum master's job.
 
-## Project-Type-Specific Behavior
+## Output
 
-### Sprint-Based Projects and Agentic-Workflow
+Design Alignment produces Charter + PRD or PRD only. It does not
+produce task documents — tasks use the standard task/plan flow
+without Design Alignment unless complexity triggers escalation to
+a PRD.
 
-Standard behavior described above. Produces Charter (first time) + PRD.
+### Charter + PRD (new project or major pivot)
 
-### Analytics-Workspace
+The Charter captures the problem space, target user, core
+capabilities, constraints, and design principles. The PRD captures
+feature-level requirements. Uses templates at
+`core/templates/Project-Charter-Template.md` and
+`core/templates/PRD-Template.md`.
 
-The analytics workflow is task-based. Design Alignment does NOT
-produce Charter/PRD for analytics workflow projects. Instead,
-it produces an enhanced Analysis Brief when the analysis is complex
-enough to warrant structured alignment.
+### PRD only (new phase or feature)
 
-**Complexity triggers** (any one is sufficient):
-- 3+ data sources involved
-- Multiple stakeholder groups with different needs
-- Novel domain requiring terminology alignment
-- Estimated effort exceeds 2 days
-- Analysis informs a significant decision (budget, strategy, headcount)
-
-When triggered, the orchestrator runs the alignment protocol and
-produces an enhanced Analysis Brief using the standard brief template
-with deeper coverage of scope, terminology, and success criteria.
-
-Simple analyses continue using the existing brief/plan flow unchanged.
+The Charter already exists. Design Alignment produces only a PRD for
+the new phase or feature.

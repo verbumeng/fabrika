@@ -8,7 +8,7 @@ completed: YYYY-MM-DD
 # Outcome: [Short descriptive title]
 
 ## Summary
-[Lead with the answer. 2-4 sentences that directly address the goal from the brief. If the audience reads nothing else, this should give them what they need.]
+[Lead with the answer. 2-4 sentences that directly address the goal from the task document. If the audience reads nothing else, this should give them what they need.]
 
 ## Deliverables Produced
 [List what was produced, where it lives, and a one-line description of each.]

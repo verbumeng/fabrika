@@ -157,7 +157,7 @@ existing agents — they fill different roles than domain-specific agents.
 
 After installing the base agents, create `tasks/` and
 `docs/evaluations/` directories, and copy the base templates
-(Brief-Template, Plan-Template, Outcome-Template).
+(Task-Template, Plan-Template, Outcome-Template).
 
 Projects that already have Fabrika installed can add the task workflow
 type on demand via `ADD-WORKFLOW.md` without going through full

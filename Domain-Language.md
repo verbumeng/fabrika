@@ -255,7 +255,7 @@ keep context windows clean.
 **Task lifecycle** — The tiered workflow governing **analytics
 workflow** projects. Two tiers: Tier 1 (local data: plan -> promotion
 check -> write -> logic review -> [revise -> re-review]* -> execute ->
-validate + brief check -> deliver) and Tier 2 (production data: adds
+validate + plan check -> deliver) and Tier 2 (production data: adds
 metadata queries, execution manifest, performance review, and cost
 approval gate before main execution). Each task is independent — no
 sprint structure. Defined in `core/workflows/types/analytics-workflow.md`.
@@ -272,9 +272,8 @@ requirements gathering. The orchestrator runs this directly (not a
 sub-agent dispatch) because the iterative back-and-forth with the
 owner requires conversational context. Produces a **Project Charter**
 (first time) and a **PRD** (per phase or feature). Triggers: new
-project, new phase, owner request, or detected ambiguity. For
-the **analytics workflow**, produces an enhanced Analysis Brief instead
-of a Charter/PRD. [Formalized in 0.14.0.]
+project, new phase, owner request, or detected ambiguity. [Formalized
+in 0.14.0; enhanced brief concept removed in 0.33.0.]
 
 **Sprint contract** — A per-sprint agreement defining the stories in
 scope, their acceptance criteria, token budget estimates, testing
@@ -442,6 +441,14 @@ with backlog types as the connecting vocabulary. [Conceptualized in 0.29.0; CR-1
 task mode. CR-17 covers the task workflow. CR-24 addresses epic
 coordination mechanics.]
 
+**Decomposition hierarchy** — The structural hierarchy of project
+documents that also serves as the alignment hierarchy. Charter ->
+Roadmap -> PRD -> Epic -> Story / Task / Bug. The documents at each
+level capture shared understanding between orchestrator and owner.
+The orchestrator's complexity assessment determines which level of
+alignment ceremony is needed — the same assessment that determines
+execution ceremony. [Formalized in 0.33.0.]
+
 **Backlog type** — The category of work that determines which workflow
 handles it and what ceremony options are available within it. Four
 types exist: **task** (bounded work using the task workflow), **bug**
@@ -456,7 +463,7 @@ type, not the complexity tier, is the primary classification.
 reproduction context: observed vs. expected behavior, reproduction
 steps. Uses the **task workflow**. The reviewer additionally verifies
 the fix addresses the reproduction case. No separate workflow or
-agents — bugs are tasks with a specific brief structure.
+agents — bugs are tasks with a specific task document structure.
 [Defined as backlog type in 0.30.0.]
 
 **Epic** — A backlog type representing a coordination envelope that
@@ -553,13 +560,14 @@ plan output, estimated costs per query, and data source classification.
 The primary input for the performance reviewer's pre-execution
 assessment. [Introduced in 0.20.0.]
 
-**Brief check** — Analysis planner validation mode output at
-`docs/evaluations/[task-name]-brief-check.md`. Verifies that the
-analysis output answers the business question from the brief in the
-format the stakeholder needs. Requirements validation (does the output
-answer the right question?), not data validation (are the numbers
-correct?). Verdict: MEETS BRIEF / PARTIALLY MEETS BRIEF / DOES NOT
-MEET BRIEF. [Introduced in 0.20.0.]
+**Plan check** — Analysis planner validation mode output at
+`docs/evaluations/[task-name]-plan-check.md`. Verifies that the
+analysis output answers the business question from the task document
+in the format the stakeholder needs. Requirements validation (does the
+output answer the right question?), not data validation (are the
+numbers correct?). Verdict: MEETS REQUIREMENTS / PARTIALLY MEETS
+REQUIREMENTS / DOES NOT MEET REQUIREMENTS. Formerly "brief check."
+[Introduced in 0.20.0; renamed in 0.33.0.]
 
 **Validation report** — A human-facing evidence chain at
 `tasks/[date-name]/validation-report.md` produced by the data
@@ -837,7 +845,7 @@ types**. [Category label retired in 0.32.0.]
 
 **Analytics workflow project** — A project type for ad hoc analysis,
 investigations, and data requests. Follows the **task lifecycle**
-(brief -> plan -> execute -> validate -> deliver) with no sprint
+(task -> plan -> execute -> validate -> deliver) with no sprint
 structure. Work is organized as individual tasks in
 `tasks/[date-name]/` directories. [Renamed from analytics-workspace
 in 0.32.0.]
@@ -895,7 +903,7 @@ analysis planner initiates this when a task recurs.
 **Task-workspace project** — A workflow type for bounded work that
 doesn't fit into software development, data analysis, or methodology
 maintenance. Uses the **task workflow** — the base multi-agent
-lifecycle (brief -> plan -> implement -> review -> validate -> deliver)
+lifecycle (task -> plan -> implement -> review -> validate -> deliver)
 with domain-agnostic base agents (planner, implementer, reviewer,
 validator). The catch-all type: if a more specific type fits, use
 it — domain-specific agents produce better results than generic ones.

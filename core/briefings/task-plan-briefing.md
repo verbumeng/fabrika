@@ -13,7 +13,7 @@ being taken before work begins.
 
 ### 1. What question are we answering and for whom
 One or two sentences: the business question in plain language, who
-asked it, and what decision it informs. If the brief has a deadline,
+asked it, and what decision it informs. If the task document has a deadline,
 state it here.
 
 ### 2. Analysis approach in plain language

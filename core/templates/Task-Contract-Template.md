@@ -9,12 +9,12 @@ status: active
 > This contract defines the scope, approach, and acceptance criteria for an analytics workflow task. It is the lightweight equivalent of a sprint contract — scoped to a single task rather than a sprint of stories.
 
 ## Task Summary
-- **Brief:** `tasks/[date-name]/brief.md`
+- **Task document:** `tasks/[date-name]/task.md`
 - **Plan:** `tasks/[date-name]/plan.md`
 - **Owner approved plan:** [Yes / Pending]
 
 ## Acceptance Criteria
-[What does "done" look like? Pull from the brief and plan.]
+[What does "done" look like? Pull from the task document and plan.]
 - [ ] [e.g., "Variance between Finance report and warehouse total is explained with specific drivers"]
 - [ ] [e.g., "Output CSV delivered to shared drive at [path]"]
 - [ ] [e.g., "Logic reviewer has verified join and aggregation logic"]
@@ -24,7 +24,7 @@ status: active
 ## Validation Requirements
 [What level of validation does this task need?]
 - **Logic review:** [Required / Optional — based on complexity]
-- **Data validation intensity:** [High / Medium / Low — based on stakes from the brief]
+- **Data validation intensity:** [High / Medium / Low — based on stakes from the task document]
 - **Cross-reference benchmarks:** [What known-good numbers to check against]
 
 ## Scope Boundaries

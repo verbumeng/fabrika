@@ -36,7 +36,7 @@ All paths in this guide use the defaults above. Replace them with the actual pat
 ### Analytics workflow type
 - A workspace repo with task-centric folder structure, git, and agentic tool configuration
 - A source registry (`sources/`) documenting data connections, BI tools, and file sources
-- Task templates (brief, plan, outcome report)
+- Task templates (task, plan, outcome report)
 - Analytics-specific agents installed (analysis-planner, logic-reviewer, data-validator)
 - Baseline eval cases installed
 - Ready to accept the first analysis task
@@ -78,7 +78,7 @@ For domain workflow types, also explain briefly: "This means we'll do a brain du
 
 For `analytics-workflow`, explain: "This means we'll set up a workspace for ad hoc analysis — we'll catalog your data sources and BI tools, then you'll be ready to start tasks. No sprints — work is organized as individual analysis tasks."
 
-For `task-workspace`, explain: "This means we'll set up a workspace for bounded tasks — anything that needs structured agent support but doesn't fit the other types. Work follows a simple lifecycle: brief, plan, implement, review, validate, deliver. No sprints, no domain assumptions. The agents work with whatever the task produces."
+For `task-workspace`, explain: "This means we'll set up a workspace for bounded tasks — anything that needs structured agent support but doesn't fit the other types. Work follows a simple lifecycle: task, plan, implement, review, validate, deliver. No sprints, no domain assumptions. The agents work with whatever the task produces."
 
 For `agentic-workflow`, explain: "This means we'll set up a system where the methodology itself is the product — agent prompts, workflows, instruction files, and templates. Changes follow a 7-step protocol (plan, align, execute, verify, incorporate feedback, present, ship). No sprints — work is organized as structural changes with version tracking."
 
@@ -454,14 +454,14 @@ Ask these three questions:
 
 1. **"What kind of work will you typically do in this workspace?"** — not to classify into a type (that already happened) but to understand the shape of tasks so the planner can orient faster.
 2. **"Are there any tools, platforms, or systems your tasks typically involve?"** — captured in the project instruction file so agents have baseline context.
-3. **"How do you want deliverables organized? The default is one folder per task with a brief, plan, work artifacts, and outcome. Does that work?"** — allows customization if the user has a preference.
+3. **"How do you want deliverables organized? The default is one folder per task with a task document, plan, work artifacts, and outcome. Does that work?"** — allows customization if the user has a preference.
 
 ### 2T.3 Set up workspace structure
 
 1. Create `tasks/` directory
 2. Create `docs/evaluations/` directory
 3. Copy templates from `[FABRIKA_PATH]/core/templates/`:
-   - `Brief-Template.md`, `Plan-Template.md`, `Outcome-Template.md`
+   - `Task-Template.md`, `Plan-Template.md`, `Outcome-Template.md`
 4. If Domain Language is warranted (user described domain-specific terminology), create from `[FABRIKA_PATH]/core/templates/Domain-Language-Template.md`
 5. Initialize `STATUS.md` with workspace type and active task count (0)
 
@@ -505,9 +505,9 @@ Copy analytics workflow agents from `[FABRIKA_PATH]/core/agents/` to the tool-ap
   - Copy copilot-instructions from `[FABRIKA_PATH]/integrations/copilot/copilot-instructions.md` to `.github/copilot-instructions.md`, set project type to `analytics-workflow`
 
 Copy templates from `[FABRIKA_PATH]/core/templates/`:
-- `Analysis-Brief-Template.md` → `docs/Templates/Analysis-Brief-Template.md`
+- `Task-Template.md` → `docs/Templates/Task-Template.md`
 - `Analysis-Plan-Template.md` → `docs/Templates/Analysis-Plan-Template.md`
-- `Outcome-Report-Template.md` → `docs/Templates/Outcome-Report-Template.md`
+- `Analysis-Outcome-Template.md` → `docs/Templates/Analysis-Outcome-Template.md`
 - `Task-Contract-Template.md` → `docs/Templates/Task-Contract-Template.md`
 - `Platform-Connection-Template.md` → `docs/Templates/Platform-Connection-Template.md`
 - `Source-Connection-Template.md` → `docs/Templates/Source-Connection-Template.md`
@@ -595,9 +595,9 @@ git commit -m "feat: initialize analytics workspace with source registry"
 
 ### 2W.6 Ready
 
-Tell the user: **"Your analytics workspace is set up with [N] data sources cataloged. To start an analysis task, just tell me what you need — a question to answer, data to pull, logic to review, or an investigation to run. I'll create a task folder and walk you through brief → plan → execute → validate → deliver."**
+Tell the user: **"Your analytics workspace is set up with [N] data sources cataloged. To start an analysis task, just tell me what you need — a question to answer, data to pull, logic to review, or an investigation to run. I'll create a task folder and walk you through task → plan → execute → validate → deliver."**
 
-> **Design Alignment for analytics workflow:** Design Alignment is not part of workspace bootstrap. It triggers later, on demand, for complex analyses (3+ data sources, multiple stakeholders, novel domain, >2 day effort, or significant decision impact). When triggered, it produces an enhanced Analysis Brief — not a Project Charter or PRD.
+> **Design Alignment for analytics workflow:** Design Alignment is not part of workspace bootstrap. It triggers later per standard triggers (new project, new phase, owner request, detected ambiguity). When triggered, it produces a PRD.
 
 **Do NOT proceed to Phase 3 or Phase 4.** Analytics workspaces do not have sprints or readiness checks. The workspace is ready for tasks.
 
@@ -888,7 +888,7 @@ Use this during the Phase 4 readiness check.
 - [ ] `tasks/` directory exists
 - [ ] `docs/evaluations/` directory exists
 - [ ] Base agents installed (planner, implementer, reviewer, validator)
-- [ ] Base templates available (Brief-Template, Plan-Template, Outcome-Template)
+- [ ] Base templates available (Task-Template, Plan-Template, Outcome-Template)
 - [ ] `STATUS.md` initialized with workspace type
 - [ ] `.fabrika/manifest.yml` generated with all installed files
 

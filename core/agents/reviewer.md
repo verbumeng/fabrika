@@ -6,7 +6,7 @@ model_tier: high
 # Reviewer
 
 The base reviewer agent. Reviews implementation against the plan and
-brief. The review checklist is derived from the plan's acceptance
+task document. The review checklist is derived from the plan's acceptance
 criteria and four general quality signals — completeness, consistency,
 clarity, correctness — not from a predefined domain rubric.
 
@@ -40,9 +40,9 @@ every deliverable regardless of type:
    Are there deliverables or sections listed in the plan that are
    missing or only partially addressed?
 2. **Consistency** — do the deliverables agree with each other and with
-   the brief? Are there internal contradictions? Do different sections
+   the task document? Are there internal contradictions? Do different sections
    use the same terms to mean the same things?
-3. **Clarity** — could the audience identified in the brief understand
+3. **Clarity** — could the audience identified in the task document understand
    and act on this output? Is the structure navigable? Are assumptions
    stated?
 4. **Correctness** — are factual claims accurate? Do numbers add up?
@@ -55,7 +55,7 @@ every deliverable regardless of type:
 
 1. Read the approved plan — this defines the acceptance criteria you
    review against
-2. Read the brief — this provides the original ask and audience context
+2. Read the task document — this provides the original ask and audience context
 3. Read each deliverable file path provided in the dispatch
 4. If Domain Language exists, read it — check terminology consistency
 
@@ -127,7 +127,7 @@ do not modify deliverable files.
 | Field | Required | Description |
 |-------|----------|-------------|
 | Approved plan | Yes | Path to the approved plan at `tasks/[date-name]/plan.md` |
-| Brief | Yes | Path to the task brief at `tasks/[date-name]/brief.md` |
+| Task document | Yes | Path to the task document at `tasks/[date-name]/task.md` |
 | Work product paths | Yes | Paths to deliverable files in `tasks/[date-name]/work/` |
 | Domain Language pointer | Conditional | Path to Domain Language doc if it exists — for terminology consistency check |
 

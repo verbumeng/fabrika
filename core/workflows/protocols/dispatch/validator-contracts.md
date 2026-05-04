@@ -110,7 +110,7 @@ the spec and the source code.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Task brief | Yes | Path to `tasks/[date-name]/brief.md` |
+| Task document | Yes | Path to `tasks/[date-name]/task.md` |
 | Task plan | Yes | Path to `tasks/[date-name]/plan.md` (includes the validation approach — do not extract it separately) |
 | Source docs | Yes | Paths to relevant source documentation |
 | Work product paths | Yes | Paths to output files and scripts |
@@ -129,14 +129,14 @@ the spec and the source code.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Brief | Yes | Path to `tasks/[date-name]/brief.md` |
+| Task document | Yes | Path to `tasks/[date-name]/task.md` |
 | Approved plan | Yes | Path to `tasks/[date-name]/plan.md` |
 | Work product paths | Yes | Paths to deliverable files in `tasks/[date-name]/work/` |
 | Domain Language pointer | Conditional | Path to Domain Language doc if it exists — for term consistency check |
 
 **Do not provide:** Reviewer findings, opinions about deliverable
 quality, suspected issues. The validator evaluates independently
-against the brief and plan.
+against the task document and plan.
 
 **Output expected:**
 1. Internal evaluation at `docs/evaluations/[task-name]-validation.md`

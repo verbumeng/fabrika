@@ -13,7 +13,7 @@ and output format constraints, see the dispatch protocol hub at
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| Requirements | Yes | Story acceptance criteria or task brief |
+| Requirements | Yes | Story acceptance criteria or task document |
 | Audience | Yes | Who will consume this visualization |
 | Data output | Yes | The data or query results to be visualized |
 | Tool docs pointer | Conditional | Path to `sources/tools/` or `docs/03-Design/Dashboard Spec.md` |

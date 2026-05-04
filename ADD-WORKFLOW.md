@@ -11,7 +11,7 @@ The orchestrator should initiate this process when:
 
 1. **The user asks for work that doesn't fit installed workflows.** If
    the project has sprint-based agents but the user needs a quick
-   bounded task (brief, plan, execute, validate, deliver), the task
+   bounded task (task, plan, execute, validate, deliver), the task
    workflow type fits better than shoehorning it into a sprint story.
 2. **The user explicitly requests a workflow type.** "Can we add the
    analytics workflow?" or "I need to do some ad hoc analysis here."
@@ -38,7 +38,7 @@ these from the Fabrika source into the consumer project.
 | Reviewer agent | `[FABRIKA_PATH]/core/agents/reviewer.md` | `.claude/agents/reviewer.md` or `.github/agents/reviewer.agent.md` |
 | Validator agent | `[FABRIKA_PATH]/core/agents/validator.md` | `.claude/agents/validator.md` or `.github/agents/validator.agent.md` |
 | Workflow definition | `[FABRIKA_PATH]/core/workflows/types/task-workflow.md` | `.fabrika/workflows/task-workflow.md` (reference copy) |
-| Brief template | `[FABRIKA_PATH]/core/templates/Brief-Template.md` | Project template location |
+| Task template | `[FABRIKA_PATH]/core/templates/Task-Template.md` | Project template location |
 | Plan template | `[FABRIKA_PATH]/core/templates/Plan-Template.md` | Project template location |
 | Outcome template | `[FABRIKA_PATH]/core/templates/Outcome-Template.md` | Project template location |
 
@@ -96,7 +96,7 @@ scaffold).
 6. **Confirm installation.** Report to the user what was installed and
    how to use the new workflow type. For the task workflow: "You can
    now bring any bounded task to the orchestrator. It will create a
-   brief, plan, execute, review, validate, and deliver — using
+   task, plan, execute, review, validate, and deliver — using
    domain-agnostic agents that work with whatever the task produces."
 
 ## Relationship to ADOPT.md

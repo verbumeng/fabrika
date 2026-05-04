@@ -88,7 +88,7 @@ independence.
 - The approved spec or plan (the contract the work was built against)
 - File paths to review (specific, not "look at the whole repo")
 - Rubric pointer (e.g., `docs/02-Engineering/rubrics/code-review-rubric.md`)
-- Sprint contract acceptance criteria (domain workflow) or task brief
+- Sprint contract acceptance criteria (domain workflow) or task document
   (analytics/task workflow)
 
 **What NOT to include in dispatch:**
