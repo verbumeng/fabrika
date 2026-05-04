@@ -39,12 +39,15 @@ Four workflow types — the base task workflow (v0.26.0), sprint-based,
 analytics-workspace, and agentic-workflow — and the patterns that
 govern them: lifecycle definitions, dispatch protocol, design
 alignment, graduated testing, the briefing system, and the knowledge
-pipeline. As of v0.29.0, sprint-based workflows include complexity
-tiers (Patch, Story, Deep Story) that match ceremony to risk — the
-sprint-based portion of a universal complexity spectrum connecting
-all workflow types. Workflows are organized into types and protocols,
-"project types" are becoming "workflow types," and context compaction
-governs phase transitions.
+pipeline. As of v0.30.0, work is categorized into four universal
+backlog types (task, bug, story, epic) that determine which workflow
+handles it. Ceremony graduates within each type, not across types:
+tasks have simple and standard modes, stories have patch/story/deep
+story tiers, bugs use the task workflow with reproduction context,
+and epics are coordination envelopes. The orchestrator asks "What
+kind of work?" before "How much ceremony?" Workflows are organized
+into types and protocols, "project types" are becoming "workflow
+types," and context compaction governs phase transitions.
 
 ### [Harvest Patterns](topics/harvest-patterns.md)
 
@@ -105,12 +108,14 @@ rationale, the deferred development-workflow rename decision, and the
 CLAUDE.md path validation design lesson from CR-28. In v0.29.0,
 Workflow Design was updated with the universal complexity tiers
 design rationale, the research-vs-Design-Alignment distinction, and
-the ceremony spectrum concept from CR-18.
+the ceremony spectrum concept from CR-18. In v0.30.0, Workflow
+Design was updated with the backlog type model (task, bug, story,
+epic), simple task mode, and work type routing from CR-19.
 
 ### Sources Summary
 
 Articles draw from:
-- CHANGELOG entries for versions 0.1.0 through 0.29.0
+- CHANGELOG entries for versions 0.1.0 through 0.30.0
 - Planning PRDs 01-15 and CRs 17-29 (in `planning/`)
 - Core workflow files, agent prompts, and integration templates
 - Alignment session outputs from the v0.10.0-v0.25.0 roadmap
